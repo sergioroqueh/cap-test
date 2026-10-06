@@ -8,8 +8,9 @@ export async function loadBankIndex(): Promise<BankIndex> {
   if (indexCache) return indexCache
   const res = await fetch(`${BASE}data/index.json`)
   if (!res.ok) throw new Error('No se pudo cargar el índice de preguntas.')
-  indexCache = await res.json()
-  return indexCache
+  const parsed = (await res.json()) as BankIndex
+  indexCache = parsed
+  return parsed
 }
 
 export async function loadQuestionnaire(meta: QuestionnaireMeta): Promise<Question[]> {
