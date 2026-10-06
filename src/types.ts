@@ -40,6 +40,7 @@ export interface QuestionProgress {
   lastAnswer?: AnswerKey
   lastCorrect?: boolean
   favorite: boolean
+  updatedAt?: number
 }
 
 export interface SessionAnswer {
@@ -52,6 +53,7 @@ export interface SessionAnswer {
 
 export interface StudySessionRecord {
   id?: number
+  clientId?: string
   type: 'study' | 'exam'
   label: string
   startedAt: number
