@@ -24,7 +24,7 @@ function Login({onSuccess}:{onSuccess:(session:Session)=>Promise<void>}){
  return <div className="authshell"><section className="authcard"><div className="authlogo">CT</div><em>CAP TEST 2026</em><h1>Tu progreso, siempre contigo.</h1><p>Inicia sesión para conservar resultados, errores y estadísticas en todos tus dispositivos.</p><form onSubmit={submit}><label>Email<input type="email" autoComplete="email" value={email} onChange={e=>setEmail(e.target.value)} required/></label><label>Contraseña<input type="password" autoComplete="current-password" value={password} onChange={e=>setPassword(e.target.value)} required/></label>{error&&<div className="autherror">{error}</div>}<button className="btn primary" disabled={sending}>{sending?'Entrando…':'Entrar'}</button></form><small>Acceso privado. No hay registro público desde esta página.</small></section></div>
 }
 
-function CapApp({userEmail,onSignOut}:{userEmail:string;onSignOut:()=>Promise<void>}){
+function App(){
  const [session,setSession]=useState<Session|null>(null),[authReady,setAuthReady]=useState(false),[syncing,setSyncing]=useState(false)
  useEffect(()=>{let live=true;if(!cloudConfigured||!supabase){setAuthReady(true);return}getSession().then(async current=>{if(!live)return;if(current){setSyncing(true);try{await synchronizeAccount()}finally{if(live)setSyncing(false)}}if(live)setSession(current)}).catch(console.error).finally(()=>{if(live)setAuthReady(true)});return()=>{live=false}},[])
  async function loginDone(next:Session){setSyncing(true);try{await synchronizeAccount();setSession(next)}finally{setSyncing(false);setAuthReady(true)}}
@@ -35,7 +35,7 @@ function CapApp({userEmail,onSignOut}:{userEmail:string;onSignOut:()=>Promise<vo
  return <CapApp userEmail={session.user.email||'Usuario'} onSignOut={logout}/>
 }
 
-function App(){
+function CapApp({userEmail,onSignOut}:{userEmail:string;onSignOut:()=>Promise<void>}){
  const [page,setPage]=useState<Route>(route()),[bank,setBank]=useState<BankIndex|null>(null),[rows,setRows]=useState<QuestionProgress[]>([]),[sessions,setSessions]=useState<StudySessionRecord[]>([]),[busy,setBusy]=useState(true),[load,setLoad]=useState<number|null>(null),[online,setOnline]=useState(navigator.onLine),[theme,setTheme]=useState(localStorage.getItem(THEME)||'light')
  useEffect(()=>{const h=()=>setPage(route()),o=()=>{const isOnline=navigator.onLine;setOnline(isOnline);if(isOnline)pushLocalSnapshotToCloud().catch(console.error)};addEventListener('hashchange',h);addEventListener('online',o);addEventListener('offline',o);if(!location.hash)go('home');return()=>{removeEventListener('hashchange',h);removeEventListener('online',o);removeEventListener('offline',o)}},[])
  useEffect(()=>{document.documentElement.dataset.theme=theme;localStorage.setItem(THEME,theme)},[theme])
