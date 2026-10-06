@@ -63,7 +63,8 @@ function Exam({bank,stats,start}:P){const [count,setCount]=useState(30),[source,
 
 function Quiz({pm,refresh}:{pm:Map<string,QuestionProgress>;refresh:()=>Promise<void>}){const [s,setS]=useState<ActiveSession|null>(()=>JSON.parse(sessionStorage.getItem(ACTIVE)||'null')),[qs,setQs]=useState<Question[]>([]),[loading,setLoading]=useState(true),[ref,setRef]=useState(false)
  useEffect(()=>{if(!s){go('study');return}resolveQuestions(s.questionIds).then(x=>{setQs(x);setLoading(false)})},[])
- if(!s||loading||!qs.length)return <Loading text="Cargando test…"/>\n const session=s
+ if(!s||loading||!qs.length)return <Loading text="Cargando test…"/>
+ const session=s
  const i=session.currentIndex,q=qs[i],sel=session.selectedAnswers[q.id],checked=session.checkedIds.includes(q.id),correct=sel===q.correctAnswer,fav=pm.get(q.id)?.favorite
  const save=(n:ActiveSession)=>{setS(n);sessionStorage.setItem(ACTIVE,JSON.stringify(n))}
  const select=(k:AnswerKey)=>{if(session.type==='study'&&checked)return;save({...session,selectedAnswers:{...session.selectedAnswers,[q.id]:k}})}
