@@ -21,6 +21,21 @@ for exam in exams:
     assert all(1 <= q['number'] <= 100 for q in rows)
     assert all(q['sourcePage'] in range(exam['sourcePageStart'],exam['sourcePageEnd']+1) for q in rows)
     assert exam['expectedCount'] == 100
+    if exam['id']=='2023-07-29-mercancias-b':
+        for n in (6,19):
+            q=next(q for q in rows if q['number']==n)
+            assert q['rawTemplateAnswer']=='C'
+            assert q['templateAnswer']=='D'
+            assert q['bankAnswer']=='D'
+            assert q['correctAnswer']=='D'
+            assert q['answerStatus']=='coincidencia_plantilla_corregida_visual_pendiente_revision'
+            assert q['templateVisualCorrectionStatus']=='correccion_visual_documentada_pendiente_revision_editorial'
+            assert q['reviewRequired']
+    if exam['id']=='2026-02-07-mercancias-global':
+        q=next(q for q in rows if q['number']==61)
+        assert q['templateAnswer']=='A' and q['bankAnswer']=='C'
+        assert q['correctAnswer'] is None
+        assert q['answerStatus']=='conflicto_plantilla_banco'
     if exam['category'] == 'viajeros':
         assert exam['id'] == '2024-04-06-viajeros-global'
         assert len(rows) == 100, 'Viajeros debe mantener las 100 preguntas principales'
@@ -65,6 +80,7 @@ for exam in exams:
             assert q['answerStatus'] in (
                 'coincidencia_automatica',
                 'coincidencia_alineacion_provisional_pendiente_revision',
+                'coincidencia_plantilla_corregida_visual_pendiente_revision',
                 'respuesta_banco_pendiente_revision',
                 'coincidencia_enunciado_banco_plantilla_pendiente_revision',
                 'respuesta_banco_enunciado_pendiente_revision')
@@ -72,6 +88,7 @@ for exam in exams:
             if q['answerStatus'] in (
                 'coincidencia_automatica',
                 'coincidencia_alineacion_provisional_pendiente_revision',
+                'coincidencia_plantilla_corregida_visual_pendiente_revision',
                 'coincidencia_enunciado_banco_plantilla_pendiente_revision'):
                 assert q['correctAnswer'] == q['templateAnswer']
         if q.get('matchMethod') == 'enunciado_y_texto_respuesta_exactos':
@@ -79,12 +96,16 @@ for exam in exams:
             assert q['answerStatus'] in (
                 'coincidencia_enunciado_banco_plantilla_pendiente_revision',
                 'coincidencia_alineacion_provisional_pendiente_revision',
+                'coincidencia_plantilla_corregida_visual_pendiente_revision',
                 'respuesta_banco_enunciado_pendiente_revision',
                 'conflicto_plantilla_banco')
         if q['answerStatus'] in ('conflicto_banco','conflicto_plantilla_banco'):
             assert q['correctAnswer'] is None
         if q['answerStatus'] == 'coincidencia_enunciado_banco_plantilla_pendiente_revision':
             assert q['reviewRequired']
+        if q['answerStatus']=='coincidencia_plantilla_corregida_visual_pendiente_revision':
+            assert q['reviewRequired']
+            assert q['rawTemplateAnswer']!=q['templateAnswer']
         if q['answerStatus']=='coincidencia_alineacion_provisional_pendiente_revision':
             assert q['reviewRequired']
             assert q['templateAlignmentStatus']!='sin_ajuste'
@@ -99,6 +120,11 @@ assert len(audit)==100 and [int(q['number']) for q in audit]==list(range(1,101))
 assert audit[88]['originalTemplateLetter']=='A' and audit[88]['candidateTemplateLetter']=='D'
 assert audit[99]['candidateTemplateNumber']=='' and audit[99]['candidateTemplateLetter']==''
 assert sum(q['answerStatus']=='conflicto_plantilla_banco' for q in audit)==0
+review=json.loads((root/'exams'/'review_queue.json').read_text())
+review61=next(q for q in review if q['examId']=='2026-02-07-mercancias-global' and q['number']==61)
+assert review61['normativeSuggestedAnswer']=='C'
+assert 'eur-lex.europa.eu' in review61['normativeSourceUrl']
+assert review61['normativeStatus']=='pendiente_revision_editorial_no_autocorregir'
 
 freq = json.loads((root/'exams'/'frequency_by_bank.json').read_text())
 assert all(1<=v['count']<=v['denominator'] for v in freq.values())
