@@ -5,10 +5,11 @@ import { cloudConfigured, getSession, signIn, signOut, supabase } from './supaba
 import type { Session } from '@supabase/supabase-js'
 import { loadAllQuestions, loadBankIndex, loadQuestionnaire, resolveQuestions } from './data'
 import { chooseSmartQuestions, getStatus, needsReview, percent, shuffle } from './utils'
+import { loadCapIndex, loadCapQuestions, loadAllCapQuestions, loadBankExamFrequency, type CapCategory, type CapExamMeta, type CapExamIndex } from './capExams'
 
 const ACTIVE='cap-test-active-v1', LAST='cap-test-last-v1', THEME='cap-test-theme'
-type Route='home'|'study'|'questionnaires'|'exam'|'quiz'|'results'|'stats'|'settings'
-const route=():Route=>{const r=location.hash.replace(/^#\/?/,'').split('?')[0] as Route;return ['home','study','questionnaires','exam','quiz','results','stats','settings'].includes(r)?r:'home'}
+type Route='home'|'general'|'study'|'questionnaires'|'exam'|'quiz'|'results'|'stats'|'settings'
+const route=():Route=>{const r=location.hash.replace(/^#\/?/,'').split('?')[0] as Route;return ['home','general','study','questionnaires','exam','quiz','results','stats','settings'].includes(r)?r:'home'}
 const go=(r:Route)=>location.hash='#/'+r
 const group=(q:Question)=>q.section+':'+q.questionnaireId
 const fresh=(q:Question):QuestionProgress=>({questionId:q.id,questionnaireId:group(q),attempts:0,correct:0,incorrect:0,streak:0,lastAnsweredAt:0,favorite:false})
@@ -57,13 +58,73 @@ function CapApp({userEmail,onSignOut}:{userEmail:string;onSignOut:()=>Promise<vo
  if(busy||!bank)return <Loading text="Preparando CAP Test…"/>
  const props={bank,rows,pm,stats,sessions,start}
  return <div className="app">
-  <header><button className="logo" onClick={()=>go('home')}>CT</button><div><b>{page==='home'?'CAP Test 2026':({study:'Modo estudio',questionnaires:'Cuestionarios',exam:'Simulacro',quiz:'Test en curso',results:'Resultado',stats:'Progreso',settings:'Ajustes'} as any)[page]}</b>{!online&&<small>Sin conexión</small>}</div><button className="gear" onClick={()=>go('settings')}>⚙</button></header>
-  <main>{load!==null&&<div className="overlay"><Loading text={'Preparando preguntas… '+load+'%'}/></div>}{page==='home'&&<Home {...props}/>} {page==='study'&&<Study {...props}/>} {page==='questionnaires'&&<Questionnaires {...props}/>} {page==='exam'&&<Exam {...props}/>} {page==='quiz'&&<Quiz pm={pm} refresh={refresh}/>} {page==='results'&&<Results/>} {page==='stats'&&<Stats {...props}/>} {page==='settings'&&<Settings theme={theme} setTheme={setTheme} bank={bank} refresh={refresh} userEmail={userEmail} onSignOut={onSignOut}/>}</main>
-  {!['quiz','results','settings','questionnaires'].includes(page)&&<nav><button className={page==='home'?'on':''} onClick={()=>go('home')}>⌂<span>Inicio</span></button><button className={page==='study'?'on':''} onClick={()=>go('study')}>▤<span>Estudiar</span></button><button className={page==='exam'?'on':''} onClick={()=>go('exam')}>✓<span>Test</span></button><button className={page==='stats'?'on':''} onClick={()=>go('stats')}>◫<span>Progreso</span></button></nav>}
+  <header><button className="logo" onClick={()=>go('home')}>CT</button><div><b>{page==='home'?'CAP Test 2026':({general:'Banco general',study:'Modo estudio',questionnaires:'Cuestionarios',exam:'Simulacro general',quiz:'Test en curso',results:'Resultado',stats:'Progreso',settings:'Ajustes'} as any)[page]}</b>{!online&&<small>Sin conexión</small>}</div><button className="gear" onClick={()=>go('settings')}>⚙</button></header>
+  <main>{load!==null&&<div className="overlay"><Loading text={'Preparando preguntas… '+load+'%'}/></div>}{page==='home'&&<CapHome/>} {page==='general'&&<Home {...props}/>} {page==='study'&&<Study {...props}/>}  {page==='questionnaires'&&<Questionnaires {...props}/>} {page==='exam'&&<Exam {...props}/>} {page==='quiz'&&<Quiz pm={pm} refresh={refresh}/>} {page==='results'&&<Results/>} {page==='stats'&&<Stats {...props}/>} {page==='settings'&&<Settings theme={theme} setTheme={setTheme} bank={bank} refresh={refresh} userEmail={userEmail} onSignOut={onSignOut}/>}</main>
+  {!['quiz','results','settings','questionnaires'].includes(page)&&<nav><button className={page==='home'?'on':''} onClick={()=>go('home')}>⌂<span>Exámenes</span></button><button className={page==='general'||page==='study'?'on':''} onClick={()=>go('general')}>▤<span>Banco</span></button><button className={page==='exam'?'on':''} onClick={()=>go('exam')}>✓<span>Test general</span></button><button className={page==='stats'?'on':''} onClick={()=>go('stats')}>◫<span>Progreso</span></button></nav>}
  </div>
 }
 
 type P={bank:BankIndex;rows:QuestionProgress[];pm:Map<string,QuestionProgress>;stats:any;sessions:StudySessionRecord[];start:(t:'study'|'exam',s:StudySource,c:number,l:string,m?:QuestionnaireMeta)=>Promise<void>}
+
+
+function CapHome(){
+ const [index,setIndex]=useState<CapExamIndex|null>(null)
+ const [category,setCategory]=useState<CapCategory>('mercancias')
+ const [mode,setMode]=useState<'study'|'exam'>('study')
+ const [count,setCount]=useState(100)
+ const [working,setWorking]=useState(false)
+ const [error,setError]=useState('')
+ useEffect(()=>{loadCapIndex().then(setIndex).catch(e=>setError(String(e)))},[])
+ const exams=(index?.exams||[]).filter(x=>x.category===category).sort((a,b)=>b.date.localeCompare(a.date)||a.model.localeCompare(b.model))
+ const available=exams.filter(x=>x.readyCount>0)
+ const pretty=(x:CapExamMeta)=>new Date(x.date+'T12:00:00').toLocaleDateString('es-ES',{day:'2-digit',month:'short',year:'numeric'})+(x.model==='GLOBAL'?'':' · modelo '+x.model)
+ async function begin(source:'cap-original'|'cap-random'|'cap-mixed',chosen?:CapExamMeta){
+  setError('');setWorking(true)
+  try{
+   let questions:Question[]=[]
+   let label=''
+   if(source==='cap-mixed'){
+    const rows=await loadAllCapQuestions(category)
+    const unique=new Map<string,Question>()
+    shuffle(rows).forEach(x=>{const id=x.progressId||x.id;if(!unique.has(id))unique.set(id,x)})
+    questions=shuffle([...unique.values()]).slice(0,count)
+    label='CAP '+(category==='mercancias'?'Mercancías':'Viajeros')+' · examen mezclado'
+   }else{
+    const meta=chosen||(available.length?shuffle(available)[0]:undefined)
+    if(!meta)throw new Error('No hay exámenes corregibles todavía en esta modalidad.')
+    questions=await loadCapQuestions(meta)
+    label='CAP '+(category==='mercancias'?'Mercancías':'Viajeros')+' · '+pretty(meta)
+   }
+   if(!questions.length)throw new Error('Ninguna pregunta tiene solución cotejable todavía.')
+   const session:ActiveSession={type:mode,source,label,questionIds:questions.map(q=>q.id),
+    currentIndex:0,selectedAnswers:{},checkedIds:[],startedAt:Date.now()}
+   sessionStorage.setItem(ACTIVE,JSON.stringify(session))
+   go('quiz')
+  }catch(e){setError(e instanceof Error?e.message:String(e))}finally{setWorking(false)}
+ }
+ if(!index&&!error)return <Loading text="Preparando exámenes CAP…"/>
+ return <div className="page cap-page">
+  <section className="hero"><div><em>PRIORIDAD DE ESTUDIO</em><h1>Exámenes CAP</h1><p>Convocatorias anteriores, preguntas repetidas y estudio a tu ritmo.</p></div></section>
+  <h2>Modalidad</h2>
+  <div className="segments"><button className={category==='mercancias'?'on':''} onClick={()=>setCategory('mercancias')}>Mercancías</button><button className={category==='viajeros'?'on':''} onClick={()=>setCategory('viajeros')}>Viajeros · autobús</button></div>
+  <h2>Cómo quieres corregir</h2>
+  <div className="segments"><button className={mode==='study'?'on':''} onClick={()=>setMode('study')}>Estudio · al responder</button><button className={mode==='exam'?'on':''} onClick={()=>setMode('exam')}>Examen · al finalizar</button></div>
+  <p className="note">{category==='viajeros'?'Los exámenes de autobús se mantienen separados y nunca se mezclan con Mercancías.':'Solo se corrigen automáticamente las preguntas con respuesta compatible con el banco original. Las dudosas quedan pendientes de revisión.'}</p>
+  {error&&<div className="autherror">{error}</div>}
+  <h2>Formas de practicar</h2>
+  <div className="cards">
+   <button onClick={()=>document.getElementById('cap-historicos')?.scrollIntoView({behavior:'smooth'})}>▦<span><b>Exámenes CAP</b><small>Elegir fecha y modelo de examen</small></span>›</button>
+   <button disabled={!available.length||working} onClick={()=>void begin('cap-random')}>⤨<span><b>Exámenes CAP aleatorios</b><small>Una convocatoria de esta modalidad al azar</small></span>›</button>
+   <button disabled={!available.length||working} onClick={()=>void begin('cap-mixed')}>✦<span><b>Exámenes CAP mezclados</b><small>Preguntas distintas de varias convocatorias</small></span>›</button>
+  </div>
+  <div className="panel"><label>Preguntas en examen mezclado</label><div className="segments">{[10,20,30,50,100].map(x=><button key={x} className={count===x?'on':''} onClick={()=>setCount(x)}>{x}</button>)}</div></div>
+  <section id="cap-historicos"><h2>Convocatorias de {category==='mercancias'?'Mercancías':'Viajeros'}</h2><p>{exams.length} documentos clasificados · {available.length} con preguntas cotejadas automáticamente</p>
+   <div className="list">{exams.map(e=><button key={e.id} disabled={e.readyCount===0||working} onClick={()=>void begin('cap-original',e)}><i>▦</i><span><b>{pretty(e)}</b><small>{e.readyCount>0?e.readyCount+' de '+(e.count||100)+' preguntas con solución del banco':'Pendiente de transcripción o cotejo'} · págs. {e.sourcePageStart}–{e.sourcePageEnd}</small></span>›</button>)}</div>
+  </section>
+  <button className="btn light" onClick={()=>go('general')}>Abrir banco general · 8.655 preguntas</button>
+  <p className="note">Frecuencias calculadas sobre modelos transcritos, no sobre probabilidades oficiales. Las ampliaciones no se cuentan dos veces.</p>
+ </div>
+}
 
 function Home({bank,stats,sessions,start}:P){return <div className="page">
  <section className="hero"><div><em>BANCO CAP 2026</em><h1>Estudia a tu ritmo.<br/>Aprende de cada fallo.</h1><p>{bank.totalQuestions.toLocaleString('es-ES')} preguntas · {bank.totalQuestionnaires} cuestionarios</p></div><strong>{stats.coverage}%<small>visto</small></strong></section>
