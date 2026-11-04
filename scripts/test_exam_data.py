@@ -133,6 +133,14 @@ assert review61['normativeSuggestedAnswer']=='C'
 assert 'eur-lex.europa.eu' in review61['normativeSourceUrl']
 assert review61['normativeStatus']=='pendiente_revision_editorial_no_autocorregir'
 
+with (root/'exams'/'ocr_2025_a_review.csv').open('r',encoding='utf-8-sig',newline='') as fh:
+    ocr_audit=list(csv.DictReader(fh))
+assert len(ocr_audit)==100
+assert [int(q['number']) for q in ocr_audit]==list(range(1,101))
+assert all(q['transcriptionReview']=='True' and q['sourceMethod'] for q in ocr_audit)
+assert all(q['optionA'] and q['optionB'] and q['optionC'] and q['optionD'] for q in ocr_audit)
+assert sum(q['bankAnswer'] in ('A','B','C','D') for q in ocr_audit)==67
+
 freq = json.loads((root/'exams'/'frequency_by_bank.json').read_text())
 assert all(1<=v['count']<=v['denominator'] for v in freq.values())
 assert all(v['category']=='mercancias' for v in freq.values()), 'El banco general no debe heredar el denominador de Viajeros'
