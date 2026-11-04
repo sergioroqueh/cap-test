@@ -222,7 +222,56 @@ function Quiz({pm,refresh}:{pm:Map<string,QuestionProgress>;refresh:()=>Promise<
 
  return <div className="quiz"><div className="quizhead"><button onClick={()=>history.back()}>×</button><div><b>{session.label}</b><small>{i+1} de {qs.length}</small><Bar v={percent(i+1,qs.length)}/></div><button className={fav?'fav':''} onClick={favorite}>★</button></div><article><small>Pregunta {i+1} de {qs.length}{q.examId&&q.sourcePage?' · número original '+q.number+' · PDF pág. '+q.sourcePage:''}</small><h2>{q.question}</h2><div className="cap-frequency">{frequency&&frequency.denominator>1?'↻ Aparece en '+frequency.count+' de '+frequency.denominator+' modelos analizados ('+percent(frequency.count,frequency.denominator)+' %)':frequency&&frequency.denominator===1?'↻ Registrada en un único examen parcialmente transcrito. No hay muestra suficiente para medir repetición.':'↻ Frecuencia no identificada con coincidencia exacta en los modelos analizados'}</div>{q.reviewRequired&&<div className="cap-review-warning">{q.transcriptionReview?'Transcripción de PDF escaneado: pregunta y solución cotejada con el banco, pendientes de revisión visual.':q.answerStatus==='coincidencia_alineacion_provisional_pendiente_revision'?'La respuesta coincide con el banco original y una alineación provisional de la plantilla de 2023. Pendiente de revisión editorial.':q.answerStatus==='coincidencia_plantilla_corregida_visual_pendiente_revision'?'Coincide con el banco y con la letra de la plantilla revisada visualmente. Revisión editorial pendiente.':'Solución obtenida del banco CAP; pendiente de revisión editorial.'}</div>}<div className="answers">{keys.map(k=>{let c=sel===k?'selected':'';if(session.type==='study'&&checked)c=k===q.correctAnswer?'correct':sel===k?'wrong':'';return <button className={c} onClick={()=>void select(k)} key={k}><i>{k}</i><span>{q.options[k]}</span></button>})}</div>{session.type==='study'&&checked&&<div className={'feedback '+(correct?'ok':'bad')}><b>{correct?'✓ ¡Correcto!':'× Incorrecto · correcta '+q.correctAnswer}</b><button onClick={()=>setRef(!ref)}>{ref?'Ocultar':'Ver fundamento'}</button>{ref&&<div><p><b>Norma:</b> {q.norm}</p><p><b>Referencia:</b> {q.reference}</p></div>}</div>}</article><footer><Btn kind="light" disabled={i===0} onClick={()=>{setRef(false);save({...session,currentIndex:i-1})}}>Anterior</Btn>{i<qs.length-1?<Btn onClick={()=>{setRef(false);save({...session,currentIndex:i+1})}}>Siguiente</Btn>:<Btn onClick={finish}>Finalizar</Btn>}</footer></div>}
 
-function Results(){const data=JSON.parse(sessionStorage.getItem(LAST)||'null') as {record:StudySessionRecord;questionIds:string[]}|null,[qs,setQs]=useState<Question[]>([]);useEffect(()=>{if(data)resolveQuestions(data.questionIds).then(setQs)},[]);if(!data)return <Loading/>;const r=data.record,map=new Map(qs.map(q=>[q.id,q])),fails=r.answers.filter(a=>!a.correct);async function review(){const a:ActiveSession={type:'study',source:'errors',label:'Repaso del último test',questionIds:fails.map(x=>x.questionId),currentIndex:0,selectedAnswers:{},checkedIds:[],startedAt:Date.now()};sessionStorage.setItem(ACTIVE,JSON.stringify(a));go('quiz')}return <div className="page"><button className="back" onClick={()=>go('home')}>‹ Inicio</button><section className={'result '+(r.score>=80?'good':r.score>=60?'mid':'bad')}><em>RESULTADO</em><strong>{r.score}%</strong><h1>{r.score>=80?'Muy buen resultado':r.score>=60?'Buen intento':'Toca reforzar'}</h1><p>{r.label}</p></section><div className="metrics"><article><b>{r.correct}</b><span>Correctas</span></article><article><b>{r.incorrect}</b><span>Fallos</span></article><article><b>{r.total-r.answered}</b><span>Sin responder</span></article></div>{fails.length>0&&<Btn onClick={review}>Repasar {fails.length} fallos</Btn>}<h2>Respuestas a revisar</h2><div className="review">{fails.map(a=>{const q=map.get(a.questionId);return q?<article key={q.id}><b>{q.question}</b><p>Tu respuesta: {a.selected||'Sin responder'}</p><p className="green">Correcta: {q.correctAnswer} · {q.options[q.correctAnswer]}</p></article>:null})}</div></div>}
+function Results(){
+ const data=JSON.parse(sessionStorage.getItem(LAST)||'null') as {record:StudySessionRecord;questionIds:string[]}|null
+ const [qs,setQs]=useState<Question[]>([])
+ const [showAll,setShowAll]=useState(false)
+ useEffect(()=>{if(data)resolveQuestions(data.questionIds).then(setQs).catch(console.error)},[])
+ if(!data)return <Loading/>
+ const r=data.record
+ const questionMap=new Map(qs.map(q=>[q.id,q]))
+ const fails=r.answers.filter(a=>!!a.selected&&!a.correct)
+ const unreviewed=r.answers.filter(a=>!a.selected)
+ const visible=showAll?r.answers:fails
+ async function review(){
+  if(!fails.length)return
+  const session:ActiveSession={type:'study',source:'errors',label:'Repaso del último test',
+   questionIds:fails.map(x=>x.questionId),currentIndex:0,selectedAnswers:{},checkedIds:[],startedAt:Date.now()}
+  sessionStorage.setItem(ACTIVE,JSON.stringify(session))
+  go('quiz')
+ }
+ return <div className="page">
+  <button className="back" onClick={()=>go('home')}>‹ Inicio</button>
+  <section className={'result '+(r.score>=80?'good':r.score>=60?'mid':'bad')}>
+   <em>RESULTADO</em><strong>{r.score}%</strong>
+   <h1>{r.score>=80?'Muy buen resultado':r.score>=60?'Buen intento':'Toca reforzar'}</h1>
+   <p>{r.label}</p>
+  </section>
+  <div className="metrics">
+   <article><b>{r.correct}</b><span>Correctas</span></article>
+   <article><b>{r.incorrect}</b><span>Fallos</span></article>
+   <article><b>{unreviewed.length}</b><span>Sin responder</span></article>
+  </div>
+  {fails.length>0&&<Btn onClick={()=>void review()}>Repasar {fails.length} fallos</Btn>}
+  <h2>Corrección de respuestas</h2>
+  <p className="note">En examen puedes comprobar aciertos, fallos y preguntas sin responder. Las preguntas sin responder no se registran como fallos en tu progreso.</p>
+  <Btn kind="light" onClick={()=>setShowAll(v=>!v)}>{showAll?'Ver solo fallos':'Ver todas las respuestas ('+r.answers.length+')'}</Btn>
+  <div className="review">
+   {visible.length===0&&!showAll&&<p>No hay respuestas incorrectas.</p>}
+   {visible.map((answer)=>{
+    const q=questionMap.get(answer.questionId)
+    if(!q)return null
+    const status=!answer.selected?'Sin responder':answer.correct?'Correcta':'Incorrecta'
+    return <article key={answer.questionId} className={answer.correct?'cap-review-correct':''}>
+     <b>{showAll?'Pregunta '+(r.answers.indexOf(answer)+1)+' · ':''}{q.question}</b>
+     <p><strong>{status}</strong> · Tu respuesta: {answer.selected?answer.selected+' · '+q.options[answer.selected]:'—'}</p>
+     <p className="green">Solución: {q.correctAnswer} · {q.options[q.correctAnswer]}</p>
+     {q.reviewRequired&&<small>Solución procedente del cotejo; pendiente de revisión editorial.</small>}
+    </article>
+   })}
+  </div>
+ </div>
+}
 
 function Stats({bank,rows,stats,sessions}:P){return <div className="page"><em>TU PREPARACIÓN</em><h1>{stats.attempts?stats.acc+'%':'Empieza hoy'}</h1><p>{stats.attempts?'de precisión global':'Tus estadísticas aparecerán aquí.'}</p><div className="statsgrid"><article><small>Vistas</small><b>{stats.seen}</b><span>de {stats.total}</span></article><article><small>Dominadas</small><b>{stats.mastered}</b></article><article><small>Por repasar</small><b>{stats.review}</b></article><article><small>Favoritas</small><b>{stats.fav}</b></article></div><h2>Progreso por cuestionario</h2><div className="progresslist">{bank.questionnaires.map(m=>{const rr=rows.filter(x=>x.questionnaireId===m.section+':'+m.questionnaireId),seen=rr.filter(x=>x.attempts).length;if(!seen)return null;const att=rr.reduce((a,x)=>a+x.attempts,0),cor=rr.reduce((a,x)=>a+x.correct,0);return <div key={m.id}><span><b>{m.questionnaireId}</b> · Sección {m.section}</span><small>{seen}/{m.count} · {percent(cor,att)}%</small><Bar v={percent(seen,m.count)}/></div>})}</div><h2>Últimas sesiones</h2><div className="history">{sessions.slice(0,10).map((s,i)=><div key={i}><span><b>{s.label}</b><small>{s.total} preguntas</small></span><strong>{s.score}%</strong></div>)}</div></div>}
 
