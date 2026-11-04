@@ -78,6 +78,30 @@ El examen de Viajeros no se fusiona ni se sortea entre los de Mercancías.
 contradicciones y seis exámenes de Mercancías más el de Viajeros con páginas
 escaneadas, además de revisión manual de fuentes.
 
+### Ronda 3 — arranque de Viajeros y asistencia a revisión (04/11/2026)
+- Transcripción visual contrastada de las **preguntas 1–18 de Viajeros 06/04/2024**,
+  correspondientes a las páginas **28–31 de 499** del PDF.
+- No se importaron las reservas 101–103 ni la ampliación del mismo examen;
+  Viajeros nunca entra en la mezcla de Mercancías.
+- CI de la primera importación: **1.918 apariciones**, de las cuales **18**
+  son Viajeros. Entre ellas, **16 respuestas recuperadas del banco original**
+  (13 por coincidencia exacta de enunciado y opciones, 3 mediante enunciado y
+  texto idéntico de respuesta, siempre pendientes de revisión); 2 sin clave cotejable.
+- Los test históricos incompletos se anuncian como **práctica parcial de X/100**.
+- Con un único modelo parcialmente transcrito de Viajeros, la pantalla NO muestra
+  «100 % de frecuencia» como indicador de importancia; informa que no hay muestra
+  suficiente para medir repetición.
+- Se generan `review_hints.csv`/`review_hints.json` con hasta tres **candidatos
+  de revisión** para preguntas sin coincidencia fiable, basados en semejanza
+  de enunciados y opciones. Son sugerencias editoriales: **no modifican respuestas**.
+- La cola de revisión incorpora las convocatorias distintas en las que la misma
+  pregunta del banco tiene confirmación de concordancia con la plantilla; estas
+  evidencias tampoco resuelven conflictos automáticamente.
+
+**Pendiente:** 82 preguntas principales de Viajeros y los otros exámenes escaneados,
+33 conflictos de banco/plantilla, revisión de muestras dudosas y comprobación móvil.
+El criterio sigue siendo **PR borrador, no desplegar**.
+
 ### Criterio de publicación
 **No fusionar** este PR hasta:
 - CI verde, generación exacta de 26 entradas y 1.900 preguntas procesadas.
