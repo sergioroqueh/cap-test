@@ -124,6 +124,15 @@ def generate():
     denomination=Counter(meta['category'] for meta,rows in exams if len(rows)==100)
     appears=defaultdict(set)
     for item in all_rows:appears[(item['category'],item['frequencyGroup'])].add(item['examId'])
+    frequency_by_bank={}
+    for row in all_rows:
+        if row['canonicalQuestionId']:
+            frequency_by_bank[row['canonicalQuestionId']]={
+                'count':len(appears[(row['category'],row['frequencyGroup'])]),
+                'denominator':denomination[row['category']],
+                'category':row['category']
+            }
+    (OUT/'frequency_by_bank.json').write_text(json.dumps(frequency_by_bank,ensure_ascii=False,separators=(',',':')),encoding='utf-8')
     index=[]
     statuses=Counter()
     for meta,rows in exams:
