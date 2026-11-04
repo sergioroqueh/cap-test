@@ -1,11 +1,11 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   plugins: [react()],
-  base: process.env.VERCEL === '1' ? '/' : '/cap-test/',
+  base: mode === 'cap-preview' ? '/' : '/cap-test/',
   build: {
     sourcemap: false,
     target: 'es2020'
   }
-})
+}))
