@@ -135,6 +135,56 @@ no se puede resolver cambiando una letra sin evidencia independiente.
 Los 33 casos **siguen bloqueados** y el archivo de candidatos solo sirve
 para facilitar la revisión, nunca para aprobar automáticamente.
 
+### Ronda 5 — examen julio 2023 y verificación de claves (04/11/2026)
+
+**Hallazgo sistemático: modelo Mercancías A, 29/07/2023.** La plantilla
+escaneada original permanece íntegra. Al comparar las preguntas que se repiten
+idénticas (enunciado y opciones) en otras convocatorias con plantillas distintas,
+la coincidencia es **17/17** en las preguntas 1–43. En las preguntas 44–100,
+el emparejamiento directo solo coincide **6/23**, pero con un desplazamiento
+de **+1 en el número de casilla de plantilla para las preguntas 44–99**
+coincide **22/22**. La pregunta 100 queda sin casilla fiable.
+
+La hipótesis documental se registra en
+`data-src/cap-exams/template_alignment_review.json`; las 100 filas de origen,
+respuesta original, alineación propuesta y respaldo interexámenes están en
+`alignment_2023_a_review.csv` (artefacto de GitHub Actions).
+**El desplazamiento no es una fe de erratas oficial:** toda respuesta obtenida
+por esta vía tiene estado `coincidencia_alineacion_provisional_pendiente_revision`,
+se indica al alumno y conserva su procedencia. Las soluciones solo se habilitan
+si también coinciden con el texto de la respuesta del banco original.
+
+**Dos errores de extracción por imagen confirmados visualmente**, no errores
+de las plantillas: Mercancías B, 29/07/2023, preguntas **6 y 19**.
+En la plantilla escaneada ambas son **D**, no la C obtenida por el
+reconocimiento automático. La corrección se documenta en
+`answer_key_visual_corrections.json`; no se sobrescribe la extracción bruta.
+La opción D además está respaldada por el banco y la normativa de transporte:
+- Pregunta 6, sin plazo prefijado de duración de autorización de mercancías,
+  art. 8 de la Orden FOM/734/2007:
+  https://www.boe.es/eli/es/o/2007/03/20/fom734/con
+- Pregunta 19, posibilidad de cooperativa de trabajo asociado como titular,
+  art. 10, letra a, de la misma Orden, y art. 43 LOTT:
+  https://www.boe.es/eli/es/l/1987/07/30/16/con/20241112
+
+**Única divergencia documental restante, bloqueada:** Mercancías, 07/02/2026,
+pregunta **61**, página 284. La plantilla original marca **A**, el banco **C**.
+El artículo **36.1.ii del Reglamento (UE) 165/2014** establece la obligación
+de exhibir la tarjeta de conductor con tacógrafo analógico *si se posee*,
+lo que coincide con la opción C. Esta evidencia normativa externa figura en
+`normative_conflicts_review.json` y en `review_queue.csv`, marcada como
+**pendiente de revisión editorial, sin autocorrección**.
+Referencia: https://eur-lex.europa.eu/legal-content/ES/TXT/?uri=CELEX%3A02014R0165-20241231
+
+**Resultado de la última compilación:** 26 modelos; 2.000 registros históricos;
+**1.484** con solución recuperada del banco (**1.408 Mercancías y 76 Viajeros**);
+**516** sin autocorrección, de los cuales **uno** tiene contradicción expresa.
+**923** preguntas distintas enlazadas al banco de 8.655; 33 cuestionarios
+originales inalterados. CI en verde.
+
+**No fusionar**: seis convocatorias escaneadas de Mercancías sin transcripción,
+más revisión humana y pruebas de usabilidad/sincronización.
+
 ### Criterio de publicación
 **No fusionar** este PR hasta:
 - CI verde, generación exacta de 26 entradas y 2.000 preguntas procesadas.
