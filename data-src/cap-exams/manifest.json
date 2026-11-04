@@ -1,0 +1,312 @@
+{
+  "schemaVersion": 1,
+  "exams": [
+    {
+      "id": "2024-04-06-mercancias-global",
+      "date": "2024-04-06",
+      "category": "mercancias",
+      "model": "GLOBAL",
+      "sourcePageStart": 1,
+      "sourcePageEnd": 21,
+      "documentKind": "examen_principal",
+      "sourcePdf": "Examenes TOTALES.pdf",
+      "templateFile": "Plantilla Abril 2024.pdf"
+    },
+    {
+      "id": "2023-07-29-mercancias-a",
+      "date": "2023-07-29",
+      "category": "mercancias",
+      "model": "A",
+      "sourcePageStart": 57,
+      "sourcePageEnd": 78,
+      "documentKind": "examen_principal",
+      "sourcePdf": "Examenes TOTALES.pdf",
+      "templateFile": "Plantilla A Julio 2023.pdf"
+    },
+    {
+      "id": "2024-07-20-mercancias-a",
+      "date": "2024-07-20",
+      "category": "mercancias",
+      "model": "A",
+      "sourcePageStart": 79,
+      "sourcePageEnd": 96,
+      "documentKind": "examen_principal",
+      "sourcePdf": "Examenes TOTALES.pdf",
+      "templateFile": "Plantilla A Julio 2024.pdf"
+    },
+    {
+      "id": "2025-07-26-mercancias-a",
+      "date": "2025-07-26",
+      "category": "mercancias",
+      "model": "A",
+      "sourcePageStart": 97,
+      "sourcePageEnd": 111,
+      "documentKind": "examen_principal",
+      "sourcePdf": "Examenes TOTALES.pdf",
+      "templateFile": "Plantilla A Julio 2025.pdf"
+    },
+    {
+      "id": "2026-07-25-mercancias-a",
+      "date": "2026-07-25",
+      "category": "mercancias",
+      "model": "A",
+      "sourcePageStart": 112,
+      "sourcePageEnd": 127,
+      "documentKind": "examen_principal",
+      "sourcePdf": "Examenes TOTALES.pdf",
+      "templateFile": "Plantilla A Julio 2026.pdf"
+    },
+    {
+      "id": "2026-09-26-mercancias-a",
+      "date": "2026-09-26",
+      "category": "mercancias",
+      "model": "A",
+      "sourcePageStart": 128,
+      "sourcePageEnd": 144,
+      "documentKind": "examen_principal",
+      "sourcePdf": "Examenes TOTALES.pdf",
+      "templateFile": "Plantilla A Septiembre 2026.pdf"
+    },
+    {
+      "id": "2023-07-29-mercancias-b",
+      "date": "2023-07-29",
+      "category": "mercancias",
+      "model": "B",
+      "sourcePageStart": 145,
+      "sourcePageEnd": 166,
+      "documentKind": "examen_principal",
+      "sourcePdf": "Examenes TOTALES.pdf",
+      "templateFile": "Plantilla B Julio 2023.pdf"
+    },
+    {
+      "id": "2024-07-20-mercancias-b",
+      "date": "2024-07-20",
+      "category": "mercancias",
+      "model": "B",
+      "sourcePageStart": 167,
+      "sourcePageEnd": 184,
+      "documentKind": "examen_principal",
+      "sourcePdf": "Examenes TOTALES.pdf",
+      "templateFile": "Plantilla B Julio 2024.pdf"
+    },
+    {
+      "id": "2025-07-26-mercancias-b",
+      "date": "2025-07-26",
+      "category": "mercancias",
+      "model": "B",
+      "sourcePageStart": 185,
+      "sourcePageEnd": 201,
+      "documentKind": "examen_principal",
+      "sourcePdf": "Examenes TOTALES.pdf",
+      "templateFile": null
+    },
+    {
+      "id": "2026-07-25-mercancias-b",
+      "date": "2026-07-25",
+      "category": "mercancias",
+      "model": "B",
+      "sourcePageStart": 202,
+      "sourcePageEnd": 217,
+      "documentKind": "examen_principal",
+      "sourcePdf": "Examenes TOTALES.pdf",
+      "templateFile": "Plantilla B Julio 2026.pdf"
+    },
+    {
+      "id": "2023-12-02-mercancias-global",
+      "date": "2023-12-02",
+      "category": "mercancias",
+      "model": "GLOBAL",
+      "sourcePageStart": 218,
+      "sourcePageEnd": 237,
+      "documentKind": "examen_principal",
+      "sourcePdf": "Examenes TOTALES.pdf",
+      "templateFile": null
+    },
+    {
+      "id": "2023-02-04-mercancias-global",
+      "date": "2023-02-04",
+      "category": "mercancias",
+      "model": "GLOBAL",
+      "sourcePageStart": 238,
+      "sourcePageEnd": 258,
+      "documentKind": "examen_principal",
+      "sourcePdf": "Examenes TOTALES.pdf",
+      "templateFile": "Plantilla Febrero 2023.pdf"
+    },
+    {
+      "id": "2025-02-01-mercancias-global",
+      "date": "2025-02-01",
+      "category": "mercancias",
+      "model": "GLOBAL",
+      "sourcePageStart": 259,
+      "sourcePageEnd": 274,
+      "documentKind": "examen_principal",
+      "sourcePdf": "Examenes TOTALES.pdf",
+      "templateFile": "Plantilla Febrero 2025.pdf"
+    },
+    {
+      "id": "2026-02-07-mercancias-global",
+      "date": "2026-02-07",
+      "category": "mercancias",
+      "model": "GLOBAL",
+      "sourcePageStart": 275,
+      "sourcePageEnd": 290,
+      "documentKind": "examen_principal",
+      "sourcePdf": "Examenes TOTALES.pdf",
+      "templateFile": "Plantilla Febrero 2026.pdf"
+    },
+    {
+      "id": "2023-06-03-mercancias-global",
+      "date": "2023-06-03",
+      "category": "mercancias",
+      "model": "GLOBAL",
+      "sourcePageStart": 291,
+      "sourcePageEnd": 311,
+      "documentKind": "examen_principal",
+      "sourcePdf": "Examenes TOTALES.pdf",
+      "templateFile": "Plantilla Junio 2023.pdf"
+    },
+    {
+      "id": "2023-03-25-mercancias-global",
+      "date": "2023-03-25",
+      "category": "mercancias",
+      "model": "GLOBAL",
+      "sourcePageStart": 312,
+      "sourcePageEnd": 331,
+      "documentKind": "examen_principal",
+      "sourcePdf": "Examenes TOTALES.pdf",
+      "templateFile": "Plantilla Marzo 2023.pdf"
+    },
+    {
+      "id": "2025-03-29-mercancias-global",
+      "date": "2025-03-29",
+      "category": "mercancias",
+      "model": "GLOBAL",
+      "sourcePageStart": 332,
+      "sourcePageEnd": 348,
+      "documentKind": "examen_principal",
+      "sourcePdf": "Examenes TOTALES.pdf",
+      "templateFile": "Plantilla Marzo 2025.pdf"
+    },
+    {
+      "id": "2026-03-28-mercancias-global",
+      "date": "2026-03-28",
+      "category": "mercancias",
+      "model": "GLOBAL",
+      "sourcePageStart": 349,
+      "sourcePageEnd": 365,
+      "documentKind": "examen_principal",
+      "sourcePdf": "Examenes TOTALES.pdf",
+      "templateFile": "Plantilla Marzo 2026.pdf"
+    },
+    {
+      "id": "2022-05-21-mercancias-global",
+      "date": "2022-05-21",
+      "category": "mercancias",
+      "model": "GLOBAL",
+      "sourcePageStart": 366,
+      "sourcePageEnd": 383,
+      "documentKind": "examen_principal",
+      "sourcePdf": "Examenes TOTALES.pdf",
+      "templateFile": null
+    },
+    {
+      "id": "2024-05-25-mercancias-global",
+      "date": "2024-05-25",
+      "category": "mercancias",
+      "model": "GLOBAL",
+      "sourcePageStart": 384,
+      "sourcePageEnd": 403,
+      "documentKind": "examen_principal",
+      "sourcePdf": "Examenes TOTALES.pdf",
+      "templateFile": "Plantilla Mayo 2024.pdf"
+    },
+    {
+      "id": "2026-05-30-mercancias-global",
+      "date": "2026-05-30",
+      "category": "mercancias",
+      "model": "GLOBAL",
+      "sourcePageStart": 404,
+      "sourcePageEnd": 419,
+      "documentKind": "examen_principal",
+      "sourcePdf": "Examenes TOTALES.pdf",
+      "templateFile": "Plantilla Mayo 2026.pdf"
+    },
+    {
+      "id": "2022-11-26-mercancias-global",
+      "date": "2022-11-26",
+      "category": "mercancias",
+      "model": "GLOBAL",
+      "sourcePageStart": 420,
+      "sourcePageEnd": 439,
+      "documentKind": "examen_principal",
+      "sourcePdf": "Examenes TOTALES.pdf",
+      "templateFile": "Plantilla Noviembre 2022.pdf"
+    },
+    {
+      "id": "2022-10-01-mercancias-global",
+      "date": "2022-10-01",
+      "category": "mercancias",
+      "model": "GLOBAL",
+      "sourcePageStart": 440,
+      "sourcePageEnd": 459,
+      "documentKind": "examen_principal",
+      "sourcePdf": "Examenes TOTALES.pdf",
+      "templateFile": "Plantilla Octubre 2022.pdf"
+    },
+    {
+      "id": "2023-09-23-mercancias-global",
+      "date": "2023-09-23",
+      "category": "mercancias",
+      "model": "GLOBAL",
+      "sourcePageStart": 460,
+      "sourcePageEnd": 481,
+      "documentKind": "examen_principal",
+      "sourcePdf": "Examenes TOTALES.pdf",
+      "templateFile": "Plantilla Septiembre 2023.pdf"
+    },
+    {
+      "id": "2025-09-27-mercancias-global",
+      "date": "2025-09-27",
+      "category": "mercancias",
+      "model": "GLOBAL",
+      "sourcePageStart": 482,
+      "sourcePageEnd": 499,
+      "documentKind": "examen_principal",
+      "sourcePdf": "Examenes TOTALES.pdf",
+      "templateFile": "Plantilla Septiembre 2025.pdf"
+    },
+    {
+      "id": "2024-04-06-viajeros-global",
+      "date": "2024-04-06",
+      "category": "viajeros",
+      "model": "GLOBAL",
+      "sourcePageStart": 28,
+      "sourcePageEnd": 50,
+      "documentKind": "examen_principal",
+      "sourcePdf": "Examenes TOTALES.pdf",
+      "templateFile": null,
+      "note": "CAP de viajeros/autobus, imagenes pendientes de transcripcion; ampliacion repetida en páginas 51-56"
+    }
+  ],
+  "excludedFromFrequency": [
+    {
+      "category": "mercancias",
+      "date": "2024-04-06",
+      "pages": [
+        22,
+        27
+      ],
+      "reason": "ampliacion del examen (repite preguntas)"
+    },
+    {
+      "category": "viajeros",
+      "date": "2024-04-06",
+      "pages": [
+        51,
+        56
+      ],
+      "reason": "ampliacion del examen (repite preguntas)"
+    }
+  ]
+}
