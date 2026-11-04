@@ -224,7 +224,7 @@ def generate():
     for item in all_rows:appears[(item['category'],item['frequencyGroup'])].add(item['examId'])
     frequency_by_bank={}
     for row in all_rows:
-        if row['canonicalQuestionId']:
+        if row['canonicalQuestionId'] and row['category']=='mercancias':
             frequency_by_bank[row['canonicalQuestionId']]={
                 'count':len(appears[(row['category'],row['frequencyGroup'])]),
                 'denominator':denomination[row['category']],
