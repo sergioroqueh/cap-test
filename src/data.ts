@@ -1,3 +1,4 @@
+import { loadCapByIds } from './capExams'
 import type { BankIndex, Question, QuestionnaireMeta } from './types'
 
 const BASE = import.meta.env.BASE_URL
@@ -53,18 +54,22 @@ export function getCachedQuestion(questionId: string): Question | undefined {
 }
 
 export async function resolveQuestions(ids: string[]): Promise<Question[]> {
-  const wanted = new Set(ids)
+  const capIds = ids.filter(id => id.startsWith('cap:'))
+  const regularIds = ids.filter(id => !id.startsWith('cap:'))
   const found = new Map<string, Question>()
+  const cap = capIds.length ? await loadCapByIds(capIds) : new Map()
+  cap.forEach((question, id) => found.set(id, question))
+  const wanted = new Set(regularIds)
   for (const rows of questionnaireCache.values()) {
-    rows.forEach((q) => {
+    rows.forEach(q => {
       if (wanted.has(q.id)) found.set(q.id, q)
     })
   }
-  if (found.size < wanted.size) {
+  if (regularIds.length && regularIds.some(id => !found.has(id))) {
     const all = await loadAllQuestions()
-    all.forEach((q) => {
+    all.forEach(q => {
       if (wanted.has(q.id)) found.set(q.id, q)
     })
   }
-  return ids.map((id) => found.get(id)).filter(Boolean) as Question[]
+  return ids.map(id => found.get(id)).filter(Boolean) as Question[]
 }
