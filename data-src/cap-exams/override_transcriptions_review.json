@@ -41,5 +41,46 @@
       "transcriptionReview": true,
       "transcriptionNote": "Letra C ausente en la extracción, conservada como reconstrucción a revisar contra imagen."
     }
+  },
+  "2023-02-04-mercancias-global": {
+    "9": {
+      "number": 9,
+      "page": 239,
+      "question": "¿Qué se considera transporte internacional de mercancías por carretera?",
+      "options": {
+        "A": "Aquel cuyo itinerario discurre, al menos parcialmente, por el territorio de un Estado extranjero.",
+        "B": "Aquel cuyo itinerario discurre totalmente por el territorio de un Estado extranjero.",
+        "C": "Aquel cuyo itinerario discurre, al menos, por los territorios de dos Estados.",
+        "D": "Aquel cuyo itinerario discurre, al menos, por los territorios de tres Estados."
+      },
+      "transcriptionReview": true,
+      "transcriptionNote": "En el texto extraído, la letra a aparece pegada al primer término de la opción; se separa y se marca para revisión de imagen."
+    },
+    "17": {
+      "number": 17,
+      "page": 241,
+      "question": "Cuando la masa del camión es elevada, durante la circulación en una pendiente ascendente:",
+      "options": {
+        "A": "se requiere más esfuerzo para mover el vehículo y se tendrán que realizar más cambios de marcha.",
+        "B": "se requiere menor esfuerzo para mover el vehículo y se tendrán que realizar más cambios de marcha.",
+        "C": "se requiere mayor esfuerzo para mover el vehículo y se tendrán que realizar menos cambios de marcha.",
+        "D": "se requerirá el mismo esfuerzo y la misma utilización de marchas que durante una pendiente descendente."
+      },
+      "transcriptionReview": true,
+      "transcriptionNote": "En el texto extraído, la letra a aparece pegada al primer término de la opción; se separa y se marca para revisión de imagen."
+    },
+    "82": {
+      "number": 82,
+      "page": 255,
+      "question": "Una buena forma de ahorrar carburante al conducir un vehículo pesado es:",
+      "options": {
+        "A": "esperar con el motor arrancado, sin circular, hasta que alcance la temperatura adecuada de funcionamiento.",
+        "B": "dejar de acelerar con suficiente antelación.",
+        "C": "circular con una presión de inflado de los neumáticos inferior a la recomendada por el fabricante.",
+        "D": "acelerar en vacío cuando se arranca el motor para que este alcance la temperatura adecuada en el menor tiempo posible."
+      },
+      "transcriptionReview": true,
+      "transcriptionNote": "En el texto extraído, la letra a aparece pegada al primer término de la opción; se separa y se marca para revisión de imagen."
+    }
   }
 }
