@@ -33,7 +33,7 @@ El apartado siguiente conserva el historial de hitos y cifras de rondas anterior
   mientras no se coteje el documento de respuestas original.
 - Resultado global: **2.300** apariciones (2.200 Mercancías + 100 Viajeros),
   **1.726** respuestas recuperadas del banco, **574** sin autocorrección,
-  **982** entradas diferentes del banco enlazadas.
+  **981** entradas diferentes del banco enlazadas.
 - Quedan por transcribir **tres Mercancías**:
   `2026-03-28-mercancias-global`, `2022-05-21-mercancias-global` y
   `2024-04-06-mercancias-global`.
