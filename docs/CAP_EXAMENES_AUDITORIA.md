@@ -5,6 +5,13 @@
 Se conserva el banco original: **8.655 preguntas / 33 cuestionarios**, el login y
 el progreso existente. No modifica ni sobrescribe los TXT de origen.
 
+**Estado vigente — Ronda 6 (04/11/2026):** 26 convocatorias catalogadas;
+**2.100 apariciones** importadas (20 modelos completos de Mercancías y
+1 de Viajeros); **1.551 respuestas** cotejadas con el banco original
+(**1.475 Mercancías + 76 Viajeros**). **549** sin autocorrección.
+**Cinco** modelos escaneados de Mercancías siguen pendientes.
+El apartado siguiente conserva el historial de hitos y cifras de rondas anteriores.
+
 ### Documentos recibidos
 - Exámenes TOTALES.pdf: 499 páginas.
 - 25 exámenes principales de Mercancías (19 con texto procesable, seis escaneados).
@@ -185,9 +192,41 @@ originales inalterados. CI en verde.
 **No fusionar**: seis convocatorias escaneadas de Mercancías sin transcripción,
 más revisión humana y pruebas de usabilidad/sincronización.
 
+### Ronda 6 — OCR supervisado de Mercancías A, 26/07/2025
+
+- Fuente: `Examenes TOTALES.pdf`, páginas **97–111**, Mercancías
+  **modelo A**, examen fechado **26 de julio de 2025**.
+- Extracción en español desde páginas sin texto seleccionable: Tesseract
+  con revisión de numeración y opciones, resultado **100/100 preguntas
+  principales** con **cuatro opciones** y página por pregunta.
+- Se excluyen las preguntas de reserva 101–103. La opción C de
+  la pregunta 29 (página 101), que el OCR confundía con `EA`,
+  se leyó visualmente del original: **«Sí.»**
+- Fuente comprimida y reproducible en
+  `data-src/cap-exams/raw/2025-07-26-mercancias-a.json.xz.b64`;
+  contiene todas las preguntas y opciones, origen y metadatos.
+  Para inspeccionarla se aplica `base64.b64decode` y `lzma.decompress`;
+  los datos públicos de compilación siguen siendo JSON legible.
+- El generador rechaza números repetidos, fuera de 1–100, páginas fuera
+  de intervalo, opciones vacías o examen OCR incompleto.
+- Coincidencias con el banco original: **67/100** con clave provisional;
+  las otras **33/100** quedan disponibles en la vista sin puntuación.
+  Todas las preguntas de este examen llevan `transcriptionReview=true`,
+  con aviso de revisión visual en el test: no se presenta el OCR como
+  transcripción editorialmente certificada.
+- Estado general: **2.100** preguntas históricas, **1.551** cotejadas,
+  **549** pendientes de corrección. Se mantienen **8.655/33** originales.
+- Se ha evitado que los 100 registros de Viajeros sobrescriban las
+  frecuencias del banco general de Mercancías. Denominadores
+  actuales: **20** modelos transcritos Mercancías y **1** Viajeros.
+
+**Por hacer:** las cinco pruebas escaneadas restantes, revisar las
+preguntas OCR contra páginas originales, auditar la única contradicción
+normativa residual y validar navegación, PWA, progreso y sincronización en móvil.
+
 ### Criterio de publicación
 **No fusionar** este PR hasta:
-- CI verde, generación exacta de 26 entradas y 2.000 preguntas procesadas.
+- CI verde, generación exacta de 26 entradas y 2.100 preguntas procesadas.
 - Verificación visual de incidencias y respuestas contradictorias (especialmente
   julio 2023 A/B).
 - Confirmar que las preguntas pendientes no muestran soluciones inventadas.
