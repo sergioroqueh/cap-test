@@ -9,7 +9,8 @@ el progreso existente. No modifica ni sobrescribe los TXT de origen.
 - Exámenes TOTALES.pdf: 499 páginas.
 - 25 exámenes principales de Mercancías (19 con texto procesable, seis escaneados).
 - Un examen principal de **Viajeros/autobús**, de 06/04/2024, en las páginas 28–50:
-  pendiente de transcripción. No se mezcla con Mercancías.
+  100 preguntas principales transcritas de páginas 28–49; la página 50 contiene
+  reservas 101–103 excluidas. No se mezcla con Mercancías.
 - Ampliaciones de 06/04/2024 (Mercancías 22–27 y Viajeros 51–56):
   registradas pero **excluidas del recuento de frecuencias** por repetir preguntas.
 - Respuestas.zip: 22 plantillas. Se transcribieron 16 series de 100 letras como
@@ -98,18 +99,41 @@ escaneadas, además de revisión manual de fuentes.
   pregunta del banco tiene confirmación de concordancia con la plantilla; estas
   evidencias tampoco resuelven conflictos automáticamente.
 
-**Pendiente:** 82 preguntas principales de Viajeros y los otros exámenes escaneados,
+**Pendiente en aquella ronda:** 82 preguntas principales de Viajeros y los otros exámenes escaneados,
 33 conflictos de banco/plantilla, revisión de muestras dudosas y comprobación móvil.
 El criterio sigue siendo **PR borrador, no desplegar**.
 
+### Ronda 4 — Viajeros completo y consulta sin autocorrección (04/11/2026)
+
+- Transcripción visual del examen principal íntegro de **Viajeros, 06/04/2024**:
+  100 preguntas numeradas de las páginas **28–49**. Las reservas de la página 50
+  (101–103) y la ampliación de páginas 51–56 no se mezclan ni se cuentan.
+- Importadas **2.000 apariciones** de exámenes: 1.900 Mercancías + 100 Viajeros.
+- Entre las de Viajeros, **60 soluciones se han recuperado automáticamente del banco
+  de 8.655**, todas sujetas a revisión editorial. **40 siguen sin clave cotejada.**
+- Totales generales: **1.452** con respuesta obtenida del banco, **548** sin
+  autocorrección; **923** preguntas distintas enlazadas al banco original.
+- Se conserva el denominador por modalidad. Con una sola convocatoria de Viajeros,
+  la pantalla indica que no hay muestra suficiente para estimar repetición.
+- Nueva vista de **preguntas pendientes de revisión**: el usuario puede leer
+  enunciado y cuatro opciones de cada pregunta sin solución, pero no puntúa
+  ni ve una respuesta inventada.
+- Todas las preguntas siguen siendo trazables por fecha, modelo, modalidad,
+  número y página del PDF. Las preguntas repetidas solo se deduplican en simulacros
+  mezclados, **no** se borran del examen histórico original.
+
+Esta ronda no justifica desplegar: quedan **33 contradicciones** y la verificación
+de fuentes y comportamiento móvil sigue pendiente. PR #6 se mantiene en borrador.
+
 ### Criterio de publicación
 **No fusionar** este PR hasta:
-- CI verde, generación exacta de 26 entradas y 1.900 preguntas procesadas.
+- CI verde, generación exacta de 26 entradas y 2.000 preguntas procesadas.
 - Verificación visual de incidencias y respuestas contradictorias (especialmente
   julio 2023 A/B).
 - Confirmar que las preguntas pendientes no muestran soluciones inventadas.
 - Probar login, navegación, repaso, sincronización y PWA en un móvil.
-- Completar posteriormente las seis pruebas escaneadas y el examen de Viajeros.
+- Completar posteriormente los seis modelos escaneados de Mercancías; el examen principal
+  de Viajeros ya tiene sus 100 preguntas, pero solo parte de sus respuestas cotejadas.
 
 La rama permite avanzar sin interrumpir producción. No publicar un examen
 como «100 preguntas corregidas» si parte de sus soluciones siguen pendientes.
