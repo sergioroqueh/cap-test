@@ -47,6 +47,37 @@ Denominador inicial: 19 modelos de Mercancías con 100 preguntas transcritas.
 No expresa probabilidad oficial de la próxima prueba.
 No incluye ampliaciones, reservas ni escaneados incompletos.
 
+
+### Ronda 2 — cotejo ampliado (04/11/2026)
+Tras cruzar de nuevo las 1.900 preguntas con el banco original:
+
+| Estado | Preguntas |
+| --- | ---: |
+| Coincidencia exacta banco + plantilla | 1.044 |
+| Coincidencia por enunciado y texto correcto, también confirmada por plantilla | 138 |
+| Respuesta solo del banco (coincidencia exacta) | 165 |
+| Respuesta solo del banco (mismo enunciado y texto correcto) | 29 |
+| Solo plantilla, todavía sin cotejo suficiente | 385 |
+| Conflicto banco / plantilla bloqueado | 33 |
+| Sin respuesta suficientemente sustentada | 106 |
+
+**Total con respuesta recuperada del banco: 1.376/1.900.**
+Son cotejos automáticos, no una revisión humana de las 1.376 soluciones.
+La segunda pasada encuentra 170 candidatos con el mismo enunciado y el texto
+de la respuesta, de los que 167 se recuperan y tres quedan bloqueados por
+contradicción. El método exige que todos los candidatos del banco con ese
+enunciado conduzcan al mismo texto de respuesta disponible en el examen.
+Todas las coincidencias de segundo nivel se marcan como **pendientes de revisión**.
+
+La interfaz indica "práctica parcial (X/100)" cuando todavía no existen 100
+respuestas cotejables. Las preguntas sin respuesta fiable permanecen registradas
+en los datos de origen y en la cola de revisión, pero no se autocorrigen.
+El examen de Viajeros no se fusiona ni se sortea entre los de Mercancías.
+
+**No fusionar el PR por el mero hecho de que la CI sea verde.** Quedan 33
+contradicciones y seis exámenes de Mercancías más el de Viajeros con páginas
+escaneadas, además de revisión manual de fuentes.
+
 ### Criterio de publicación
 **No fusionar** este PR hasta:
 - CI verde, generación exacta de 26 entradas y 1.900 preguntas procesadas.
