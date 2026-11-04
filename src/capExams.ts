@@ -67,6 +67,24 @@ export async function loadCapQuestions(meta: CapExamMeta): Promise<CapQuestion[]
   return ready
 }
 
+export interface CapPendingQuestion {
+  number: number
+  question: string
+  options: Record<AnswerKey, string>
+  sourcePage: number
+  answerStatus: string
+}
+
+export async function loadCapPendingQuestions(meta: CapExamMeta): Promise<CapPendingQuestion[]> {
+  const res = await fetch(BASE + meta.path)
+  if (!res.ok) throw new Error('No se pudieron cargar las preguntas pendientes.')
+  const rows: CapRawQuestion[] = await res.json()
+  return rows.filter(q => q.correctAnswer === null).map(q => ({
+    number:q.number,question:q.question,options:q.options,
+    sourcePage:q.sourcePage,answerStatus:q.answerStatus
+  }))
+}
+
 export async function loadCapByIds(ids: string[]): Promise<Map<string, CapQuestion>> {
   const index = await loadCapIndex()
   const examIds = [...new Set(ids.map(id => /^cap:([^:]+):\d+$/.exec(id)?.[1]).filter((s): s is string => !!s))]
