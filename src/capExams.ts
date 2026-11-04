@@ -11,6 +11,7 @@ export interface CapExamMeta {
   templateFile: string | null
   status: string
   count: number
+  expectedCount: number
   readyCount: number
   path: string
 }
