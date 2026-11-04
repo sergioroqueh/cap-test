@@ -61,10 +61,13 @@ def generate():
     keys = json.loads((SRC/'answer_keys_unverified.json').read_text(encoding='utf-8'))
     corrections = json.loads((SRC/'override_transcriptions_review.json').read_text(encoding='utf-8'))
     bank = defaultdict(list)
+    bank_by_question = defaultdict(list)
     original_count = 0
     for path in (ROOT/'public'/'data'/'questions').glob('*.json'):
         for item in json.loads(path.read_text(encoding='utf-8')):
-            bank[fingerprint(item)].append(item); original_count += 1
+            bank[fingerprint(item)].append(item)
+            bank_by_question[norm(item['question'])].append(item)
+            original_count += 1
     if original_count != 8655: raise RuntimeError(f'Banco original no es de 8655 preguntas: {original_count}')
     if OUT.exists():shutil.rmtree(OUT)
     (OUT/'questions').mkdir(parents=True,exist_ok=True)
@@ -94,7 +97,25 @@ def generate():
         template=keys.get(exam_id,'')
         for q in parsed:
             matching=bank.get(fingerprint(q),[])
+            method='pregunta_y_cuatro_opciones_exactas' if matching else 'sin_coincidencia'
             mapped=set()
+            if not matching:
+                # Rescate conservador: enunciado igual, y el texto de la respuesta
+                # debe encontrarse de manera única en las opciones del examen.
+                # TODOS los candidatos del banco con ese enunciado deben coincidir.
+                candidates=bank_by_question.get(norm(q['question']),[])
+                proposed=set()
+                consistent=bool(candidates)
+                for candidate in candidates:
+                    answer_text=norm(candidate['options'][candidate['correctAnswer']])
+                    letters=[letter for letter,value in q['options'].items() if norm(value)==answer_text]
+                    if len(letters)!=1:
+                        consistent=False
+                        break
+                    proposed.add(letters[0])
+                if consistent and len(proposed)==1:
+                    matching=candidates
+                    method='enunciado_y_texto_respuesta_exactos'
             for b in matching:
                 wanted=norm(b['options'][b['correctAnswer']])
                 mapped.update(k for k,v in q['options'].items() if norm(v)==wanted)
@@ -103,14 +124,18 @@ def generate():
             if letter not in ('A','B','C','D'):letter=None
             if len(mapped)>1: status='conflicto_banco'
             elif inferred and letter and inferred!=letter: status='conflicto_plantilla_banco'
-            elif inferred and letter: status='coincidencia_automatica'
-            elif inferred:status='respuesta_banco_pendiente_revision'
+            elif inferred and letter:
+                status='coincidencia_automatica' if method=='pregunta_y_cuatro_opciones_exactas' else 'coincidencia_enunciado_banco_plantilla_pendiente_revision'
+            elif inferred:
+                status='respuesta_banco_pendiente_revision' if method=='pregunta_y_cuatro_opciones_exactas' else 'respuesta_banco_enunciado_pendiente_revision'
             elif letter:status='solo_plantilla_pendiente_cotejo'
             else:status='sin_respuesta_verificada'
             original=matching[0] if matching and len(mapped)==1 else None
             key=fingerprint(q)
             group='b:'+original['code'] if original else 't:'+sha256(key.encode()).hexdigest()[:18]
-            answer=inferred if status in ('coincidencia_automatica','respuesta_banco_pendiente_revision') else None
+            answer=inferred if status in ('coincidencia_automatica','respuesta_banco_pendiente_revision',
+                                           'coincidencia_enunciado_banco_plantilla_pendiente_revision',
+                                           'respuesta_banco_enunciado_pendiente_revision') else None
             local.append({**q,'examId':exam_id,'date':meta['date'],'category':meta['category'],'model':meta['model'],
               'id':original['id'] if original else 'cap-'+sha256(key.encode()).hexdigest()[:24],
               'canonicalQuestionId':original['id'] if original else None,'canonicalCode':original['code'] if original else None,
@@ -120,7 +145,7 @@ def generate():
               'reference':original.get('reference','') if original else '',
               'questionnaireId':original['questionnaireId'] if original else 'examenes-cap',
               'correctAnswer':answer,'bankAnswer':inferred,'templateAnswer':letter,
-              'answerStatus':status,'sourcePage':q['page'],'frequencyGroup':group,
+              'answerStatus':status,'matchMethod':method,'sourcePage':q['page'],'frequencyGroup':group,
               'reviewRequired':bool(q.get('transcriptionReview')) or status!='coincidencia_automatica'})
         exams.append((meta,local))
         all_rows.extend(local)
@@ -153,6 +178,8 @@ def generate():
     by_id={meta['id']:meta for meta,_ in exams}
     priority={'conflicto_banco':0,'conflicto_plantilla_banco':0,
               'solo_plantilla_pendiente_cotejo':1,'sin_respuesta_verificada':2,
+              'coincidencia_enunciado_banco_plantilla_pendiente_revision':3,
+              'respuesta_banco_enunciado_pendiente_revision':3,
               'respuesta_banco_pendiente_revision':3,'coincidencia_automatica':4}
     review=[]
     for row in all_rows:
@@ -161,6 +188,7 @@ def generate():
         review.append({
           'examId':row['examId'],'date':row['date'],'category':row['category'],'model':row['model'],
           'number':row['number'],'page':row['sourcePage'],'status':row['answerStatus'],
+          'matchMethod':row['matchMethod'],
           'question':row['question'],'bankAnswer':row['bankAnswer'],'templateAnswer':row['templateAnswer'],
           'bankAnswerText':row['options'].get(row['bankAnswer'] or '', ''),
           'templateAnswerText':row['options'].get(row['templateAnswer'] or '', ''),
@@ -179,6 +207,8 @@ def generate():
       'frequencyExplanation':'Apariciones por modelo de examen transcrito, nunca una predicción de la siguiente prueba.'
     },ensure_ascii=False,indent=2),encoding='utf-8')
     print(f"CAP audit: {len(index)} examenes, {len(all_rows)} preguntas, {dict(statuses)}, pendientes {len(warnings)}")
+    print('AUDIT rescued by exact question and answer text:',
+          sum(q['matchMethod']=='enunciado_y_texto_respuesta_exactos' for q in all_rows))
     print('AUDIT incomplete models:',[(e['id'],e['count']) for e in index if e['count'] not in (0,100)])
     print('AUDIT parse warnings:', warnings[:20])
     if len(index)!=26 or len(all_rows)!=1900:
