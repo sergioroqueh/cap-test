@@ -10,6 +10,18 @@ index = json.loads((root/'exams'/'index.json').read_text())
 assert index['totalExamModels'] == 26
 assert index['totalImportedQuestions'] == 2400
 exams = index['exams']
+# No overlapping PDF source pages across principal models. The only unassigned
+# ranges are the two known six-page ampliaciones, excluded from frequency.
+covered_pdf_pages = [
+    page
+    for e in exams
+    for page in range(e['sourcePageStart'], e['sourcePageEnd']+1)
+]
+assert len(covered_pdf_pages) == len(set(covered_pdf_pages)) == 487
+assert set(range(1, 500)) - set(covered_pdf_pages) == set(range(22, 28)) | set(range(51, 57))
+assert next(e for e in exams if e['id']=='2025-03-29-mercancias-global')['sourcePageEnd']==347
+assert next(e for e in exams if e['id']=='2026-03-28-mercancias-global')['sourcePageStart']==348
+assert next(e for e in exams if e['id']=='2022-05-21-mercancias-global')['sourcePageStart']==364
 assert len([e for e in exams if e['category'] == 'mercancias']) == 25
 assert len([e for e in exams if e['category'] == 'viajeros']) == 1
 assert index['categoryCounts']['mercancias'] == 23
