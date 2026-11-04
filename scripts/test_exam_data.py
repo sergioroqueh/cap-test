@@ -8,7 +8,7 @@ assert bank['totalQuestions'] == 8655
 assert bank['totalQuestionnaires'] == 33
 index = json.loads((root/'exams'/'index.json').read_text())
 assert index['totalExamModels'] == 26
-assert index['totalImportedQuestions'] == 2400
+assert index['totalImportedQuestions'] == 2525
 exams = index['exams']
 # No overlapping PDF source pages across principal models. The only unassigned
 # ranges are the two known six-page ampliaciones, excluded from frequency.
@@ -24,7 +24,7 @@ assert next(e for e in exams if e['id']=='2026-03-28-mercancias-global')['source
 assert next(e for e in exams if e['id']=='2022-05-21-mercancias-global')['sourcePageStart']==364
 assert len([e for e in exams if e['category'] == 'mercancias']) == 25
 assert len([e for e in exams if e['category'] == 'viajeros']) == 1
-assert index['categoryCounts']['mercancias'] == 23
+assert index['categoryCounts']['mercancias'] == 24
 assert index['categoryCounts'].get('viajeros',0) == 1
 
 for exam in exams:
@@ -33,6 +33,24 @@ for exam in exams:
     assert all(1 <= q['number'] <= 100 for q in rows)
     assert all(q['sourcePage'] in range(exam['sourcePageStart'],exam['sourcePageEnd']+1) for q in rows)
     assert exam['expectedCount'] == 100
+    if exam['id']=='2022-05-21-mercancias-global':
+        assert len(rows)==100
+        assert {q['number'] for q in rows}==set(range(1,101))
+        assert {q['sourcePage'] for q in rows}==set(range(364,384))
+        assert all(q.get('transcriptionReview') is True for q in rows)
+        assert all(q.get('sourceMethod')=='LECTURA_VISUAL_PDF_PENDIENTE_REVISION' for q in rows)
+        assert all(q['reviewRequired'] is True for q in rows)
+        assert all(q['category']=='mercancias' for q in rows)
+        assert all(q['correctAnswer'] is None or q['correctAnswer']==q['bankAnswer'] for q in rows)
+        assert next(q for q in rows if q['number']==1)['sourcePage']==364
+        assert next(q for q in rows if q['number']==100)['sourcePage']==383
+    if exam['id']=='2024-04-06-mercancias-global':
+        assert len(rows)==25
+        assert {q['number'] for q in rows}==set(range(1,26))
+        assert {q['sourcePage'] for q in rows}==set(range(1,6))
+        assert all(q.get('transcriptionReview') is True for q in rows)
+        assert all(q['reviewRequired'] is True for q in rows)
+        assert all(q['category']=='mercancias' for q in rows)
     if exam['id']=='2026-03-28-mercancias-global':
         assert len(rows)==100
         assert {q['number'] for q in rows}==set(range(1,101))
