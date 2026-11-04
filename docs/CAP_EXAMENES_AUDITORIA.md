@@ -5,12 +5,45 @@
 Se conserva el banco original: **8.655 preguntas / 33 cuestionarios**, el login y
 el progreso existente. No modifica ni sobrescribe los TXT de origen.
 
-**Estado vigente — Ronda 9 (04/11/2026):** 26 convocatorias catalogadas;
-**2.400 apariciones** importadas (23 modelos completos de Mercancías y
-1 de Viajeros); **1.807 respuestas** recuperadas por cotejo automático con el
-banco maestro (**1.731 Mercancías + 76 Viajeros**). **593** sin autocorrección.
-**Dos** modelos escaneados de Mercancías siguen pendientes.
+**Estado vigente — Ronda 10 (04/11/2026):** 26 convocatorias catalogadas;
+**2.500 apariciones** importadas (**24** modelos completos de Mercancías y
+**1** de Viajeros); **1.842 respuestas** recuperadas por cotejo automático con el
+banco maestro (**1.766 Mercancías + 76 Viajeros**). **658** sin autocorrección.
+**Un modelo** escaneado de Mercancías continúa pendiente (abril de 2024):
+25 preguntas transcritas en la fuente sin publicar y 75 aún no disponibles.
 El apartado siguiente conserva el historial de hitos y cifras de rondas anteriores.
+
+### Ronda 10 — Mercancías Global 21/05/2022 (PDF pp. 364–383)
+
+- Se han incorporado las **100/100 preguntas principales**, numeración
+  secuencial y **cuatro opciones A–D**, según la fuente visual PDF original
+  del usuario. Archivo `data-src/cap-exams/raw/2022-05-21-mercancias-global.json`.
+- Se recuperaron **35/100** claves mediante el banco maestro; **65**
+  preguntas siguen sin respuesta autocorregible y no se puntúan. Todas
+  llevan `TRANSCRIPCION_VISUAL_PENDIENTE_REVISION`, `transcriptionReview=true`
+  y `reviewRequired=true`, incluidas las 35 cotejadas.
+- El examen de mayo de 2022 no tiene plantilla asociada en el manifiesto.
+  No se han deducido letras correctas de similitudes del banco.
+- El escaneo presenta líneas poco nítidas. Se ha creado el informe
+  `docs/CAP_MAYO_2022_PENDIENTES.md` con 65 candidatos/no candidatos
+  y las preguntas que requieren lectura visual de mayor resolución
+  (especialmente 50, 65, 74 y 100).
+- Del último examen pendiente, **Mercancías 06/04/2024**, hay **25/100**
+  preguntas transcritas en
+  `data-src/cap-exams/raw/2024-04-06-mercancias-global.json`, páginas
+  1–5. **Estas 25 preguntas NO se publican en la beta ni se cuentan
+  en las frecuencias hasta completar las 100.** La lectura del PDF
+  desde la página 6 está temporalmente inaccesible; faltan preguntas
+  26–100. No se han reconstruido ni inventado.
+- Se añadió un guard para toda fuente visual:
+  transcripciones con `0 < count < 100` quedan en preparación sin
+  contaminar el recuento, los denominadores o las prácticas.
+- Estado global: **2.500 apariciones históricas** (2.400 Mercancías +
+  100 Viajeros), **1.842** recuperadas del banco y **658** sin
+  autocorrección. **1.056 IDs distintos** del banco original enlazados.
+- El original de 8.655 preguntas y 33 cuestionarios, la separación de
+  modalidades y la producción en main/GitHub Pages permanecen intactos.
+  PR #6 sigue en borrador.
 
 ### Ronda 9 — Mercancías Global 28/03/2026 (PDF pp. 348–363)
 
