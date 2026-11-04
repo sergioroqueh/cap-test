@@ -8,7 +8,7 @@ assert bank['totalQuestions'] == 8655
 assert bank['totalQuestionnaires'] == 33
 index = json.loads((root/'exams'/'index.json').read_text())
 assert index['totalExamModels'] == 26
-assert index['totalImportedQuestions'] == 2525
+assert index['totalImportedQuestions'] == 2500
 exams = index['exams']
 # No overlapping PDF source pages across principal models. The only unassigned
 # ranges are the two known six-page ampliaciones, excluded from frequency.
@@ -45,12 +45,10 @@ for exam in exams:
         assert next(q for q in rows if q['number']==1)['sourcePage']==364
         assert next(q for q in rows if q['number']==100)['sourcePage']==383
     if exam['id']=='2024-04-06-mercancias-global':
-        assert len(rows)==25
-        assert {q['number'] for q in rows}==set(range(1,26))
-        assert {q['sourcePage'] for q in rows}==set(range(1,6))
-        assert all(q.get('transcriptionReview') is True for q in rows)
-        assert all(q['reviewRequired'] is True for q in rows)
-        assert all(q['category']=='mercancias' for q in rows)
+        # 25 questions are staged as raw source; no partial test is published.
+        assert len(rows)==0
+        assert exam['count']==0
+        assert exam['readyCount']==0
     if exam['id']=='2026-03-28-mercancias-global':
         assert len(rows)==100
         assert {q['number'] for q in rows}==set(range(1,101))
