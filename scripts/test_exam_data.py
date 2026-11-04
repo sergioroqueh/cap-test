@@ -8,11 +8,11 @@ assert bank['totalQuestions'] == 8655
 assert bank['totalQuestionnaires'] == 33
 index = json.loads((root/'exams'/'index.json').read_text())
 assert index['totalExamModels'] == 26
-assert index['totalImportedQuestions'] == 2000
+assert index['totalImportedQuestions'] == 2100
 exams = index['exams']
 assert len([e for e in exams if e['category'] == 'mercancias']) == 25
 assert len([e for e in exams if e['category'] == 'viajeros']) == 1
-assert index['categoryCounts']['mercancias'] == 19
+assert index['categoryCounts']['mercancias'] == 20
 assert index['categoryCounts'].get('viajeros',0) == 1
 
 for exam in exams:
@@ -21,6 +21,13 @@ for exam in exams:
     assert all(1 <= q['number'] <= 100 for q in rows)
     assert all(q['sourcePage'] in range(exam['sourcePageStart'],exam['sourcePageEnd']+1) for q in rows)
     assert exam['expectedCount'] == 100
+    if exam['id']=='2025-07-26-mercancias-a':
+        assert len(rows)==100
+        assert {q['number'] for q in rows}==set(range(1,101))
+        assert {q['sourcePage'] for q in rows}==set(range(97,112))
+        assert all(q.get('transcriptionReview') is True for q in rows)
+        assert all(q['reviewRequired'] is True for q in rows)
+        assert all(q['correctAnswer'] is None or q['correctAnswer']==q['bankAnswer'] for q in rows)
     if exam['id']=='2023-07-29-mercancias-b':
         for n in (6,19):
             q=next(q for q in rows if q['number']==n)
@@ -128,6 +135,7 @@ assert review61['normativeStatus']=='pendiente_revision_editorial_no_autocorregi
 
 freq = json.loads((root/'exams'/'frequency_by_bank.json').read_text())
 assert all(1<=v['count']<=v['denominator'] for v in freq.values())
+assert all(v['category']=='mercancias' for v in freq.values()), 'El banco general no debe heredar el denominador de Viajeros'
 hints=json.loads((root/'exams'/'review_hints.json').read_text())
 assert all(h['approved'] is False for h in hints)
 assert all(h['usage']=='SUGERENCIA_REVISION_NO_AUTOCORREGIR' for h in hints)
