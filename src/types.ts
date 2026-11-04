@@ -11,6 +11,13 @@ export interface Question {
   correctAnswer: AnswerKey
   norm: string
   reference: string
+  /** For original CAP questions, the progress is shared by canonical question id. */
+  progressId?: string
+  examId?: string
+  examFrequency?: number
+  examFrequencyDenominator?: number
+  answerStatus?: string
+  reviewRequired?: boolean
 }
 
 export interface QuestionnaireMeta {
@@ -66,7 +73,7 @@ export interface StudySessionRecord {
   answers: SessionAnswer[]
 }
 
-export type StudySource = 'questionnaire' | 'random' | 'unseen' | 'errors' | 'smart' | 'favorites'
+export type StudySource = 'questionnaire' | 'random' | 'unseen' | 'errors' | 'smart' | 'favorites' | 'cap-original' | 'cap-random' | 'cap-mixed'
 
 export interface ActiveSession {
   type: 'study' | 'exam'
