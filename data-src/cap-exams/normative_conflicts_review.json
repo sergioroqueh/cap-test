@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Evidencia normativa externa para ayudar a revisar divergencias entre plantillas y banco. No tiene efecto en respuestas correctas.",
+  "reviews": {
+    "2026-02-07-mercancias-global:61": {
+      "sourceExam": "Examenes TOTALES.pdf, página 284",
+      "questionNumber": 61,
+      "category": "mercancias",
+      "rawTemplateAnswer": "A",
+      "bankAnswer": "C",
+      "suggestedAnswer": "C",
+      "correctAnswerText": "Sí, en caso de que posea una.",
+      "legalSource": "Reglamento (UE) 165/2014, artículo 36.1, letra ii, versión consolidada",
+      "url": "https://eur-lex.europa.eu/legal-content/ES/TXT/?uri=CELEX%3A02014R0165-20241231",
+      "reasoning": "En un vehículo con tacógrafo analógico, se debe presentar la tarjeta de conductor si se posee. La opción A («Sí, siempre») omite esta condición.",
+      "evidenceType": "normativa_externa_eurlex",
+      "status": "pendiente_revision_editorial_no_autocorregir"
+    }
+  }
+}
