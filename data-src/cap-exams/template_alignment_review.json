@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Ajustes provisionales de lectura de plantillas respaldados por repetición en otros modelos. No modifican la plantilla fuente ni convalidan respuestas sin cotejo con el banco original.",
+  "alignments": {
+    "2023-07-29-mercancias-a": {
+      "sourceFile": "Plantilla A Julio 2023.pdf",
+      "sourceExam": "Examenes TOTALES.pdf, páginas 57–78, 29/07/2023, Mercancías A",
+      "sourceTemplatePreserved": true,
+      "reviewStatus": "alineacion_provisional_pendiente_revision_visual_de_plantilla_completa",
+      "rules": [
+        {
+          "questionStart": 1,
+          "questionEnd": 43,
+          "templateNumberOffset": 0
+        },
+        {
+          "questionStart": 44,
+          "questionEnd": 99,
+          "templateNumberOffset": 1
+        },
+        {
+          "questionStart": 100,
+          "questionEnd": 100,
+          "templateNumberOffset": null
+        }
+      ],
+      "evidence": {
+        "method": "Identidad de enunciado + todas las opciones en modelos históricos distintos y comparación independiente de sus respuestas",
+        "first43OriginalPositionConcordances": "17/17",
+        "last57OriginalPositionConcordances": "6/23",
+        "last57ShiftedPlusOneConcordances": "22/22",
+        "examples": [
+          {
+            "examQuestion": 44,
+            "originalTemplateQuestion": 44,
+            "correctedTemplateQuestion": 45
+          },
+          {
+            "examQuestion": 89,
+            "originalTemplateQuestion": 89,
+            "correctedTemplateQuestion": 90
+          },
+          {
+            "examQuestion": 94,
+            "originalTemplateQuestion": 94,
+            "correctedTemplateQuestion": 95
+          }
+        ],
+        "caveat": "El desplazamiento es una hipótesis de alineación fuertemente respaldada, no una fe de erratas oficial."
+      }
+    }
+  }
+}
