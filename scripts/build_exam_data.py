@@ -4,6 +4,7 @@ Las claves de las plantillas son candidatas: contradicciones quedan bloqueadas.
 from __future__ import annotations
 
 from collections import Counter, defaultdict
+import csv
 from hashlib import sha256
 from pathlib import Path
 import json
@@ -148,6 +149,30 @@ def generate():
         index.append({**meta,'count':len(rows),'readyCount':ready,'path':f"data/exams/questions/{meta['id']}.json",
            'status':'practicable_pendiente_auditoria' if len(rows)==100 and ready==100
             else ('parcial_en_revision' if rows else 'pendiente_transcripcion')})
+    # Editable review queue for editorial verification; never auto-resolve a conflict.
+    by_id={meta['id']:meta for meta,_ in exams}
+    priority={'conflicto_banco':0,'conflicto_plantilla_banco':0,
+              'solo_plantilla_pendiente_cotejo':1,'sin_respuesta_verificada':2,
+              'respuesta_banco_pendiente_revision':3,'coincidencia_automatica':4}
+    review=[]
+    for row in all_rows:
+        if not row['reviewRequired']: continue
+        meta=by_id[row['examId']]
+        review.append({
+          'examId':row['examId'],'date':row['date'],'category':row['category'],'model':row['model'],
+          'number':row['number'],'page':row['sourcePage'],'status':row['answerStatus'],
+          'question':row['question'],'bankAnswer':row['bankAnswer'],'templateAnswer':row['templateAnswer'],
+          'bankAnswerText':row['options'].get(row['bankAnswer'] or '', ''),
+          'templateAnswerText':row['options'].get(row['templateAnswer'] or '', ''),
+          'canonicalCode':row['canonicalCode'] or '', 'templateFile':meta.get('templateFile') or '',
+          'transcriptionReview':bool(row.get('transcriptionReview'))
+        })
+    review.sort(key=lambda r:(priority.get(r['status'],5),r['date'],r['model'],r['number']))
+    (OUT/'review_queue.json').write_text(json.dumps(review,ensure_ascii=False,indent=2),encoding='utf-8')
+    with (OUT/'review_queue.csv').open('w',encoding='utf-8-sig',newline='') as fh:
+        writer=csv.DictWriter(fh,fieldnames=list(review[0]) if review else ['examId','status'])
+        writer.writeheader()
+        writer.writerows(review)
     (OUT/'index.json').write_text(json.dumps({
       'version':'2026-11-04-auditoria','totalExamModels':len(index),'totalImportedQuestions':len(all_rows),
       'categoryCounts':dict(denomination),'exams':index,'answerStatuses':dict(statuses),'warnings':warnings,
