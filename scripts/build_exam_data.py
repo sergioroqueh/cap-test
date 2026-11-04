@@ -11,6 +11,8 @@ import json
 import re
 import shutil
 import unicodedata
+import base64
+import lzma
 from difflib import SequenceMatcher
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -83,12 +85,38 @@ def generate():
         exam_id=meta['id']
         path=SRC/'raw'/f'{exam_id}.json'
         parsed=[]
+        packed=SRC/'raw'/f'{exam_id}.json.xz.b64'
+        if path.exists() and packed.exists():
+            raise RuntimeError(f'Fuentes duplicadas para {exam_id}')
         if path.exists():
             source=json.loads(path.read_text(encoding='utf-8'))
-            for p in source['pages']:
-                rows,bad=parse_page(p['text'],p['page'])
+            for page in source['pages']:
+                rows,bad=parse_page(page['text'],page['page'])
                 parsed.extend(rows)
                 warnings += [{'examId':exam_id,**item} for item in bad]
+        elif packed.exists():
+            # Source OCR scans are NOT validated as official text. All OCR rows
+            # are prominently marked for editorial review, even if the bank matches.
+            decoded=lzma.decompress(base64.b64decode(packed.read_text(encoding='ascii')))
+            source=json.loads(decoded.decode('utf-8'))
+            if source.get('kind')!='OCR_PARA_REVISION' or source.get('examId')!=exam_id:
+                raise RuntimeError(f'Metadatos de OCR inválidos: {exam_id}')
+            numbers=[]
+            for cols in source['rows']:
+                if len(cols)!=7:raise RuntimeError(f'Fila OCR incompleta: {exam_id}')
+                page,num,question,a,b,c,d=cols
+                if not all(isinstance(z,str) and len(z.strip())>=1 for z in (question,a,b,c,d)):
+                    raise RuntimeError(f'Texto OCR vacío: {exam_id} q{num}')
+                if not (meta['sourcePageStart']<=page<=meta['sourcePageEnd']):
+                    raise RuntimeError(f'Página OCR fuera de rango: {exam_id} q{num}')
+                if not (1<=num<=100) or num in numbers:
+                    raise RuntimeError(f'Número OCR repetido o de reserva: {exam_id} q{num}')
+                numbers.append(num)
+                parsed.append({'number':num,'page':page,'question':question,
+                  'options':dict(zip('ABCD',(a,b,c,d))),
+                  'transcriptionReview':True,'sourceMethod':source.get('ocr','OCR')})
+            if numbers!=list(range(1,101)):
+                raise RuntimeError(f'Examen OCR incompleto: {exam_id}, {len(numbers)}/100')
         overrides=corrections.get(exam_id,{})
         parsed=[q for q in parsed if str(q['number']) not in overrides]+list(overrides.values())
         by_num={}
@@ -96,7 +124,7 @@ def generate():
             if q['number'] not in by_num: by_num[q['number']]=q
             else: warnings.append({'examId':exam_id,'number':q['number'],'reason':'numero_repetido'})
         parsed=[by_num[n] for n in range(1,101) if n in by_num]
-        if path.exists() and len(parsed)!=100:
+        if (path.exists() or packed.exists()) and len(parsed)!=100:
             warnings.append({'examId':exam_id,'reason':'examen_incompleto','count':len(parsed),
                              'missing':[n for n in range(1,101) if n not in by_num]})
         local=[]
@@ -382,7 +410,7 @@ def generate():
           sum(q['matchMethod']=='enunciado_y_texto_respuesta_exactos' for q in all_rows))
     print('AUDIT incomplete models:',[(e['id'],e['count']) for e in index if e['count'] not in (0,100)])
     print('AUDIT parse warnings:', warnings[:20])
-    if len(index)!=26 or len(all_rows)!=2000:
-        raise RuntimeError(f"Auditoria incompleta: {len(index)} examenes y {len(all_rows)} preguntas; esperados 26 y 2000")
+    if len(index)!=26 or len(all_rows)!=2100:
+        raise RuntimeError(f"Auditoria incompleta: {len(index)} examenes y {len(all_rows)} preguntas; esperados 26 y 2100")
 
 if __name__=='__main__':generate()
