@@ -34,6 +34,12 @@ for exam in exams:
                 assert q['templateAlignmentStatus']=='sin_ajuste'
                 assert q['templateAnswer']==q['rawTemplateAnswer']
             elif 44<=n<=99:
+                if n==44:
+                    assert q['rawTemplateAnswer']=='C' and q['templateAnswer']=='B'
+                if n==89:
+                    assert q['rawTemplateAnswer']=='A' and q['templateAnswer']=='D'
+                if n==94:
+                    assert q['rawTemplateAnswer']=='C' and q['templateAnswer']=='B'
                 assert q['templateNumberUsed']==n+1
                 assert q['templateAlignmentStatus']=='alineacion_provisional_pendiente_revision'
                 assert q['reviewRequired']
@@ -85,6 +91,14 @@ for exam in exams:
             assert q['correctAnswer'] == q['templateAnswer'] == q['bankAnswer']
         if q.get('transcriptionReview'):
             assert q['reviewRequired']
+
+import csv
+with (root/'exams'/'alignment_2023_a_review.csv').open('r',encoding='utf-8-sig',newline='') as fh:
+    audit=list(csv.DictReader(fh))
+assert len(audit)==100 and [int(q['number']) for q in audit]==list(range(1,101))
+assert audit[88]['originalTemplateLetter']=='A' and audit[88]['candidateTemplateLetter']=='D'
+assert audit[99]['candidateTemplateNumber']=='' and audit[99]['candidateTemplateLetter']==''
+assert sum(q['answerStatus']=='conflicto_plantilla_banco' for q in audit)==0
 
 freq = json.loads((root/'exams'/'frequency_by_bank.json').read_text())
 assert all(1<=v['count']<=v['denominator'] for v in freq.values())
