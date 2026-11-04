@@ -39,3 +39,15 @@ nav{position:fixed;bottom:0;left:0;right:0;height:72px;background:color-mix(in s
   border:1px solid var(--line,rgba(127,127,127,.2));}
 .cap-review-warning{font-size:.78rem;line-height:1.5;margin:0 0 13px;
   color:var(--muted,#777);font-weight:500;}
+
+/* CAP - consulta sin autocorrección de preguntas pendientes */
+.cap-pending-panel{display:grid;gap:12px}
+.cap-pending-panel>p{font-size:13px;color:var(--muted);line-height:1.55}
+.cap-pending-panel>select{width:100%;min-width:0;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--text);padding:12px;font:inherit}
+.cap-pending-results{display:grid;gap:10px;max-width:100%}
+.cap-pending-results>strong{font-size:13px}
+.cap-pending-item{border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:12px;overflow-wrap:anywhere}
+.cap-pending-item summary{cursor:pointer;font-size:13px;font-weight:700}
+.cap-pending-item p{margin:12px 0 8px;font-size:13px;line-height:1.5}
+.cap-pending-item ol{padding-left:23px;margin:0 0 12px;display:grid;gap:8px;font-size:13px;line-height:1.5}
+.cap-pending-item small{color:var(--muted);font-size:11px}
