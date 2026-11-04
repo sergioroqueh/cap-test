@@ -5,7 +5,7 @@ import { cloudConfigured, getSession, signIn, signOut, supabase } from './supaba
 import type { Session } from '@supabase/supabase-js'
 import { loadAllQuestions, loadBankIndex, loadQuestionnaire, resolveQuestions } from './data'
 import { chooseSmartQuestions, getStatus, needsReview, percent, shuffle } from './utils'
-import { loadCapIndex, loadCapQuestions, loadAllCapQuestions, loadBankExamFrequency, type CapCategory, type CapExamMeta, type CapExamIndex } from './capExams'
+import { loadCapIndex, loadCapQuestions, loadAllCapQuestions, loadBankExamFrequency, loadCapPendingQuestions, type CapPendingQuestion, type CapCategory, type CapExamMeta, type CapExamIndex } from './capExams'
 
 const ACTIVE='cap-test-active-v1', LAST='cap-test-last-v1', THEME='cap-test-theme'
 type Route='home'|'general'|'study'|'questionnaires'|'exam'|'quiz'|'results'|'stats'|'settings'
@@ -74,10 +74,23 @@ function CapHome(){
  const [count,setCount]=useState(100)
  const [working,setWorking]=useState(false)
  const [error,setError]=useState('')
+ const [pendingId,setPendingId]=useState('')
+ const [pendingRows,setPendingRows]=useState<CapPendingQuestion[]>([])
+ const [pendingShown,setPendingShown]=useState(false)
+ const [pendingBusy,setPendingBusy]=useState(false)
  useEffect(()=>{loadCapIndex().then(setIndex).catch(e=>setError(String(e)))},[])
+ useEffect(()=>{setPendingId('');setPendingRows([]);setPendingShown(false)},[category])
  const exams=(index?.exams||[]).filter(x=>x.category===category).sort((a,b)=>b.date.localeCompare(a.date)||a.model.localeCompare(b.model))
  const available=exams.filter(x=>x.readyCount>0)
  const pretty=(x:CapExamMeta)=>new Date(x.date+'T12:00:00').toLocaleDateString('es-ES',{day:'2-digit',month:'short',year:'numeric'})+(x.model==='GLOBAL'?'':' · modelo '+x.model)
+ async function showPending(){
+  const selected=exams.find(x=>x.id===pendingId)
+  if(!selected)return
+  setPendingBusy(true);setError('')
+  try{setPendingRows(await loadCapPendingQuestions(selected));setPendingShown(true)}
+  catch(e){setError(e instanceof Error?e.message:String(e))}
+  finally{setPendingBusy(false)}
+ }
  async function begin(source:'cap-original'|'cap-random'|'cap-mixed',chosen?:CapExamMeta){
   setError('');setWorking(true)
   try{
@@ -121,6 +134,24 @@ function CapHome(){
   <div className="panel"><label>Preguntas en examen mezclado</label><div className="segments">{[10,20,30,50,100].map(x=><button key={x} className={count===x?'on':''} onClick={()=>setCount(x)}>{x}</button>)}</div></div>
   <section id="cap-historicos"><h2>Convocatorias de {category==='mercancias'?'Mercancías':'Viajeros'}</h2><p>{exams.length} documentos clasificados · {available.length} con preguntas cotejadas automáticamente</p>
    <div className="list">{exams.map(e=><button key={e.id} disabled={e.readyCount===0||working} onClick={()=>void begin('cap-original',e)}><i>▦</i><span><b>{pretty(e)}</b><small>{e.readyCount>0?(e.readyCount<(e.expectedCount||100)?'Práctica parcial: ':'')+e.readyCount+' de '+(e.expectedCount||100)+' respuestas cotejadas':'Pendiente de transcripción o cotejo'} · págs. {e.sourcePageStart}–{e.sourcePageEnd}</small></span>›</button>)}</div>
+  </section>
+  <section className="panel cap-pending-panel">
+   <h2>Preguntas pendientes de revisión</h2>
+   <p>Consulta el enunciado original y sus cuatro opciones. No se muestra una solución sin cotejar, ni se registran estas preguntas como fallos.</p>
+   <select aria-label="Convocatoria con preguntas pendientes" value={pendingId} onChange={e=>{setPendingId(e.target.value);setPendingShown(false);setPendingRows([])}}>
+    <option value="">Seleccionar convocatoria</option>
+    {exams.filter(e=>e.count>e.readyCount).map(e=><option key={e.id} value={e.id}>{pretty(e)} · {e.count-e.readyCount} pendientes</option>)}
+   </select>
+   <Btn kind="light" disabled={!pendingId||pendingBusy} onClick={()=>void showPending()}>{pendingBusy?'Preparando…':'Consultar sin puntuación'}</Btn>
+   {pendingShown&&<div className="cap-pending-results">
+    <strong>{pendingRows.length} preguntas sin solución cotejada</strong>
+    {pendingRows.map(q=><details key={q.number} className="cap-pending-item">
+     <summary>Pregunta {q.number} · página {q.sourcePage}{q.answerStatus.startsWith('conflicto')?' · Fuentes contradictorias':''}</summary>
+     <p>{q.question}</p>
+     <ol type="A">{keys.map(k=><li key={k}>{q.options[k]}</li>)}</ol>
+     <small>Solución pendiente de revisión. No se califica esta pregunta.</small>
+    </details>)}
+   </div>}
   </section>
   <button className="btn light" onClick={()=>go('general')}>Abrir banco general · 8.655 preguntas</button>
   <p className="note">Los exámenes completos conservan sus 100 preguntas originales; los escaneados se incorporan de forma progresiva y mantienen su número real de preguntas transcritas. El test autocorregido solo muestra las que tienen respuesta cotejada. Una práctica parcial no es un examen oficial completo. Frecuencia observada, no predicción; las ampliaciones no se cuentan dos veces.</p>
