@@ -109,8 +109,8 @@ El criterio sigue siendo **PR borrador, no desplegar**.
   100 preguntas numeradas de las páginas **28–49**. Las reservas de la página 50
   (101–103) y la ampliación de páginas 51–56 no se mezclan ni se cuentan.
 - Importadas **2.000 apariciones** de exámenes: 1.900 Mercancías + 100 Viajeros.
-- Entre las de Viajeros, **60 soluciones se han recuperado automáticamente del banco
-  de 8.655**, todas sujetas a revisión editorial. **40 siguen sin clave cotejada.**
+- Entre las de Viajeros, **76 soluciones se han recuperado automáticamente del banco
+  de 8.655**, todas sujetas a revisión editorial. **24 siguen sin clave cotejada.**
 - Totales generales: **1.452** con respuesta obtenida del banco, **548** sin
   autocorrección; **923** preguntas distintas enlazadas al banco original.
 - Se conserva el denominador por modalidad. Con una sola convocatoria de Viajeros,
@@ -124,6 +124,16 @@ El criterio sigue siendo **PR borrador, no desplegar**.
 
 Esta ronda no justifica desplegar: quedan **33 contradicciones** y la verificación
 de fuentes y comportamiento móvil sigue pendiente. PR #6 se mantiene en borrador.
+
+### Auditoría de las 33 contradicciones
+La CI localizó **30 discrepancias en Mercancías A de julio de 2023**,
+**dos en Mercancías B de julio de 2023** y **una en Mercancías de febrero de 2026**.
+Se comprobó visualmente la plantilla original A de julio de 2023: contiene
+una tabla legible con las 100 letras, incluyendo la pregunta 89 = A,
+que contradice la solución del banco en ese enunciado. Esta divergencia
+no se puede resolver cambiando una letra sin evidencia independiente.
+Los 33 casos **siguen bloqueados** y el archivo de candidatos solo sirve
+para facilitar la revisión, nunca para aprobar automáticamente.
 
 ### Criterio de publicación
 **No fusionar** este PR hasta:
