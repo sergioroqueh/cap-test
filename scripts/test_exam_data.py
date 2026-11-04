@@ -22,6 +22,7 @@ for exam in exams:
     assert all(q['sourcePage'] in range(exam['sourcePageStart'],exam['sourcePageEnd']+1) for q in rows)
     assert exam['expectedCount'] == 100
     if exam['id']=='2026-09-26-mercancias-a':
+        assert exam['readyCount']==90, '90 claves del banco, resto sin autocorrección y pendiente de revisión'
         assert len(rows)==100
         assert {q['number'] for q in rows}==set(range(1,101))
         assert {q['sourcePage'] for q in rows}==set(range(128,145))
