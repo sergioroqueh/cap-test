@@ -99,8 +99,10 @@ def generate():
                 if (source.get('pageStart'),source.get('pageEnd')) != (meta['sourcePageStart'],meta['sourcePageEnd']):
                     raise RuntimeError(f'Rango de páginas visual inconsistente: {exam_id}')
             for page in source['pages']:
-                if not (meta['sourcePageStart']<=page['page']<=meta['sourcePageEnd']):
-                    raise RuntimeError(f'Página fuera del manifiesto: {exam_id} p{page["page"]}')
+                # Algunos raw históricos anteriores conservan bloques de
+                # preámbulo p0. No cambiar retroactivamente su interpretación.
+                if source_kind and not (meta['sourcePageStart']<=page['page']<=meta['sourcePageEnd']):
+                    raise RuntimeError(f'Página visual fuera del manifiesto: {exam_id} p{page["page"]}')
                 rows,bad=parse_page(page['text'],page['page'])
                 if source_kind:
                     # La transcripción visual es material provisional, no texto
