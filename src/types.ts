@@ -18,6 +18,9 @@ export interface Question {
   examFrequencyDenominator?: number
   answerStatus?: string
   reviewRequired?: boolean
+  transcriptionReview?: boolean
+  sourceMethod?: string
+  sourcePage?: number
 }
 
 export interface QuestionnaireMeta {
