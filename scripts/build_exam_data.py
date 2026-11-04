@@ -62,6 +62,7 @@ def generate():
     keys = json.loads((SRC/'answer_keys_unverified.json').read_text(encoding='utf-8'))
     alignments = json.loads((SRC/'template_alignment_review.json').read_text(encoding='utf-8'))['alignments']
     visual_keys = json.loads((SRC/'answer_key_visual_corrections.json').read_text(encoding='utf-8'))['overrides']
+    normative_notes = json.loads((SRC/'normative_conflicts_review.json').read_text(encoding='utf-8'))['reviews']
     corrections = json.loads((SRC/'override_transcriptions_review.json').read_text(encoding='utf-8'))
     bank = defaultdict(list)
     bank_by_question = defaultdict(list)
@@ -241,7 +242,13 @@ def generate():
           'bankAnswerText':row['options'].get(row['bankAnswer'] or '', ''),
           'templateAnswerText':row['options'].get(row['templateAnswer'] or '', ''),
           'canonicalCode':row['canonicalCode'] or '', 'templateFile':meta.get('templateFile') or '',
-          'transcriptionReview':bool(row.get('transcriptionReview'))
+          'transcriptionReview':bool(row.get('transcriptionReview')),
+          'normativeSuggestedAnswer':normative_notes.get(
+              row['examId']+':'+str(row['number']),{}).get('suggestedAnswer',''),
+          'normativeSourceUrl':normative_notes.get(
+              row['examId']+':'+str(row['number']),{}).get('url',''),
+          'normativeStatus':normative_notes.get(
+              row['examId']+':'+str(row['number']),{}).get('status','')
         })
     review.sort(key=lambda r:(priority.get(r['status'],5),r['date'],r['model'],r['number']))
     (OUT/'review_queue.json').write_text(json.dumps(review,ensure_ascii=False,indent=2),encoding='utf-8')
