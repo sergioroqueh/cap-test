@@ -27,3 +27,15 @@ nav{position:fixed;bottom:0;left:0;right:0;height:72px;background:color-mix(in s
 .authcard form .btn{width:100%;min-height:48px;margin-top:4px}.authcard>small{display:block;text-align:center;color:var(--muted);font-size:10px;line-height:1.45;margin-top:18px}
 .autherror{background:color-mix(in srgb,var(--danger) 11%,var(--surface));color:var(--danger);border:1px solid color-mix(in srgb,var(--danger) 28%,var(--line));padding:10px 12px;border-radius:12px;font-size:11px;font-weight:700}
 .panel.account small{display:block;color:var(--primary);font-size:9px;font-weight:900;letter-spacing:.1em}.panel.account h2{margin:5px 0 5px;font-size:18px;word-break:break-all}.panel.account .btn{margin-top:14px}
+
+/* Overlay de exámenes CAP: respeta el estilo existente y prioriza móvil. */
+.cap-page .panel{margin:16px 0}
+.cap-page .segments{display:flex;flex-wrap:wrap;gap:4px}
+.cap-page .segments button{flex:1 1 auto;min-width:85px}
+.cap-page .list button:disabled{opacity:.58;cursor:not-allowed}
+.cap-page .cards button:disabled{opacity:.55;cursor:not-allowed}
+.cap-frequency{margin:12px 0 17px;padding:9px 12px;border-radius:10px;
+  font-size:.8rem;font-weight:600;line-height:1.45;background:var(--card,rgba(127,127,127,.10));
+  border:1px solid var(--line,rgba(127,127,127,.2));}
+.cap-review-warning{font-size:.78rem;line-height:1.5;margin:0 0 13px;
+  color:var(--muted,#777);font-weight:500;}
