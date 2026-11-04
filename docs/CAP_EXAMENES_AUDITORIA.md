@@ -7,8 +7,8 @@ el progreso existente. No modifica ni sobrescribe los TXT de origen.
 
 **Estado vigente — Ronda 7 (04/11/2026):** 26 convocatorias catalogadas;
 **2.200 apariciones** importadas (21 modelos completos de Mercancías y
-1 de Viajeros); **1.635 respuestas** recuperadas por cotejo automático con el
-banco maestro (**1.559 Mercancías + 76 Viajeros**). **565** sin autocorrección.
+1 de Viajeros); **1.636 respuestas** recuperadas por cotejo automático con el
+banco maestro (**1.560 Mercancías + 76 Viajeros**). **564** sin autocorrección.
 **Cuatro** modelos escaneados de Mercancías siguen pendientes.
 El apartado siguiente conserva el historial de hitos y cifras de rondas anteriores.
 
@@ -23,12 +23,12 @@ El apartado siguiente conserva el historial de hitos y cifras de rondas anterior
   `transcriptionReview=true`, `reviewRequired=true` y
   `sourceMethod=LECTURA_VISUAL_PDF_PENDIENTE_REVISION` en sus 100 preguntas.
   **No se presenta como transcripción editorial oficialmente validada**.
-- El cotejo recuperó **84/100 respuestas solo del banco maestro**, mediante
+- El cotejo recuperó **85/100 respuestas solo del banco maestro**, mediante
   igualdad normalizada de pregunta y cuatro opciones o, conservadoramente,
-  de enunciado y texto de respuesta. **16** permanecen sin respuesta
+  de enunciado y texto de respuesta. **15** permanecen sin respuesta
   autocorregible; ninguna letra se dedujo de una plantilla inexistente.
 - Tras esta importación: **2.200 apariciones** (2.100 Mercancías + 100
-  Viajeros), **1.635** con clave del banco, **565** sin autocorrección,
+  Viajeros), **1.636** con clave del banco, **564** sin autocorrección,
   **930** preguntas históricas distintas enlazadas al banco.
   Quedan **cuatro** modelos Mercancías por transcribir:
   2026-09-26-A, 2026-03-28-global, 2022-05-21-global y
@@ -41,7 +41,7 @@ El apartado siguiente conserva el historial de hitos y cifras de rondas anterior
 - El PR #6 sigue **en borrador**. Producción en main/GitHub Pages no se modifica.
   La beta aislada debe actualizarse solo tras comprobar CI y commit.
 - El cotejo automatizado **no equivale a la validación oficial o visual de
-  las 84 claves**. Las sugerencias de similitud siguen sin poder adjudicar
+  las 85 claves**. Las sugerencias de similitud siguen sin poder adjudicar
   respuesta y el conflicto explícito de febrero 2026 continúa bloqueado.
 
 ### Documentos recibidos
