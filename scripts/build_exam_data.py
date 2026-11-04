@@ -90,8 +90,24 @@ def generate():
             raise RuntimeError(f'Fuentes duplicadas para {exam_id}')
         if path.exists():
             source=json.loads(path.read_text(encoding='utf-8'))
+            source_kind=source.get('kind')
+            if source_kind not in (None,'TRANSCRIPCION_VISUAL_PENDIENTE_REVISION'):
+                raise RuntimeError(f'Formato raw sin reconocer: {exam_id}: {source_kind}')
+            if source_kind:
+                if source.get('id')!=exam_id or source.get('sourcePdf')!=meta.get('sourcePdf'):
+                    raise RuntimeError(f'Procedencia visual inconsistente: {exam_id}')
+                if (source.get('pageStart'),source.get('pageEnd')) != (meta['sourcePageStart'],meta['sourcePageEnd']):
+                    raise RuntimeError(f'Rango de páginas visual inconsistente: {exam_id}')
             for page in source['pages']:
+                if not (meta['sourcePageStart']<=page['page']<=meta['sourcePageEnd']):
+                    raise RuntimeError(f'Página fuera del manifiesto: {exam_id} p{page["page"]}')
                 rows,bad=parse_page(page['text'],page['page'])
+                if source_kind:
+                    # La transcripción visual es material provisional, no texto
+                    # original validado ni reconocimiento OCR verificado.
+                    for row in rows:
+                        row['transcriptionReview']=True
+                        row['sourceMethod']='LECTURA_VISUAL_PDF_PENDIENTE_REVISION'
                 parsed.extend(rows)
                 warnings += [{'examId':exam_id,**item} for item in bad]
         elif packed.exists():
@@ -428,7 +444,7 @@ def generate():
           sum(q['matchMethod']=='enunciado_y_texto_respuesta_exactos' for q in all_rows))
     print('AUDIT incomplete models:',[(e['id'],e['count']) for e in index if e['count'] not in (0,100)])
     print('AUDIT parse warnings:', warnings[:20])
-    if len(index)!=26 or len(all_rows)!=2100:
-        raise RuntimeError(f"Auditoria incompleta: {len(index)} examenes y {len(all_rows)} preguntas; esperados 26 y 2100")
+    if len(index)!=26 or len(all_rows)!=2200:
+        raise RuntimeError(f"Auditoria incompleta: {len(index)} examenes y {len(all_rows)} preguntas; esperados 26 y 2200")
 
 if __name__=='__main__':generate()
