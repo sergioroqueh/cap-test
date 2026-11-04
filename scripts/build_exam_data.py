@@ -85,6 +85,7 @@ def generate():
         exam_id=meta['id']
         path=SRC/'raw'/f'{exam_id}.json'
         parsed=[]
+        source_kind=None
         packed=SRC/'raw'/f'{exam_id}.json.xz.b64'
         if path.exists() and packed.exists():
             raise RuntimeError(f'Fuentes duplicadas para {exam_id}')
@@ -135,6 +136,13 @@ def generate():
                   'transcriptionReview':True,'sourceMethod':source.get('ocr','OCR')})
             if numbers!=list(range(1,101)):
                 raise RuntimeError(f'Examen OCR incompleto: {exam_id}, {len(numbers)}/100')
+        # Keep staged visual transcripts in version control, but DO NOT
+        # publish incomplete exams or count their questions/frequencies.
+        # They become visible only when all main 100 questions are present.
+        if source_kind=='TRANSCRIPCION_VISUAL_PENDIENTE_REVISION' and 0<len(parsed)<100:
+            warnings.append({'examId':exam_id,'reason':'transcripcion_visual_en_preparacion',
+                             'count':len(parsed),'expected':100})
+            parsed=[]
         overrides=corrections.get(exam_id,{})
         parsed=[q for q in parsed if str(q['number']) not in overrides]+list(overrides.values())
         by_num={}
@@ -446,7 +454,7 @@ def generate():
           sum(q['matchMethod']=='enunciado_y_texto_respuesta_exactos' for q in all_rows))
     print('AUDIT incomplete models:',[(e['id'],e['count']) for e in index if e['count'] not in (0,100)])
     print('AUDIT parse warnings:', warnings[:20])
-    if len(index)!=26 or len(all_rows)!=2525:
-        raise RuntimeError(f"Auditoria incompleta: {len(index)} examenes y {len(all_rows)} preguntas; esperados 26 y 2525")
+    if len(index)!=26 or len(all_rows)!=2500:
+        raise RuntimeError(f"Auditoria incompleta: {len(index)} examenes y {len(all_rows)} preguntas; esperados 26 y 2500")
 
 if __name__=='__main__':generate()
