@@ -5,12 +5,39 @@
 Se conserva el banco original: **8.655 preguntas / 33 cuestionarios**, el login y
 el progreso existente. No modifica ni sobrescribe los TXT de origen.
 
-**Estado vigente — Ronda 8 (04/11/2026):** 26 convocatorias catalogadas;
-**2.300 apariciones** importadas (22 modelos completos de Mercancías y
-1 de Viajeros); **1.726 respuestas** recuperadas por cotejo automático con el
-banco maestro (**1.650 Mercancías + 76 Viajeros**). **574** sin autocorrección.
-**Tres** modelos escaneados de Mercancías siguen pendientes.
+**Estado vigente — Ronda 9 (04/11/2026):** 26 convocatorias catalogadas;
+**2.400 apariciones** importadas (23 modelos completos de Mercancías y
+1 de Viajeros); **1.807 respuestas** recuperadas por cotejo automático con el
+banco maestro (**1.731 Mercancías + 76 Viajeros**). **593** sin autocorrección.
+**Dos** modelos escaneados de Mercancías siguen pendientes.
 El apartado siguiente conserva el historial de hitos y cifras de rondas anteriores.
+
+### Ronda 9 — Mercancías Global 28/03/2026 (PDF pp. 348–363)
+
+- Examen de **100/100 preguntas principales con cuatro opciones**, transcrito
+  a partir de la imagen original del usuario. Origen:
+  `data-src/cap-exams/raw/2026-03-28-mercancias-global.json`.
+- **81/100** respuestas recuperadas del banco original; **19/100**
+  quedan consultables sin puntuación, no inventadas. Las 100 mantienen la
+  etiqueta obligatoria de revisión visual `transcriptionReview=true`.
+- Se ha corregido un **desplazamiento en la paginación del manifiesto**:
+  marzo 2026 realmente ocupa páginas **348–363**; mayo 2022 comienza
+  en la **364** y llega hasta la **383**.
+- Se ha localizado la [plantilla correctora oficial de Castilla-La Mancha](https://transporte.castillalamancha.es/sites/default/files/2026-03/CAP%202026_2%C2%AA%20-%20Plantillas%20Correctoras.pdf)
+  correspondiente al 28/03/2026, publicada por el tribunal el 30/03/2026,
+  con sección «MERCANCÍAS GLOBAL». **No se ha podido leer ni transcribir
+  de forma fiable la tabla de casillas**, por lo que no se promueven
+  respuestas de esta fuente hasta verificación visual.
+- Informe `docs/CAP_MARZO_2026_PENDIENTES.md` con las **19 preguntas**
+  bloqueadas, candidatos no aprobados del banco y prioridades de revisión
+  (q12, q45 y q99 especialmente).
+- Estado general: **2.400 apariciones** (2.300 Mercancías + 100 Viajeros),
+  **1.807** con clave recuperada del banco y **593** sin autocorrección.
+  **1.031 IDs** de preguntas del banco maestro enlazados al historial.
+- Quedan **dos modelos Mercancías** pendientes de transcripción:
+  `2022-05-21-mercancias-global` y `2024-04-06-mercancias-global`.
+  Banco original de 8.655/33 y separación Mercancías/Viajeros intactos.
+- El PR #6 sigue **en borrador**, sin fusionar ni publicar producción.
 
 ### Ronda 8 — Mercancías A 26/09/2026 (PDF pp. 128–144)
 
