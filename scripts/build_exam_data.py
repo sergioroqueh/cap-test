@@ -235,6 +235,7 @@ def generate():
         for token in tokens:
             if len(token)>3: question_index[token].add(i)
     review_hints=[]
+    row_lookup={(q['examId'],q['number']):q for q in all_rows}
     unresolved={'solo_plantilla_pendiente_cotejo','sin_respuesta_verificada',
                 'conflicto_plantilla_banco','conflicto_banco'}
     for row in review:
@@ -246,14 +247,13 @@ def generate():
             ids=question_index.get(token,set())
             if len(ids)<1000: hits.update(ids)
         shortlisted=[idx for idx,_ in hits.most_common(55)]
+        exam_question=row_lookup.get((row['examId'],row['number']),{})
+        question_options={norm(v) for v in exam_question.get('options',{}).values()}
         ranked=[]
         for idx in shortlisted:
             item,candidate_tokens=indexed[idx]
             similarity=SequenceMatcher(None,query,norm(item['question'])).ratio()
             bank_options={norm(v) for v in item['options'].values()}
-            question_options={norm(v) for v in next((
-                q['options'] for q in all_rows if q['examId']==row['examId']
-                and q['number']==row['number']),{}).values()}
             overlap=len(bank_options & question_options)/4
             score=round(0.78*similarity+0.22*overlap,3)
             if score<0.52:continue
