@@ -251,6 +251,37 @@ def generate():
         writer.writeheader()
         writer.writerows(review)
 
+    # Complete, traceable before/after mapping for the anomalous 2023-A key.
+    # This report contains proposed alignment, NOT approved corrections.
+    aligned_rows=[]
+    for row in all_rows:
+        if row['examId']!='2023-07-29-mercancias-a':continue
+        supporters=[x for x in same_bank_group.get((row['category'],row['canonicalCode']),[])
+                    if x['examId']!=row['examId']] if row['canonicalCode'] else []
+        aligned_rows.append({
+          'examId':row['examId'],'number':row['number'],'sourcePage':row['sourcePage'],
+          'question':row['question'],
+          'originalTemplateNumber':row['number'],'originalTemplateLetter':row['rawTemplateAnswer'],
+          'candidateTemplateNumber':row['templateNumberUsed'],'candidateTemplateLetter':row['templateAnswer'],
+          'bankLetter':row['bankAnswer'],'bankCode':row['canonicalCode'] or '',
+          'matchMethod':row['matchMethod'],'answerStatus':row['answerStatus'],
+          'reviewRequired':row['reviewRequired'],
+          'independentConfirmedModels':len({x['examId'] for x in supporters}),
+          'independentExamIds':' | '.join(sorted({x['examId'] for x in supporters})),
+          'optionA':row['options']['A'],'optionB':row['options']['B'],
+          'optionC':row['options']['C'],'optionD':row['options']['D']
+        })
+    assert len(aligned_rows)==100
+    with (OUT/'alignment_2023_a_review.csv').open('w',encoding='utf-8-sig',newline='') as fh:
+        writer=csv.DictWriter(fh,fieldnames=list(aligned_rows[0]))
+        writer.writeheader()
+        writer.writerows(aligned_rows)
+    print('AUDIT remaining conflicts:',
+          [(q['examId'],q['number'],q['sourcePage'],q['bankAnswer'],
+            q['rawTemplateAnswer'],q['templateAnswer'],
+            q['question'][:80]) for q in all_rows if q['answerStatus'] in
+           ('conflicto_plantilla_banco','conflicto_banco')])
+
     # Suggestions for manual inspection, not new keys. An imperfect transcription
     # or paraphrase may be close to many bank questions. NEVER autocorrect from this list.
     stop={'que','con','por','para','del','los','las','una','uno','un','de','el','la','en','al',
