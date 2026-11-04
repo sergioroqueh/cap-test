@@ -88,12 +88,13 @@ function CapHome(){
     const unique=new Map<string,Question>()
     shuffle(rows).forEach(x=>{const id=x.progressId||x.id;if(!unique.has(id))unique.set(id,x)})
     questions=shuffle([...unique.values()]).slice(0,count)
-    label='CAP '+(category==='mercancias'?'Mercancías':'Viajeros')+' · examen mezclado'
+    label='CAP '+(category==='mercancias'?'Mercancías':'Viajeros')+' · mezclado · '+questions.length+' preguntas cotejadas'
    }else{
     const meta=chosen||(available.length?shuffle(available)[0]:undefined)
     if(!meta)throw new Error('No hay exámenes corregibles todavía en esta modalidad.')
     questions=await loadCapQuestions(meta)
     label='CAP '+(category==='mercancias'?'Mercancías':'Viajeros')+' · '+pretty(meta)
+    if(questions.length<(meta.count||100))label+=' · práctica parcial ('+questions.length+'/'+(meta.count||100)+')'
    }
    if(!questions.length)throw new Error('Ninguna pregunta tiene solución cotejable todavía.')
    const session:ActiveSession={type:mode,source,label,questionIds:questions.map(q=>q.id),
@@ -119,10 +120,10 @@ function CapHome(){
   </div>
   <div className="panel"><label>Preguntas en examen mezclado</label><div className="segments">{[10,20,30,50,100].map(x=><button key={x} className={count===x?'on':''} onClick={()=>setCount(x)}>{x}</button>)}</div></div>
   <section id="cap-historicos"><h2>Convocatorias de {category==='mercancias'?'Mercancías':'Viajeros'}</h2><p>{exams.length} documentos clasificados · {available.length} con preguntas cotejadas automáticamente</p>
-   <div className="list">{exams.map(e=><button key={e.id} disabled={e.readyCount===0||working} onClick={()=>void begin('cap-original',e)}><i>▦</i><span><b>{pretty(e)}</b><small>{e.readyCount>0?e.readyCount+' de '+(e.count||100)+' preguntas con solución del banco':'Pendiente de transcripción o cotejo'} · págs. {e.sourcePageStart}–{e.sourcePageEnd}</small></span>›</button>)}</div>
+   <div className="list">{exams.map(e=><button key={e.id} disabled={e.readyCount===0||working} onClick={()=>void begin('cap-original',e)}><i>▦</i><span><b>{pretty(e)}</b><small>{e.readyCount>0?(e.readyCount<(e.count||100)?'Práctica parcial: ':'')+e.readyCount+' de '+(e.count||100)+' respuestas cotejadas':'Pendiente de transcripción o cotejo'} · págs. {e.sourcePageStart}–{e.sourcePageEnd}</small></span>›</button>)}</div>
   </section>
   <button className="btn light" onClick={()=>go('general')}>Abrir banco general · 8.655 preguntas</button>
-  <p className="note">Frecuencias calculadas sobre modelos transcritos, no sobre probabilidades oficiales. Las ampliaciones no se cuentan dos veces.</p>
+  <p className="note">Cada convocatoria conserva sus 100 preguntas originales en el archivo de auditoría, pero el test autocorregido solo muestra las que tienen respuesta cotejada. Una práctica parcial no es un examen oficial completo. Frecuencia observada, no predicción; las ampliaciones no se cuentan dos veces.</p>
  </div>
 }
 
