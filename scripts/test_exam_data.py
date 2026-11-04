@@ -31,11 +31,26 @@ for exam in exams:
                                   'solo_plantilla_pendiente_cotejo','sin_respuesta_verificada'):
             assert q['correctAnswer'] is None, (exam['id'],q['number'])
         if q['correctAnswer'] is not None:
-            assert q['answerStatus'] in ('coincidencia_automatica',
-                                          'respuesta_banco_pendiente_revision')
+            assert q['answerStatus'] in (
+                'coincidencia_automatica',
+                'respuesta_banco_pendiente_revision',
+                'coincidencia_enunciado_banco_plantilla_pendiente_revision',
+                'respuesta_banco_enunciado_pendiente_revision')
             assert q['correctAnswer'] == q['bankAnswer']
-            if q['answerStatus'] == 'coincidencia_automatica':
+            if q['answerStatus'] in (
+                'coincidencia_automatica',
+                'coincidencia_enunciado_banco_plantilla_pendiente_revision'):
                 assert q['correctAnswer'] == q['templateAnswer']
+        if q.get('matchMethod') == 'enunciado_y_texto_respuesta_exactos':
+            assert q['reviewRequired'], (exam['id'],q['number'])
+            assert q['answerStatus'] in (
+                'coincidencia_enunciado_banco_plantilla_pendiente_revision',
+                'respuesta_banco_enunciado_pendiente_revision',
+                'conflicto_plantilla_banco')
+        if q['answerStatus'] in ('conflicto_banco','conflicto_plantilla_banco'):
+            assert q['correctAnswer'] is None
+        if q['answerStatus'] == 'coincidencia_enunciado_banco_plantilla_pendiente_revision':
+            assert q['reviewRequired']
         if q.get('transcriptionReview'):
             assert q['reviewRequired']
 
