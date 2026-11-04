@@ -5,12 +5,44 @@
 Se conserva el banco original: **8.655 preguntas / 33 cuestionarios**, el login y
 el progreso existente. No modifica ni sobrescribe los TXT de origen.
 
-**Estado vigente — Ronda 7 (04/11/2026):** 26 convocatorias catalogadas;
-**2.200 apariciones** importadas (21 modelos completos de Mercancías y
-1 de Viajeros); **1.636 respuestas** recuperadas por cotejo automático con el
-banco maestro (**1.560 Mercancías + 76 Viajeros**). **564** sin autocorrección.
-**Cuatro** modelos escaneados de Mercancías siguen pendientes.
+**Estado vigente — Ronda 8 (04/11/2026):** 26 convocatorias catalogadas;
+**2.300 apariciones** importadas (22 modelos completos de Mercancías y
+1 de Viajeros); **1.726 respuestas** recuperadas por cotejo automático con el
+banco maestro (**1.650 Mercancías + 76 Viajeros**). **574** sin autocorrección.
+**Tres** modelos escaneados de Mercancías siguen pendientes.
 El apartado siguiente conserva el historial de hitos y cifras de rondas anteriores.
+
+### Ronda 8 — Mercancías A 26/09/2026 (PDF pp. 128–144)
+
+- Se han transcrito **100/100 preguntas** con cuatro opciones y procedencia
+  exacta de cada página. Números 1–100 exclusivos; ninguna pregunta de reserva.
+  Archivo `data-src/cap-exams/raw/2026-09-26-mercancias-a.json`.
+- Fuente marcada `TRANSCRIPCION_VISUAL_PENDIENTE_REVISION`. Las **100 preguntas**
+  siguen con `transcriptionReview=true`, `reviewRequired=true` y
+  `sourceMethod=LECTURA_VISUAL_PDF_PENDIENTE_REVISION`.
+- El banco maestro permite recuperar **90/100 respuestas** (no validación
+  editorial de su exactitud). **10 preguntas** permanecen sin clave autocorregible:
+  **2, 6, 8, 22, 27, 29, 40, 45, 82 y 93**. Sus candidatos aproximados
+  en `review_hints` **no son claves**.
+- Se corrigieron los enunciados transcritos de las preguntas 24 y 37
+  para reflejar el original; ambas pasan al cotejo automático. Son
+  transcripciones provisionales, pendientes de comprobación editorial integral.
+- El manifiesto asocia el examen a `Plantilla A Septiembre 2026.pdf`,
+  pero **no existe serie de claves digitales para este modelo** en
+  `answer_keys_unverified.json`. No se afirma coincidencia banco/plantilla
+  mientras no se coteje el documento de respuestas original.
+- Resultado global: **2.300** apariciones (2.200 Mercancías + 100 Viajeros),
+  **1.726** respuestas recuperadas del banco, **574** sin autocorrección,
+  **982** entradas diferentes del banco enlazadas.
+- Quedan por transcribir **tres Mercancías**:
+  `2026-03-28-mercancias-global`, `2022-05-21-mercancias-global` y
+  `2024-04-06-mercancias-global`.
+- La única discrepancia explícita entre banco y plantilla (febrero 2026,
+  pregunta 61) sigue bloqueada. El banco original de **8.655 preguntas /
+  33 cuestionarios** y el examen de Viajeros se preservan íntegros.
+- CI: exige 26 modelos, 2.300 preguntas, revisión visual en las 100,
+  páginas originales 128–144, cuatro opciones, ninguna reserva,
+  y aislamiento por modalidad. PR #6 permanece borrador y producción intacta.
 
 ### Ronda 7 — Mercancías B 26/07/2025 (PDF pp. 185–201)
 
