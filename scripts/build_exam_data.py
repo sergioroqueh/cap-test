@@ -11,6 +11,7 @@ import json
 import re
 import shutil
 import unicodedata
+from difflib import SequenceMatcher
 
 ROOT = Path(__file__).resolve().parents[1]
 SRC = ROOT / 'data-src' / 'cap-exams'
@@ -62,11 +63,13 @@ def generate():
     corrections = json.loads((SRC/'override_transcriptions_review.json').read_text(encoding='utf-8'))
     bank = defaultdict(list)
     bank_by_question = defaultdict(list)
+    bank_rows = []
     original_count = 0
     for path in (ROOT/'public'/'data'/'questions').glob('*.json'):
         for item in json.loads(path.read_text(encoding='utf-8')):
             bank[fingerprint(item)].append(item)
             bank_by_question[norm(item['question'])].append(item)
+            bank_rows.append(item)
             original_count += 1
     if original_count != 8655: raise RuntimeError(f'Banco original no es de 8655 preguntas: {original_count}')
     if OUT.exists():shutil.rmtree(OUT)
@@ -201,6 +204,79 @@ def generate():
         writer=csv.DictWriter(fh,fieldnames=list(review[0]) if review else ['examId','status'])
         writer.writeheader()
         writer.writerows(review)
+
+    # Review support: repeated, independently aligned templates across exam models.
+    # The evidence is advisory only: no answer status is changed by this report.
+    same_bank_group=defaultdict(list)
+    for row in all_rows:
+        if row['canonicalCode'] and row['answerStatus']=='coincidencia_automatica':
+            same_bank_group[(row['category'],row['canonicalCode'])].append(row)
+    for row in review:
+        supporters=[item for item in same_bank_group.get((row['category'],row['canonicalCode']),[])
+                    if item['examId']!=row['examId']] if row['canonicalCode'] else []
+        row['independentSupportingModels']=len({item['examId'] for item in supporters})
+        row['supportingExamIds']=' | '.join(sorted({item['examId'] for item in supporters}))
+        row['evidenceScope']='solo_misma_modalidad'
+    (OUT/'review_queue.json').write_text(json.dumps(review,ensure_ascii=False,indent=2),encoding='utf-8')
+    with (OUT/'review_queue.csv').open('w',encoding='utf-8-sig',newline='') as fh:
+        writer=csv.DictWriter(fh,fieldnames=list(review[0]) if review else ['examId','status'])
+        writer.writeheader()
+        writer.writerows(review)
+
+    # Suggestions for manual inspection, not new keys. An imperfect transcription
+    # or paraphrase may be close to many bank questions. NEVER autocorrect from this list.
+    stop={'que','con','por','para','del','los','las','una','uno','un','de','el','la','en','al',
+          'es','se','si','su','sus','como','cual','cuales','cuando','entre','mas','sobre'}
+    question_index=defaultdict(set)
+    indexed=[]
+    for i,item in enumerate(bank_rows):
+        tokens=set(norm(item['question']).split())-stop
+        indexed.append((item,tokens))
+        for token in tokens:
+            if len(token)>3: question_index[token].add(i)
+    review_hints=[]
+    unresolved={'solo_plantilla_pendiente_cotejo','sin_respuesta_verificada',
+                'conflicto_plantilla_banco','conflicto_banco'}
+    for row in review:
+        if row['status'] not in unresolved:continue
+        query=norm(row['question'])
+        tokens={tok for tok in query.split() if len(tok)>3}-stop
+        hits=Counter()
+        for token in tokens:
+            ids=question_index.get(token,set())
+            if len(ids)<1000: hits.update(ids)
+        shortlisted=[idx for idx,_ in hits.most_common(55)]
+        ranked=[]
+        for idx in shortlisted:
+            item,candidate_tokens=indexed[idx]
+            similarity=SequenceMatcher(None,query,norm(item['question'])).ratio()
+            bank_options={norm(v) for v in item['options'].values()}
+            question_options={norm(v) for v in next((
+                q['options'] for q in all_rows if q['examId']==row['examId']
+                and q['number']==row['number']),{}).values()}
+            overlap=len(bank_options & question_options)/4
+            score=round(0.78*similarity+0.22*overlap,3)
+            if score<0.52:continue
+            ranked.append((score,item,similarity,overlap))
+        for rank,(score,item,sim,overlap) in enumerate(sorted(ranked,key=lambda r:-r[0])[:3],1):
+            review_hints.append({
+                'examId':row['examId'],'number':row['number'],'category':row['category'],
+                'status':row['status'],'candidateRank':rank,
+                'candidateCode':item['code'],'candidateQuestion':item['question'],
+                'candidateAnswerText':item['options'][item['correctAnswer']],
+                'candidateReference':item.get('reference',''),
+                'candidateScore':score,'questionSimilarity':round(sim,3),
+                'optionOverlap':round(overlap,3),
+                'approved':False,'usage':'SUGERENCIA_REVISION_NO_AUTOCORREGIR'
+            })
+    (OUT/'review_hints.json').write_text(json.dumps(review_hints,ensure_ascii=False,indent=2),encoding='utf-8')
+    with (OUT/'review_hints.csv').open('w',encoding='utf-8-sig',newline='') as fh:
+        writer=csv.DictWriter(fh,fieldnames=list(review_hints[0]) if review_hints else ['examId','number'])
+        writer.writeheader()
+        writer.writerows(review_hints)
+    print('AUDIT review suggestions:',len(review_hints),
+          'questions with suggestions:',len({(x['examId'],x['number']) for x in review_hints}))
+
     (OUT/'index.json').write_text(json.dumps({
       'version':'2026-11-04-auditoria','totalExamModels':len(index),'totalImportedQuestions':len(all_rows),
       'categoryCounts':dict(denomination),'exams':index,'answerStatuses':dict(statuses),'warnings':warnings,
