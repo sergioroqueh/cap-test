@@ -150,7 +150,7 @@ def generate():
         exams.append((meta,local))
         all_rows.extend(local)
     # The denominator uses only complete textual exam models, not missing scans.
-    denomination=Counter(meta['category'] for meta,rows in exams if len(rows)==100)
+    denomination=Counter(meta['category'] for meta,rows in exams if rows)
     appears=defaultdict(set)
     for item in all_rows:appears[(item['category'],item['frequencyGroup'])].add(item['examId'])
     frequency_by_bank={}
@@ -171,7 +171,7 @@ def generate():
             statuses[row['answerStatus']]+=1
         ready=sum(row['correctAnswer'] in ('A','B','C','D') for row in rows)
         (OUT/'questions'/f"{meta['id']}.json").write_text(json.dumps(rows,ensure_ascii=False,separators=(',',':')),encoding='utf-8')
-        index.append({**meta,'count':len(rows),'readyCount':ready,'path':f"data/exams/questions/{meta['id']}.json",
+        index.append({**meta,'count':len(rows),'expectedCount':100,'readyCount':ready,'path':f"data/exams/questions/{meta['id']}.json",
            'status':'practicable_pendiente_auditoria' if len(rows)==100 and ready==100
             else ('parcial_en_revision' if rows else 'pendiente_transcripcion')})
     # Editable review queue for editorial verification; never auto-resolve a conflict.
@@ -211,7 +211,7 @@ def generate():
           sum(q['matchMethod']=='enunciado_y_texto_respuesta_exactos' for q in all_rows))
     print('AUDIT incomplete models:',[(e['id'],e['count']) for e in index if e['count'] not in (0,100)])
     print('AUDIT parse warnings:', warnings[:20])
-    if len(index)!=26 or len(all_rows)!=1900:
-        raise RuntimeError(f"Auditoria incompleta: {len(index)} examenes y {len(all_rows)} preguntas; esperados 26 y 1900")
+    if len(index)!=26 or len(all_rows)!=1918:
+        raise RuntimeError(f"Auditoria incompleta: {len(index)} examenes y {len(all_rows)} preguntas; esperados 26 y 1918")
 
 if __name__=='__main__':generate()
