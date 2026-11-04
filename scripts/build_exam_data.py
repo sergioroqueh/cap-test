@@ -61,6 +61,7 @@ def generate():
     manifest = json.loads((SRC/'manifest.json').read_text(encoding='utf-8'))['exams']
     keys = json.loads((SRC/'answer_keys_unverified.json').read_text(encoding='utf-8'))
     alignments = json.loads((SRC/'template_alignment_review.json').read_text(encoding='utf-8'))['alignments']
+    visual_keys = json.loads((SRC/'answer_key_visual_corrections.json').read_text(encoding='utf-8'))['overrides']
     corrections = json.loads((SRC/'override_transcriptions_review.json').read_text(encoding='utf-8'))
     bank = defaultdict(list)
     bank_by_question = defaultdict(list)
@@ -142,10 +143,24 @@ def generate():
                     if template_number is not None and 1<=template_number<=len(template)
                     else None)
             if letter not in ('A','B','C','D'):letter=None
+            visual_fix=visual_keys.get(exam_id,{}).get(str(original_number))
+            visual_status='sin_correccion_visual'
+            if visual_fix:
+                if template_number!=original_number:
+                    raise RuntimeError(f'No mezclar ajustes posicionales y visuales en {exam_id} q{original_number}')
+                if original_letter!=visual_fix['expectedExtracted']:
+                    raise RuntimeError(f'La letra original cambió en {exam_id} q{original_number}: '
+                                       f"{original_letter} vs {visual_fix['expectedExtracted']}")
+                letter=visual_fix['verifiedLetter']
+                if letter not in ('A','B','C','D'):
+                    raise RuntimeError(f'Corrección de letra inválida en {exam_id} q{original_number}')
+                visual_status='correccion_visual_documentada_pendiente_revision_editorial'
             if len(mapped)>1: status='conflicto_banco'
             elif inferred and letter and inferred!=letter: status='conflicto_plantilla_banco'
             elif inferred and letter:
-                if align_status!='sin_ajuste':
+                if visual_fix:
+                    status='coincidencia_plantilla_corregida_visual_pendiente_revision'
+                elif align_status!='sin_ajuste':
                     status='coincidencia_alineacion_provisional_pendiente_revision'
                 else:
                     status='coincidencia_automatica' if method=='pregunta_y_cuatro_opciones_exactas' else 'coincidencia_enunciado_banco_plantilla_pendiente_revision'
@@ -156,7 +171,7 @@ def generate():
             original=matching[0] if matching and len(mapped)==1 else None
             key=fingerprint(q)
             group='b:'+original['code'] if original else 't:'+sha256(key.encode()).hexdigest()[:18]
-            answer=inferred if status in ('coincidencia_automatica','coincidencia_alineacion_provisional_pendiente_revision','respuesta_banco_pendiente_revision',
+            answer=inferred if status in ('coincidencia_automatica','coincidencia_alineacion_provisional_pendiente_revision','coincidencia_plantilla_corregida_visual_pendiente_revision','respuesta_banco_pendiente_revision',
                                            'coincidencia_enunciado_banco_plantilla_pendiente_revision',
                                            'respuesta_banco_enunciado_pendiente_revision') else None
             local.append({**q,'examId':exam_id,'date':meta['date'],'category':meta['category'],'model':meta['model'],
@@ -169,7 +184,7 @@ def generate():
               'questionnaireId':original['questionnaireId'] if original else 'examenes-cap',
               'correctAnswer':answer,'bankAnswer':inferred,'templateAnswer':letter,
               'rawTemplateAnswer':original_letter,'templateNumberUsed':template_number,
-              'templateAlignmentStatus':align_status,
+              'templateAlignmentStatus':align_status,'templateVisualCorrectionStatus':visual_status,
               'answerStatus':status,'matchMethod':method,'sourcePage':q['page'],'frequencyGroup':group,
               'reviewRequired':bool(q.get('transcriptionReview')) or status!='coincidencia_automatica'})
         exams.append((meta,local))
@@ -206,6 +221,7 @@ def generate():
               'solo_plantilla_alineada_pendiente_cotejo':1,
               'sin_respuesta_verificada':2,
               'coincidencia_alineacion_provisional_pendiente_revision':3,
+              'coincidencia_plantilla_corregida_visual_pendiente_revision':3,
               'coincidencia_enunciado_banco_plantilla_pendiente_revision':3,
               'respuesta_banco_enunciado_pendiente_revision':3,
               'respuesta_banco_pendiente_revision':3,'coincidencia_automatica':4}
@@ -221,6 +237,7 @@ def generate():
           'rawTemplateAnswer':row['rawTemplateAnswer'],
           'templateNumberUsed':row['templateNumberUsed'],
           'templateAlignmentStatus':row['templateAlignmentStatus'],
+          'templateVisualCorrectionStatus':row['templateVisualCorrectionStatus'],
           'bankAnswerText':row['options'].get(row['bankAnswer'] or '', ''),
           'templateAnswerText':row['options'].get(row['templateAnswer'] or '', ''),
           'canonicalCode':row['canonicalCode'] or '', 'templateFile':meta.get('templateFile') or '',
@@ -342,6 +359,10 @@ def generate():
       'frequencyExplanation':'Apariciones por modelo de examen transcrito, nunca una predicción de la siguiente prueba.'
     },ensure_ascii=False,indent=2),encoding='utf-8')
     print(f"CAP audit: {len(index)} examenes, {len(all_rows)} preguntas, {dict(statuses)}, pendientes {len(warnings)}")
+    print('AUDIT visual letter corrections:', [
+        (r['examId'],r['number'],r['rawTemplateAnswer'],r['templateAnswer'],r['bankAnswer'])
+        for r in all_rows if r['templateVisualCorrectionStatus']!='sin_correccion_visual'
+    ])
     print('AUDIT provisional alignment status:',dict(Counter(
         q['answerStatus'] for q in all_rows if q['templateAlignmentStatus']!='sin_ajuste')))
     print('AUDIT conflict distribution:', dict(Counter(
