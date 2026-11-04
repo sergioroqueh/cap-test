@@ -64,7 +64,8 @@ assert all(1<=v['count']<=v['denominator'] for v in freq.values())
 hints=json.loads((root/'exams'/'review_hints.json').read_text())
 assert all(h['approved'] is False for h in hints)
 assert all(h['usage']=='SUGERENCIA_REVISION_NO_AUTOCORREGIR' for h in hints)
-assert all(h['category'] == 'mercancias' for h in hints), 'Las sugerencias no deben cruzar modalidades'
+assert all(h['category'] in ('mercancias','viajeros') for h in hints)
+assert all('correctAnswer' not in h for h in hints), 'Una sugerencia no puede convertirse en clave de respuesta'
 assert all(1<=h['candidateRank']<=3 for h in hints)
 print(f"PASS CAP: {len(exams)} modelos, {index['totalImportedQuestions']} preguntas, {len(freq)} preguntas enlazadas al banco")
 print(f"PASS sugerencias editoriales, nunca claves: {len(hints)}")
