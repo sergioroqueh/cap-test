@@ -8,16 +8,21 @@ assert bank['totalQuestions'] == 8655
 assert bank['totalQuestionnaires'] == 33
 index = json.loads((root/'exams'/'index.json').read_text())
 assert index['totalExamModels'] == 26
-assert index['totalImportedQuestions'] == 1900
+assert index['totalImportedQuestions'] == 1918
 exams = index['exams']
 assert len([e for e in exams if e['category'] == 'mercancias']) == 25
 assert len([e for e in exams if e['category'] == 'viajeros']) == 1
 assert index['categoryCounts']['mercancias'] == 19
-assert index['categoryCounts'].get('viajeros',0) == 0
+assert index['categoryCounts'].get('viajeros',0) == 1
 
 for exam in exams:
     rows = json.loads((root/exam['path'].removeprefix('data/')).read_text())
     assert len(rows) == exam['count'], exam['id']
+    assert exam['expectedCount'] == 100
+    if exam['category'] == 'viajeros':
+        assert exam['id'] == '2024-04-06-viajeros-global'
+        assert len(rows) == 18, 'La primera fase de Viajeros son 18 preguntas cotejables en origen'
+        assert {q['sourcePage'] for q in rows} == {28,29,30,31}
     assert sum(q['correctAnswer'] in ('A','B','C','D') for q in rows) == exam['readyCount']
     assert len({q['number'] for q in rows}) == len(rows)
     for q in rows:
