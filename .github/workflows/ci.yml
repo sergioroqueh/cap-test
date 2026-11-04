@@ -31,5 +31,6 @@ jobs:
           path: |
             public/data/exams/review_queue.csv
             public/data/exams/review_hints.csv
+            public/data/exams/alignment_2023_a_review.csv
             public/data/exams/index.json
           retention-days: 14
