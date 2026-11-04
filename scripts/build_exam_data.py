@@ -283,6 +283,12 @@ def generate():
       'frequencyExplanation':'Apariciones por modelo de examen transcrito, nunca una predicción de la siguiente prueba.'
     },ensure_ascii=False,indent=2),encoding='utf-8')
     print(f"CAP audit: {len(index)} examenes, {len(all_rows)} preguntas, {dict(statuses)}, pendientes {len(warnings)}")
+    print('AUDIT conflict distribution:', dict(Counter(
+        q['examId'] for q in all_rows if q['answerStatus'] in
+        ('conflicto_banco','conflicto_plantilla_banco'))))
+    print('AUDIT coverage per category:',dict(Counter(q['category'] for q in all_rows)))
+    print('AUDIT corrected per category:',dict(Counter(
+        q['category'] for q in all_rows if q['correctAnswer'] in ('A','B','C','D'))))
     print('AUDIT rescued by exact question and answer text:',
           sum(q['matchMethod']=='enunciado_y_texto_respuesta_exactos' for q in all_rows))
     print('AUDIT incomplete models:',[(e['id'],e['count']) for e in index if e['count'] not in (0,100)])
