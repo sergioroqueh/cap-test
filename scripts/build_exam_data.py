@@ -271,6 +271,9 @@ def generate():
           'templateAnswerText':row['options'].get(row['templateAnswer'] or '', ''),
           'canonicalCode':row['canonicalCode'] or '', 'templateFile':meta.get('templateFile') or '',
           'transcriptionReview':bool(row.get('transcriptionReview')),
+          'sourceMethod':row.get('sourceMethod',''),
+          'optionA':row['options']['A'],'optionB':row['options']['B'],
+          'optionC':row['options']['C'],'optionD':row['options']['D'],
           'normativeSuggestedAnswer':normative_notes.get(
               row['examId']+':'+str(row['number']),{}).get('suggestedAnswer',''),
           'normativeSourceUrl':normative_notes.get(
@@ -333,6 +336,21 @@ def generate():
             q['rawTemplateAnswer'],q['templateAnswer'],
             q['question'][:80]) for q in all_rows if q['answerStatus'] in
            ('conflicto_plantilla_banco','conflicto_banco')])
+
+    # A reviewer-friendly copy of all 100 OCR questions, with full option text.
+    # This never approves an OCR transcription or promotes an answer.
+    ocr_review=[item for item in review
+                if item['examId']=='2025-07-26-mercancias-a']
+    if len(ocr_review)!=100 or not all(item['transcriptionReview'] for item in ocr_review):
+        raise RuntimeError('Se requieren 100 preguntas OCR pendientes de revisión')
+    ocr_review.sort(key=lambda item:item['number'])
+    with (OUT/'ocr_2025_a_review.csv').open('w',encoding='utf-8-sig',newline='') as fh:
+        writer=csv.DictWriter(fh,fieldnames=list(ocr_review[0]))
+        writer.writeheader()
+        writer.writerows(ocr_review)
+    print('AUDIT OCR 2025A candidate answers:',sum(
+        q['bankAnswer'] in ('A','B','C','D') for q in ocr_review),
+        'out of',len(ocr_review))
 
     # Suggestions for manual inspection, not new keys. An imperfect transcription
     # or paraphrase may be close to many bank questions. NEVER autocorrect from this list.
