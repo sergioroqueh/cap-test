@@ -1,0 +1,45 @@
+{
+  "2023-06-03-mercancias-global": {
+    "97": {
+      "number": 97,
+      "page": 311,
+      "question": "En relación con el auxilio a los heridos de un accidente de tráfico, señale cuál de las siguientes afirmaciones es incorrecta:",
+      "options": {
+        "A": "El objetivo de la actuación con los heridos es conseguir su estabilización y el mantenimiento de su vida.",
+        "B": "No se debe actuar si no se está seguro de lo que se debe hacer, ya que se podría agravar la situación de la víctima.",
+        "C": "Las actuaciones que se produzcan en la primera hora son de vital importancia.",
+        "D": "La primera actuación ante un herido de tráfico debe ser voltearlo para reconocer su estado."
+      },
+      "transcriptionReview": true,
+      "transcriptionNote": "La letra C no aparece en la extracción; texto asociado por su posición entre B y D. Revisar contra imagen."
+    }
+  },
+  "2025-02-01-mercancias-global": {
+    "22": {
+      "number": 22,
+      "page": 262,
+      "question": "¿Cuál de estas afirmaciones es incorrecta?",
+      "options": {
+        "A": "Los transitarios son organizadores de transportes internacionales.",
+        "B": "Un grupo de actividades complementarias del transporte lo constituyen las de almacenaje y distribución.",
+        "C": "Las empresas de almacenaje y distribución se denominan genéricamente operarios de transporte de mercancías.",
+        "D": "Las actividades de transitario y de almacenaje y distribución requieren contar con autorización administrativa."
+      },
+      "transcriptionReview": true,
+      "transcriptionNote": "Letra C ausente en la extracción, conservada como reconstrucción a revisar contra imagen."
+    },
+    "57": {
+      "number": 57,
+      "page": 267,
+      "question": "¿Cuál de las siguientes conductas no está considerada como delito contra la seguridad vial en el Código Penal?",
+      "options": {
+        "A": "Robar un vehículo.",
+        "B": "Conducir vehículos con temeridad manifiesta, poniendo en peligro la vida o la integridad de las personas.",
+        "C": "Originar un grave riesgo para la circulación mediante la colocación en la vía de obstáculos imprevisibles.",
+        "D": "Originar un grave riesgo para la circulación derramando sustancias deslizantes o inflamables."
+      },
+      "transcriptionReview": true,
+      "transcriptionNote": "Letra C ausente en la extracción, conservada como reconstrucción a revisar contra imagen."
+    }
+  }
+}
