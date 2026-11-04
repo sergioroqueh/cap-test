@@ -25,6 +25,23 @@ for exam in exams:
         assert exam['id'] == '2024-04-06-viajeros-global'
         assert len(rows) == 100, 'Viajeros debe mantener las 100 preguntas principales'
         assert {q['sourcePage'] for q in rows} == set(range(28,50))
+    if exam['id'] == '2023-07-29-mercancias-a':
+        assert len(rows) == 100
+        for q in rows:
+            n=q['number']
+            if 1<=n<=43:
+                assert q['templateNumberUsed']==n
+                assert q['templateAlignmentStatus']=='sin_ajuste'
+                assert q['templateAnswer']==q['rawTemplateAnswer']
+            elif 44<=n<=99:
+                assert q['templateNumberUsed']==n+1
+                assert q['templateAlignmentStatus']=='alineacion_provisional_pendiente_revision'
+                assert q['reviewRequired']
+                assert q['answerStatus']!='coincidencia_automatica'
+            else:
+                assert q['templateNumberUsed'] is None
+                assert q['templateAnswer'] is None
+                assert q['reviewRequired']
     assert sum(q['correctAnswer'] in ('A','B','C','D') for q in rows) == exam['readyCount']
     assert len({q['number'] for q in rows}) == len(rows)
     for q in rows:
@@ -35,29 +52,37 @@ for exam in exams:
         assert q['examFrequency'] >= 1
         assert q['examFrequency'] <= q['examFrequencyDenominator']
         if q['answerStatus'] in ('conflicto_banco','conflicto_plantilla_banco',
-                                  'solo_plantilla_pendiente_cotejo','sin_respuesta_verificada'):
+                                  'solo_plantilla_pendiente_cotejo','solo_plantilla_alineada_pendiente_cotejo',
+                                  'sin_respuesta_verificada'):
             assert q['correctAnswer'] is None, (exam['id'],q['number'])
         if q['correctAnswer'] is not None:
             assert q['answerStatus'] in (
                 'coincidencia_automatica',
+                'coincidencia_alineacion_provisional_pendiente_revision',
                 'respuesta_banco_pendiente_revision',
                 'coincidencia_enunciado_banco_plantilla_pendiente_revision',
                 'respuesta_banco_enunciado_pendiente_revision')
             assert q['correctAnswer'] == q['bankAnswer']
             if q['answerStatus'] in (
                 'coincidencia_automatica',
+                'coincidencia_alineacion_provisional_pendiente_revision',
                 'coincidencia_enunciado_banco_plantilla_pendiente_revision'):
                 assert q['correctAnswer'] == q['templateAnswer']
         if q.get('matchMethod') == 'enunciado_y_texto_respuesta_exactos':
             assert q['reviewRequired'], (exam['id'],q['number'])
             assert q['answerStatus'] in (
                 'coincidencia_enunciado_banco_plantilla_pendiente_revision',
+                'coincidencia_alineacion_provisional_pendiente_revision',
                 'respuesta_banco_enunciado_pendiente_revision',
                 'conflicto_plantilla_banco')
         if q['answerStatus'] in ('conflicto_banco','conflicto_plantilla_banco'):
             assert q['correctAnswer'] is None
         if q['answerStatus'] == 'coincidencia_enunciado_banco_plantilla_pendiente_revision':
             assert q['reviewRequired']
+        if q['answerStatus']=='coincidencia_alineacion_provisional_pendiente_revision':
+            assert q['reviewRequired']
+            assert q['templateAlignmentStatus']!='sin_ajuste'
+            assert q['correctAnswer'] == q['templateAnswer'] == q['bankAnswer']
         if q.get('transcriptionReview'):
             assert q['reviewRequired']
 
