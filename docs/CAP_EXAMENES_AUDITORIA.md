@@ -5,12 +5,44 @@
 Se conserva el banco original: **8.655 preguntas / 33 cuestionarios**, el login y
 el progreso existente. No modifica ni sobrescribe los TXT de origen.
 
-**Estado vigente — Ronda 6 (04/11/2026):** 26 convocatorias catalogadas;
-**2.100 apariciones** importadas (20 modelos completos de Mercancías y
-1 de Viajeros); **1.551 respuestas** cotejadas con el banco original
-(**1.475 Mercancías + 76 Viajeros**). **549** sin autocorrección.
-**Cinco** modelos escaneados de Mercancías siguen pendientes.
+**Estado vigente — Ronda 7 (04/11/2026):** 26 convocatorias catalogadas;
+**2.200 apariciones** importadas (21 modelos completos de Mercancías y
+1 de Viajeros); **1.635 respuestas** recuperadas por cotejo automático con el
+banco maestro (**1.559 Mercancías + 76 Viajeros**). **565** sin autocorrección.
+**Cuatro** modelos escaneados de Mercancías siguen pendientes.
 El apartado siguiente conserva el historial de hitos y cifras de rondas anteriores.
+
+### Ronda 7 — Mercancías B 26/07/2025 (PDF pp. 185–201)
+
+- Incorporación del **modelo B completo, preguntas 1–100 y cuatro opciones**, con
+  número y página PDF de origen por pregunta. No se incluyen reservas 101–103
+  de la p. 201. El modelo B **no tiene plantilla original de respuestas**.
+- Fuente: transcripción visual provisional, conservada íntegra en
+  `data-src/cap-exams/raw/2025-07-26-mercancias-b.json` con el tipo
+  `TRANSCRIPCION_VISUAL_PENDIENTE_REVISION`. El importador mantiene
+  `transcriptionReview=true`, `reviewRequired=true` y
+  `sourceMethod=LECTURA_VISUAL_PDF_PENDIENTE_REVISION` en sus 100 preguntas.
+  **No se presenta como transcripción editorial oficialmente validada**.
+- El cotejo recuperó **84/100 respuestas solo del banco maestro**, mediante
+  igualdad normalizada de pregunta y cuatro opciones o, conservadoramente,
+  de enunciado y texto de respuesta. **16** permanecen sin respuesta
+  autocorregible; ninguna letra se dedujo de una plantilla inexistente.
+- Tras esta importación: **2.200 apariciones** (2.100 Mercancías + 100
+  Viajeros), **1.635** con clave del banco, **565** sin autocorrección,
+  **930** preguntas históricas distintas enlazadas al banco.
+  Quedan **cuatro** modelos Mercancías por transcribir:
+  2026-09-26-A, 2026-03-28-global, 2022-05-21-global y
+  2024-04-06-global.
+- El examen de Viajeros mantiene sus 100 preguntas y las 76 respuestas
+  anteriormente recuperadas. Banco original de **8.655/33 intacto**.
+- Controles CI: 26 modelos, 2.200 preguntas, números 1–100 sin duplicaciones,
+  páginas 185–201, cuatro opciones, marca obligatoria de revisión visual,
+  fuente de respuesta diferenciada y ninguna reserva puntuada.
+- El PR #6 sigue **en borrador**. Producción en main/GitHub Pages no se modifica.
+  La beta aislada debe actualizarse solo tras comprobar CI y commit.
+- El cotejo automatizado **no equivale a la validación oficial o visual de
+  las 84 claves**. Las sugerencias de similitud siguen sin poder adjudicar
+  respuesta y el conflicto explícito de febrero 2026 continúa bloqueado.
 
 ### Documentos recibidos
 - Exámenes TOTALES.pdf: 499 páginas.
