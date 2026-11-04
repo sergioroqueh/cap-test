@@ -60,6 +60,7 @@ def parse_page(text,page):
 def generate():
     manifest = json.loads((SRC/'manifest.json').read_text(encoding='utf-8'))['exams']
     keys = json.loads((SRC/'answer_keys_unverified.json').read_text(encoding='utf-8'))
+    alignments = json.loads((SRC/'template_alignment_review.json').read_text(encoding='utf-8'))['alignments']
     corrections = json.loads((SRC/'override_transcriptions_review.json').read_text(encoding='utf-8'))
     bank = defaultdict(list)
     bank_by_question = defaultdict(list)
@@ -123,20 +124,39 @@ def generate():
                 wanted=norm(b['options'][b['correctAnswer']])
                 mapped.update(k for k,v in q['options'].items() if norm(v)==wanted)
             inferred=next(iter(mapped)) if len(mapped)==1 else None
-            letter=template[q['number']-1] if len(template)>=q['number'] else None
+            original_number=q['number']
+            original_letter=template[original_number-1] if len(template)>=original_number else None
+            if original_letter not in ('A','B','C','D'):original_letter=None
+            # The original scanned answer sheet must stay unchanged. Any
+            # offset is explicit, limited, and treated as provisional evidence.
+            template_number=original_number
+            align_status='sin_ajuste'
+            for rule in alignments.get(exam_id,{}).get('rules',[]):
+                if rule['questionStart']<=original_number<=rule['questionEnd']:
+                    offset=rule['templateNumberOffset']
+                    template_number=original_number+offset if offset is not None else None
+                    align_status=('sin_ajuste' if offset==0
+                                  else 'alineacion_provisional_pendiente_revision')
+                    break
+            letter=(template[template_number-1]
+                    if template_number is not None and 1<=template_number<=len(template)
+                    else None)
             if letter not in ('A','B','C','D'):letter=None
             if len(mapped)>1: status='conflicto_banco'
             elif inferred and letter and inferred!=letter: status='conflicto_plantilla_banco'
             elif inferred and letter:
-                status='coincidencia_automatica' if method=='pregunta_y_cuatro_opciones_exactas' else 'coincidencia_enunciado_banco_plantilla_pendiente_revision'
+                if align_status!='sin_ajuste':
+                    status='coincidencia_alineacion_provisional_pendiente_revision'
+                else:
+                    status='coincidencia_automatica' if method=='pregunta_y_cuatro_opciones_exactas' else 'coincidencia_enunciado_banco_plantilla_pendiente_revision'
             elif inferred:
                 status='respuesta_banco_pendiente_revision' if method=='pregunta_y_cuatro_opciones_exactas' else 'respuesta_banco_enunciado_pendiente_revision'
-            elif letter:status='solo_plantilla_pendiente_cotejo'
+            elif letter:status=('solo_plantilla_alineada_pendiente_cotejo' if align_status!='sin_ajuste' else 'solo_plantilla_pendiente_cotejo')
             else:status='sin_respuesta_verificada'
             original=matching[0] if matching and len(mapped)==1 else None
             key=fingerprint(q)
             group='b:'+original['code'] if original else 't:'+sha256(key.encode()).hexdigest()[:18]
-            answer=inferred if status in ('coincidencia_automatica','respuesta_banco_pendiente_revision',
+            answer=inferred if status in ('coincidencia_automatica','coincidencia_alineacion_provisional_pendiente_revision','respuesta_banco_pendiente_revision',
                                            'coincidencia_enunciado_banco_plantilla_pendiente_revision',
                                            'respuesta_banco_enunciado_pendiente_revision') else None
             local.append({**q,'examId':exam_id,'date':meta['date'],'category':meta['category'],'model':meta['model'],
@@ -148,6 +168,8 @@ def generate():
               'reference':original.get('reference','') if original else '',
               'questionnaireId':original['questionnaireId'] if original else 'examenes-cap',
               'correctAnswer':answer,'bankAnswer':inferred,'templateAnswer':letter,
+              'rawTemplateAnswer':original_letter,'templateNumberUsed':template_number,
+              'templateAlignmentStatus':align_status,
               'answerStatus':status,'matchMethod':method,'sourcePage':q['page'],'frequencyGroup':group,
               'reviewRequired':bool(q.get('transcriptionReview')) or status!='coincidencia_automatica'})
         exams.append((meta,local))
@@ -180,7 +202,10 @@ def generate():
     # Editable review queue for editorial verification; never auto-resolve a conflict.
     by_id={meta['id']:meta for meta,_ in exams}
     priority={'conflicto_banco':0,'conflicto_plantilla_banco':0,
-              'solo_plantilla_pendiente_cotejo':1,'sin_respuesta_verificada':2,
+              'solo_plantilla_pendiente_cotejo':1,
+              'solo_plantilla_alineada_pendiente_cotejo':1,
+              'sin_respuesta_verificada':2,
+              'coincidencia_alineacion_provisional_pendiente_revision':3,
               'coincidencia_enunciado_banco_plantilla_pendiente_revision':3,
               'respuesta_banco_enunciado_pendiente_revision':3,
               'respuesta_banco_pendiente_revision':3,'coincidencia_automatica':4}
@@ -193,6 +218,9 @@ def generate():
           'number':row['number'],'page':row['sourcePage'],'status':row['answerStatus'],
           'matchMethod':row['matchMethod'],
           'question':row['question'],'bankAnswer':row['bankAnswer'],'templateAnswer':row['templateAnswer'],
+          'rawTemplateAnswer':row['rawTemplateAnswer'],
+          'templateNumberUsed':row['templateNumberUsed'],
+          'templateAlignmentStatus':row['templateAlignmentStatus'],
           'bankAnswerText':row['options'].get(row['bankAnswer'] or '', ''),
           'templateAnswerText':row['options'].get(row['templateAnswer'] or '', ''),
           'canonicalCode':row['canonicalCode'] or '', 'templateFile':meta.get('templateFile') or '',
@@ -236,7 +264,7 @@ def generate():
             if len(token)>3: question_index[token].add(i)
     review_hints=[]
     row_lookup={(q['examId'],q['number']):q for q in all_rows}
-    unresolved={'solo_plantilla_pendiente_cotejo','sin_respuesta_verificada',
+    unresolved={'solo_plantilla_pendiente_cotejo','solo_plantilla_alineada_pendiente_cotejo','sin_respuesta_verificada',
                 'conflicto_plantilla_banco','conflicto_banco'}
     for row in review:
         if row['status'] not in unresolved:continue
@@ -283,6 +311,8 @@ def generate():
       'frequencyExplanation':'Apariciones por modelo de examen transcrito, nunca una predicción de la siguiente prueba.'
     },ensure_ascii=False,indent=2),encoding='utf-8')
     print(f"CAP audit: {len(index)} examenes, {len(all_rows)} preguntas, {dict(statuses)}, pendientes {len(warnings)}")
+    print('AUDIT provisional alignment status:',dict(Counter(
+        q['answerStatus'] for q in all_rows if q['templateAlignmentStatus']!='sin_ajuste')))
     print('AUDIT conflict distribution:', dict(Counter(
         q['examId'] for q in all_rows if q['answerStatus'] in
         ('conflicto_banco','conflicto_plantilla_banco'))))
