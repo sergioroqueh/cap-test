@@ -87,10 +87,21 @@ export interface StudySessionRecord {
   correct: number
   incorrect: number
   score: number
+  /** CAP net points, +1 correct / -0.5 incorrect / 0 blank. */
+  netPoints?: number
+  gradedTotal?: number
+  blank?: number
+  excluded?: number
+  passed?: boolean | null
+  capScoring?: boolean
+  timed?: boolean
+  durationMinutes?: number
+  finishedReason?: 'manual' | 'timeout'
+  elapsedSeconds?: number
   answers: SessionAnswer[]
 }
 
-export type StudySource = 'questionnaire' | 'random' | 'unseen' | 'errors' | 'smart' | 'favorites' | 'cap-original' | 'cap-random' | 'cap-mixed'
+export type StudySource = 'questionnaire' | 'random' | 'unseen' | 'errors' | 'smart' | 'favorites' | 'cap-original' | 'cap-random' | 'cap-mixed' | 'cap-errors' | 'cap-favorites' | 'cap-review'
 
 export interface ActiveSession {
   type: 'study' | 'exam'
@@ -102,4 +113,9 @@ export interface ActiveSession {
   selectedAnswers: Record<string, AnswerKey>
   checkedIds: string[]
   startedAt: number
+  /** A CAP real exam uses persisted wall clock and cannot be paused. */
+  timed?: boolean
+  durationMinutes?: number
+  /** Questions flagged for later review, not graded differently. */
+  markedIds?: string[]
 }
