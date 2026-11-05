@@ -65,9 +65,9 @@ def main():
         rows.sort(key=lambda row: (row["examId"], row["number"]))
     dump_csv("template_review_priority.csv", with_template)
     dump_csv("without_template_deferred.csv", without_template)
-    if len(with_template) + len(without_template) != 678:
+    if len(with_template) + len(without_template) != 663:
         raise AssertionError("La cola debería contener 678 preguntas pendientes")
-    if len(with_template) != 498 or len(without_template) != 180:
+    if len(with_template) != 483 or len(without_template) != 180:
         raise AssertionError("Desfase de cola prioritaria y aplazada")
 
     # Una lectura textual de la plantilla oficial no basta para corregirla:
@@ -122,8 +122,9 @@ def main():
             "conflictsBlocked": len(conflicts),
             "withoutBankCandidateBlocked": len(candidates),
         },
-        "publishedAnswerChanges": 0,
-        "instructions": "Esperar lectura VISUAL de plantilla original, no convertir las letras de la extracción en definitivas",
+        "publishedAnswerChanges": 15,
+        "visualVerifiedModels": ["2025-03-29-mercancias-global"],
+        "instructions": "Marzo 2025 ya verificado visualmente con el PDF original; la lectura textual antigua permanece bloqueada. Las restantes plantillas siguen pendientes de cotejo visual.",
     }
     (OUT / "template_review_summary.json").write_text(json.dumps(summary, ensure_ascii=False, indent=2), encoding="utf-8")
     print("PASS R14", summary["prioritizedWithTemplate"], "con plantilla;",
