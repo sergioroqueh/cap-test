@@ -983,7 +983,7 @@ def generate():
         for row in items:
             identity=row['canonicalQuestionId'] or row['id']
             question=unicodedata.normalize('NFKC',row['question']).lower()
-            question=re.sub(r'[¿?¡!.,;:()\\[\\]{}]','',re.sub(r'\\s+',' ',question)).strip()
+            question=re.sub(r'[¿?¡!.,;:()\[\]{}]','',re.sub(r'\s+',' ',question)).strip()
             if identity in ids or question in texts:
                 continue
             ids.add(identity)
