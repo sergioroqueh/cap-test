@@ -165,6 +165,24 @@ def main() -> None:
          "Palabras deformadas en el texto publicado por el extractor, sin prueba de error en la respuesta",
          "Examenes TOTALES.pdf paginas 482-499; ejemplo q1 'EI origen'/'Ios animaIes'")
 
+    # Seis opciones recuperadas manualmente porque el extractor omitio
+    # o pego la letra de una alternativa. Permanecen pendientes de cotejo visual.
+    repairs = json.loads(
+        (SOURCE / "override_transcriptions_review.json").read_text(encoding="utf-8"))
+    repair_count = 0
+    for eid, items in repairs.items():
+        for number, proof in items.items():
+            item = by_id[(eid, int(number))]
+            assert item["sourcePage"] == proof["page"]
+            assert norm(item["question"]) == norm(proof["question"])
+            assert all(norm(item["options"][a]) == norm(proof["options"][a]) for a in "ABCD")
+            assert item["textReviewRequired"] is True
+            mark(item, "opcion_reconstruida_extractor_pdf", "P1",
+                 "Se reconstruyo una alternativa con letra ausente o unida al texto extraido",
+                 proof["transcriptionNote"] + f"; PDF pagina {proof['page']}")
+            repair_count += 1
+    assert repair_count == 6
+
     counts = Counter()
     exams_out = []
     export = []
