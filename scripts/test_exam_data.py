@@ -372,7 +372,7 @@ for eid,proof in verified_meta['exams'].items():
     assert all(q['templateAnswer']==proof['correctAnswers'][q['number']-1] for q in rows)
     assert all(q['correctAnswer']==proof['correctAnswers'][q['number']-1] for q in rows if q['number'] not in held)
     assert sum(q['bankAnswer'] in ('A','B','C','D') and q['bankAnswer']==q['templateAnswer'] for q in rows)==proof['expectedBankConcordances']
-    assert sum(q['bankAnswer'] and q['bankAnswer']!=q['templateAnswer'] for q in rows)==proof.get('expectedBankConflicts',0)
+    assert sum(q['bankAnswer'] in ('A','B','C','D') and q['bankAnswer']!=q['templateAnswer'] for q in rows)==proof.get('expectedBankConflicts',0)
     assert sum(bool(q.get('answerEvidenceUrl')) for q in rows)==proof.get('expectedPreviouslyScoredExternal',0)
     assert next(e for e in exams if e['id']==eid)['readyCount']==100-len(held)
 print('PASS R15: 5 PDF originales, 500 casillas comprobadas, 2 conflictos excluidos de puntuación')
