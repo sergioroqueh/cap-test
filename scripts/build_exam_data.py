@@ -324,6 +324,26 @@ def generate():
                 evidence_url=public_evidence['sourceUrl']
                 evidence_source=public_evidence['officialSource']
                 evidence_applied.add(evidence_id)
+            editorial = (editorial_source['approvals'].get(str(original_number))
+                         if exam_id==editorial_source['examId'] else None)
+            if editorial:
+                evidence_id=f'{exam_id}:{original_number}'
+                if status!='solo_plantilla_alineada_pendiente_cotejo' or answer is not None:
+                    raise RuntimeError(f'La resolución editorial sobrescribe una respuesta válida: {evidence_id}')
+                if (not template_verified or not template_verified.get('fromBatch')
+                    or editorial_source['sourceTemplateSha256']!=template_verified['sourcePdfSha256']
+                    or q['page']!=editorial['sourcePage']
+                    or original_number!=editorial['number']
+                    or norm(q['question'])!=norm(editorial['expectedQuestion'])
+                    or norm(q['options'][letter])!=norm(editorial['expectedAnswerText'])
+                    or letter!=editorial['approvedAnswer']
+                    or template_number!=editorial['templateNumberUsed']
+                    or template_number!=original_number+1
+                    or align_status!='alineacion_provisional_pendiente_revision'):
+                    raise RuntimeError(f'Resolución editorial incompatible con PDF original: {evidence_id}')
+                answer=letter
+                status='respuesta_alineacion_editorial_confirmada'
+                editorial_applied.add(original_number)
             local.append({**q,'examId':exam_id,'date':meta['date'],'category':meta['category'],'model':meta['model'],
               'id':original['id'] if original else 'cap-'+sha256(key.encode()).hexdigest()[:24],
               'canonicalQuestionId':original['id'] if original else None,'canonicalCode':original['code'] if original else None,
@@ -337,12 +357,18 @@ def generate():
               'templateAlignmentStatus':align_status,'templateVisualCorrectionStatus':visual_status,
               'answerStatus':status,'matchMethod':method,'sourcePage':q['page'],'frequencyGroup':group,
               'reviewRequired':bool(q.get('transcriptionReview')) or status not in ('coincidencia_automatica','plantilla_pdf_oficial_verificada'),
+              'answerEditoriallyVerified':bool(editorial),
+              'answerEditorialEvidence':editorial['verificationMethod'] if editorial else '',
               'answerEvidenceUrl':evidence_url,
               'answerEvidenceSource':evidence_source,
               'answerTemplateOfficiallyVerified':True if verified_pdf else (False if public_evidence else None),
               'answerTemplateSourceSha256':template_verified['sourcePdfSha256'] if verified_pdf else ''})
         exams.append((meta,local))
         all_rows.extend(local)
+    if editorial_applied != {int(n) for n in editorial_source['approvals']}:
+        raise RuntimeError('Faltan aprobaciones editoriales: '
+                           +str({int(n) for n in editorial_source['approvals']}-editorial_applied))
+    print('AUDIT editorial verified July 2023 A:',sorted(editorial_applied))
     for verified_exam, proof in verified_pdf_keys.items():
         expected_verified=proof.get('verifiedQuestionEnd',100)
         if verified_pdf_applied[verified_exam]!=expected_verified:
