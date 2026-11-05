@@ -78,6 +78,42 @@
       },
       "approval": "lectura_visual_plantilla_original_verificada",
       "notes": "MER­CANCÍAS GLOBAL MARZO 2026: 100 casillas cotejadas; 80/81 concordancias con banco, q43 bloqueada, q58 coincide con evidencia independiente DGT existente. La transcripción del texto original es provisional."
+    },
+    "2024-04-06-mercancias-global": {
+      "sourceFile": "Plantilla Abril 2024.pdf",
+      "sourcePage": 1,
+      "category": "mercancias",
+      "model": "GLOBAL",
+      "sourcePdfSha256": "6355052fdc3440ebd4ca01dbd15d8c19b9a53104d9f8e2d095b6473b5360c934",
+      "sourceZip": "Respuestas(1).zip",
+      "visualMethod": "lectura_de_marcas_A_B_C_D_en_imagen_del_pdf_original_con_cotejo_visual_muestra_y_73_claves_del_banco",
+      "readDirection": "Sección superior: 1-5,6-10,11-15,16-20,21-25; inferior: 26-40,41-55,56-70,71-85,86-100; ignorar 1ª/2ª de reserva.",
+      "correctAnswers": "BDBDDACDADBCDCDBDCABDCABCBBBBBCCDDCDCDCDCBCCACADACDADDAABAACAAACADDBDAADABBCCACAAAACADDCCCCBACABBBAA",
+      "keyDigestSha256": "5c01ad76e8a8608b152647172a935282c524d6cffea02ab542d45c43243c4469",
+      "verifiedOn": "2026-11-05",
+      "expectedBankConcordances": 73,
+      "expectedBankConflicts": 0,
+      "expectedPreviouslyScoredExternal": 1,
+      "approval": "lectura_visual_marca_pdf_original_y_validacion_banco",
+      "notes": "100 casillas detectadas sin ambigüedad, 73/73 coincidencias con banco, q71 A coincide con Ley 16/1987; 26 respuestas adicionales. Se excluyen reservas."
+    },
+    "2024-07-20-mercancias-b": {
+      "sourceFile": "Plantilla B Julio 2024.pdf",
+      "sourcePage": 1,
+      "category": "mercancias",
+      "model": "B",
+      "sourcePdfSha256": "c315413c24be4c22cecc0cb458c4ab4006be5c708319ba379cc5319ca4a4ee95",
+      "sourceZip": "Respuestas(1).zip",
+      "visualMethod": "lectura_de_marcas_negras_A_B_C_D_de_imagen_pdf_original_cotejo_con_85_claves_banco",
+      "readDirection": "Sección superior: 1-5,6-10,11-15,16-20,21-25; inferior: 26-40,41-55,56-70,71-85,86-100; ignorar reservas 1ª/2ª/3ª.",
+      "correctAnswers": "CCCBABBDABCDBBBCACABACDABCCDDDCBBACBACDCCCCCCCABCACACBAAADBDDDBCAADDDBBBBBBCAAABCCDBCAAACBDBACCCABBC",
+      "keyDigestSha256": "ef37972c9471f699ec8c38e5feb9ed0bcc499825703eb3e26ac3ada5fc459878",
+      "verifiedOn": "2026-11-05",
+      "expectedBankConcordances": 85,
+      "expectedBankConflicts": 0,
+      "expectedPreviouslyScoredExternal": 1,
+      "approval": "lectura_visual_marca_pdf_original_y_validacion_banco",
+      "notes": "100 casillas de preguntas principales; 85/85 banco, q84 B = PHEV DGT, 14 nuevas, reservas excluidas."
     }
   }
 }
