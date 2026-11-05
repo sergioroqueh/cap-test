@@ -42,10 +42,17 @@
       "correctAnswers": "BACABAABBDBCDCCBCDDBAACCDBCACBCBCAACDCACDBAAABBACDBBBADAACABDCABCCDACCCCCABBDADDBBDDBBDBBABCCCACDADB",
       "keyDigestSha256": "8386c95ad396aa357ffe50fb0d1559ca60ac53a7a66578be202bf70f89910500",
       "verifiedOn": "2026-11-05",
-      "expectedBankConcordances": 67,
-      "expectedBankConflicts": 0,
+      "expectedBankConcordances": 66,
+      "expectedBankConflicts": 1,
       "approval": "lectura_visual_plantilla_original_verificada",
-      "notes": "Encabezado MERCANCÍAS GLOBAL / JULIO 2025 MODELO A. 100 casillas cotejadas visualmente. Las preguntas del examen original proceden de transcripción visual provisional; la CLAVE de respuesta sí es la del PDF original."
+      "notes": "Plantilla original MERCANCÍAS GLOBAL / JULIO 2025 MODELO A, 100 casillas leídas visualmente. 66 de 67 claves del banco coinciden; pregunta 43 se bloquea por conflicto. La transcripción del examen es provisional. Las 33 preguntas sin clave previa pueden usarse con la respuesta visual del PDF.",
+      "holdConflicts": {
+        "43": {
+          "bankAnswer": "B",
+          "pdfAnswer": "A",
+          "reason": "La plantilla original marca A; la transcripción provisional del enunciado y opciones sugiere B (orden decreciente de consumo específico). Revisar imagen del examen antes de decidir, sin autocorrección."
+        }
+      }
     }
   }
 }
