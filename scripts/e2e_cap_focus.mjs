@@ -55,7 +55,7 @@ try{
  await p.locator('.focus-index summary').click()
  assert.equal(await p.locator('.focus-question-grid button').count(),100)
  await p.locator('.focus-question-grid button').nth(9).click()
- assert.match(await p.locator('.focus-question>small').innerText(),/Pregunta 10 de 100/)
+ assert.match(await p.locator('.focus-question>small').innerText(),/pregunta 10 de 100/i)
  await submit(p)
  const result=await readResult(p)
  assert.equal(result.record.total,100)

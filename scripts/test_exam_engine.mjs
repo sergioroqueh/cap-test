@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { gradeSession, deadlineAt, remainingMs, formatRemaining } from '../src/examEngine.mjs';
+import { gradeSession, deadlineAt, remainingMs, formatRemaining, uniqueExamQuestions } from '../src/examEngine.mjs';
 
 const answers = (right, wrong, empty, excluded = 0) => [
   ...Array.from({length:right},()=>({selected:'A',correct:true,scoringEligible:true})),
@@ -50,4 +50,14 @@ test('clock does not pause when the tab is hidden or page reloads',()=>{
   assert.equal(remainingMs(start,start+7_500_000),0);
   assert.equal(formatRemaining(7_200_000),'02:00:00');
   assert.equal(formatRemaining(0),'00:00:00');
+});
+
+test('mixed exams discard repeated canonical ids and identical enunciados',()=>{
+ const input=[
+  {id:'1',progressId:'canonical-a',question:'¿Qué carga corresponde?'},
+  {id:'2',progressId:'canonical-a',question:'Pregunta distinta con el mismo id'},
+  {id:'3',progressId:'canonical-b',question:'¿Qué   carga corresponde?'},
+  {id:'4',progressId:'canonical-c',question:'Pregunta realmente diferente'}
+ ];
+ assert.deepEqual(uniqueExamQuestions(input).map(q=>q.id),['1','4']);
 });

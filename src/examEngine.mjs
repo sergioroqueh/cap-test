@@ -48,3 +48,24 @@ export function formatRemaining(ms) {
     String(Math.floor((seconds % 3600) / 60)).padStart(2, '0') + ':' +
     String(seconds % 60).padStart(2, '0');
 }
+
+/**
+ * Mix without repeating either the canonical question or its normalized text.
+ * The first occurrence keeps the original question, options, and answer letter.
+ * @template {{id:string, progressId?:string, question:string}} T
+ * @param {T[]} questions
+ * @returns {T[]}
+ */
+export function uniqueExamQuestions(questions) {
+  const ids = new Set();
+  const statements = new Set();
+  return questions.filter(q => {
+    const id = q.progressId || q.id;
+    const text = q.question.normalize('NFKC').toLocaleLowerCase('es')
+      .replace(/\s+/g, ' ').replace(/[¿?¡!.,;:()[\]{}]/g, '').trim();
+    if(ids.has(id) || statements.has(text)) return false;
+    ids.add(id);
+    statements.add(text);
+    return true;
+  });
+}

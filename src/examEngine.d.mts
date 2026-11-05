@@ -22,3 +22,5 @@ export function gradeSession(answers: GradingAnswer[], capScoring?: boolean): Gr
 export function deadlineAt(startedAt: number, durationMinutes?: number): number;
 export function remainingMs(startedAt: number, now: number, durationMinutes?: number): number;
 export function formatRemaining(ms: number): string;
+
+export function uniqueExamQuestions<T extends {id:string;progressId?:string;question:string}>(questions:T[]):T[];

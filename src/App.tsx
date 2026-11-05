@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import Quiz from './Quiz'
-import { CAP_DURATION_MINUTES } from './examEngine.mjs'
+import { CAP_DURATION_MINUTES, uniqueExamQuestions } from './examEngine.mjs'
 import type { ActiveSession, AnswerKey, BankIndex, Question, QuestionProgress, QuestionnaireMeta, StudySessionRecord, StudySource } from './types'
 import { addSession, clearAllData, clearLocalCache, exportDatabase, getAllProgress, getRecentSessions, importProgress, pushLocalSnapshotToCloud, putProgress, synchronizeAccount } from './db'
 import { cloudConfigured, getSession, signIn, signOut, supabase } from './supabase'
@@ -43,7 +43,7 @@ function App(){
 function CapApp({userEmail,onSignOut}:{userEmail:string;onSignOut:()=>Promise<void>}){
  const [page,setPage]=useState<Route>(route()),[bank,setBank]=useState<BankIndex|null>(null),[rows,setRows]=useState<QuestionProgress[]>([]),[sessions,setSessions]=useState<StudySessionRecord[]>([]),[busy,setBusy]=useState(true),[load,setLoad]=useState<number|null>(null),[online,setOnline]=useState(navigator.onLine),[theme,setTheme]=useState(localStorage.getItem(THEME)||'dark')
  useEffect(()=>{const h=()=>setPage(route()),o=()=>{const isOnline=navigator.onLine;setOnline(isOnline);if(isOnline)pushLocalSnapshotToCloud().catch(console.error)};addEventListener('hashchange',h);addEventListener('online',o);addEventListener('offline',o);if(!location.hash)go('home');return()=>{removeEventListener('hashchange',h);removeEventListener('online',o);removeEventListener('offline',o)}},[])
- useEffect(()=>{document.documentElement.dataset.theme=theme;localStorage.setItem(THEME,theme)},[theme])
+ useEffect(()=>{document.documentElement.dataset.theme=theme;localStorage.setItem(THEME,theme);document.querySelector('meta[name="theme-color"]')?.setAttribute('content',theme==='light'?'#f5f8f8':'#0b1115')},[theme])
  const refresh=async()=>{setRows(await getAllProgress());setSessions(await getRecentSessions(30))}
  useEffect(()=>{Promise.all([loadBankIndex(),refresh()]).then(([b])=>setBank(b)).finally(()=>setBusy(false))},[])
  const pm=useMemo(()=>new Map(rows.map(x=>[x.questionId,x])),[rows])
@@ -129,9 +129,7 @@ function CapHome({pm}:{pm:Map<string,QuestionProgress>}){
    const real=runMode==='exam'&&timed
    if(['cap-mixed','cap-errors','cap-favorites','cap-review'].includes(source)){
     const rows=await loadAllCapQuestions(category)
-    const unique=new Map<string,Question>()
-    shuffle(rows).forEach(x=>{const id=x.progressId||x.id;if(!unique.has(id))unique.set(id,x)})
-    let pool=[...unique.values()]
+    let pool=uniqueExamQuestions(shuffle(rows))
     if(source==='cap-errors')pool=pool.filter(x=>needsReview(pm.get(x.progressId||x.id)))
     if(source==='cap-favorites')pool=pool.filter(x=>pm.get(x.progressId||x.id)?.favorite)
     if(source==='cap-review')pool=pool.sort((a,b)=>smartScore(pm.get(b.progressId||b.id))-smartScore(pm.get(a.progressId||a.id)))
