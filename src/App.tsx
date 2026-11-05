@@ -5,7 +5,7 @@ import { cloudConfigured, getSession, signIn, signOut, supabase } from './supaba
 import type { Session } from '@supabase/supabase-js'
 import { loadAllQuestions, loadBankIndex, loadQuestionnaire, resolveQuestions } from './data'
 import { chooseSmartQuestions, getStatus, needsReview, percent, shuffle } from './utils'
-import { loadCapIndex, loadCapQuestions, loadAllCapQuestions, loadBankExamFrequency, loadCapPendingQuestions, type CapPendingQuestion, type CapCategory, type CapExamMeta, type CapExamIndex } from './capExams'
+import { loadCapIndex, loadCapQuestions, loadAllCapQuestions, loadBankExamFrequency, loadCapPendingQuestions, loadCapSheetReview, type CapSheetReviewQuestion, type CapPendingQuestion, type CapCategory, type CapExamMeta, type CapExamIndex } from './capExams'
 
 const PREVIEW=import.meta.env.VITE_CAP_PREVIEW === 'true'
 const ACTIVE=PREVIEW?'cap-test-beta-active-v1':'cap-test-active-v1',
@@ -184,7 +184,7 @@ function Quiz({pm,refresh}:{pm:Map<string,QuestionProgress>;refresh:()=>Promise<
  const progressId=(x:Question)=>x.progressId||x.id
  if(!s||loading||!qs.length)return <Loading text="Cargando test…"/>
  const session=s
- const i=session.currentIndex,q=qs[i],sel=session.selectedAnswers[q.id],checked=session.checkedIds.includes(q.id),correct=sel===q.correctAnswer,fav=pm.get(progressId(q))?.favorite
+ const i=session.currentIndex,q=qs[i],sel=session.selectedAnswers[q.id],checked=session.checkedIds.includes(q.id),correct=q.scoringEligible!==false&&sel===q.correctAnswer,fav=pm.get(progressId(q))?.favorite
  const frequency=q.examFrequency!==undefined?{count:q.examFrequency,denominator:q.examFrequencyDenominator||0,category:(q as Question & {category?:CapCategory}).category||'mercancias'}:frequencies[progressId(q)]
  const save=(n:ActiveSession)=>{setS(n);sessionStorage.setItem(ACTIVE,JSON.stringify(n))}
  async function select(k:AnswerKey){
@@ -192,6 +192,7 @@ function Quiz({pm,refresh}:{pm:Map<string,QuestionProgress>;refresh:()=>Promise<
   if(session.type==='exam'){save({...session,selectedAnswers:{...session.selectedAnswers,[q.id]:k}});return}
   const next={...session,selectedAnswers:{...session.selectedAnswers,[q.id]:k},checkedIds:[...session.checkedIds,q.id]}
   save(next)
+  if(q.scoringEligible===false)return // el alumno no acumula fallos/aciertos discutidos
   const b=pm.get(progressId(q))||fresh({...q,id:progressId(q)}),ok=k===q.correctAnswer
   await putProgress({...b,attempts:b.attempts+1,correct:b.correct+(ok?1:0),incorrect:b.incorrect+(ok?0:1),streak:ok?b.streak+1:0,lastAnsweredAt:Date.now(),lastAnswer:k,lastCorrect:ok})
   await refresh()
@@ -203,16 +204,18 @@ function Quiz({pm,refresh}:{pm:Map<string,QuestionProgress>;refresh:()=>Promise<
   if(session.type==='exam'){
    for(const x of qs){
     const selected=session.selectedAnswers[x.id]
-    if(!selected)continue
+    if(!selected||x.scoringEligible===false)continue
     const prior=pm.get(progressId(x))||fresh({...x,id:progressId(x)})
     const ok=selected===x.correctAnswer
     await putProgress({...prior,attempts:prior.attempts+1,correct:prior.correct+(ok?1:0),incorrect:prior.incorrect+(ok?0:1),streak:ok?prior.streak+1:0,lastAnsweredAt:Date.now(),lastAnswer:selected,lastCorrect:ok})
    }
   }
-  const answers=qs.map(x=>({questionId:x.id,questionnaireId:group(x),selected:session.selectedAnswers[x.id],correctAnswer:x.correctAnswer,correct:session.selectedAnswers[x.id]===x.correctAnswer}))
-  const cor=answers.filter(x=>x.correct).length
-  const incorrect=answers.filter(x=>x.selected&&!x.correct).length
-  const record:StudySessionRecord={type:session.type,label:session.label,startedAt:session.startedAt,completedAt:Date.now(),total:qs.length,answered,correct:cor,incorrect,score:percent(cor,session.type==='exam'?qs.length:answered),answers}
+  const answers=qs.map(x=>({questionId:x.id,questionnaireId:group(x),selected:session.selectedAnswers[x.id],correctAnswer:x.correctAnswer,scoringEligible:x.scoringEligible!==false,correct:x.scoringEligible!==false&&session.selectedAnswers[x.id]===x.correctAnswer}))
+  const graded=answers.filter(x=>x.scoringEligible!==false)
+  const cor=graded.filter(x=>x.correct).length
+  const incorrect=graded.filter(x=>x.selected&&!x.correct).length
+  const gradedAnswered=graded.filter(x=>!!x.selected).length
+  const record:StudySessionRecord={type:session.type,label:session.label,startedAt:session.startedAt,completedAt:Date.now(),total:qs.length,answered,correct:cor,incorrect,score:percent(cor,session.type==='exam'?graded.length:gradedAnswered),answers}
   await addSession(record)
   sessionStorage.setItem(LAST,JSON.stringify({record,questionIds:session.questionIds}))
   sessionStorage.removeItem(ACTIVE)
