@@ -54,10 +54,10 @@
       "examId": "2022-11-26-mercancias-global",
       "number": 6,
       "expectedQuestionFragment": "caja de cambios o caja de velocidades",
-      "status": "COHERENCIA_TECNICA_PRELIMINAR",
+      "status": "DUDOSA_TECNICA_FRENTE_DGT",
       "expectedAppliedAnswer": "A",
-      "explanation": "Elemento de enlace del motor con la transmisión; lectura de las cuatro alternativas y plantilla conservada, NO revisión visual independiente de todo el PDF",
-      "source": "Examenes TOTALES.pdf, páginas 420–422; Plantilla Noviembre 2022.pdf"
+      "explanation": "La plantilla marca A (conectar el motor al sistema de transmisión), pero el Manual VIII Mecánica DGT 2022 diferencia claramente: el embrague acopla/desacopla el motor y la caja de velocidades adapta la relación de transmisión/par. No existe alternativa que describa con exactitud la función de la caja; mantener A como respuesta impresa, marcar pregunta dudosa y solicitar decisión editorial antes de cambiar puntuación.",
+      "source": "https://sede.dgt.gob.es/.galleries/permisos-de-conducir/certificacion-aptitud-profesores-formacion-vial/2022/Manual-VIII-Mecanica-2022.pdf (TEMA 7, transmisión), además de Examenes TOTALES.pdf página 420 y Plantilla Noviembre 2022.pdf"
     },
     {
       "examId": "2022-11-26-mercancias-global",
