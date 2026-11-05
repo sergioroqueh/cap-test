@@ -27,6 +27,20 @@ jobs:
       - name: Audit remaining source PDFs without changing scored keys
         run: python3 scripts/audit_visual_batch_candidates.py
 
+      - name: Validate isolated CAP preview build
+        run: |
+          npm run build:preview
+          test -f dist/index.html
+          test -f dist/data/exams/editorial_casebook_r23.json
+          test -f dist/data/exams/editorial_casebook_r23.csv
+
+      - name: Package beta preview files (not deployed)
+        uses: actions/upload-artifact@v4
+        with:
+          name: cap-test-r23-preview-build
+          path: dist/
+          retention-days: 14
+
       - name: Package CAP answer review queue
         uses: actions/upload-artifact@v4
         with:
