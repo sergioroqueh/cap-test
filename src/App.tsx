@@ -157,7 +157,7 @@ function CapHome(){
   </div>
   <div className="panel"><label>Preguntas en examen mezclado</label><div className="segments">{[10,20,30,50,100].map(x=><button key={x} className={count===x?'on':''} onClick={()=>setCount(x)}>{x}</button>)}</div></div>
   <section id="cap-historicos"><h2>Convocatorias de {category==='mercancias'?'Mercancías':'Viajeros'}</h2><p>{exams.length} modelos · {available.length} con plantilla de 100 respuestas</p>
-   <div className="list">{exams.map(e=><button key={e.id} disabled={!e.hasOriginalAnswerSheet||working} onClick={()=>void begin('cap-original',e)}><i>▦</i><span><b>{pretty(e)}</b><small>{e.hasOriginalAnswerSheet?'100 preguntas · '+e.readyCount+' puntuables'+(e.disputedCount?' · '+e.disputedCount+' en revisión':''):'Aplazado: falta plantilla original'} · págs. {e.sourcePageStart}–{e.sourcePageEnd}</small></span>›</button>)}</div>
+   <div className="list">{exams.map(e=><button key={e.id} disabled={!e.hasOriginalAnswerSheet||working} onClick={()=>void begin('cap-original',e)}><i>▦</i><span><b>{pretty(e)}</b><small>{e.hasOriginalAnswerSheet?'100 preguntas · '+e.readyCount+' puntuables'+(e.disputedCount?' · '+e.disputedCount+' conflictos sin puntuar':''):'Aplazado: falta plantilla original'} · págs. {e.sourcePageStart}–{e.sourcePageEnd}</small></span>›</button>)}</div>
   </section>
   <section className="panel cap-pending-panel">
    <h2>Auditoría editorial · 26 convocatorias</h2>
@@ -199,7 +199,7 @@ function CapHome(){
    </div>}
   </section>
   <section className="panel cap-pending-panel">
-   <h2>Preguntas pendientes de revisión</h2>
+   <h2>Preguntas sin puntuación · cerradas y pendientes</h2>
    <p>Consulta el enunciado original y sus cuatro opciones. Los tres conflictos de plantilla tienen ya una decisión editorial cerrada, aunque siguen sin puntuar. No se registran como fallos.</p>
    <select aria-label="Convocatoria con preguntas pendientes" value={pendingId} onChange={e=>{setPendingId(e.target.value);setPendingShown(false);setPendingRows([])}}>
     <option value="">Seleccionar convocatoria</option>
@@ -207,7 +207,7 @@ function CapHome(){
    </select>
    <Btn kind="light" disabled={!pendingId||pendingBusy} onClick={()=>void showPending()}>{pendingBusy?'Preparando…':'Consultar sin puntuación'}</Btn>
    {pendingShown&&<div className="cap-pending-results">
-    <strong>{pendingRows.length} preguntas sin solución cotejada</strong>
+    <strong>{pendingRows.length} preguntas sin puntuación; {pendingRows.filter(x=>x.editorialDecision).length} con decisión editorial cerrada</strong>
     {pendingRows.map(q=><details key={q.number} className="cap-pending-item">
      <summary>Pregunta {q.number} · página {q.sourcePage}{q.answerStatus.startsWith('conflicto')?' · Fuentes contradictorias':''}</summary>
      <p>{q.question}</p>
@@ -315,7 +315,7 @@ function Results(){
   <div className="metrics">
    <article><b>{r.correct}</b><span>Correctas</span></article>
    <article><b>{r.incorrect}</b><span>Fallos</span></article>
-   <article><b>{unreviewed.length}</b><span>Sin responder</span></article>{unscored.length>0&&<article><b>{unscored.length}</b><span>En revisión · sin puntuar</span></article>}
+   <article><b>{unreviewed.length}</b><span>Sin responder</span></article>{unscored.length>0&&<article><b>{unscored.length}</b><span>Sin puntuar · no penalizan</span></article>}
   </div>
   {fails.length>0&&<Btn onClick={()=>void review()}>Repasar {fails.length} fallos</Btn>}
   <h2>Corrección de respuestas</h2>
