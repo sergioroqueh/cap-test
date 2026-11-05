@@ -5,7 +5,7 @@ import { cloudConfigured, getSession, signIn, signOut, supabase } from './supaba
 import type { Session } from '@supabase/supabase-js'
 import { loadAllQuestions, loadBankIndex, loadQuestionnaire, resolveQuestions } from './data'
 import { chooseSmartQuestions, getStatus, needsReview, percent, shuffle } from './utils'
-import { loadCapIndex, loadCapQuestions, loadAllCapQuestions, loadBankExamFrequency, loadCapPendingQuestions, loadCapSheetReview, type CapSheetReviewQuestion, type CapPendingQuestion, type CapCategory, type CapExamMeta, type CapExamIndex } from './capExams'
+import { loadCapIndex, loadCapQuestions, loadAllCapQuestions, loadBankExamFrequency, loadCapPendingQuestions, loadCapSheetReview, loadCapEditorialTriage, type CapEditorialTriage, type CapSheetReviewQuestion, type CapPendingQuestion, type CapCategory, type CapExamMeta, type CapExamIndex } from './capExams'
 
 const PREVIEW=import.meta.env.VITE_CAP_PREVIEW === 'true'
 const ACTIVE=PREVIEW?'cap-test-beta-active-v1':'cap-test-active-v1',
@@ -74,6 +74,7 @@ type P={bank:BankIndex;rows:QuestionProgress[];pm:Map<string,QuestionProgress>;s
 
 function CapHome(){
  const [index,setIndex]=useState<CapExamIndex|null>(null)
+ const [editorialTriage,setEditorialTriage]=useState<CapEditorialTriage|null>(null)
  const [category,setCategory]=useState<CapCategory>('mercancias')
  const [mode,setMode]=useState<'study'|'exam'>('study')
  const [count,setCount]=useState(100)
@@ -88,7 +89,7 @@ function CapHome(){
  const [sheetReviewBusy,setSheetReviewBusy]=useState(false)
  const [sheetReviewShown,setSheetReviewShown]=useState(false)
  const [sheetReviewOnlyIssues,setSheetReviewOnlyIssues]=useState(false)
- useEffect(()=>{loadCapIndex().then(setIndex).catch(e=>setError(String(e)))},[])
+ useEffect(()=>{Promise.all([loadCapIndex(),loadCapEditorialTriage()]).then(([ix,tri])=>{setIndex(ix);setEditorialTriage(tri)}).catch(e=>setError(String(e)))},[])
  useEffect(()=>{setPendingId('');setPendingRows([]);setPendingShown(false);setSheetReviewId('');setSheetReviewRows([]);setSheetReviewShown(false)},[category])
  const exams=(index?.exams||[]).filter(x=>x.category===category).sort((a,b)=>b.date.localeCompare(a.date)||a.model.localeCompare(b.model))
  const available=exams.filter(x=>x.hasOriginalAnswerSheet)
@@ -103,17 +104,14 @@ function CapHome(){
  }
  async function showSheetReview(){
   const selected=exams.find(x=>x.id===sheetReviewId)
-  if(!selected||!selected.hasOriginalAnswerSheet)return
+  if(!selected)return
   setSheetReviewBusy(true);setError('')
   try{setSheetReviewRows(await loadCapSheetReview(selected));setSheetReviewShown(true)}
   catch(e){setError(e instanceof Error?e.message:String(e))}
   finally{setSheetReviewBusy(false)}
  }
- const showSheetRows=sheetReviewOnlyIssues?sheetReviewRows.filter(q=>
-  !q.scoringEligible||q.mappedSheetQuestionNumber!==q.originalSheetQuestionNumber||
-  q.answerStatus==='respuesta_alineacion_editorial_confirmada'||
-  (!!q.bankAnswer&&!!q.mappedSheetAnswer&&q.bankAnswer!==q.mappedSheetAnswer)
- ):sheetReviewRows
+ const showSheetRows=sheetReviewOnlyIssues?sheetReviewRows.filter(q=>q.reviewPriority!=='P4'):sheetReviewRows
+ const selectedTriage=editorialTriage?.exams.find(e=>e.examId===sheetReviewId)
  async function begin(source:'cap-original'|'cap-random'|'cap-mixed',chosen?:CapExamMeta){
   setError('');setWorking(true)
   try{
@@ -159,24 +157,28 @@ function CapHome(){
    <div className="list">{exams.map(e=><button key={e.id} disabled={!e.hasOriginalAnswerSheet||working} onClick={()=>void begin('cap-original',e)}><i>▦</i><span><b>{pretty(e)}</b><small>{e.hasOriginalAnswerSheet?'100 preguntas · '+e.readyCount+' puntuables'+(e.disputedCount?' · '+e.disputedCount+' en revisión':''):'Aplazado: falta plantilla original'} · págs. {e.sourcePageStart}–{e.sourcePageEnd}</small></span>›</button>)}</div>
   </section>
   <section className="panel cap-pending-panel">
-   <h2>Auditoría por convocatoria · 100 respuestas</h2>
-   <p>Consulta las letras impresas del PDF, el resultado vinculado al enunciado y el banco. La fuente original se conserva incluso cuando una letra es discutida.</p>
+   <h2>Auditoría editorial · 26 convocatorias</h2>
+   <p>Revisa las 100 preguntas de cada examen con sus marcas: conflicto de respuestas, texto sospechoso, desfase de numeración o falta de cotejo. P0 significa prioridad máxima, no una respuesta declarada errónea. Las letras impresas y el banco original no se alteran.</p>
    <select aria-label="Examen a revisar con plantilla" value={sheetReviewId} onChange={e=>{setSheetReviewId(e.target.value);setSheetReviewShown(false);setSheetReviewRows([])}}>
-    <option value="">Seleccionar una plantilla</option>
-    {available.map(e=><option key={e.id} value={e.id}>{pretty(e)} · {e.originalSheetAnswersCount||100} casillas</option>)}
+    <option value="">Seleccionar convocatoria</option>
+    {exams.map(e=><option key={e.id} value={e.id}>{pretty(e)} · {e.hasOriginalAnswerSheet?'con plantilla':'sin plantilla'}</option>)}
    </select>
-   <Btn kind="light" disabled={!sheetReviewId||sheetReviewBusy} onClick={()=>void showSheetReview()}>{sheetReviewBusy?'Leyendo…':'Ver las 100 respuestas'}</Btn>
-   <p><a className="btn light" href={import.meta.env.BASE_URL+'data/exams/sheet_audit_2200.csv'} download="CAP_2200_respuestas_plantillas_revision.csv">Exportar CSV de todas las plantillas</a></p>
+   <Btn kind="light" disabled={!sheetReviewId||sheetReviewBusy} onClick={()=>void showSheetReview()}>{sheetReviewBusy?'Leyendo…':'Auditar las 100 preguntas'}</Btn>
+   <p><a className="btn light" href={import.meta.env.BASE_URL+'data/exams/editorial_triage_r21.csv'} download="CAP_R21_2600_marcas_editoriales.csv">Exportar las 2.600 preguntas y sus marcas (CSV)</a></p>
+   <p><a className="btn light" href={import.meta.env.BASE_URL+'data/exams/sheet_audit_2200.csv'} download="CAP_2200_respuestas_plantillas_revision.csv">CSV de las 2.200 respuestas impresas</a></p>
    {sheetReviewShown&&<div className="cap-pending-results">
-    <strong>{sheetReviewRows.length} respuestas impresas · {sheetReviewRows.filter(q=>!q.scoringEligible).length} en revisión sin puntuación</strong>
-    <label><input type="checkbox" checked={sheetReviewOnlyIssues} onChange={e=>setSheetReviewOnlyIssues(e.target.checked)}/> Solo discordancias y ajustes de numeración</label>
+    <strong>{sheetReviewRows.length} preguntas · {sheetReviewRows.filter(q=>!q.scoringEligible).length} sin puntuación · {sheetReviewRows.filter(q=>q.reviewPriority!=='P4').length} con algún aviso de cotejo</strong>
+    {selectedTriage&&<p className="cap-triage-summary"><b>Prioridad:</b> P0 {selectedTriage.P0} · P1 {selectedTriage.P1} · P2 {selectedTriage.P2} · P3 {selectedTriage.P3} · sin alertas P4 {selectedTriage.P4}. Texto con revisión pendiente: {selectedTriage.pendingVisualTranscription}.</p>}
+    <label><input type="checkbox" checked={sheetReviewOnlyIssues} onChange={e=>setSheetReviewOnlyIssues(e.target.checked)}/> Mostrar solo preguntas marcadas para revisión (P0–P3)</label>
     <p>{showSheetRows.length} preguntas visibles. Abre cada fila para contrastar las cuatro opciones.</p>
     {showSheetRows.map(q=><details className="cap-pending-item" key={q.number}>
-     <summary>Pregunta {q.number} · página {q.sourcePage} · plantilla: {q.originalSheetAnswer||'—'}{!q.scoringEligible?' · EN REVISIÓN':''}{q.mappedSheetQuestionNumber!==q.originalSheetQuestionNumber?' · ajuste de numeración':''}</summary>
+     <summary>Pregunta {q.number} · página {q.sourcePage} · {q.reviewPriority!=='P4'?q.reviewPriority+' · COTEJAR':'sin alertas automáticas'} · plantilla: {q.originalSheetAnswer||'—'}{!q.scoringEligible?' · SIN PUNTUAR':''}{q.originalSheetAnswer&&q.mappedSheetQuestionNumber!==q.originalSheetQuestionNumber?' · ajuste de numeración':''}</summary>
      <p>{q.question}</p>
      <ol type="A">{keys.map(k=><li key={k}>{q.options[k]}</li>)}</ol>
-     <p><b>Hoja original:</b> nº {q.originalSheetQuestionNumber} = {q.originalSheetAnswer} · {q.originalSheetSourceFile}</p>
-     {q.mappedSheetQuestionNumber!==q.originalSheetQuestionNumber&&<p><b>Correspondencia editorial:</b> fila {q.mappedSheetQuestionNumber||'sin asignar'} = {q.mappedSheetAnswer||'—'}. La hoja original no se modifica.</p>}
+     {q.reviewFlags.length>0&&<div className="cap-editorial-flags"><b>Marcas de revisión (no corrigen claves):</b>{q.reviewFlags.map(f=><p key={f.code}><strong>{f.priority} · {f.code.replaceAll('_',' ')}</strong> — {f.description}. <small>{f.evidence}</small></p>)}</div>}
+     {q.textReviewRequired&&<small>La transcripción del texto sigue pendiente de cotejo editorial con la imagen fuente.</small>}
+     <p><b>Hoja original:</b> {q.originalSheetAnswer?'nº '+q.originalSheetQuestionNumber+' = '+q.originalSheetAnswer+' · '+q.originalSheetSourceFile:'No existe plantilla original para esta convocatoria'}</p>
+     {q.originalSheetAnswer&&q.mappedSheetQuestionNumber!==q.originalSheetQuestionNumber&&<p><b>Correspondencia editorial:</b> fila {q.mappedSheetQuestionNumber||'sin asignar'} = {q.mappedSheetAnswer||'—'}. La hoja original no se modifica.</p>}
      <p><b>Banco:</b> {q.bankAnswer||'Sin coincidencia'} · <b>Solución aplicada:</b> {q.correctAnswer||'Bloqueada; no puntúa'}</p>
      {q.answerDispute&&<p><b>Conflicto:</b> plantilla {q.answerDispute.pdfAnswer}, banco {q.answerDispute.bankAnswer}. {q.answerDispute.reason}</p>}
      {!q.scoringEligible&&<small>Esta pregunta está incluida en el examen, pero no suma ni resta puntos.</small>}
