@@ -605,3 +605,79 @@ assert any(c['status'] == 'MISMA_PREGUNTA_SIN_PLANTILLA_INDEPENDIENTE'
 assert any(c['status'] == 'EXPLICACION_DGT_EXTERNA_COTEJADA'
            and 'dgt.es' in c['sourceUrl'] for c in r23['cases'])
 print('PASS R23: auditable 1000 preguntas, 17 casos, 900 originales, 982 puntuables; 0 claves alteradas')
+
+
+# R24: exactly 10 Mercancias models with official answer sheets; defer Viajeros
+# and all three remaining no-sheet models entirely, without guesswork.
+r24=json.loads((root/'exams'/'editorial_casebook_r24.json').read_text(encoding='utf-8'))
+overview24=json.loads((root/'exams'/'editorial_progress_r24.json').read_text(encoding='utf-8'))
+assert r24['schemaVersion']==1 and r24['round']=='R24'
+assert r24['totalExamModels']==10 and r24['totalQuestionRows']==1000
+assert r24['originalSheetLetters']==r24['scoringEligible']==1000
+assert r24['originalSheetConflicts']==r24['sourceKeyChanges']==0
+assert r24['caseCount']==len(r24['cases'])==18
+assert r24['reversibleTextCorrections']==7
+assert r24['reviewCompletedVisualAll100'] is False
+assert len(r24['exams'])==10 and all(x['templateFile'] for x in r24['exams'])
+assert all(x['questions']==x['printedAnswers']==x['scoredAnswers']==100
+           and x['unscoredAnswers']==0 for x in r24['exams'])
+assert all(x['visualAuditAll100Completed'] is False for x in r24['exams'])
+assert all(c['changesAnswer'] is False and c['manualVisualReviewComplete'] is False
+           for c in r24['cases'])
+ids_r24={x['examId'] for x in r24['exams']}
+ids_r22={x['examId'] for x in r22['targetExams']}
+ids_r23={x['examId'] for x in r23['exams']}
+deferred_ids={x['examId'] for x in r24['deferredToFinal']}
+assert len(ids_r24)==10 and len(ids_r22)==3 and len(ids_r23)==10 and len(deferred_ids)==3
+assert not (ids_r24 & ids_r22 or ids_r24 & ids_r23 or ids_r24 & deferred_ids
+            or ids_r22 & ids_r23 or ids_r22 & deferred_ids or ids_r23 & deferred_ids)
+assert ids_r24|ids_r22|ids_r23|deferred_ids=={e['id'] for e in exams}
+assert deferred_ids == {
+    '2022-05-21-mercancias-global','2023-12-02-mercancias-global',
+    '2024-04-06-viajeros-global'
+}
+assert sum(x['questionsNotAuditedThisRound'] for x in r24['deferredToFinal'])==300
+assert sum(x['unscoredDueToNoSheet'] for x in r24['deferredToFinal'])==165
+assert sum(x['scoringEligibleFromBank'] for x in r24['deferredToFinal'])==135
+assert overview24==r24['globalEditorialProgress']
+assert overview24['totalExamModels']==26 and overview24['allHistoricalQuestions']==2600
+assert overview24['modelsIndexedR22R23R24']==23
+assert overview24['questionsIndexedR22R23R24']==2300
+assert overview24['modelsDeferredToFinal']==3
+assert overview24['questionsDeferredToFinal']==300
+assert overview24['printedSheetLetters']==2200
+assert overview24['scoringEligibleAllModels']==2417
+assert overview24['totalUnscored']==183
+assert overview24['unscoredFromMissingTemplate']==180
+assert overview24['unscoredFromDocumentedDisputes']==3
+assert overview24['deferredMissingTemplateInThreeUnreviewedExams']==165
+assert overview24['deferredMissingTemplateIn2025BAlreadyIndexed']==15
+with (root/'exams'/'editorial_casebook_r24.csv').open(encoding='utf-8-sig',newline='') as fh:
+    editorial24=list(csv.DictReader(fh))
+assert len(editorial24)==1000
+assert len({(row['examId'],int(row['number'])) for row in editorial24})==1000
+assert all(row['category']=='mercancias' and row['pdfOriginalLetter'] in 'ABCD'
+           and row['pdfOriginalLetter']==row['scoredLetter']
+           and row['verifiedQuestionIndividually']=='NO'
+           for row in editorial24)
+assert not (deferred_ids & {row['examId'] for row in editorial24})
+assert sum(row['textOriginalPreserved']=='SI' for row in editorial24)==7
+assert sum(row['editorialState']=='RECONSTRUCCION_ALTERNATIVA_PENDIENTE_IMAGEN'
+           for row in editorial24)==4
+assert any(row['examId']=='2022-10-01-mercancias-global'
+           and int(row['number'])==74
+           and '12.000 kg' in row['optionC'] and 'exento del uso de tacógrafo' in row['optionD']
+           for row in editorial24)
+julyb=json.loads((root/'exams'/'questions'/'2023-07-29-mercancias-b.json').read_text())
+assert julyb[34]['options']['A'].startswith('Al estómago')
+assert julyb[51]['options']['B'].startswith('Al cumplimentar')
+assert julyb[84]['options']['D'].startswith('Al abandonar')
+march23=json.loads((root/'exams'/'questions'/'2023-03-25-mercancias-global.json').read_text())
+assert 'tiene lugar' in march23[86]['question']
+assert march23[86]['options']['B'].startswith('Al menos, cada 5 años')
+assert march23[86]['textCorrection']['round']=='R24'
+assert march23[86]['textCorrection']['answerKeysChanged'] is False
+assert march23[86]['originalSheetAnswer']==march23[86]['correctAnswer']=='B'
+print('PASS R24 FINAL COVERAGE: 23 modelos / 2300 en expedientes, '
+      '3 modelos / 300 aplazados, 2200 letras originales, '
+      '2417 puntuables, 18 incidencias R24 y 0 cambios de clave')
