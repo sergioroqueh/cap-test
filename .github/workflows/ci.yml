@@ -33,6 +33,10 @@ jobs:
             public/data/exams/review_hints.csv
             public/data/exams/cross_model_pending_review.csv
             public/data/exams/cross_model_pending_review.json
+            public/data/exams/template_review_priority.csv
+            public/data/exams/without_template_deferred.csv
+            public/data/exams/template_review_summary.json
+            public/data/exams/template_2025_03_29_unverified_comparison.json
             public/data/exams/alignment_2023_a_review.csv
             public/data/exams/ocr_2025_a_review.csv
             public/data/exams/index.json
