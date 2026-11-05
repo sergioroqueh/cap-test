@@ -59,6 +59,104 @@ def parse_page(text,page):
             rows.append({'number':number,'page':page,'question':q,'options':options})
     return rows,errors
 
+# R22: corrections limited to the display text of September 2025.
+# The original PDF extraction, 100 sheet letters, answer statuses, bank ids,
+# source page, scoring eligibility, and frequency-group hashes remain unchanged.
+# Official source:
+# https://www.castillalamancha.es/sites/default/files/documentos/pdf/20250929/cap_2025_5a_cuestionarios.pdf
+R22_SOURCE_URL = (
+    'https://www.castillalamancha.es/sites/default/files/documentos/pdf/'
+    '20250929/cap_2025_5a_cuestionarios.pdf'
+)
+R22_GLYPH_WORDS = {
+    'EI': 'El', 'eI': 'el', 'AI': 'Al', 'aI': 'al',
+    'Ios': 'los', 'Ias': 'las', 'Ia': 'la', 'Io': 'lo',
+}
+R22_INTERNAL_I = re.compile(r'(?<=[a-záéíóúüñ])I(?=[a-záéíóúüñ]|\b)')
+
+
+def r22_normalize_display(text):
+    # The PDF's text layer confuses lowercase "l" with uppercase "I".
+    # Do not replace a true initial capital I in "Isotermo"/proper names.
+    s = R22_INTERNAL_I.sub('l', text)
+    for old, new in R22_GLYPH_WORDS.items():
+        s = re.sub(r'\b' + old + r'\b', new, s)
+    return s
+
+
+def r22_curate_september_display(exams):
+    affected = []
+    for meta, rows in exams:
+        if meta['id'] != '2025-09-27-mercancias-global':
+            continue
+        if len(rows) != 100 or not meta['templateFile']:
+            raise RuntimeError('R22 requiere 100 preguntas y plantilla Septiembre 2025')
+        for row in rows:
+            before_question = row['question']
+            before_options = dict(row['options'])
+            before_scoring = (
+                row['correctAnswer'], row['originalSheetAnswer'],
+                row['mappedSheetAnswer'], row['bankAnswer'],
+                row['answerStatus'], row['frequencyGroup'],
+                row['canonicalQuestionId'], row['sourcePage'],
+            )
+            question = r22_normalize_display(before_question)
+            if row['number'] == 3:
+                # Exact, independently verified source wording (official PDF
+                # page 1): "En razón de la especificidad...", not "en razón a".
+                original = 'En razón a la especificidad de su objeto y de su régimen jurídico'
+                replacement = 'En razón de la especificidad de su objeto y de su régimen jurídico'
+                if original not in question:
+                    raise RuntimeError('R22 pregunta 3: el texto esperado ha cambiado')
+                question = question.replace(original, replacement, 1)
+            options = {key: r22_normalize_display(value)
+                       for key, value in before_options.items()}
+            if set(options) != set('ABCD'):
+                raise RuntimeError('R22 no puede alterar las cuatro alternativas')
+            if question != before_question or options != before_options:
+                row['question'] = question
+                row['options'] = options
+                row['textCorrection'] = {
+                    'round': 'R22',
+                    'sourceOfficialPdf': R22_SOURCE_URL,
+                    'sourcePage': row['sourcePage'],
+                    'method': ('comparacion_exacta_enunciado_pdf_oficial'
+                               if row['number'] == 3
+                               else 'normalizacion_glifos_capa_texto_pdf'),
+                    'reviewStatus': ('confirmada_redaccion_q3_con_pdf_oficial'
+                                     if row['number'] == 3 else
+                                     'correccion_mecanica_cotejar_con_imagen_individual'),
+                    'originalQuestion': before_question,
+                    'originalOptions': before_options,
+                    'changedQuestion': question != before_question,
+                    'changedOptions': [k for k in 'ABCD'
+                                       if options[k] != before_options[k]],
+                    'answerKeysChanged': False,
+                }
+                affected.append(row['number'])
+            if before_scoring != (
+                row['correctAnswer'], row['originalSheetAnswer'],
+                row['mappedSheetAnswer'], row['bankAnswer'],
+                row['answerStatus'], row['frequencyGroup'],
+                row['canonicalQuestionId'], row['sourcePage'],
+            ):
+                raise RuntimeError('R22 detecta un cambio prohibido de respuesta o procedencia')
+        if 1 not in affected or 2 not in affected or 3 not in affected:
+            raise RuntimeError('R22 no corrigio los primeros ejemplos comprobados')
+        if rows[0]['options']['A'] != 'El origen y el propietario de los animales.':
+            raise RuntimeError('R22 q1: texto oficial no recuperado')
+        if rows[1]['options']['A'] != 'Vehículo jaula.':
+            raise RuntimeError('R22 q2: texto oficial no recuperado')
+        if not rows[2]['question'].startswith(
+                'En razón de la especificidad de su objeto y de su régimen jurídico'):
+            raise RuntimeError('R22 q3: discrepancia con la pregunta oficial')
+        if len(affected) < 50 or len(affected) > 100:
+            raise RuntimeError('R22 cantidad de glifos corregidos fuera del rango esperado')
+    print('AUDIT R22 Septiembre 2025: textos display corregidos con original conservado:',
+          len(affected), 'preguntas', sorted(affected))
+    return affected
+
+
 def generate():
     manifest = json.loads((SRC/'manifest.json').read_text(encoding='utf-8'))['exams']
     keys = json.loads((SRC/'answer_keys_unverified.json').read_text(encoding='utf-8'))
@@ -407,6 +505,7 @@ def generate():
           dict(verified_pdf_bank_matching),'documented conflicts',dict(verified_pdf_bank_conflicts))
     if evidence_applied != set(official_evidence):
         raise RuntimeError(f'Evidencia oficial sin aplicar: {set(official_evidence)-evidence_applied}')
+    r22_curate_september_display(exams)
     # The denominator uses only complete textual exam models, not missing scans.
     denomination=Counter(meta['category'] for meta,rows in exams if rows)
     appears=defaultdict(set)
