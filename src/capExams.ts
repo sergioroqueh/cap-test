@@ -68,7 +68,6 @@ export async function loadCapQuestions(meta: CapExamMeta): Promise<CapQuestion[]
     ...q,
     correctAnswer: (q.correctAnswer || q.originalSheetAnswer) as AnswerKey,
     scoringEligible: q.correctAnswer !== null,
-    ...q,
     id: 'cap:' + meta.id + ':' + q.number,
     progressId: q.canonicalQuestionId || q.id,
     examId: meta.id
