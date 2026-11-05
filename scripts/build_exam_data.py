@@ -280,9 +280,9 @@ def generate():
             evidence_source=''
             if public_evidence:
                 evidence_id=exam_id+':'+str(original_number)
-                if answer is not None or status not in (
+                if not verified_pdf and (answer is not None or status not in (
                     'sin_respuesta_verificada','solo_plantilla_pendiente_cotejo',
-                    'solo_plantilla_alineada_pendiente_cotejo'):
+                    'solo_plantilla_alineada_pendiente_cotejo')):
                     raise RuntimeError(f'No sobrescribir una respuesta ya cotejada: {evidence_id}')
                 if (public_evidence['examId']!=exam_id
                     or public_evidence['number']!=original_number
@@ -299,8 +299,13 @@ def generate():
                     raise RuntimeError(f'Fuente pública no clasificada: {evidence_id}')
                 if public_evidence['editorialReviewRequired'] is not True:
                     raise RuntimeError(f'La verificación editorial debe seguir pendiente: {evidence_id}')
-                answer=evidence_letters[0]
-                status='respuesta_fuente_publica_oficial_pendiente_plantilla'
+                if verified_pdf:
+                    if answer!=evidence_letters[0] or status!='plantilla_pdf_oficial_verificada':
+                        raise RuntimeError(f'Conflicto entre plantilla PDF original y fuente pública: {evidence_id}')
+                    # El PDF propio ya verifica la clave; la DGT solo añade una segunda fuente.
+                else:
+                    answer=evidence_letters[0]
+                    status='respuesta_fuente_publica_oficial_pendiente_plantilla'
                 evidence_url=public_evidence['sourceUrl']
                 evidence_source=public_evidence['officialSource']
                 evidence_applied.add(evidence_id)
