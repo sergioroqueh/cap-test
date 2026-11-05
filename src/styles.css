@@ -54,3 +54,15 @@ nav{position:fixed;bottom:0;left:0;right:0;height:72px;background:color-mix(in s
 
 /* Beta aislada: identificación visible y persistente */
 .cap-preview-banner{padding:9px 14px;text-align:center;font-size:11px;font-weight:750;letter-spacing:.035em;line-height:1.4;color:#fff;background:#85530c;border-bottom:1px solid rgba(0,0,0,.14)}
+
+/* CAP R21 - marcas editoriales compactas, legibles en movil y modo oscuro. */
+.cap-triage-summary{padding:10px 12px;border-radius:12px;border:1px solid var(--line);
+ background:var(--soft);color:var(--text);font-size:12px;line-height:1.55}
+.cap-editorial-flags{border:1px solid color-mix(in srgb,var(--primary) 25%,var(--line));
+ background:color-mix(in srgb,var(--primary) 5%,var(--surface));border-radius:12px;
+ padding:10px 12px;margin:12px 0;overflow-wrap:anywhere}
+.cap-editorial-flags>b{font-size:12px;color:var(--text)}
+.cap-editorial-flags p{font-size:12px;line-height:1.5;margin:8px 0}
+.cap-editorial-flags strong{color:var(--primary);font-size:11px;letter-spacing:.015em}
+.cap-editorial-flags small{display:block;margin-top:2px;line-height:1.45;color:var(--muted)}
+.cap-pending-panel a.btn{font-size:11px;max-width:100%;text-align:center;white-space:normal}
