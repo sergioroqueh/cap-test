@@ -114,6 +114,30 @@
       "expectedPreviouslyScoredExternal": 1,
       "approval": "lectura_visual_marca_pdf_original_y_validacion_banco",
       "notes": "100 casillas de preguntas principales; 85/85 banco, q84 B = PHEV DGT, 14 nuevas, reservas excluidas."
+    },
+    "2026-02-07-mercancias-global": {
+      "sourceFile": "Plantilla Febrero 2026.pdf",
+      "sourcePage": 1,
+      "category": "mercancias",
+      "model": "GLOBAL",
+      "sourcePdfSha256": "df29f426fc22c50502b8afcc448a374b78a079a89b5bf1fbc2818f25c55f6d87",
+      "sourceZip": "Respuestas(1).zip",
+      "visualMethod": "lectura_directa_imagen_pdf_original_1_7x_cinco_columnas_contraste_plantilla_previa",
+      "readDirection": "Cinco columnas consecutivas 1-20, 21-40, 41-60, 61-80, 81-100",
+      "correctAnswers": "CABDBCDDAABBDCCADDAAAAACDDBADBDBAAAAAAADDACCBBBCBAACCDBCBADCACDCDAAACDCCCABACBCACDAABDDBBDABAAADABDC",
+      "keyDigestSha256": "2a79e1b3d26ab9a60b45666bdab43f5d4ffa68889349dca9fc52fbcdbd4d70cb",
+      "verifiedOn": "2026-11-05",
+      "expectedBankConcordances": 86,
+      "expectedBankConflicts": 1,
+      "holdConflicts": {
+        "61": {
+          "bankAnswer": "C",
+          "pdfAnswer": "A",
+          "reason": "La plantilla oficial FEBRERO 2026 confirma visualmente A; banco CAP/normativa Reglamento UE 165/2014 art. 36 sugieren C. Conflicto documental real: conservar sin autocorrección hasta auditoría editorial del enunciado."
+        }
+      },
+      "approval": "lectura_visual_plantilla_original_verificada",
+      "notes": "Cabecera MERCANCÍAS GLOBAL / FEBRERO DE 2026 confirmada. 100 respuestas leídas visualmente. 86 coincidencias con banco, 13 claves PDF sin equivalente, q61 bloqueada por conflicto real."
     }
   }
 }
