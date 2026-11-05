@@ -543,7 +543,7 @@ assert len(rows22)==306 and len({(r['examId'],r['number']) for r in rows22})==30
 cases22={(c['examId'],c['number']):c for c in r22['cases']}
 assert len(cases22)==33
 nov6=cases22[('2022-11-26-mercancias-global',6)]
-assert nov6['status']=='DUDOSA_TECNICA_FRENTE_DGT'
+assert nov6['status']=='CERRADA_A_CONFIRMADA_CONTEXTO_TRANSMISION'
 assert 'sede.dgt.gob.es' in nov6['source']
 qnov6=json.loads((root/'exams'/'questions'/'2022-11-26-mercancias-global.json').read_text())[5]
 assert qnov6['originalSheetAnswer']==qnov6['correctAnswer']=='A'
