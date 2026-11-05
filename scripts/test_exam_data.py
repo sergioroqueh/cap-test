@@ -68,7 +68,7 @@ for exam in exams:
         assert next(q for q in rows if q['number']==1)['sourcePage']==348
         assert next(q for q in rows if q['number']==100)['sourcePage']==363
     if exam['id']=='2026-09-26-mercancias-a':
-        assert exam['readyCount']==90, '90 claves del banco, resto sin autocorrección y pendiente de revisión'
+        assert exam['readyCount']==100, 'Plantilla A Septiembre 2026 con 100 casillas verificadas'
         assert len(rows)==100
         assert {q['number'] for q in rows}==set(range(1,101))
         assert {q['sourcePage'] for q in rows}==set(range(128,145))
@@ -100,13 +100,13 @@ for exam in exams:
     if exam['id']=='2023-07-29-mercancias-b':
         for n in (6,19):
             q=next(q for q in rows if q['number']==n)
-            assert q['rawTemplateAnswer']=='C'
+            assert q['rawTemplateAnswer']=='D'
             assert q['templateAnswer']=='D'
             assert q['bankAnswer']=='D'
             assert q['correctAnswer']=='D'
-            assert q['answerStatus']=='coincidencia_plantilla_corregida_visual_pendiente_revision'
-            assert q['templateVisualCorrectionStatus']=='correccion_visual_documentada_pendiente_revision_editorial'
-            assert q['reviewRequired']
+            assert q['answerStatus']=='plantilla_pdf_oficial_verificada'
+            assert q['templateVisualCorrectionStatus']=='plantilla_pdf_original_verificada'
+            assert q['answerTemplateOfficiallyVerified'] is True
     if exam['id']=='2026-02-07-mercancias-global':
         q=next(q for q in rows if q['number']==61)
         assert q['templateAnswer']=='A' and q['bankAnswer']=='C'
@@ -236,7 +236,7 @@ for exam in exams:
 assert len(public_answers)==len(evidence)==7
 assert sum(q['answerStatus']=='respuesta_fuente_publica_oficial_pendiente_plantilla' for q in public_answers)==4
 assert index['totalImportedQuestions']==2600
-assert sum(q['readyCount'] for q in exams)==2039
+assert sum(q['readyCount'] for q in exams)==2404
 print('PASS documentadas con BOE/DGT:',len(public_answers))
 
 # Cross-exam review is advisory and must never silently assign a correct answer.
@@ -375,6 +375,31 @@ for eid,proof in verified_meta['exams'].items():
     assert sum(q['bankAnswer'] in ('A','B','C','D') and q['bankAnswer']!=q['templateAnswer'] for q in rows)==proof.get('expectedBankConflicts',0)
     assert sum(bool(q.get('answerEvidenceUrl')) for q in rows)==proof.get('expectedPreviouslyScoredExternal',0)
     assert next(e for e in exams if e['id']==eid)['readyCount']==100-len(held)
+
+# R17: 16 PDF adicionales, incluida una validación parcial por desalineación.
+batch=json.loads((root.parent.parent/'data-src'/'cap-exams'/'visual_batch_candidates_2026_11_05.json').read_text())['exams']
+assert len(batch)==16
+for eid,proof in batch.items():
+    rows=json.loads((root/'exams'/'questions'/f'{eid}.json').read_text())
+    limit=proof['verifiedQuestionEnd']
+    assert len(rows)==100
+    assert limit in (43,100)
+    assert len(proof['correctAnswers'])==100
+    assert sum(q['answerStatus']=='plantilla_pdf_oficial_verificada' for q in rows if q['number']<=limit)==limit
+    assert all(q['correctAnswer']==proof['correctAnswers'][q['number']-1] for q in rows if q['number']<=limit)
+    assert all(q['answerTemplateOfficiallyVerified'] is True for q in rows if q['number']<=limit)
+    assert all(q['answerTemplateSourceSha256']==proof['sourcePdfSha256'] for q in rows if q['number']<=limit)
+    assert sum(q['bankAnswer']==proof['correctAnswers'][q['number']-1] for q in rows if q['number']<=limit)==proof['expectedBankConcordances']
+    if limit==43:
+        assert eid=='2023-07-29-mercancias-a'
+        assert all(q['answerStatus']!='plantilla_pdf_oficial_verificada' for q in rows if q['number']>43)
+        assert all(q['templateAlignmentStatus']=='alineacion_provisional_pendiente_revision' for q in rows if 44<=q['number']<=99)
+        assert next(q for q in rows if q['number']==100)['correctAnswer'] is None
+    else:
+        assert all(q['correctAnswer'] is not None for q in rows)
+assert next(q for q in json.loads((root/'exams'/'questions'/'2023-07-29-mercancias-b.json').read_text()) if q['number']==13)['correctAnswer']=='D'
+print('PASS R17: 1543 posiciones de las 16 plantillas, desfase 2023 A preservado')
+
 print('PASS R15: 5 PDF originales, 500 casillas comprobadas, 2 conflictos excluidos de puntuación')
 
 
@@ -385,10 +410,10 @@ print('PASS R15: marzo 2025 100/100 visualmente verificados, 85/85 banco, 15 res
 # R14: solo analizar pendientes con archivo de plantilla; las restantes
 # conservan su posición en CAP Test, pero se aplazan en auditoría editorial.
 template_summary=json.loads((root/'exams'/'template_review_summary.json').read_text())
-assert template_summary['totalUnscored']==561
-assert template_summary['prioritizedWithTemplate']==381
+assert template_summary['totalUnscored']==196
+assert template_summary['prioritizedWithTemplate']==16
 assert template_summary['deferredWithoutTemplate']==180
-assert template_summary['publishedAnswerChanges']==117
+assert template_summary['publishedAnswerChanges']==482
 expected_deferred={
     '2025-07-26-mercancias-b',
     '2023-12-02-mercancias-global',
@@ -400,14 +425,14 @@ with (root/'exams'/'template_review_priority.csv').open(encoding='utf-8-sig',new
     priority_rows=list(csv.DictReader(fh))
 with (root/'exams'/'without_template_deferred.csv').open(encoding='utf-8-sig',newline='') as fh:
     deferred_rows=list(csv.DictReader(fh))
-assert len(priority_rows)==381 and len(deferred_rows)==180
+assert len(priority_rows)==16 and len(deferred_rows)==180
 assert all(r['templateFile'] and r['pendingReason']=='VERIFICAR_IMAGEN_PLANTILLA' for r in priority_rows)
 assert all(not r['templateFile'] and r['pendingReason']=='APLAZADO_SIN_ARCHIVO_PLANTILLA' for r in deferred_rows)
 assert all(r['examId'] not in expected_deferred for r in priority_rows)
 assert all(r['examId'] in expected_deferred for r in deferred_rows)
 prioritized_keys={(r['examId'],int(r['number'])) for r in priority_rows}
 deferred_keys={(r['examId'],int(r['number'])) for r in deferred_rows}
-assert len(prioritized_keys)==381 and len(deferred_keys)==180
+assert len(prioritized_keys)==16 and len(deferred_keys)==180
 assert not (prioritized_keys & deferred_keys)
 assert all(all_questions[key]['correctAnswer'] is None for key in prioritized_keys | deferred_keys)
 unverified=json.loads((root/'exams'/'template_2025_03_29_unverified_comparison.json').read_text())
@@ -419,7 +444,7 @@ assert len(unverified['disagreements'])==9
 assert len(unverified['candidatesUnapproved'])==15
 assert all(all_questions[('2025-03-29-mercancias-global',int(q['number']))]['answerStatus']=='plantilla_pdf_oficial_verificada'
            for q in unverified['candidatesUnapproved'])
-print('PASS R16: 381 pendientes con plantilla, 180 aplazadas, 6 plantillas leídas')
+print('PASS R17: 16 pendientes con plantilla, 180 aplazadas, 22 plantillas cotejadas')
 
 freq = json.loads((root/'exams'/'frequency_by_bank.json').read_text())
 assert all(1<=v['count']<=v['denominator'] for v in freq.values())
