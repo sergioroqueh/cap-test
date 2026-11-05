@@ -167,6 +167,7 @@ def generate():
         local=[]
         template=keys.get(exam_id,'')
         template_verified=verified_pdf_keys.get(exam_id)
+        verified_limit=template_verified.get('verifiedQuestionEnd',100) if template_verified else 0
         if template_verified:
             if (template_verified['sourceFile']!=meta.get('templateFile')
                 or template_verified['category']!=meta['category']
