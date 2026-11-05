@@ -86,3 +86,13 @@ nav{position:fixed;bottom:0;left:0;right:0;height:72px;background:color-mix(in s
 .cap-r23-case>b{font-size:12px;color:var(--primary)}
 .cap-r23-case p{font-size:12px;line-height:1.55;margin:7px 0}
 .cap-r23-case small{display:block;font-size:11px;line-height:1.4;color:var(--muted)}
+
+/* Closed editorial decisions preserve source letters and score neutrality. */
+.cap-r25-final{
+ border:1px solid color-mix(in srgb,var(--primary) 38%,var(--line));
+ background:color-mix(in srgb,var(--primary) 7%,var(--surface));
+ padding:13px 14px;border-radius:13px;margin:12px 0;overflow-wrap:anywhere;
+}
+.cap-r25-final>b{font-size:12px;letter-spacing:.02em;color:var(--primary)}
+.cap-r25-final p{margin:8px 0;font-size:12px;line-height:1.65}
+.cap-r25-final small{font-size:11px;line-height:1.55;color:var(--muted)}
