@@ -47,6 +47,8 @@ jobs:
             public/data/exams/editorial_triage_r21.csv
             public/data/exams/editorial_casebook_r22.json
             public/data/exams/editorial_casebook_r22.csv
+            public/data/exams/editorial_casebook_r23.json
+            public/data/exams/editorial_casebook_r23.csv
             public/data/exams/visual_batch_audit_2026_11_05.json
             public/data/exams/template_2025_03_29_unverified_comparison.json
             public/data/exams/alignment_2023_a_review.csv
