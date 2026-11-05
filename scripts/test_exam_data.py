@@ -41,7 +41,7 @@ for exam in exams:
         assert all(q.get('sourceMethod')=='LECTURA_VISUAL_PDF_PENDIENTE_REVISION' for q in rows)
         assert all(q['reviewRequired'] is True for q in rows)
         assert all(q['category']=='mercancias' for q in rows)
-        assert all(q['correctAnswer'] is None or q['correctAnswer']==q['bankAnswer'] or q['answerStatus']=='respuesta_fuente_publica_oficial_pendiente_plantilla' for q in rows)
+        assert all(q['correctAnswer'] is None or q['correctAnswer']==q['bankAnswer'] or q['answerStatus'] in ('respuesta_fuente_publica_oficial_pendiente_plantilla','plantilla_pdf_oficial_verificada') for q in rows)
         assert next(q for q in rows if q['number']==1)['sourcePage']==364
         assert next(q for q in rows if q['number']==100)['sourcePage']==383
     if exam['id']=='2024-04-06-mercancias-global':
@@ -52,7 +52,7 @@ for exam in exams:
         assert all(q.get('sourceMethod')=='LECTURA_VISUAL_PDF_PENDIENTE_REVISION' for q in rows)
         assert all(q['reviewRequired'] is True for q in rows)
         assert all(q['category']=='mercancias' for q in rows)
-        assert all(q['correctAnswer'] is None or q['correctAnswer']==q['bankAnswer'] or q['answerStatus']=='respuesta_fuente_publica_oficial_pendiente_plantilla' for q in rows)
+        assert all(q['correctAnswer'] is None or q['correctAnswer']==q['bankAnswer'] or q['answerStatus'] in ('respuesta_fuente_publica_oficial_pendiente_plantilla','plantilla_pdf_oficial_verificada') for q in rows)
         assert next(q for q in rows if q['number']==1)['sourcePage']==1
         assert next(q for q in rows if q['number']==100)['sourcePage']==21
         assert all(q['number']<=100 for q in rows), 'No incluir reservas 101-103'
@@ -64,7 +64,7 @@ for exam in exams:
         assert all(q.get('sourceMethod')=='LECTURA_VISUAL_PDF_PENDIENTE_REVISION' for q in rows)
         assert all(q['reviewRequired'] is True for q in rows)
         assert all(q['category']=='mercancias' for q in rows)
-        assert all(q['correctAnswer'] is None or q['correctAnswer']==q['bankAnswer'] or q['answerStatus']=='respuesta_fuente_publica_oficial_pendiente_plantilla' for q in rows)
+        assert all(q['correctAnswer'] is None or q['correctAnswer']==q['bankAnswer'] or q['answerStatus'] in ('respuesta_fuente_publica_oficial_pendiente_plantilla','plantilla_pdf_oficial_verificada') for q in rows)
         assert next(q for q in rows if q['number']==1)['sourcePage']==348
         assert next(q for q in rows if q['number']==100)['sourcePage']==363
     if exam['id']=='2026-09-26-mercancias-a':
@@ -76,7 +76,7 @@ for exam in exams:
         assert all(q.get('sourceMethod')=='LECTURA_VISUAL_PDF_PENDIENTE_REVISION' for q in rows)
         assert all(q['reviewRequired'] is True for q in rows)
         assert all(q['category']=='mercancias' for q in rows)
-        assert all(q['correctAnswer'] is None or q['correctAnswer']==q['bankAnswer'] or q['answerStatus']=='respuesta_fuente_publica_oficial_pendiente_plantilla' for q in rows)
+        assert all(q['correctAnswer'] is None or q['correctAnswer']==q['bankAnswer'] or q['answerStatus'] in ('respuesta_fuente_publica_oficial_pendiente_plantilla','plantilla_pdf_oficial_verificada') for q in rows)
         assert next(q for q in rows if q['number']==100)['sourcePage']==144
     if exam['id']=='2025-07-26-mercancias-b':
         assert exam['readyCount']==85, 'Las 85 claves proceden solo del banco; 15 siguen pendientes'
@@ -86,7 +86,7 @@ for exam in exams:
         assert all(q.get('transcriptionReview') is True for q in rows)
         assert all(q.get('sourceMethod')=='LECTURA_VISUAL_PDF_PENDIENTE_REVISION' for q in rows)
         assert all(q['reviewRequired'] is True for q in rows)
-        assert all(q['correctAnswer'] is None or q['correctAnswer']==q['bankAnswer'] or q['answerStatus']=='respuesta_fuente_publica_oficial_pendiente_plantilla' for q in rows)
+        assert all(q['correctAnswer'] is None or q['correctAnswer']==q['bankAnswer'] or q['answerStatus'] in ('respuesta_fuente_publica_oficial_pendiente_plantilla','plantilla_pdf_oficial_verificada') for q in rows)
         assert all(q['category']=='mercancias' for q in rows)
         assert next(q for q in rows if q['number']==100)['sourcePage']==201
         assert all(q['number']<=100 for q in rows), 'Excluir preguntas de reserva'
@@ -96,7 +96,7 @@ for exam in exams:
         assert {q['sourcePage'] for q in rows}==set(range(97,112))
         assert all(q.get('transcriptionReview') is True for q in rows)
         assert all(q['reviewRequired'] is True for q in rows)
-        assert all(q['correctAnswer'] is None or q['correctAnswer']==q['bankAnswer'] or q['answerStatus']=='respuesta_fuente_publica_oficial_pendiente_plantilla' for q in rows)
+        assert all(q['correctAnswer'] is None or q['correctAnswer']==q['bankAnswer'] or q['answerStatus'] in ('respuesta_fuente_publica_oficial_pendiente_plantilla','plantilla_pdf_oficial_verificada') for q in rows)
     if exam['id']=='2023-07-29-mercancias-b':
         for n in (6,19):
             q=next(q for q in rows if q['number']==n)
@@ -221,20 +221,21 @@ evidence=json.loads((root.parent.parent/'data-src'/'cap-exams'/'official_public_
 public_answers=[]
 for exam in exams:
     for q in json.loads((root/exam['path'].removeprefix('data/')).read_text()):
-        if q['answerStatus']=='respuesta_fuente_publica_oficial_pendiente_plantilla':
+        if q.get('answerEvidenceUrl'):
             public_answers.append(q)
             key=q['examId']+':'+str(q['number'])
             proof=evidence[key]
             assert q['sourcePage']==proof['sourcePage']
             assert q['reviewRequired'] is True
             assert q['answerEvidenceUrl']==proof['sourceUrl']
-            assert q['answerTemplateOfficiallyVerified'] is False
+            assert q['answerTemplateOfficiallyVerified'] is (q['answerStatus']=='plantilla_pdf_oficial_verificada')
             assert q['correctAnswer'] in 'ABCD'
             assert q['options'][q['correctAnswer']]==proof['correctAnswerText']
             assert q['bankAnswer'] is None
 assert len(public_answers)==len(evidence)==7
+assert sum(q['answerStatus']=='respuesta_fuente_publica_oficial_pendiente_plantilla' for q in public_answers)==6
 assert index['totalImportedQuestions']==2600
-assert sum(q['readyCount'] for q in exams)==1969
+assert sum(q['readyCount'] for q in exams)==1986
 print('PASS documentadas con BOE/DGT:',len(public_answers))
 
 # Cross-exam review is advisory and must never silently assign a correct answer.
@@ -325,6 +326,27 @@ assert july_conflict['answerStatus']=='conflicto_pdf_original_banco_pendiente_co
 assert july_conflict['reviewRequired'] is True
 assert july_conflict['answerTemplateOfficiallyVerified'] is True
 assert next(e for e in exams if e['id']=='2025-07-26-mercancias-a')['readyCount']==99
+march26_proof=verified_meta['exams']['2026-03-28-mercancias-global']
+march26_rows=json.loads((root/'exams'/'questions'/'2026-03-28-mercancias-global.json').read_text())
+assert len(march26_rows)==100 and len(march26_proof['correctAnswers'])==100
+assert hashlib.sha256(march26_proof['correctAnswers'].encode()).hexdigest()==march26_proof['keyDigestSha256']
+assert sum(q['correctAnswer'] in 'ABCD' for q in march26_rows if q['correctAnswer'] is not None)==99
+assert all(q['answerStatus']=='plantilla_pdf_oficial_verificada' for q in march26_rows if q['number']!=43)
+assert all(q['correctAnswer']==march26_proof['correctAnswers'][q['number']-1]
+           for q in march26_rows if q['number']!=43)
+assert sum(q['bankAnswer'] is not None for q in march26_rows)==81
+assert sum(q['bankAnswer']==q['correctAnswer'] for q in march26_rows if q['bankAnswer'])==80
+march26_conflict=next(q for q in march26_rows if q['number']==43)
+assert march26_conflict['bankAnswer']=='B' and march26_conflict['templateAnswer']=='C'
+assert march26_conflict['correctAnswer'] is None
+assert march26_conflict['answerStatus']=='conflicto_pdf_original_banco_pendiente_cotejo_enunciado'
+march26_external=next(q for q in march26_rows if q['number']==58)
+assert march26_external['correctAnswer']=='C' and march26_external['bankAnswer'] is None
+assert march26_external['answerStatus']=='plantilla_pdf_oficial_verificada'
+assert 'dgt.es' in march26_external['answerEvidenceUrl']
+assert next(e for e in exams if e['id']=='2026-03-28-mercancias-global')['readyCount']==99
+print('PASS R15: marzo 2026, 99 verificadas y q43 bloqueada por discrepancia OCR/banco')
+
 print('PASS R15: julio 2025 A, 99 verificadas y q43 bloqueada por discrepancia OCR/banco')
 
 print('PASS R15: marzo 2025 100/100 visualmente verificados, 85/85 banco, 15 respuestas recuperadas')
@@ -332,10 +354,10 @@ print('PASS R15: marzo 2025 100/100 visualmente verificados, 85/85 banco, 15 res
 # R14: solo analizar pendientes con archivo de plantilla; las restantes
 # conservan su posición en CAP Test, pero se aplazan en auditoría editorial.
 template_summary=json.loads((root/'exams'/'template_review_summary.json').read_text())
-assert template_summary['totalUnscored']==631
-assert template_summary['prioritizedWithTemplate']==451
+assert template_summary['totalUnscored']==614
+assert template_summary['prioritizedWithTemplate']==434
 assert template_summary['deferredWithoutTemplate']==180
-assert template_summary['publishedAnswerChanges']==47
+assert template_summary['publishedAnswerChanges']==64
 expected_deferred={
     '2025-07-26-mercancias-b',
     '2023-12-02-mercancias-global',
@@ -347,14 +369,14 @@ with (root/'exams'/'template_review_priority.csv').open(encoding='utf-8-sig',new
     priority_rows=list(csv.DictReader(fh))
 with (root/'exams'/'without_template_deferred.csv').open(encoding='utf-8-sig',newline='') as fh:
     deferred_rows=list(csv.DictReader(fh))
-assert len(priority_rows)==451 and len(deferred_rows)==180
+assert len(priority_rows)==434 and len(deferred_rows)==180
 assert all(r['templateFile'] and r['pendingReason']=='VERIFICAR_IMAGEN_PLANTILLA' for r in priority_rows)
 assert all(not r['templateFile'] and r['pendingReason']=='APLAZADO_SIN_ARCHIVO_PLANTILLA' for r in deferred_rows)
 assert all(r['examId'] not in expected_deferred for r in priority_rows)
 assert all(r['examId'] in expected_deferred for r in deferred_rows)
 prioritized_keys={(r['examId'],int(r['number'])) for r in priority_rows}
 deferred_keys={(r['examId'],int(r['number'])) for r in deferred_rows}
-assert len(prioritized_keys)==451 and len(deferred_keys)==180
+assert len(prioritized_keys)==434 and len(deferred_keys)==180
 assert not (prioritized_keys & deferred_keys)
 assert all(all_questions[key]['correctAnswer'] is None for key in prioritized_keys | deferred_keys)
 unverified=json.loads((root/'exams'/'template_2025_03_29_unverified_comparison.json').read_text())
@@ -366,7 +388,7 @@ assert len(unverified['disagreements'])==9
 assert len(unverified['candidatesUnapproved'])==15
 assert all(all_questions[('2025-03-29-mercancias-global',int(q['number']))]['answerStatus']=='plantilla_pdf_oficial_verificada'
            for q in unverified['candidatesUnapproved'])
-print('PASS R15: 451 pendientes con plantilla, 180 aplazadas, marzo 2025 y julio 2025 A validados')
+print('PASS R15: 434 pendientes con plantilla, 180 aplazadas, 3 plantillas visualmente leídas')
 
 freq = json.loads((root/'exams'/'frequency_by_bank.json').read_text())
 assert all(1<=v['count']<=v['denominator'] for v in freq.values())
