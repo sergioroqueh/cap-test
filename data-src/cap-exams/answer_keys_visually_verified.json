@@ -29,6 +29,23 @@
       },
       "approval": "lectura_visual_plantilla_original_verificada",
       "notes": "Se observa el encabezado MERCANCÍAS GLOBAL / MARZO DE 2025. Se cotejaron las 100 casillas. Las 9 anomalías del extractor anterior eran letras mal leídas; las 85 del banco concuerdan. Las 15 sin banco reciben la clave visible en este PDF."
+    },
+    "2025-07-26-mercancias-a": {
+      "sourceFile": "Plantilla A Julio 2025.pdf",
+      "sourcePage": 1,
+      "category": "mercancias",
+      "model": "A",
+      "sourcePdfSha256": "8dd030ebdb4bdfd739b07a009018253200666da47355d1e152bc5b14a3b88d5c",
+      "sourceZip": "Respuestas(1).zip",
+      "visualMethod": "lectura_directa_imagen_pdf_a_2x_cinco_columnas_y_cruce_con_banco",
+      "readDirection": "Cinco columnas consecutivas 1-20,21-40,41-60,61-80,81-100",
+      "correctAnswers": "BACABAABBDBCDCCBCDDBAACCDBCACBCBCAACDCACDBAAABBACDBBBADAACABDCABCCDACCCCCABBDADDBBDDBBDBBABCCCACDADB",
+      "keyDigestSha256": "8386c95ad396aa357ffe50fb0d1559ca60ac53a7a66578be202bf70f89910500",
+      "verifiedOn": "2026-11-05",
+      "expectedBankConcordances": 67,
+      "expectedBankConflicts": 0,
+      "approval": "lectura_visual_plantilla_original_verificada",
+      "notes": "Encabezado MERCANCÍAS GLOBAL / JULIO 2025 MODELO A. 100 casillas cotejadas visualmente. Las preguntas del examen original proceden de transcripción visual provisional; la CLAVE de respuesta sí es la del PDF original."
     }
   }
 }
