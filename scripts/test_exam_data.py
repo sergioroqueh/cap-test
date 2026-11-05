@@ -162,8 +162,9 @@ for exam in exams:
                 'respuesta_banco_pendiente_revision',
                 'coincidencia_enunciado_banco_plantilla_pendiente_revision',
                 'respuesta_banco_enunciado_pendiente_revision',
-                'respuesta_fuente_publica_oficial_pendiente_plantilla')
-            if q['answerStatus']!='respuesta_fuente_publica_oficial_pendiente_plantilla':
+                'respuesta_fuente_publica_oficial_pendiente_plantilla',
+                'plantilla_pdf_oficial_verificada')
+            if q['answerStatus'] not in ('respuesta_fuente_publica_oficial_pendiente_plantilla', 'plantilla_pdf_oficial_verificada'):
                 assert q['correctAnswer'] == q['bankAnswer']
             if q['answerStatus'] in (
                 'coincidencia_automatica',
@@ -178,7 +179,8 @@ for exam in exams:
                 'coincidencia_alineacion_provisional_pendiente_revision',
                 'coincidencia_plantilla_corregida_visual_pendiente_revision',
                 'respuesta_banco_enunciado_pendiente_revision',
-                'conflicto_plantilla_banco')
+                'conflicto_plantilla_banco',
+                'plantilla_pdf_oficial_verificada')
         if q['answerStatus'] in ('conflicto_banco','conflicto_plantilla_banco'):
             assert q['correctAnswer'] is None
         if q['answerStatus'] == 'coincidencia_enunciado_banco_plantilla_pendiente_revision':
@@ -232,7 +234,7 @@ for exam in exams:
             assert q['bankAnswer'] is None
 assert len(public_answers)==len(evidence)==7
 assert index['totalImportedQuestions']==2600
-assert sum(q['readyCount'] for q in exams)==1922
+assert sum(q['readyCount'] for q in exams)==1937
 print('PASS documentadas con BOE/DGT:',len(public_answers))
 
 # Cross-exam review is advisory and must never silently assign a correct answer.
@@ -282,13 +284,39 @@ with (root/'exams'/'cross_model_pending_review.csv').open('r',encoding='utf-8-si
 assert len(cross_csv)==len(cross['items'])
 
 
+# R15: cross-check against the *original user-provided PDF*, read visually.
+# The digest is of the literal 100 letters in five 20-row columns, not OCR.
+import hashlib
+verified_meta=json.loads((root.parent.parent/'data-src'/'cap-exams'/'answer_keys_visually_verified.json').read_text())
+proof=verified_meta['exams']['2025-03-29-mercancias-global']
+key=proof['correctAnswers']
+assert len(key)==100 and set(key)<=set('ABCD')
+assert hashlib.sha256(key.encode()).hexdigest()==proof['keyDigestSha256']
+assert proof['sourcePdfSha256']=='ef2729a312160717c732240d9dde37807a459f66e7ec2d86cfc60f1faaeeb70b'
+assert key[24]=='C' and key[45]=='B' and key[61]=='C'
+assert key[68]=='A' and key[69]=='C' and key[79]=='B'
+assert key[81]=='C' and key[89]=='C' and key[99]=='B'
+march_rows=json.loads((root/'exams'/'questions'/'2025-03-29-mercancias-global.json').read_text())
+assert len(march_rows)==100
+assert {q['number'] for q in march_rows}==set(range(1,101))
+assert ''.join(q['correctAnswer'] for q in march_rows)==key
+assert all(q['templateAnswer']==q['correctAnswer'] for q in march_rows)
+assert all(q['answerStatus']=='plantilla_pdf_oficial_verificada' for q in march_rows)
+assert all(q['answerTemplateOfficiallyVerified'] is True for q in march_rows)
+assert all(q['answerTemplateSourceSha256']==proof['sourcePdfSha256'] for q in march_rows)
+assert sum(q['bankAnswer'] is not None for q in march_rows)==85
+assert sum(q['bankAnswer'] is None for q in march_rows)==15
+assert all(not q['bankAnswer'] or q['bankAnswer']==q['correctAnswer'] for q in march_rows)
+assert next(e for e in exams if e['id']=='2025-03-29-mercancias-global')['readyCount']==100
+print('PASS R15: marzo 2025 100/100 visualmente verificados, 85/85 banco, 15 respuestas recuperadas')
+
 # R14: solo analizar pendientes con archivo de plantilla; las restantes
 # conservan su posición en CAP Test, pero se aplazan en auditoría editorial.
 template_summary=json.loads((root/'exams'/'template_review_summary.json').read_text())
-assert template_summary['totalUnscored']==678
-assert template_summary['prioritizedWithTemplate']==498
+assert template_summary['totalUnscored']==663
+assert template_summary['prioritizedWithTemplate']==483
 assert template_summary['deferredWithoutTemplate']==180
-assert template_summary['publishedAnswerChanges']==0
+assert template_summary['publishedAnswerChanges']==15
 expected_deferred={
     '2025-07-26-mercancias-b',
     '2023-12-02-mercancias-global',
@@ -300,14 +328,14 @@ with (root/'exams'/'template_review_priority.csv').open(encoding='utf-8-sig',new
     priority_rows=list(csv.DictReader(fh))
 with (root/'exams'/'without_template_deferred.csv').open(encoding='utf-8-sig',newline='') as fh:
     deferred_rows=list(csv.DictReader(fh))
-assert len(priority_rows)==498 and len(deferred_rows)==180
+assert len(priority_rows)==483 and len(deferred_rows)==180
 assert all(r['templateFile'] and r['pendingReason']=='VERIFICAR_IMAGEN_PLANTILLA' for r in priority_rows)
 assert all(not r['templateFile'] and r['pendingReason']=='APLAZADO_SIN_ARCHIVO_PLANTILLA' for r in deferred_rows)
 assert all(r['examId'] not in expected_deferred for r in priority_rows)
 assert all(r['examId'] in expected_deferred for r in deferred_rows)
 prioritized_keys={(r['examId'],int(r['number'])) for r in priority_rows}
 deferred_keys={(r['examId'],int(r['number'])) for r in deferred_rows}
-assert len(prioritized_keys)==498 and len(deferred_keys)==180
+assert len(prioritized_keys)==483 and len(deferred_keys)==180
 assert not (prioritized_keys & deferred_keys)
 assert all(all_questions[key]['correctAnswer'] is None for key in prioritized_keys | deferred_keys)
 unverified=json.loads((root/'exams'/'template_2025_03_29_unverified_comparison.json').read_text())
@@ -317,9 +345,9 @@ assert unverified['noExistingBankAnswer']==15
 assert 'BLOQUEADO' in unverified['reviewStatus']
 assert len(unverified['disagreements'])==9
 assert len(unverified['candidatesUnapproved'])==15
-assert all(all_questions[('2025-03-29-mercancias-global',int(q['number']))]['correctAnswer'] is None
+assert all(all_questions[('2025-03-29-mercancias-global',int(q['number']))]['answerStatus']=='plantilla_pdf_oficial_verificada'
            for q in unverified['candidatesUnapproved'])
-print('PASS R14: 498 con plantilla, 180 aplazadas, 9 discrepancias PDF sin publicar')
+print('PASS R15: 483 pendientes con plantilla, 180 aplazadas, 9 errores de extracción corregidos visualmente')
 
 freq = json.loads((root/'exams'/'frequency_by_bank.json').read_text())
 assert all(1<=v['count']<=v['denominator'] for v in freq.values())
