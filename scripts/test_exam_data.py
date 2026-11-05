@@ -227,7 +227,7 @@ for exam in exams:
             key=q['examId']+':'+str(q['number'])
             proof=evidence[key]
             assert q['sourcePage']==proof['sourcePage']
-            assert q['reviewRequired'] is (q['answerStatus']!='plantilla_pdf_oficial_verificada')
+            assert q['reviewRequired'] is (bool(q.get('transcriptionReview')) or q['answerStatus']!='plantilla_pdf_oficial_verificada')
             assert q['answerEvidenceUrl']==proof['sourceUrl']
             assert q['answerTemplateOfficiallyVerified'] is (q['answerStatus']=='plantilla_pdf_oficial_verificada')
             assert q['correctAnswer'] in 'ABCD'
