@@ -96,16 +96,18 @@ export interface CapSheetReviewQuestion {
   reviewPriority: string
   textReviewRequired: boolean
   r22Case: CapR22Case | null
+  r23Case: CapR23Case | null
   r22TextCorrection: CapRawQuestion['textCorrection'] | null
 }
 
 /** Returns every question, including three documented conflicts, for audit by exam. */
 export async function loadCapSheetReview(meta: CapExamMeta): Promise<CapSheetReviewQuestion[]> {
-  const [res, triage, casebook] = await Promise.all([fetch(BASE + meta.path), loadCapEditorialTriage(), loadCapR22Casebook()])
+  const [res, triage, casebook, casebookR23] = await Promise.all([fetch(BASE + meta.path), loadCapEditorialTriage(), loadCapR22Casebook(), loadCapR23Casebook()])
   if (!res.ok) throw new Error('No se pudo cargar la convocatoria.')
   const rows: CapRawQuestion[] = await res.json()
   const sourceFlags = new Map((triage.questions[meta.id] || []).map(x => [x.number, x]))
   const r22Cases = new Map(casebook.cases.map(x => [x.examId + ':' + x.number, x]))
+  const r23Cases = new Map(casebookR23.cases.map(x => [x.examId + ':' + x.number, x]))
   if (rows.length !== 100 || sourceFlags.size !== 100)
     throw new Error('Auditoría incompleta: esta convocatoria necesita 100 preguntas.')
   return rows.map(q => ({
@@ -124,6 +126,7 @@ export async function loadCapSheetReview(meta: CapExamMeta): Promise<CapSheetRev
     reviewPriority: sourceFlags.get(q.number)?.priority || 'P4',
     textReviewRequired: sourceFlags.get(q.number)?.textReviewRequired || false,
     r22Case: r22Cases.get(meta.id + ':' + q.number) || null,
+    r23Case: r23Cases.get(meta.id + ':' + q.number) || null,
     r22TextCorrection: q.textCorrection || null,
   }))
 }
@@ -151,6 +154,36 @@ export async function loadCapR22Casebook(): Promise<CapR22Casebook> {
       payload.correctAnswerChangeCount !== 0)
     throw new Error('El expediente R22 no coincide con la versión actual del banco.')
   r22Cache = payload
+  return payload
+}
+
+export interface CapR23Case {
+  examId: string
+  number: number
+  status: string
+  priority: string
+  reason: string
+  sourceUrl: string
+  evidenceType: string
+  unverifiedTextExtractionLetter?: AnswerKey
+  visuallyVerifiedOriginalSheetLetter?: AnswerKey
+}
+export interface CapR23Casebook {
+  totalQuestionRows: number
+  manualEvidenceCases: number
+  sourceKeyChanges: number
+  cases: CapR23Case[]
+}
+let r23Cache: CapR23Casebook | null = null
+export async function loadCapR23Casebook(): Promise<CapR23Casebook> {
+  if (r23Cache) return r23Cache
+  const res = await fetch(BASE + 'data/exams/editorial_casebook_r23.json')
+  if (!res.ok) throw new Error('No se ha podido cargar el expediente R23.')
+  const payload = await res.json() as CapR23Casebook
+  if (payload.totalQuestionRows !== 1000 || payload.manualEvidenceCases !== 17 ||
+      payload.sourceKeyChanges !== 0)
+    throw new Error('El expediente R23 no corresponde a esta versión de los exámenes.')
+  r23Cache = payload
   return payload
 }
 
