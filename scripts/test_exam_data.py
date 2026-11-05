@@ -394,7 +394,8 @@ for eid,proof in batch.items():
         assert eid=='2023-07-29-mercancias-a'
         assert all(q['answerStatus']!='plantilla_pdf_oficial_verificada' for q in rows if q['number']>43)
         assert all(q['templateAlignmentStatus']=='alineacion_provisional_pendiente_revision' for q in rows if 44<=q['number']<=99)
-        assert next(q for q in rows if q['number']==100)['correctAnswer'] is None
+        assert next(q for q in rows if q['number']==100)['answerTemplateOfficiallyVerified'] is not True
+        assert next(q for q in rows if q['number']==100)['answerStatus']!='plantilla_pdf_oficial_verificada'
     else:
         assert all(q['correctAnswer'] is not None for q in rows)
 assert next(q for q in json.loads((root/'exams'/'questions'/'2023-07-29-mercancias-b.json').read_text()) if q['number']==13)['correctAnswer']=='D'
