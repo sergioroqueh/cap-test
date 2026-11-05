@@ -1,0 +1,120 @@
+import assert from 'node:assert/strict'
+import { mkdir } from 'node:fs/promises'
+import { chromium } from 'playwright'
+
+const BASE=process.env.CAP_PREVIEW_URL||'http://127.0.0.1:4173/'
+const artifacts='artifacts/cap-focus-e2e'
+await mkdir(artifacts,{recursive:true})
+const browser=await chromium.launch({headless:true,args:['--no-sandbox']})
+const readSession=page=>page.evaluate(()=>JSON.parse(localStorage.getItem('cap-test-beta-active-v1')||'null'))
+const readResult=page=>page.evaluate(()=>JSON.parse(localStorage.getItem('cap-test-beta-last-v1')||'null'))
+let checks=0
+
+async function openHome(context){
+ const page=await context.newPage()
+ await page.goto(BASE,{waitUntil:'domcontentloaded'})
+ await page.locator('.focus-primary').waitFor({timeout:30000})
+ return page
+}
+async function submit(page){
+ page.once('dialog',dialog=>dialog.accept())
+ await page.locator('.focus-quiz-actions button').last().click()
+ await page.locator('.result').waitFor({timeout:30000})
+}
+try{
+ // Mobile: all 100 mixed questions, persisted answers, index, review marker, real scoring.
+ const mobile=await browser.newContext({viewport:{width:390,height:844},isMobile:true,deviceScaleFactor:1})
+ const p=await openHome(mobile)
+ assert.equal(await p.locator('html').getAttribute('data-theme'),'dark')
+ await p.screenshot({path:artifacts+'/mobile-home.png',fullPage:true})
+ await p.locator('.focus-practice-grid button').filter({hasText:'Examen mezclado'}).click()
+ await p.locator('.focus-question').waitFor({timeout:30000})
+ const original=await readSession(p)
+ assert.equal(original.questionIds.length,100,'mixed exam should contain 100 questions')
+ assert.equal(new Set(original.questionIds).size,100,'mixed exam must not duplicate ids')
+ assert.equal(original.timed,true,'real exam needs a running clock')
+ assert.equal(original.durationMinutes,120)
+ await p.locator('.answers button').first().click()
+ await p.locator('.focus-mark').click()
+ await p.screenshot({path:artifacts+'/mobile-question.png',fullPage:true})
+ await p.reload()
+ await p.locator('.focus-question').waitFor({timeout:30000})
+ const resumed=await readSession(p)
+ assert.equal(resumed.startedAt,original.startedAt,'refresh must not reset the timer')
+ assert.equal(Object.keys(resumed.selectedAnswers).length,1,'response must survive refresh')
+ assert.equal(resumed.markedIds.length,1,'marked questions must survive refresh')
+ await p.locator('.focus-index summary').click()
+ assert.equal(await p.locator('.focus-question-grid button').count(),100)
+ await p.locator('.focus-question-grid button').nth(9).click()
+ assert.match(await p.locator('.focus-question>small').innerText(),/Pregunta 10 de 100/)
+ await submit(p)
+ const result=await readResult(p)
+ assert.equal(result.record.total,100)
+ assert.equal(result.record.answered,1)
+ assert.equal(result.record.timed,true)
+ assert.equal(result.record.finishedReason,'manual')
+ assert.equal(await readSession(p),null,'completed test must clear active data')
+ await p.screenshot({path:artifacts+'/mobile-result.png',fullPage:true})
+ checks++
+ await mobile.close()
+
+ // Deadline: altering only the stored start time simulates returning after 2 hours.
+ const timeoutContext=await browser.newContext({viewport:{width:390,height:844},isMobile:true})
+ const t=await openHome(timeoutContext)
+ await t.locator('.focus-primary').click()
+ await t.locator('.focus-question').waitFor({timeout:30000})
+ await t.evaluate(()=>{
+   const key='cap-test-beta-active-v1'
+   const session=JSON.parse(localStorage.getItem(key))
+   session.startedAt=Date.now()-121*60*1000
+   localStorage.setItem(key,JSON.stringify(session))
+ })
+ await t.reload()
+ await t.locator('.result').waitFor({timeout:30000})
+ const timeoutResult=await readResult(t)
+ assert.equal(timeoutResult.record.finishedReason,'timeout')
+ assert.equal(timeoutResult.record.answered,0)
+ assert.equal(timeoutResult.record.score,0)
+ assert.equal(await readSession(t),null)
+ checks++
+ await timeoutContext.close()
+
+ // Original historic model with an editorial exclusion must never show an official pass.
+ const historicContext=await browser.newContext({viewport:{width:390,height:844},isMobile:true})
+ const h=await openHome(historicContext)
+ const disputed=h.locator('#cap-historicos .list button').filter({hasText:'conflictos sin puntuar'}).first()
+ assert.ok(await disputed.count()>0,'at least one historic model has a disputed question')
+ await disputed.click()
+ await h.locator('.focus-question').waitFor({timeout:30000})
+ assert.equal((await readSession(h)).questionIds.length,100)
+ await submit(h)
+ const historicResult=await readResult(h)
+ assert.ok(historicResult.record.excluded>0)
+ assert.equal(historicResult.record.passed,null)
+ assert.match(await h.locator('.result').innerText(),/orientativo/i)
+ checks++
+ await historicContext.close()
+
+ // Desktop: two-column practice choices, study feedback, light theme preference.
+ const desktopContext=await browser.newContext({viewport:{width:1440,height:900},deviceScaleFactor:1})
+ const d=await openHome(desktopContext)
+ assert.equal(await d.locator('html').getAttribute('data-theme'),'dark')
+ const overflow=await d.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth)
+ assert.equal(overflow,false,'desktop must not have horizontal overflow')
+ await d.screenshot({path:artifacts+'/desktop-home.png',fullPage:true})
+ await d.locator('.focus-choice button').filter({hasText:'Estudio'}).click()
+ await d.locator('.focus-primary').click()
+ await d.locator('.focus-question').waitFor({timeout:30000})
+ await d.locator('.answers button').first().click()
+ await d.locator('.feedback').waitFor()
+ await d.screenshot({path:artifacts+'/desktop-study.png',fullPage:true})
+ await d.locator('header .gear').click()
+ await d.locator('.panel').filter({hasText:'Tema'}).getByRole('button',{name:/Claro/}).click()
+ await d.reload()
+ await d.locator('html[data-theme="light"]').waitFor()
+ checks++
+ await desktopContext.close()
+ console.log('CAP Focus E2E PASS: '+checks+' mobile/desktop scenarios')
+}finally{
+ await browser.close()
+}
