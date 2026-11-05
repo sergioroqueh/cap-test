@@ -90,7 +90,7 @@ def main():
             extractedAnswerText=q["options"][letter], sourceUrl=source["sourceUrl"],
             reviewStatus="LECTURA_PDF_SIN_IMAGEN_NO_APROBADA",
         )
-        if q.get("bankAnswer") in "ABCD":
+        if q.get("bankAnswer") in ('A', 'B', 'C', 'D'):
             (concordant if q["bankAnswer"] == letter else conflicts).append(line)
         else:
             candidates.append(line)
