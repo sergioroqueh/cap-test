@@ -62,6 +62,9 @@ def parse_page(text,page):
 def generate():
     manifest = json.loads((SRC/'manifest.json').read_text(encoding='utf-8'))['exams']
     keys = json.loads((SRC/'answer_keys_unverified.json').read_text(encoding='utf-8'))
+    verified_pdf_keys = json.loads((SRC/'answer_keys_visually_verified.json').read_text(encoding='utf-8'))['exams']
+    verified_pdf_applied = defaultdict(int)
+    verified_pdf_bank_matching = defaultdict(int)
     alignments = json.loads((SRC/'template_alignment_review.json').read_text(encoding='utf-8'))['alignments']
     visual_keys = json.loads((SRC/'answer_key_visual_corrections.json').read_text(encoding='utf-8'))['overrides']
     normative_notes = json.loads((SRC/'normative_conflicts_review.json').read_text(encoding='utf-8'))['reviews']
@@ -157,6 +160,21 @@ def generate():
                              'missing':[n for n in range(1,101) if n not in by_num]})
         local=[]
         template=keys.get(exam_id,'')
+        template_verified=verified_pdf_keys.get(exam_id)
+        if template_verified:
+            if (template_verified['sourceFile']!=meta.get('templateFile')
+                or template_verified['category']!=meta['category']
+                or template_verified['model']!=meta['model']):
+                raise RuntimeError(f'Plantilla PDF verificada no corresponde al examen {exam_id}')
+            if (len(template_verified['correctAnswers'])!=100
+                or set(template_verified['correctAnswers'])-set('ABCD')
+                or len(template_verified['sourcePdfSha256'])!=64):
+                raise RuntimeError(f'Clave visual PDF inválida en {exam_id}')
+            if template:
+                raise RuntimeError(f'Clave visual PDF duplicada en claves provisionales {exam_id}')
+            if alignments.get(exam_id):
+                raise RuntimeError(f'Clave visual PDF incompatible con alineación provisional {exam_id}')
+
         for q in parsed:
             matching=bank.get(fingerprint(q),[])
             method='pregunta_y_cuatro_opciones_exactas' if matching else 'sin_coincidencia'
@@ -231,6 +249,25 @@ def generate():
             answer=inferred if status in ('coincidencia_automatica','coincidencia_alineacion_provisional_pendiente_revision','coincidencia_plantilla_corregida_visual_pendiente_revision','respuesta_banco_pendiente_revision',
                                            'coincidencia_enunciado_banco_plantilla_pendiente_revision',
                                            'respuesta_banco_enunciado_pendiente_revision') else None
+            # A direct visual read of the actual answer-sheet PDF takes precedence
+            # over inferred bank solutions, but a conflict stops the entire build.
+            verified_pdf=False
+            if template_verified:
+                visual_letter=template_verified['correctAnswers'][original_number-1]
+                if (len(mapped)>1 or (inferred and inferred!=visual_letter)):
+                    raise RuntimeError(f'Conflicto entre plantilla PDF verificada y banco: {exam_id} pregunta {original_number}')
+                if visual_fix:
+                    raise RuntimeError(f'Corrección visual previa incompatible con plantilla completa: {exam_id} q{original_number}')
+                letter=visual_letter
+                original_letter=visual_letter
+                template_number=original_number
+                align_status='sin_ajuste'
+                visual_status='plantilla_pdf_original_verificada'
+                status='plantilla_pdf_oficial_verificada'
+                answer=visual_letter
+                verified_pdf=True
+                verified_pdf_applied[exam_id]+=1
+                if inferred: verified_pdf_bank_matching[exam_id]+=1
             public_evidence=official_evidence.get(exam_id+':'+str(original_number))
             evidence_url=''
             evidence_source=''
@@ -272,12 +309,19 @@ def generate():
               'rawTemplateAnswer':original_letter,'templateNumberUsed':template_number,
               'templateAlignmentStatus':align_status,'templateVisualCorrectionStatus':visual_status,
               'answerStatus':status,'matchMethod':method,'sourcePage':q['page'],'frequencyGroup':group,
-              'reviewRequired':bool(q.get('transcriptionReview')) or status!='coincidencia_automatica',
+              'reviewRequired':bool(q.get('transcriptionReview')) or status not in ('coincidencia_automatica','plantilla_pdf_oficial_verificada'),
               'answerEvidenceUrl':evidence_url,
               'answerEvidenceSource':evidence_source,
-              'answerTemplateOfficiallyVerified':False if public_evidence else None})
+              'answerTemplateOfficiallyVerified':True if verified_pdf else (False if public_evidence else None),
+              'answerTemplateSourceSha256':template_verified['sourcePdfSha256'] if verified_pdf else ''})
         exams.append((meta,local))
         all_rows.extend(local)
+    for verified_exam, proof in verified_pdf_keys.items():
+        if verified_pdf_applied[verified_exam]!=100:
+            raise RuntimeError(f'Plantilla PDF visual incompleta: {verified_exam}: {verified_pdf_applied[verified_exam]}')
+        if verified_pdf_bank_matching[verified_exam]!=proof['expectedBankConcordances']:
+            raise RuntimeError(f'Concordancias visuales con banco diferentes a lo auditado: {verified_exam}')
+    print('AUDIT visual verified PDF keys:',dict(verified_pdf_applied),'bank concordances',dict(verified_pdf_bank_matching))
     if evidence_applied != set(official_evidence):
         raise RuntimeError(f'Evidencia oficial sin aplicar: {set(official_evidence)-evidence_applied}')
     # The denominator uses only complete textual exam models, not missing scans.
