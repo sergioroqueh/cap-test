@@ -65,6 +65,7 @@ def generate():
     verified_pdf_keys = json.loads((SRC/'answer_keys_visually_verified.json').read_text(encoding='utf-8'))['exams']
     verified_pdf_applied = defaultdict(int)
     verified_pdf_bank_matching = defaultdict(int)
+    verified_pdf_bank_conflicts = defaultdict(int)
     alignments = json.loads((SRC/'template_alignment_review.json').read_text(encoding='utf-8'))['alignments']
     visual_keys = json.loads((SRC/'answer_key_visual_corrections.json').read_text(encoding='utf-8'))['overrides']
     normative_notes = json.loads((SRC/'normative_conflicts_review.json').read_text(encoding='utf-8'))['reviews']
@@ -254,8 +255,14 @@ def generate():
             verified_pdf=False
             if template_verified:
                 visual_letter=template_verified['correctAnswers'][original_number-1]
-                if (len(mapped)>1 or (inferred and inferred!=visual_letter)):
-                    raise RuntimeError(f'Conflicto entre plantilla PDF verificada y banco: {exam_id} pregunta {original_number}')
+                hold=template_verified.get('holdConflicts',{}).get(str(original_number))
+                disagreement=len(mapped)>1 or (inferred and inferred!=visual_letter)
+                if disagreement:
+                    if not hold or hold['pdfAnswer']!=visual_letter or hold['bankAnswer']!=inferred:
+                        raise RuntimeError(f'Conflicto no documentado entre plantilla PDF y banco: {exam_id} pregunta {original_number}')
+                    verified_pdf_bank_conflicts[exam_id]+=1
+                elif hold:
+                    raise RuntimeError(f'Conflicto antiguo ya no presente y sigue bloqueado: {exam_id} pregunta {original_number}')
                 if visual_fix:
                     raise RuntimeError(f'Corrección visual previa incompatible con plantilla completa: {exam_id} q{original_number}')
                 letter=visual_letter
@@ -263,8 +270,8 @@ def generate():
                 template_number=original_number
                 align_status='sin_ajuste'
                 visual_status='plantilla_pdf_original_verificada'
-                status='plantilla_pdf_oficial_verificada'
-                answer=visual_letter
+                status='conflicto_pdf_original_banco_pendiente_cotejo_enunciado' if disagreement else 'plantilla_pdf_oficial_verificada'
+                answer=None if disagreement else visual_letter
                 verified_pdf=True
                 verified_pdf_applied[exam_id]+=1
                 if inferred: verified_pdf_bank_matching[exam_id]+=1
@@ -321,7 +328,10 @@ def generate():
             raise RuntimeError(f'Plantilla PDF visual incompleta: {verified_exam}: {verified_pdf_applied[verified_exam]}')
         if verified_pdf_bank_matching[verified_exam]!=proof['expectedBankConcordances']:
             raise RuntimeError(f'Concordancias visuales con banco diferentes a lo auditado: {verified_exam}')
-    print('AUDIT visual verified PDF keys:',dict(verified_pdf_applied),'bank concordances',dict(verified_pdf_bank_matching))
+        if verified_pdf_bank_conflicts[verified_exam]!=proof.get('expectedBankConflicts',0):
+            raise RuntimeError(f'Conflictos visuales con banco distintos a lo auditado: {verified_exam}')
+    print('AUDIT visual verified PDF keys:',dict(verified_pdf_applied),'bank concordances',
+          dict(verified_pdf_bank_matching),'documented conflicts',dict(verified_pdf_bank_conflicts))
     if evidence_applied != set(official_evidence):
         raise RuntimeError(f'Evidencia oficial sin aplicar: {set(official_evidence)-evidence_applied}')
     # The denominator uses only complete textual exam models, not missing scans.
