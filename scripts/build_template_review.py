@@ -33,7 +33,9 @@ def main():
     by_id = {exam["id"]: exam for exam in manifest}
     digitized = set(json.loads((SRC / "answer_keys_unverified.json").read_text(encoding="utf-8")))
     verified = json.loads((SRC / "answer_keys_visually_verified.json").read_text(encoding="utf-8"))['exams']
+    # Un desacuerdo visual/banco previamente puntuado pasa a pendiente y se resta.
     newly_certified_count = sum(100 - proof['expectedBankConcordances']
+                                - 2 * proof.get('expectedBankConflicts',0)
                                 for proof in verified.values())
     if len(by_id) != len(indexed):
         raise AssertionError("Desfase entre manifiesto e índice")
