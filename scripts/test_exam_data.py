@@ -550,6 +550,12 @@ assert nov6['editorialClosure']['appliedAnswer'] == 'A'
 assert nov6['editorialClosure']['scoringEligible'] is True
 qnov6=json.loads((root/'exams'/'questions'/'2022-11-26-mercancias-global.json').read_text())[5]
 assert qnov6['originalSheetAnswer']==qnov6['correctAnswer']=='A'
+assert qnov6['scoringEligible'] is True and qnov6['answerDispute'] is None
+nov_triage = next(q for q in triage['questions']['2022-11-26-mercancias-global'] if q['number']==6)
+assert nov_triage['priority']=='P2'
+assert any(f['code']=='resuelta_caja_cambios_A_confirmada' for f in nov_triage['flags'])
+assert not any(f['code']=='dudosa_clave_caja_cambios_frente_dgt' for f in nov_triage['flags'])
+assert sum(x['P0'] for x in triage['exams'])==3
 sept=json.loads((root/'exams'/'questions'/'2025-09-27-mercancias-global.json').read_text())
 assert sum(bool(q.get('textCorrection')) for q in sept)==94
 assert sept[0]['options']['A']=='El origen y el propietario de los animales.'
