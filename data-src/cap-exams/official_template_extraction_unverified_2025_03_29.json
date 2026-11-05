@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "examId": "2025-03-29-mercancias-global",
+  "sourceTitle": "2ª prueba CAP 2025 - plantillas correctoras; PLANTILLA MERCANCÍAS GLOBAL",
+  "sourceUrl": "https://www.castillalamancha.es/sites/default/files/documentos/pdf/20250331/2a_prueba_cap_2025_-_plantillas_correctoras.pdf",
+  "sourceDate": "2025-03-31",
+  "sourceMethod": "lectura_textual_extraida_de_pdf_web_sin_verificacion_visual_de_casillas",
+  "reviewStatus": "PROVISIONAL_BLOQUEADO_NO_PUBLICAR_COMO_PLANTILLA_VERIFICADA",
+  "correctAnswersCandidate": "ADBBDDCDDCCACADDBACDBDCAACDBBBDCBADAAADBDAACCDCACBBDACAADABADAACDCDBCDBCCBBBBBDACAAACACCCABBBBCCDBAA",
+  "description": "El PDF público incluye una tabla de 100 respuestas, pero la lectura web no ha podido ser contrastada mediante imagen de la plantilla. Hay discrepancias graves con respuestas históricas, así que no usar en puntuación.",
+  "readNotes": [
+    "Se leyó expresamente el bloque MERCANCÍAS GLOBAL; no ampliación ni viajeros.",
+    "La captura visual PDF falló por error del visor (cache miss).",
+    "No se modifica answer_keys_unverified.json ni se aprueban respuestas.",
+    "Cotejar la imagen original y comprobar secuencia y ubicación de cada casilla antes de promocionar."
+  ]
+}
