@@ -76,6 +76,10 @@ def generate():
     normative_notes = json.loads((SRC/'normative_conflicts_review.json').read_text(encoding='utf-8'))['reviews']
     corrections = json.loads((SRC/'override_transcriptions_review.json').read_text(encoding='utf-8'))
     official_evidence = json.loads((SRC/'official_public_evidence_2026_11_05.json').read_text(encoding='utf-8'))['cases']
+    editorial_source = json.loads((SRC/'editorial_alignment_verified_2023_a.json').read_text(encoding='utf-8'))
+    if editorial_source['examId']!='2023-07-29-mercancias-a' or len(editorial_source['approvals'])!=13:
+        raise RuntimeError('El expediente editorial del modelo A no está completo')
+    editorial_applied=set()
     evidence_applied = set()
     bank = defaultdict(list)
     bank_by_question = defaultdict(list)
