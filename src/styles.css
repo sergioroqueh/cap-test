@@ -66,3 +66,15 @@ nav{position:fixed;bottom:0;left:0;right:0;height:72px;background:color-mix(in s
 .cap-editorial-flags strong{color:var(--primary);font-size:11px;letter-spacing:.015em}
 .cap-editorial-flags small{display:block;margin-top:2px;line-height:1.45;color:var(--muted)}
 .cap-pending-panel a.btn{font-size:11px;max-width:100%;text-align:center;white-space:normal}
+
+/* R22: distinguish editorial verification, disputed technical keys and original text. */
+.cap-r22-case{padding:12px 13px;border:1px solid var(--line);border-radius:13px;
+ background:color-mix(in srgb,var(--primary) 7%,var(--surface));margin:10px 0}
+.cap-r22-case>b{font-size:12px;color:var(--primary);overflow-wrap:anywhere}
+.cap-r22-case p{font-size:12px;line-height:1.55;margin:7px 0}
+.cap-r22-case small{display:block;overflow-wrap:anywhere;line-height:1.4}
+.cap-r22-original{border:1px dashed var(--line);background:var(--soft);
+ border-radius:12px;padding:10px 12px;margin:10px 0}
+.cap-r22-original summary{font-size:11px;font-weight:750;color:var(--muted)}
+.cap-r22-original p{font-size:12px}
+.cap-r22-original li{font-size:11px}
