@@ -14,6 +14,37 @@ se excluyen del recuento. Siguen pendientes revisiones visuales y cotejos
 de las respuestas con sus plantillas oficiales.
 El apartado siguiente conserva el historial de hitos y cifras de rondas anteriores.
 
+### Ronda 13 — BOE/DGT, 7 respuestas documentadas (05/11/2026)
+
+- Se han contrastado 7 apariciones sin clave de banco mediante fuentes
+  oficiales externas de contenido. **No equivalen a lectura de la plantilla
+  del examen** y conservan revisión editorial pendiente.
+- Traslado para control hasta 30 km en sentido contrario al de la marcha:
+  2023-03-25/global q50 = B, 2023-07-29/A q79 = B,
+  2023-07-29/B q33 = B, 2024-05-25/global q32 = B,
+  2024-04-06/global q71 = A. Fuente:
+  [Ley 16/1987, art. 33.4](https://boe.es/buscar/act.php?id=BOE-A-1987-17803&p=20220302&tn=0).
+- Vehículos eléctricos híbridos enchufables:
+  2024-07-20/B q84 = B (PHEV), según
+  [DGT](https://www.dgt.es/nuestros-servicios/tu-vehiculo/tus-vehiculos/distintivo-ambiental/).
+- Triángulo rojo y coche negro en envase de medicamento:
+  2026-03-28/global q58 = C, alerta de posible afectación a la conducción,
+  según [DGT](https://www.dgt.es/export/sites/web-DGT/.galleries/downloads/muevete-con-seguridad/evita-conductas-riesgo/Medicamentos_conduccion_PoblacionGeneral.pdf).
+- Origen verificable en
+  `data-src/cap-exams/official_public_evidence_2026_11_05.json`.
+  La importación comprueba que fecha/modelo, número, página, enunciado
+  y texto de opción sean idénticos. No sobrescribe respuestas del banco
+  ni plantillas contradictorias. El aviso en la interfaz dice que la
+  evidencia es oficial **externa**, no plantilla CAP.
+- Resultado validado: **26/26** modelos, **2.600/2.600** preguntas;
+  **1.922** respuestas utilizables (1.915 previas + 7 documentadas),
+  **678** pendientes sin autocorrección. Los originales 8.655/33
+  siguen intactos. Auditoría cruzada R12: ahora 140 casos repetidos
+  entre los pendientes (2 con consenso de plantillas entre modelos).
+- CI de la importación y pruebas
+  [SUCCESS](https://github.com/sergioroqueh/cap-test/actions/runs/41995209567).
+  No fusionar PR #6 a producción sin revisión editorial y funcional.
+
 ### Ronda 12 — Cruce exacto de preguntas pendientes (05/11/2026)
 
 - El inventario **ya está completo**: 26 modelos, 2.600 apariciones.
