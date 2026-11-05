@@ -205,7 +205,7 @@ def main():
     for case in source["cases"]:
         key = (case["examId"], case["number"])
         entry = next(q for q in all_rows if (q["examId"], q["questionNumber"]) == key)
-        enriched = dict(case)
+        enriched = dict(by_case[key])  # Includes the nine distinct unverified/verified letters.
         enriched.update({
             "sourcePage": entry["sourcePage"],
             "originalSheetAnswer": entry["pdfOriginalLetter"] or None,
