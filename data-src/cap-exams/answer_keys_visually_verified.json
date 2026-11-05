@@ -137,7 +137,8 @@
         }
       },
       "approval": "lectura_visual_plantilla_original_verificada",
-      "notes": "Cabecera MERCANCÍAS GLOBAL / FEBRERO DE 2026 confirmada. 100 respuestas leídas visualmente. 86 coincidencias con banco, 13 claves PDF sin equivalente, q61 bloqueada por conflicto real."
+      "notes": "Cabecera MERCANCÍAS GLOBAL / FEBRERO DE 2026 confirmada. 100 respuestas leídas visualmente. 86 coincidencias con banco, 13 claves PDF sin equivalente, q61 bloqueada por conflicto real.",
+      "expectedPreviouslyUnscoredConflicts": 1
     }
   }
 }
