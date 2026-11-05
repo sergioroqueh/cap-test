@@ -24,6 +24,9 @@ jobs:
       - name: Validate CAP overlay isolation and answer provenance
         run: python3 scripts/test_exam_data.py
 
+      - name: Audit remaining source PDFs without changing scored keys
+        run: python3 scripts/audit_visual_batch_candidates.py
+
       - name: Package CAP answer review queue
         uses: actions/upload-artifact@v4
         with:
@@ -36,6 +39,7 @@ jobs:
             public/data/exams/template_review_priority.csv
             public/data/exams/without_template_deferred.csv
             public/data/exams/template_review_summary.json
+            public/data/exams/visual_batch_audit_2026_11_05.json
             public/data/exams/template_2025_03_29_unverified_comparison.json
             public/data/exams/alignment_2023_a_review.csv
             public/data/exams/ocr_2025_a_review.csv
