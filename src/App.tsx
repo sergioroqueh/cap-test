@@ -75,11 +75,12 @@ type P={bank:BankIndex;rows:QuestionProgress[];pm:Map<string,QuestionProgress>;s
 const capDecision = (q:Question):CapEditorialDecision|null =>
  (q as Question & {editorialDecision?:CapEditorialDecision}).editorialDecision || null
 
-function CapHome(){
+function CapHome({pm}:{pm:Map<string,QuestionProgress>}){
  const [index,setIndex]=useState<CapExamIndex|null>(null)
  const [editorialTriage,setEditorialTriage]=useState<CapEditorialTriage|null>(null)
  const [category,setCategory]=useState<CapCategory>('mercancias')
- const [mode,setMode]=useState<'study'|'exam'>('study')
+ const [mode,setMode]=useState<'study'|'exam'>('exam')
+ const [timed,setTimed]=useState(true)
  const [count,setCount]=useState(100)
  const [working,setWorking]=useState(false)
  const [error,setError]=useState('')
@@ -115,50 +116,95 @@ function CapHome(){
  }
  const showSheetRows=sheetReviewOnlyIssues?sheetReviewRows.filter(q=>q.reviewPriority!=='P4'||!!q.r22Case||!!q.r23Case||!!q.r24Case):sheetReviewRows
  const selectedTriage=editorialTriage?.exams.find(e=>e.examId===sheetReviewId)
- async function begin(source:'cap-original'|'cap-random'|'cap-mixed',chosen?:CapExamMeta){
-  setError('');setWorking(true)
+ async function begin(source:'cap-original'|'cap-random'|'cap-mixed'|'cap-errors'|'cap-favorites'|'cap-review',chosen?:CapExamMeta){
+  setError('')
+  const existing=localStorage.getItem(ACTIVE)||sessionStorage.getItem(ACTIVE)
+  if(existing&&!confirm('Tienes una sesión guardada. Si comienzas otra se sustituirá. ¿Continuar?'))return
+  setWorking(true)
   try{
    let questions:Question[]=[]
    let label=''
-   if(source==='cap-mixed'){
+   const practiceSource=['cap-errors','cap-favorites','cap-review'].includes(source)
+   const runMode=practiceSource?'study':mode
+   const real=runMode==='exam'&&timed
+   if(['cap-mixed','cap-errors','cap-favorites','cap-review'].includes(source)){
     const rows=await loadAllCapQuestions(category)
     const unique=new Map<string,Question>()
     shuffle(rows).forEach(x=>{const id=x.progressId||x.id;if(!unique.has(id))unique.set(id,x)})
-    questions=shuffle([...unique.values()]).slice(0,count)
-    label='CAP '+(category==='mercancias'?'Mercancías':'Viajeros')+' · mezclado · '+questions.length+' preguntas cotejadas'
+    let pool=[...unique.values()]
+    if(source==='cap-errors')pool=pool.filter(x=>needsReview(pm.get(x.progressId||x.id)))
+    if(source==='cap-favorites')pool=pool.filter(x=>pm.get(x.progressId||x.id)?.favorite)
+    if(source==='cap-review')pool=pool.sort((a,b)=>smartScore(pm.get(b.progressId||b.id))-smartScore(pm.get(a.progressId||a.id)))
+    questions=source==='cap-review'?pool.slice(0,20):shuffle(pool).slice(0,source==='cap-mixed'?(real?100:count):20)
+    label=source==='cap-errors'?'CAP Mercancías · mis errores':source==='cap-favorites'?'CAP Mercancías · favoritas':source==='cap-review'?'CAP Mercancías · repaso inteligente':'CAP Mercancías · mezclado · '+questions.length+' preguntas'
    }else{
     const meta=chosen||(available.length?shuffle(available)[0]:undefined)
-    if(!meta)throw new Error('No hay exámenes corregibles todavía en esta modalidad.')
+    if(!meta)throw new Error('No hay convocatorias con plantilla disponibles para esta modalidad.')
     questions=await loadCapQuestions(meta)
     label='CAP '+(category==='mercancias'?'Mercancías':'Viajeros')+' · '+pretty(meta)
-    if(questions.length<(meta.expectedCount||100))label+=' · práctica parcial ('+questions.length+'/'+(meta.expectedCount||100)+')'
+    if(questions.length!==(meta.expectedCount||100))throw new Error('Esta convocatoria aún no reúne sus 100 preguntas originales; se conserva sin iniciar examen.')
    }
-   if(!questions.length)throw new Error('Ninguna pregunta tiene solución cotejable todavía.')
-   const session:ActiveSession={type:mode,source,label,questionIds:questions.map(q=>q.id),
-    currentIndex:0,selectedAnswers:{},checkedIds:[],startedAt:Date.now()}
-   sessionStorage.setItem(ACTIVE,JSON.stringify(session))
+   if(!questions.length)throw new Error(source==='cap-errors'?'No hay errores pendientes de Mercancías.':source==='cap-favorites'?'Todavía no hay preguntas favoritas.':'No hay preguntas con este filtro.')
+   if(real&&questions.length!==100)throw new Error('El simulacro real necesita exactamente 100 preguntas. Selecciona una práctica sin reloj.')
+   const session:ActiveSession={type:runMode,source,label,questionIds:questions.map(q=>q.id),
+    currentIndex:0,selectedAnswers:{},checkedIds:[],startedAt:Date.now(),
+    timed:real,durationMinutes:real?CAP_DURATION_MINUTES:undefined,markedIds:[]}
+   localStorage.setItem(ACTIVE,JSON.stringify(session))
+   sessionStorage.removeItem(ACTIVE)
    go('quiz')
   }catch(e){setError(e instanceof Error?e.message:String(e))}finally{setWorking(false)}
  }
  if(!index&&!error)return <Loading text="Preparando exámenes CAP…"/>
- return <div className="page cap-page">
-  <section className="hero"><div><em>PRIORIDAD DE ESTUDIO</em><h1>Exámenes CAP</h1><p>Convocatorias anteriores, preguntas repetidas y estudio a tu ritmo.</p></div></section>
-  <h2>Modalidad</h2>
-  <div className="segments"><button className={category==='mercancias'?'on':''} onClick={()=>setCategory('mercancias')}>Mercancías</button><button className={category==='viajeros'?'on':''} onClick={()=>setCategory('viajeros')}>Viajeros · autobús</button></div>
-  <h2>Cómo quieres corregir</h2>
-  <div className="segments"><button className={mode==='study'?'on':''} onClick={()=>setMode('study')}>Estudio · al responder</button><button className={mode==='exam'?'on':''} onClick={()=>setMode('exam')}>Examen · al finalizar</button></div>
-  <p className="note">{category==='viajeros'?'El examen de Viajeros se conserva en el archivo, pero se aplaza hasta disponer de su plantilla.':'Cada convocatoria con plantilla contiene 100 preguntas y sus 100 respuestas impresas. Las contradicciones quedan visibles y no puntúan.'}</p>
-  {error&&<div className="autherror">{error}</div>}
-  <h2>Formas de practicar</h2>
-  <div className="cards">
-   <button onClick={()=>document.getElementById('cap-historicos')?.scrollIntoView({behavior:'smooth'})}>▦<span><b>Exámenes CAP</b><small>Elegir fecha y modelo de examen</small></span>›</button>
-   <button disabled={!available.length||working} onClick={()=>void begin('cap-random')}>⤨<span><b>Exámenes CAP aleatorios</b><small>Una convocatoria de esta modalidad al azar</small></span>›</button>
-   <button disabled={!available.length||working} onClick={()=>void begin('cap-mixed')}>✦<span><b>Exámenes CAP mezclados</b><small>Preguntas distintas de varias convocatorias</small></span>›</button>
-  </div>
-  <div className="panel"><label>Preguntas en examen mezclado</label><div className="segments">{[10,20,30,50,100].map(x=><button key={x} className={count===x?'on':''} onClick={()=>setCount(x)}>{x}</button>)}</div></div>
+ const savedSession=(()=>{try{return JSON.parse(localStorage.getItem(ACTIVE)||sessionStorage.getItem(ACTIVE)||'null') as ActiveSession|null}catch{return null}})()
+ return <div className="page cap-page focus-home">
+  <section className="focus-hero" aria-labelledby="focus-title">
+   <div className="focus-eyebrow"><span className="focus-status-dot"/> CAP TEST · MERCANCÍAS</div>
+   <h1 id="focus-title">Practica para aprobar.</h1>
+   <p>Exámenes reales, sin distracciones. Empieza con una convocatoria completa o estudia a tu ritmo.</p>
+   <div className="focus-facts"><span>100 preguntas</span><span>120 minutos</span><span>+1 / −0,5 / 0</span></div>
+   <div className="focus-choice" role="group" aria-label="Modo de corrección">
+    <button type="button" className={mode==='exam'?'on':''} aria-pressed={mode==='exam'} onClick={()=>setMode('exam')}>Examen</button>
+    <button type="button" className={mode==='study'?'on':''} aria-pressed={mode==='study'} onClick={()=>setMode('study')}>Estudio</button>
+   </div>
+   {mode==='exam'&&<div className="focus-timer-toggle" role="group" aria-label="Cronómetro">
+    <button className={timed?'on':''} aria-pressed={timed} onClick={()=>setTimed(true)}>Simulacro real · 2 h</button>
+    <button className={!timed?'on':''} aria-pressed={!timed} onClick={()=>setTimed(false)}>Práctica sin reloj</button>
+   </div>}
+   <button className="focus-primary" disabled={!available.length||working} onClick={()=>void begin('cap-random')}>
+     <span>{working?'Preparando…':mode==='study'?'Empezar estudio de 100 preguntas':timed?'Comenzar simulacro real':'Empezar examen sin reloj'}</span><span aria-hidden="true">→</span>
+   </button>
+   <small>{available.length} convocatorias con plantilla · corrección {mode==='study'?'inmediata':'solo al entregar'}{mode==='exam'&&timed?' · reloj sin pausa':''}</small>
+  </section>
+  {savedSession&&<section className="focus-resume" role="status">
+   <div><strong>Test sin terminar</strong><p>{savedSession.label} · {Object.keys(savedSession.selectedAnswers).length} respuestas guardadas</p></div>
+   <button className="btn light" onClick={()=>go('quiz')}>Continuar</button>
+  </section>}
+  {error&&<div className="autherror" role="alert">{error}</div>}
+  <section className="focus-practices" aria-labelledby="focus-other">
+   <div className="focus-section-heading"><h2 id="focus-other">Otras formas de practicar</h2><p>Elige una convocatoria, combina preguntas o repasa lo que más necesitas.</p></div>
+   <div className="focus-practice-grid">
+    <button onClick={()=>document.getElementById('cap-historicos')?.scrollIntoView({behavior:'smooth'})}><span className="focus-choice-icon">▦</span><span><b>Por convocatoria</b><small>Fecha y modelo originales</small></span><span aria-hidden="true">›</span></button>
+    <button disabled={!available.length||working} onClick={()=>void begin('cap-mixed')}><span className="focus-choice-icon">⤨</span><span><b>Examen mezclado</b><small>Sin preguntas duplicadas</small></span><span aria-hidden="true">›</span></button>
+    <button disabled={working} onClick={()=>void begin('cap-errors')}><span className="focus-choice-icon">↺</span><span><b>Mis errores</b><small>Repasa las respuestas falladas</small></span><span aria-hidden="true">›</span></button>
+    <button disabled={working} onClick={()=>void begin('cap-review')}><span className="focus-choice-icon">✦</span><span><b>Repaso inteligente</b><small>Prioriza las preguntas difíciles</small></span><span aria-hidden="true">›</span></button>
+    <button disabled={working} onClick={()=>void begin('cap-favorites')}><span className="focus-choice-icon">☆</span><span><b>Favoritas</b><small>Tus preguntas guardadas</small></span><span aria-hidden="true">›</span></button>
+   </div>
+  </section>
+  <details className="focus-options">
+   <summary>Opciones de práctica y archivo</summary>
+   <div className="focus-options-inner">
+    <p className="focus-muted">El examen real usa siempre 100 preguntas y 120 minutos. Los tests de estudio pueden ser más cortos.</p>
+    <label>Preguntas en examen mezclado sin reloj</label>
+    <div className="segments">{[10,20,30,50,100].map(x=><button key={x} className={count===x?'on':''} onClick={()=>setCount(x)}>{x}</button>)}</div>
+    <label>Archivo por modalidad</label>
+    <div className="segments"><button className={category==='mercancias'?'on':''} onClick={()=>setCategory('mercancias')}>Mercancías</button><button className={category==='viajeros'?'on':''} onClick={()=>setCategory('viajeros')}>Viajeros · pendiente</button></div>
+    {category==='viajeros'&&<p className="note">Viajeros permanece archivado, sin mezclar sus preguntas ni inventar soluciones hasta verificar su plantilla.</p>}
+   </div>
+  </details>
   <section id="cap-historicos"><h2>Convocatorias de {category==='mercancias'?'Mercancías':'Viajeros'}</h2><p>{exams.length} modelos · {available.length} con plantilla de 100 respuestas</p>
    <div className="list">{exams.map(e=><button key={e.id} disabled={!e.hasOriginalAnswerSheet||working} onClick={()=>void begin('cap-original',e)}><i>▦</i><span><b>{pretty(e)}</b><small>{e.hasOriginalAnswerSheet?'100 preguntas · '+e.readyCount+' puntuables'+(e.disputedCount?' · '+e.disputedCount+' conflictos sin puntuar':''):'Aplazado: falta plantilla original'} · págs. {e.sourcePageStart}–{e.sourcePageEnd}</small></span>›</button>)}</div>
   </section>
+  <details className="focus-editorial"><summary>Auditoría editorial · consulta avanzada</summary><div className="focus-editorial-inner">
   <section className="panel cap-pending-panel">
    <h2>Auditoría editorial · 26 convocatorias</h2>
    <p>Revisa las 100 preguntas de cada examen con sus marcas: conflicto de respuestas, texto sospechoso, desfase de numeración o falta de cotejo. P0 significa prioridad máxima, no una respuesta declarada errónea. Las letras impresas y el banco original no se alteran.</p>
@@ -216,6 +262,7 @@ function CapHome(){
     </details>)}
    </div>}
   </section>
+  </div></details>
   <button className="btn light" onClick={()=>go('general')}>Abrir banco general · 8.655 preguntas</button>
   <p className="note">Los 22 modelos con plantilla mantienen sus 100 preguntas y las letras originales; las contradicciones documentadas no puntúan. No se duplican ampliaciones en el cómputo de frecuencia.</p>
  </div>
