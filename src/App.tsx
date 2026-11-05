@@ -1,11 +1,13 @@
 import { useEffect, useMemo, useState } from 'react'
+import Quiz from './Quiz'
+import { CAP_DURATION_MINUTES } from './examEngine.mjs'
 import type { ActiveSession, AnswerKey, BankIndex, Question, QuestionProgress, QuestionnaireMeta, StudySessionRecord, StudySource } from './types'
 import { addSession, clearAllData, clearLocalCache, exportDatabase, getAllProgress, getRecentSessions, importProgress, pushLocalSnapshotToCloud, putProgress, synchronizeAccount } from './db'
 import { cloudConfigured, getSession, signIn, signOut, supabase } from './supabase'
 import type { Session } from '@supabase/supabase-js'
 import { loadAllQuestions, loadBankIndex, loadQuestionnaire, resolveQuestions } from './data'
-import { chooseSmartQuestions, getStatus, needsReview, percent, shuffle } from './utils'
-import { loadCapIndex, loadCapQuestions, loadAllCapQuestions, loadBankExamFrequency, loadCapPendingQuestions, loadCapSheetReview, loadCapEditorialTriage, type CapEditorialTriage, type CapSheetReviewQuestion, type CapPendingQuestion, type CapCategory, type CapExamMeta, type CapExamIndex, type CapEditorialDecision } from './capExams'
+import { chooseSmartQuestions, getStatus, needsReview, percent, shuffle, smartScore } from './utils'
+import { loadCapIndex, loadCapQuestions, loadAllCapQuestions, loadCapPendingQuestions, loadCapSheetReview, loadCapEditorialTriage, type CapEditorialTriage, type CapSheetReviewQuestion, type CapPendingQuestion, type CapCategory, type CapExamMeta, type CapExamIndex, type CapEditorialDecision } from './capExams'
 
 const PREVIEW=import.meta.env.VITE_CAP_PREVIEW === 'true'
 const ACTIVE=PREVIEW?'cap-test-beta-active-v1':'cap-test-active-v1',
@@ -14,8 +16,6 @@ const ACTIVE=PREVIEW?'cap-test-beta-active-v1':'cap-test-active-v1',
 type Route='home'|'general'|'study'|'questionnaires'|'exam'|'quiz'|'results'|'stats'|'settings'
 const route=():Route=>{const r=location.hash.replace(/^#\/?/,'').split('?')[0] as Route;return ['home','general','study','questionnaires','exam','quiz','results','stats','settings'].includes(r)?r:'home'}
 const go=(r:Route)=>location.hash='#/'+r
-const group=(q:Question)=>q.section+':'+q.questionnaireId
-const fresh=(q:Question):QuestionProgress=>({questionId:q.id,questionnaireId:group(q),attempts:0,correct:0,incorrect:0,streak:0,lastAnsweredAt:0,favorite:false})
 const keys:AnswerKey[]=['A','B','C','D']
 
 function Bar({v}:{v:number}){return <div className="bar"><i style={{width:Math.max(0,Math.min(100,v))+'%'}}/></div>}
@@ -32,7 +32,7 @@ function App(){
  const [session,setSession]=useState<Session|null>(null),[authReady,setAuthReady]=useState(false),[syncing,setSyncing]=useState(false)
  useEffect(()=>{let live=true;if(!cloudConfigured||!supabase){setAuthReady(true);return}getSession().then(async current=>{if(!live)return;if(current){setSyncing(true);try{await synchronizeAccount()}finally{if(live)setSyncing(false)}}if(live)setSession(current)}).catch(console.error).finally(()=>{if(live)setAuthReady(true)});return()=>{live=false}},[])
  async function loginDone(next:Session){setSyncing(true);try{await synchronizeAccount();setSession(next)}finally{setSyncing(false);setAuthReady(true)}}
- async function logout(){try{await signOut()}finally{await clearLocalCache();sessionStorage.removeItem(ACTIVE);sessionStorage.removeItem(LAST);setSession(null)}}
+ async function logout(){try{await signOut()}finally{await clearLocalCache();localStorage.removeItem(ACTIVE);localStorage.removeItem(LAST);sessionStorage.removeItem(ACTIVE);sessionStorage.removeItem(LAST);setSession(null)}}
  if(PREVIEW)return <CapApp userEmail="Modo pruebas · solo este navegador" onSignOut={async()=>{}}/>
  if(!cloudConfigured)return <div className="authshell"><section className="authcard"><div className="authlogo">CT</div><h1>Sincronización pendiente</h1><p>La aplicación está preparada para acceso privado, pero falta conectar el proyecto de Supabase.</p></section></div>
  if(!authReady||syncing)return <Loading text={syncing?'Sincronizando tu progreso…':'Comprobando sesión…'}/>
@@ -41,7 +41,7 @@ function App(){
 }
 
 function CapApp({userEmail,onSignOut}:{userEmail:string;onSignOut:()=>Promise<void>}){
- const [page,setPage]=useState<Route>(route()),[bank,setBank]=useState<BankIndex|null>(null),[rows,setRows]=useState<QuestionProgress[]>([]),[sessions,setSessions]=useState<StudySessionRecord[]>([]),[busy,setBusy]=useState(true),[load,setLoad]=useState<number|null>(null),[online,setOnline]=useState(navigator.onLine),[theme,setTheme]=useState(localStorage.getItem(THEME)||'light')
+ const [page,setPage]=useState<Route>(route()),[bank,setBank]=useState<BankIndex|null>(null),[rows,setRows]=useState<QuestionProgress[]>([]),[sessions,setSessions]=useState<StudySessionRecord[]>([]),[busy,setBusy]=useState(true),[load,setLoad]=useState<number|null>(null),[online,setOnline]=useState(navigator.onLine),[theme,setTheme]=useState(localStorage.getItem(THEME)||'dark')
  useEffect(()=>{const h=()=>setPage(route()),o=()=>{const isOnline=navigator.onLine;setOnline(isOnline);if(isOnline)pushLocalSnapshotToCloud().catch(console.error)};addEventListener('hashchange',h);addEventListener('online',o);addEventListener('offline',o);if(!location.hash)go('home');return()=>{removeEventListener('hashchange',h);removeEventListener('online',o);removeEventListener('offline',o)}},[])
  useEffect(()=>{document.documentElement.dataset.theme=theme;localStorage.setItem(THEME,theme)},[theme])
  const refresh=async()=>{setRows(await getAllProgress());setSessions(await getRecentSessions(30))}
@@ -57,14 +57,14 @@ function CapApp({userEmail,onSignOut}:{userEmail:string;onSignOut:()=>Promise<vo
   else if(source==='questionnaire')pool=[...pool].sort((a,b)=>{const score={review:0,unseen:1,learning:2,mastered:3};return score[getStatus(pm.get(a.id))]-score[getStatus(pm.get(b.id))]||Math.random()-.5}).slice(0,count)
   else pool=shuffle(pool).slice(0,count)
   if(!pool.length){alert(source==='errors'?'No tienes errores pendientes.':source==='favorites'?'No tienes favoritas todavía.':'No hay preguntas con ese filtro.');return}
-  const s:ActiveSession={type,source,label,questionIds:pool.map(q=>q.id),questionnaireId:meta?.id,currentIndex:0,selectedAnswers:{},checkedIds:[],startedAt:Date.now()};sessionStorage.setItem(ACTIVE,JSON.stringify(s));go('quiz')
+  const s:ActiveSession={type,source,label,questionIds:pool.map(q=>q.id),questionnaireId:meta?.id,currentIndex:0,selectedAnswers:{},checkedIds:[],startedAt:Date.now()};localStorage.setItem(ACTIVE,JSON.stringify(s));go('quiz')
  }
  if(busy||!bank)return <Loading text="Preparando CAP Test…"/>
  const props={bank,rows,pm,stats,sessions,start}
  return <div className="app">
   <header><button className="logo" onClick={()=>go('home')}>CT</button><div><b>{page==='home'?'CAP Test 2026':({general:'Banco general',study:'Modo estudio',questionnaires:'Cuestionarios',exam:'Simulacro general',quiz:'Test en curso',results:'Resultado',stats:'Progreso',settings:'Ajustes'} as any)[page]}</b>{!online&&<small>Sin conexión</small>}</div><button className="gear" onClick={()=>go('settings')}>⚙</button></header>
   {PREVIEW&&<div className="cap-preview-banner" role="status">VERSIÓN DE PRUEBAS · Datos locales · No sincroniza con tu cuenta</div>}
-  <main>{load!==null&&<div className="overlay"><Loading text={'Preparando preguntas… '+load+'%'}/></div>}{page==='home'&&<CapHome/>} {page==='general'&&<Home {...props}/>} {page==='study'&&<Study {...props}/>}  {page==='questionnaires'&&<Questionnaires {...props}/>} {page==='exam'&&<Exam {...props}/>} {page==='quiz'&&<Quiz pm={pm} refresh={refresh}/>} {page==='results'&&<Results/>} {page==='stats'&&<Stats {...props}/>} {page==='settings'&&<Settings theme={theme} setTheme={setTheme} bank={bank} refresh={refresh} userEmail={userEmail} onSignOut={onSignOut}/>}</main>
+  <main>{load!==null&&<div className="overlay"><Loading text={'Preparando preguntas… '+load+'%'}/></div>}{page==='home'&&<CapHome pm={pm}/>} {page==='general'&&<Home {...props}/>} {page==='study'&&<Study {...props}/>}  {page==='questionnaires'&&<Questionnaires {...props}/>} {page==='exam'&&<Exam {...props}/>} {page==='quiz'&&<Quiz pm={pm} refresh={refresh}/>} {page==='results'&&<Results/>} {page==='stats'&&<Stats {...props}/>} {page==='settings'&&<Settings theme={theme} setTheme={setTheme} bank={bank} refresh={refresh} userEmail={userEmail} onSignOut={onSignOut}/>}</main>
   {!['quiz','results','settings','questionnaires'].includes(page)&&<nav><button className={page==='home'?'on':''} onClick={()=>go('home')}>⌂<span>Exámenes</span></button><button className={page==='general'||page==='study'?'on':''} onClick={()=>go('general')}>▤<span>Banco</span></button><button className={page==='exam'?'on':''} onClick={()=>go('exam')}>✓<span>Test general</span></button><button className={page==='stats'?'on':''} onClick={()=>go('stats')}>◫<span>Progreso</span></button></nav>}
  </div>
 }
@@ -236,58 +236,8 @@ function Questionnaires({bank,rows,start}:P){return <div className="page"><butto
 
 function Exam({bank,stats,start}:P){const [count,setCount]=useState(30),[source,setSource]=useState<StudySource>('random'),[qid,setQid]=useState(bank.questionnaires[0].id);const meta=bank.questionnaires.find(x=>x.id===qid);return <div className="page"><em>SIMULACRO</em><h1>Como un examen</h1><p>No verás la solución hasta finalizar. Las no contestadas cuentan como fallo.</p><div className="panel"><label>Número de preguntas</label><div className="segments">{[10,20,30,50].map(n=><button className={count===n?'on':''} onClick={()=>setCount(n)} key={n}>{n}</button>)}</div><label>Contenido</label>{([['random','Todo el banco','Mezcla todos los cuestionarios'],['unseen','Solo nuevas',(stats.total-stats.seen)+' sin ver'],['errors','Solo errores',stats.review+' disponibles'],['questionnaire','Un cuestionario','Elige un bloque concreto']] as any[]).map(x=><button className={'radio '+(source===x[0]?'on':'')} onClick={()=>setSource(x[0])} key={x[0]}><i/><span><b>{x[1]}</b><small>{x[2]}</small></span></button>)}{source==='questionnaire'&&<select value={qid} onChange={e=>setQid(e.target.value)}>{bank.questionnaires.map(q=><option key={q.id} value={q.id}>Sección {q.section} · {q.questionnaireId} ({q.count})</option>)}</select>}<Btn onClick={()=>start('exam',source,count,'Simulacro · '+count,source==='questionnaire'?meta:undefined)}>Comenzar simulacro</Btn></div></div>}
 
-function Quiz({pm,refresh}:{pm:Map<string,QuestionProgress>;refresh:()=>Promise<void>}){const [s,setS]=useState<ActiveSession|null>(()=>JSON.parse(sessionStorage.getItem(ACTIVE)||'null')),[qs,setQs]=useState<Question[]>([]),[loading,setLoading]=useState(true),[ref,setRef]=useState(false),[frequencies,setFrequencies]=useState<Record<string,{count:number;denominator:number;category:CapCategory}>>({})
- useEffect(()=>{if(!s){go('study');return}resolveQuestions(s.questionIds).then(x=>{setQs(x);setLoading(false)})},[])
- useEffect(()=>{loadBankExamFrequency().then(setFrequencies).catch(console.error)},[])
- const progressId=(x:Question)=>x.progressId||x.id
- if(!s||loading||!qs.length)return <Loading text="Cargando test…"/>
- const session=s
- const i=session.currentIndex,q=qs[i],sel=session.selectedAnswers[q.id],checked=session.checkedIds.includes(q.id),correct=q.scoringEligible!==false&&sel===q.correctAnswer,fav=pm.get(progressId(q))?.favorite
- const decision=capDecision(q)
- const frequency=q.examFrequency!==undefined?{count:q.examFrequency,denominator:q.examFrequencyDenominator||0,category:(q as Question & {category?:CapCategory}).category||'mercancias'}:frequencies[progressId(q)]
- const save=(n:ActiveSession)=>{setS(n);sessionStorage.setItem(ACTIVE,JSON.stringify(n))}
- async function select(k:AnswerKey){
-  if(session.type==='study'&&checked)return
-  if(session.type==='exam'){save({...session,selectedAnswers:{...session.selectedAnswers,[q.id]:k}});return}
-  const next={...session,selectedAnswers:{...session.selectedAnswers,[q.id]:k},checkedIds:[...session.checkedIds,q.id]}
-  save(next)
-  if(q.scoringEligible===false)return // el alumno no acumula fallos/aciertos discutidos
-  const b=pm.get(progressId(q))||fresh({...q,id:progressId(q)}),ok=k===q.correctAnswer
-  await putProgress({...b,attempts:b.attempts+1,correct:b.correct+(ok?1:0),incorrect:b.incorrect+(ok?0:1),streak:ok?b.streak+1:0,lastAnsweredAt:Date.now(),lastAnswer:k,lastCorrect:ok})
-  await refresh()
- }
- async function favorite(){const b=pm.get(progressId(q))||fresh({...q,id:progressId(q)});await putProgress({...b,favorite:!b.favorite});await refresh()}
- async function finish(){
-  const answered=qs.filter(x=>!!session.selectedAnswers[x.id]).length
-  if(session.type==='exam'&&answered<qs.length&&!confirm('Hay '+(qs.length-answered)+' preguntas sin responder. ¿Finalizar y corregir el examen?'))return
-  if(session.type==='exam'){
-   for(const x of qs){
-    const selected=session.selectedAnswers[x.id]
-    if(!selected||x.scoringEligible===false)continue
-    const prior=pm.get(progressId(x))||fresh({...x,id:progressId(x)})
-    const ok=selected===x.correctAnswer
-    await putProgress({...prior,attempts:prior.attempts+1,correct:prior.correct+(ok?1:0),incorrect:prior.incorrect+(ok?0:1),streak:ok?prior.streak+1:0,lastAnsweredAt:Date.now(),lastAnswer:selected,lastCorrect:ok})
-   }
-  }
-  const answers=qs.map(x=>({questionId:x.id,questionnaireId:group(x),selected:session.selectedAnswers[x.id],correctAnswer:x.correctAnswer,scoringEligible:x.scoringEligible!==false,correct:x.scoringEligible!==false&&session.selectedAnswers[x.id]===x.correctAnswer}))
-  const graded=answers.filter(x=>x.scoringEligible!==false)
-  const cor=graded.filter(x=>x.correct).length
-  const incorrect=graded.filter(x=>x.selected&&!x.correct).length
-  const gradedAnswered=graded.filter(x=>!!x.selected).length
-  const record:StudySessionRecord={type:session.type,label:session.label,startedAt:session.startedAt,completedAt:Date.now(),total:qs.length,answered,correct:cor,incorrect,score:percent(cor,session.type==='exam'?graded.length:gradedAnswered),answers}
-  await addSession(record)
-  sessionStorage.setItem(LAST,JSON.stringify({record,questionIds:session.questionIds}))
-  sessionStorage.removeItem(ACTIVE)
-  await refresh()
-  go('results')
- }
-
- return <div className="quiz"><div className="quizhead"><button onClick={()=>history.back()}>×</button><div><b>{session.label}</b><small>{i+1} de {qs.length}</small><Bar v={percent(i+1,qs.length)}/></div><button className={fav?'fav':''} onClick={favorite}>★</button></div><article><small>Pregunta {i+1} de {qs.length}{q.examId&&q.sourcePage?' · número original '+q.number+' · PDF pág. '+q.sourcePage:''}</small><h2>{q.question}</h2><div className="cap-frequency">{frequency&&frequency.denominator>1?'↻ Aparece en '+frequency.count+' de '+frequency.denominator+' modelos analizados ('+percent(frequency.count,frequency.denominator)+' %)':frequency&&frequency.denominator===1?'↻ Registrada en un único examen parcialmente transcrito. No hay muestra suficiente para medir repetición.':'↻ Frecuencia no identificada con coincidencia exacta en los modelos analizados'}</div>{q.reviewRequired&&<div className="cap-review-warning">{q.scoringEligible===false?(decision?'Incidencia editorial cerrada: '+(decision.editorialAnswer?'criterio técnico '+decision.editorialAnswer:'pregunta anulada editorialmente')+'. Se conserva sin puntuar; la plantilla original no se modifica.':'Respuesta oficial y banco en conflicto: esta pregunta no puntúa hasta resolver la discrepancia.'):q.answerStatus==='plantilla_pdf_oficial_verificada'?'Respuesta verificada en la plantilla PDF original. El texto del enunciado procede de una transcripción y sigue pendiente de revisión visual.':q.answerStatus==='respuesta_alineacion_editorial_confirmada'?'Respuesta cotejada con el texto y las opciones del examen original. La numeración de la plantilla PDF no coincide desde la pregunta 44: se usó la casilla siguiente tras validación editorial.':q.answerStatus==='respuesta_fuente_publica_oficial_pendiente_plantilla'?'Respuesta contrastada con BOE/DGT (fuente oficial externa), pendiente de cotejo con la plantilla del examen y revisión del texto.':q.transcriptionReview?'Transcripción de PDF escaneado: pregunta y solución cotejada con el banco, pendientes de revisión visual.':q.answerStatus==='coincidencia_alineacion_provisional_pendiente_revision'?'La respuesta coincide con el banco original y una alineación provisional de la plantilla de 2023. Pendiente de revisión editorial.':q.answerStatus==='coincidencia_plantilla_corregida_visual_pendiente_revision'?'Coincide con el banco y con la letra de la plantilla revisada visualmente. Revisión editorial pendiente.':'Solución obtenida del banco CAP; pendiente de revisión editorial.'}</div>}<div className="answers">{keys.map(k=>{let c=sel===k?'selected':'';if(session.type==='study'&&checked&&q.scoringEligible!==false)c=k===q.correctAnswer?'correct':sel===k?'wrong':'';return <button className={c} onClick={()=>void select(k)} key={k}><i>{k}</i><span>{q.options[k]}</span></button>})}</div>{session.type==='study'&&checked&&(q.scoringEligible===false
-  ?<div className="feedback" role="status"><b>{decision?'Decisión editorial cerrada':'Pregunta en revisión'} · no puntúa</b><p>Plantilla original: {q.originalSheetAnswer||'—'} · banco: {q.bankAnswer||'—'}. Tu respuesta no se registra como acierto ni error.</p>{decision?<><p><b>{decision.editorialAnswer?'Orientación técnica: '+decision.editorialAnswer+' · '+q.options[decision.editorialAnswer]:'Pregunta anulada editorialmente: no hay solución fiable.'}</b></p><small>{decision.decision}</small></>:q.answerDispute?.reason&&<small>{q.answerDispute.reason}</small>}</div>
-  :<div className={'feedback '+(correct?'ok':'bad')}><b>{correct?'✓ ¡Correcto!':'× Incorrecto · correcta '+q.correctAnswer}</b><button onClick={()=>setRef(!ref)}>{ref?'Ocultar':'Ver fundamento'}</button>{ref&&<div><p><b>Norma:</b> {q.norm}</p><p><b>Referencia:</b> {q.reference}</p>{q.originalSheetAnswer&&<p><b>Plantilla original:</b> {q.originalSheetAnswer} · casilla {q.originalSheetQuestionNumber}. {q.mappedSheetQuestionNumber!==q.originalSheetQuestionNumber?'La correspondencia editorial utiliza la casilla '+q.mappedSheetQuestionNumber+' ('+q.mappedSheetAnswer+').':''}</p>}</div>}</div>)}</article><footer><Btn kind="light" disabled={i===0} onClick={()=>{setRef(false);save({...session,currentIndex:i-1})}}>Anterior</Btn>{i<qs.length-1?<Btn onClick={()=>{setRef(false);save({...session,currentIndex:i+1})}}>Siguiente</Btn>:<Btn onClick={finish}>Finalizar</Btn>}</footer></div>}
-
 function Results(){
- const data=JSON.parse(sessionStorage.getItem(LAST)||'null') as {record:StudySessionRecord;questionIds:string[]}|null
+ const data=JSON.parse(localStorage.getItem(LAST)||sessionStorage.getItem(LAST)||'null') as {record:StudySessionRecord;questionIds:string[]}|null
  const [qs,setQs]=useState<Question[]>([])
  const [showAll,setShowAll]=useState(false)
  useEffect(()=>{if(data)resolveQuestions(data.questionIds).then(setQs).catch(console.error)},[])
