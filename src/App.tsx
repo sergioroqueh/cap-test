@@ -159,6 +159,30 @@ function CapHome(){
    <div className="list">{exams.map(e=><button key={e.id} disabled={!e.hasOriginalAnswerSheet||working} onClick={()=>void begin('cap-original',e)}><i>▦</i><span><b>{pretty(e)}</b><small>{e.hasOriginalAnswerSheet?'100 preguntas · '+e.readyCount+' puntuables'+(e.disputedCount?' · '+e.disputedCount+' en revisión':''):'Aplazado: falta plantilla original'} · págs. {e.sourcePageStart}–{e.sourcePageEnd}</small></span>›</button>)}</div>
   </section>
   <section className="panel cap-pending-panel">
+   <h2>Auditoría por convocatoria · 100 respuestas</h2>
+   <p>Consulta las letras impresas del PDF, el resultado vinculado al enunciado y el banco. La fuente original se conserva incluso cuando una letra es discutida.</p>
+   <select aria-label="Examen a revisar con plantilla" value={sheetReviewId} onChange={e=>{setSheetReviewId(e.target.value);setSheetReviewShown(false);setSheetReviewRows([])}}>
+    <option value="">Seleccionar una plantilla</option>
+    {available.map(e=><option key={e.id} value={e.id}>{pretty(e)} · {e.originalSheetAnswersCount||100} casillas</option>)}
+   </select>
+   <Btn kind="light" disabled={!sheetReviewId||sheetReviewBusy} onClick={()=>void showSheetReview()}>{sheetReviewBusy?'Leyendo…':'Ver las 100 respuestas'}</Btn>
+   {sheetReviewShown&&<div className="cap-pending-results">
+    <strong>{sheetReviewRows.length} respuestas impresas · {sheetReviewRows.filter(q=>!q.scoringEligible).length} en revisión sin puntuación</strong>
+    <label><input type="checkbox" checked={sheetReviewOnlyIssues} onChange={e=>setSheetReviewOnlyIssues(e.target.checked)}/> Solo discordancias y ajustes de numeración</label>
+    <p>{showSheetRows.length} preguntas visibles. Abre cada fila para contrastar las cuatro opciones.</p>
+    {showSheetRows.map(q=><details className="cap-pending-item" key={q.number}>
+     <summary>Pregunta {q.number} · página {q.sourcePage} · plantilla: {q.originalSheetAnswer||'—'}{!q.scoringEligible?' · EN REVISIÓN':''}{q.mappedSheetQuestionNumber!==q.originalSheetQuestionNumber?' · ajuste de numeración':''}</summary>
+     <p>{q.question}</p>
+     <ol type="A">{keys.map(k=><li key={k}>{q.options[k]}</li>)}</ol>
+     <p><b>Hoja original:</b> nº {q.originalSheetQuestionNumber} = {q.originalSheetAnswer} · {q.originalSheetSourceFile}</p>
+     {q.mappedSheetQuestionNumber!==q.originalSheetQuestionNumber&&<p><b>Correspondencia editorial:</b> fila {q.mappedSheetQuestionNumber||'sin asignar'} = {q.mappedSheetAnswer||'—'}. La hoja original no se modifica.</p>}
+     <p><b>Banco:</b> {q.bankAnswer||'Sin coincidencia'} · <b>Solución aplicada:</b> {q.correctAnswer||'Bloqueada; no puntúa'}</p>
+     {q.answerDispute&&<p><b>Conflicto:</b> plantilla {q.answerDispute.pdfAnswer}, banco {q.answerDispute.bankAnswer}. {q.answerDispute.reason}</p>}
+     {!q.scoringEligible&&<small>Esta pregunta está incluida en el examen, pero no suma ni resta puntos.</small>}
+    </details>)}
+   </div>}
+  </section>
+  <section className="panel cap-pending-panel">
    <h2>Preguntas pendientes de revisión</h2>
    <p>Consulta el enunciado original y sus cuatro opciones. No se muestra una solución sin cotejar, ni se registran estas preguntas como fallos.</p>
    <select aria-label="Convocatoria con preguntas pendientes" value={pendingId} onChange={e=>{setPendingId(e.target.value);setPendingShown(false);setPendingRows([])}}>
