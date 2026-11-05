@@ -37,6 +37,7 @@ def main():
     newly_certified_count = sum(100 - proof['expectedBankConcordances']
                                 - 2 * proof.get('expectedBankConflicts',0)
                                 - proof.get('expectedPreviouslyScoredExternal',0)
+                                + proof.get('expectedPreviouslyUnscoredConflicts',0)
                                 for proof in verified.values())
     if len(by_id) != len(indexed):
         raise AssertionError("Desfase entre manifiesto e índice")
