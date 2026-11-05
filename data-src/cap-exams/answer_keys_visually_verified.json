@@ -53,6 +53,31 @@
           "reason": "La plantilla original marca A; la transcripción provisional del enunciado y opciones sugiere B (orden decreciente de consumo específico). Revisar imagen del examen antes de decidir, sin autocorrección."
         }
       }
+    },
+    "2026-03-28-mercancias-global": {
+      "sourceFile": "Plantilla Marzo 2026.pdf",
+      "sourcePage": 1,
+      "category": "mercancias",
+      "model": "GLOBAL",
+      "sourcePdfSha256": "b3be17781d019f25e621490c2f01d671ab7449f156d140ed52be5a1d1d572d23",
+      "sourceZip": "Respuestas(1).zip",
+      "visualMethod": "lectura_directa_imagen_pdf_a_2x_con_100_casillas_y_contraste_con_81_respuestas_del_banco",
+      "readDirection": "Cinco columnas consecutivas 1-20,21-40,41-60,61-80,81-100",
+      "correctAnswers": "CBDBBCBDAAAABAABBCACCACCACCBDACBDBBBBBABBACBBACBACDACBCCACABCCBABBAABBDCCBCCDDCCABADCCCCDDBBCACBCBCD",
+      "keyDigestSha256": "61f65d736ac566f4e99a5d3f856c8e318757f16580d6111d21c146021bde29cc",
+      "verifiedOn": "2026-11-05",
+      "expectedBankConcordances": 80,
+      "expectedBankConflicts": 1,
+      "expectedPreviouslyScoredExternal": 1,
+      "holdConflicts": {
+        "43": {
+          "bankAnswer": "B",
+          "pdfAnswer": "C",
+          "reason": "La plantilla original marca C, pero la transcripción provisional del examen pregunta por riesgos para circulación sanguínea, cuya opción B es levantar pesos. Verificar imagen del examen antes de puntuar."
+        }
+      },
+      "approval": "lectura_visual_plantilla_original_verificada",
+      "notes": "MER­CANCÍAS GLOBAL MARZO 2026: 100 casillas cotejadas; 80/81 concordancias con banco, q43 bloqueada, q58 coincide con evidencia independiente DGT existente. La transcripción del texto original es provisional."
     }
   }
 }
