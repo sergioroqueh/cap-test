@@ -41,7 +41,7 @@ for exam in exams:
         assert all(q.get('sourceMethod')=='LECTURA_VISUAL_PDF_PENDIENTE_REVISION' for q in rows)
         assert all(q['reviewRequired'] is True for q in rows)
         assert all(q['category']=='mercancias' for q in rows)
-        assert all(q['correctAnswer'] is None or q['correctAnswer']==q['bankAnswer'] for q in rows)
+        assert all(q['correctAnswer'] is None or q['correctAnswer']==q['bankAnswer'] or q['answerStatus']=='respuesta_fuente_publica_oficial_pendiente_plantilla' for q in rows)
         assert next(q for q in rows if q['number']==1)['sourcePage']==364
         assert next(q for q in rows if q['number']==100)['sourcePage']==383
     if exam['id']=='2024-04-06-mercancias-global':
@@ -52,7 +52,7 @@ for exam in exams:
         assert all(q.get('sourceMethod')=='LECTURA_VISUAL_PDF_PENDIENTE_REVISION' for q in rows)
         assert all(q['reviewRequired'] is True for q in rows)
         assert all(q['category']=='mercancias' for q in rows)
-        assert all(q['correctAnswer'] is None or q['correctAnswer']==q['bankAnswer'] for q in rows)
+        assert all(q['correctAnswer'] is None or q['correctAnswer']==q['bankAnswer'] or q['answerStatus']=='respuesta_fuente_publica_oficial_pendiente_plantilla' for q in rows)
         assert next(q for q in rows if q['number']==1)['sourcePage']==1
         assert next(q for q in rows if q['number']==100)['sourcePage']==21
         assert all(q['number']<=100 for q in rows), 'No incluir reservas 101-103'
@@ -64,7 +64,7 @@ for exam in exams:
         assert all(q.get('sourceMethod')=='LECTURA_VISUAL_PDF_PENDIENTE_REVISION' for q in rows)
         assert all(q['reviewRequired'] is True for q in rows)
         assert all(q['category']=='mercancias' for q in rows)
-        assert all(q['correctAnswer'] is None or q['correctAnswer']==q['bankAnswer'] for q in rows)
+        assert all(q['correctAnswer'] is None or q['correctAnswer']==q['bankAnswer'] or q['answerStatus']=='respuesta_fuente_publica_oficial_pendiente_plantilla' for q in rows)
         assert next(q for q in rows if q['number']==1)['sourcePage']==348
         assert next(q for q in rows if q['number']==100)['sourcePage']==363
     if exam['id']=='2026-09-26-mercancias-a':
@@ -76,7 +76,7 @@ for exam in exams:
         assert all(q.get('sourceMethod')=='LECTURA_VISUAL_PDF_PENDIENTE_REVISION' for q in rows)
         assert all(q['reviewRequired'] is True for q in rows)
         assert all(q['category']=='mercancias' for q in rows)
-        assert all(q['correctAnswer'] is None or q['correctAnswer']==q['bankAnswer'] for q in rows)
+        assert all(q['correctAnswer'] is None or q['correctAnswer']==q['bankAnswer'] or q['answerStatus']=='respuesta_fuente_publica_oficial_pendiente_plantilla' for q in rows)
         assert next(q for q in rows if q['number']==100)['sourcePage']==144
     if exam['id']=='2025-07-26-mercancias-b':
         assert exam['readyCount']==85, 'Las 85 claves proceden solo del banco; 15 siguen pendientes'
@@ -86,7 +86,7 @@ for exam in exams:
         assert all(q.get('transcriptionReview') is True for q in rows)
         assert all(q.get('sourceMethod')=='LECTURA_VISUAL_PDF_PENDIENTE_REVISION' for q in rows)
         assert all(q['reviewRequired'] is True for q in rows)
-        assert all(q['correctAnswer'] is None or q['correctAnswer']==q['bankAnswer'] for q in rows)
+        assert all(q['correctAnswer'] is None or q['correctAnswer']==q['bankAnswer'] or q['answerStatus']=='respuesta_fuente_publica_oficial_pendiente_plantilla' for q in rows)
         assert all(q['category']=='mercancias' for q in rows)
         assert next(q for q in rows if q['number']==100)['sourcePage']==201
         assert all(q['number']<=100 for q in rows), 'Excluir preguntas de reserva'
@@ -96,7 +96,7 @@ for exam in exams:
         assert {q['sourcePage'] for q in rows}==set(range(97,112))
         assert all(q.get('transcriptionReview') is True for q in rows)
         assert all(q['reviewRequired'] is True for q in rows)
-        assert all(q['correctAnswer'] is None or q['correctAnswer']==q['bankAnswer'] for q in rows)
+        assert all(q['correctAnswer'] is None or q['correctAnswer']==q['bankAnswer'] or q['answerStatus']=='respuesta_fuente_publica_oficial_pendiente_plantilla' for q in rows)
     if exam['id']=='2023-07-29-mercancias-b':
         for n in (6,19):
             q=next(q for q in rows if q['number']==n)
@@ -161,8 +161,10 @@ for exam in exams:
                 'coincidencia_plantilla_corregida_visual_pendiente_revision',
                 'respuesta_banco_pendiente_revision',
                 'coincidencia_enunciado_banco_plantilla_pendiente_revision',
-                'respuesta_banco_enunciado_pendiente_revision')
-            assert q['correctAnswer'] == q['bankAnswer']
+                'respuesta_banco_enunciado_pendiente_revision',
+                'respuesta_fuente_publica_oficial_pendiente_plantilla')
+            if q['answerStatus']!='respuesta_fuente_publica_oficial_pendiente_plantilla':
+                assert q['correctAnswer'] == q['bankAnswer']
             if q['answerStatus'] in (
                 'coincidencia_automatica',
                 'coincidencia_alineacion_provisional_pendiente_revision',
@@ -211,6 +213,27 @@ assert [int(q['number']) for q in ocr_audit]==list(range(1,101))
 assert all(q['transcriptionReview']=='True' and q['sourceMethod'] for q in ocr_audit)
 assert all(q['optionA'] and q['optionB'] and q['optionC'] and q['optionD'] for q in ocr_audit)
 assert sum(q['bankAnswer'] in ('A','B','C','D') for q in ocr_audit)==67
+
+# Public government/BOE evidence, NOT the official CAP answer sheet.
+evidence=json.loads((root.parent.parent/'data-src'/'cap-exams'/'official_public_evidence_2026_11_05.json').read_text())['cases']
+public_answers=[]
+for exam in exams:
+    for q in json.loads((root/exam['path'].removeprefix('data/')).read_text()):
+        if q['answerStatus']=='respuesta_fuente_publica_oficial_pendiente_plantilla':
+            public_answers.append(q)
+            key=q['examId']+':'+str(q['number'])
+            proof=evidence[key]
+            assert q['sourcePage']==proof['sourcePage']
+            assert q['reviewRequired'] is True
+            assert q['answerEvidenceUrl']==proof['sourceUrl']
+            assert q['answerTemplateOfficiallyVerified'] is False
+            assert q['correctAnswer'] in 'ABCD'
+            assert q['options'][q['correctAnswer']]==proof['correctAnswerText']
+            assert q['bankAnswer'] is None
+assert len(public_answers)==len(evidence)==7
+assert index['totalImportedQuestions']==2600
+assert sum(q['readyCount'] for q in exams)==1922
+print('PASS documentadas con BOE/DGT:',len(public_answers))
 
 # Cross-exam review is advisory and must never silently assign a correct answer.
 cross=json.loads((root/'exams'/'cross_model_pending_review.json').read_text())
