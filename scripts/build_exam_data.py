@@ -344,6 +344,24 @@ def generate():
                 answer=letter
                 status='respuesta_alineacion_editorial_confirmada'
                 editorial_applied.add(original_number)
+            # Preserve the 100 printed letters from every original answer PDF
+            # separately from scored answers, bank inferences and editorial mapping.
+            # In particular July 2023 A needs its printed n and mapped n+1
+            # to remain distinct; never silently rewrite the official sheet.
+            source_pdf_answer=(template_verified['correctAnswers'][original_number-1]
+                               if template_verified else None)
+            source_pdf_verified=bool(template_verified)
+            if source_pdf_verified and source_pdf_answer not in 'ABCD':
+                raise RuntimeError(f'Falta respuesta impresa: {exam_id} q{original_number}')
+            mapped_pdf_answer=(template_verified['correctAnswers'][template_number-1]
+                               if template_verified and template_number is not None
+                               and 1<=template_number<=100 else None)
+            if (source_pdf_verified and (meta.get('templateFile')!=template_verified['sourceFile']
+                or q['number']!=original_number)):
+                raise RuntimeError(f'Fuente visual desalineada: {exam_id} q{original_number}')
+            dispute=template_verified.get('holdConflicts',{}).get(str(original_number)) if template_verified else None
+            if bool(dispute)!=(status=='conflicto_pdf_original_banco_pendiente_cotejo_enunciado'):
+                raise RuntimeError(f'Estado de contradicción desfasado: {exam_id} q{original_number}')
             local.append({**q,'examId':exam_id,'date':meta['date'],'category':meta['category'],'model':meta['model'],
               'id':original['id'] if original else 'cap-'+sha256(key.encode()).hexdigest()[:24],
               'canonicalQuestionId':original['id'] if original else None,'canonicalCode':original['code'] if original else None,
@@ -353,6 +371,14 @@ def generate():
               'reference':original.get('reference','') if original else '',
               'questionnaireId':original['questionnaireId'] if original else 'examenes-cap',
               'correctAnswer':answer,'bankAnswer':inferred,'templateAnswer':letter,
+              'originalSheetAnswer':source_pdf_answer,
+              'originalSheetQuestionNumber':original_number if source_pdf_verified else None,
+              'originalSheetSourceFile':template_verified['sourceFile'] if source_pdf_verified else None,
+              'originalSheetSha256':template_verified['sourcePdfSha256'] if source_pdf_verified else None,
+              'mappedSheetAnswer':mapped_pdf_answer,
+              'mappedSheetQuestionNumber':template_number if source_pdf_verified else None,
+              'answerDispute':dispute,
+              'scoringEligible':answer in ('A','B','C','D'),
               'rawTemplateAnswer':original_letter,'templateNumberUsed':template_number,
               'templateAlignmentStatus':align_status,'templateVisualCorrectionStatus':visual_status,
               'answerStatus':status,'matchMethod':method,'sourcePage':q['page'],'frequencyGroup':group,
@@ -402,8 +428,18 @@ def generate():
             row['examFrequencyDenominator']=denomination[row['category']]
             statuses[row['answerStatus']]+=1
         ready=sum(row['correctAnswer'] in ('A','B','C','D') for row in rows)
+        original_sheet_count=sum(row['originalSheetAnswer'] in ('A','B','C','D') for row in rows)
+        if bool(meta.get('templateFile')) != (original_sheet_count==100):
+            raise RuntimeError(f'Cobertura hoja PDF distinta de 100 o cero: {meta["id"]}')
+        if sum(bool(row['answerDispute']) for row in rows) != sum(
+                row['answerStatus']=='conflicto_pdf_original_banco_pendiente_cotejo_enunciado' for row in rows):
+            raise RuntimeError(f'Conflictos no indexados: {meta["id"]}')
         (OUT/'questions'/f"{meta['id']}.json").write_text(json.dumps(rows,ensure_ascii=False,separators=(',',':')),encoding='utf-8')
-        index.append({**meta,'count':len(rows),'expectedCount':100,'readyCount':ready,'path':f"data/exams/questions/{meta['id']}.json",
+        index.append({**meta,'originalSheetAnswersCount':original_sheet_count,
+            'disputedCount':sum(bool(row['answerDispute']) for row in rows),
+            'scoringEligibleCount':ready,
+            'hasOriginalAnswerSheet':original_sheet_count==100,
+            'count':len(rows),'expectedCount':100,'readyCount':ready,'path':f"data/exams/questions/{meta['id']}.json",
            'status':'practicable_pendiente_auditoria' if len(rows)==100 and ready==100
             else ('parcial_en_revision' if rows else 'pendiente_transcripcion')})
     # Editable review queue for editorial verification; never auto-resolve a conflict.
