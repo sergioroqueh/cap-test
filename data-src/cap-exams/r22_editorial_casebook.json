@@ -54,10 +54,25 @@
       "examId": "2022-11-26-mercancias-global",
       "number": 6,
       "expectedQuestionFragment": "caja de cambios o caja de velocidades",
-      "status": "DUDOSA_TECNICA_FRENTE_DGT",
+      "status": "CERRADA_A_CONFIRMADA_CONTEXTO_TRANSMISION",
       "expectedAppliedAnswer": "A",
-      "explanation": "La plantilla marca A (conectar el motor al sistema de transmisión), pero el Manual VIII Mecánica DGT 2022 diferencia claramente: el embrague acopla/desacopla el motor y la caja de velocidades adapta la relación de transmisión/par. No existe alternativa que describa con exactitud la función de la caja; mantener A como respuesta impresa, marcar pregunta dudosa y solicitar decisión editorial antes de cambiar puntuación.",
-      "source": "https://sede.dgt.gob.es/.galleries/permisos-de-conducir/certificacion-aptitud-profesores-formacion-vial/2022/Manual-VIII-Mecanica-2022.pdf (TEMA 7, transmisión), además de Examenes TOTALES.pdf página 420 y Plantilla Noviembre 2022.pdf"
+      "explanation": "Cierre editorial tras comprobar imagen del examen y su plantilla original: q6 = A. La caja de velocidades recibe el giro procedente del motor y lo transmite al resto de la transmisión, adaptando par y velocidad. Aunque la expresión 'conectar el motor' es funcionalmente imprecisa (el embrague acopla/desacopla el motor de la caja), las alternativas B/C/D no describen la caja de cambios. A es la única respuesta defendible en este test. Mantener A y puntuación; no es una fe de erratas oficial ni una revisión visual de todas las preguntas.",
+      "source": "Examenes TOTALES.pdf, página 420, y Plantilla Noviembre 2022.pdf, casilla 6=A, imagen aportada por el usuario el 05/11/2026; DGT https://www.dgt.es/muevete-con-seguridad/viaja-seguro/en-coche/ (embrague); DGT https://www.dgt.es/export/sites/web-DGT/.galleries/downloads/nuestros_servicios/Sistema_relacional_DGT.pdf (caja de cambios y relación de transmisión); Manual VIII Mecánica DGT 2022, tema 7.",
+      "editorialClosure": {
+        "round": "R25-4",
+        "date": "2026-11-05",
+        "originalSheetAnswer": "A",
+        "appliedAnswer": "A",
+        "scoringEligible": true,
+        "reviewComplete": true,
+        "remainingControversy": "PRECISION_TERMINOLOGICA_SIN_CAMBIO_CLAVE",
+        "visualEvidence": "Cuestionario y hoja de 100 respuestas aportados en imagen por el usuario",
+        "alternativeAnswersRejected": [
+          "B",
+          "C",
+          "D"
+        ]
+      }
     },
     {
       "examId": "2022-11-26-mercancias-global",
