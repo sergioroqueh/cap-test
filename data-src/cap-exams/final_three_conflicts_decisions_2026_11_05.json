@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "round": "R25-3",
+  "date": "2026-11-05",
+  "name": "Cierre editorial de las tres preguntas discrepantes en exámenes de Mercancías",
+  "purpose": "No equiparar decisión técnica/editorial con fe de erratas oficial. En los tres casos el ejercicio permanece visible, sin puntuar y sin registrar error.",
+  "officialCorrectionConfirmed": false,
+  "originalPrintedLettersPreserved": true,
+  "scoringChangeCount": 0,
+  "caseCount": 3,
+  "cases": [
+    {
+      "examId": "2025-07-26-mercancias-a",
+      "number": 43,
+      "expectedQuestionFragment": "Ordene los motores de mayor a menor consumo específico",
+      "originalSheetAnswer": "A",
+      "bankAnswer": "B",
+      "editorialAnswer": "B",
+      "status": "CERRADA_CLAVE_ORIGINAL_DISCREPA_NO_PUNTUABLE",
+      "decision": "La secuencia técnica de mayor a menor consumo específico es gasolina indirecta, gasolina directa, diésel indirecta, diésel directa (B). La plantilla original conserva A. No se ha confirmado una fe de erratas oficial que rectifique la plantilla; la pregunta se excluye de puntuación para evitar penalizaciones.",
+      "scope": "CONCLUSION_TECNICA_NO_RECTIFICACION_OFICIAL",
+      "sources": [
+        "https://www.castillalamancha.es/sites/default/files/documentos/pdf/20250728/2025_cap_4a_prueba_cuestionarios.pdf#page=7",
+        "https://www.castillalamancha.es/sites/default/files/documentos/pdf/20250728/2025_4a_prueba_cap_-_plantillas_correctoras.pdf",
+        "https://www.idae.es/sites/default/files/documentos/publicaciones_idae/documentos_10297_treatise_combustiblesvehiculosalternativos_a2005_d9d8d6b3.pdf"
+      ],
+      "reason": "El texto original pide explícitamente MAYOR a MENOR. La plantilla A refleja la clasificación inversa, propia de MENOR a MAYOR.",
+      "scoringPolicy": "NO_PUNTUA",
+      "reviewCompleted": true
+    },
+    {
+      "examId": "2026-02-07-mercancias-global",
+      "number": 61,
+      "expectedQuestionFragment": "¿Está obligado un conductor a presentar a los agentes de control la tarjeta de conductor",
+      "originalSheetAnswer": "A",
+      "bankAnswer": "C",
+      "editorialAnswer": "C",
+      "status": "CERRADA_NORMA_UE_DISCREPA_NO_PUNTUABLE",
+      "decision": "El Reglamento (UE) 165/2014, artículo 36.1, inciso ii, requiere la tarjeta de conductor solamente si el conductor posee una. C expresa esa condición; A ('Sí, siempre') es demasiado absoluta. Conservar plantilla A y dejar sin puntuación mientras no haya rectificación oficial.",
+      "scope": "CRITERIO_NORMATIVO_EURLEX_NO_RECTIFICACION_OFICIAL",
+      "sources": [
+        "https://eur-lex.europa.eu/legal-content/ES/TXT/?uri=CELEX%3A02014R0165-20241231",
+        "https://www.boe.es/doue/2014/060/L00001-00033.pdf"
+      ],
+      "reason": "Artículo 36.1.ii: la tarjeta de conductor se presenta SI POSEE UNA.",
+      "scoringPolicy": "NO_PUNTUA",
+      "reviewCompleted": true
+    },
+    {
+      "examId": "2026-03-28-mercancias-global",
+      "number": 43,
+      "expectedQuestionFragment": "circulación sanguínea con mayor frecuencia",
+      "originalSheetAnswer": "C",
+      "bankAnswer": "B",
+      "editorialAnswer": null,
+      "status": "CERRADA_ANULADA_EDITORIALMENTE_ENUNCIADO_INCOHERENTE",
+      "decision": "El enunciado trata de problemas de circulación sanguínea y las cuatro opciones describen placas de hielo, levantamiento de pesos, invasión de zonas restringidas y uso imprudente de maquinaria. Ninguna responde inequívocamente a la pregunta. Se anula EDITORIALMENTE en CAP Test, sin pretender que el tribunal la haya anulado oficialmente.",
+      "scope": "INCOHERENCIA_DE_ORIGEN_IMAGEN_PDF_COMPUESTO_R20",
+      "sources": [
+        "Examenes TOTALES.pdf, página compuesta 355, cotejada visualmente en auditoría R20",
+        "https://github.com/sergioroqueh/cap-test/blob/feat/examenes-cap-auditoria-2026-11/docs/CAP_R20_AUDITORIA_CONVOCATORIAS_2026_11_05.md"
+      ],
+      "reason": "No es seguro convertir B o C en solución válida cuando el enunciado no corresponde con las cuatro alternativas.",
+      "scoringPolicy": "NO_PUNTUA",
+      "reviewCompleted": true
+    }
+  ],
+  "additionalTechnicalReviewOutsideThree": {
+    "examId": "2022-11-26-mercancias-global",
+    "number": 6,
+    "status": "DUDOSA_TECNICA_FRENTE_DGT",
+    "note": "Una cuarta cuestión de redacción técnica, no uno de los tres conflictos de plantilla/banco. Permanece identificada por separado en R22."
+  }
+}
