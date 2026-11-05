@@ -146,7 +146,7 @@ function CapHome(){
   <div className="segments"><button className={category==='mercancias'?'on':''} onClick={()=>setCategory('mercancias')}>Mercancías</button><button className={category==='viajeros'?'on':''} onClick={()=>setCategory('viajeros')}>Viajeros · autobús</button></div>
   <h2>Cómo quieres corregir</h2>
   <div className="segments"><button className={mode==='study'?'on':''} onClick={()=>setMode('study')}>Estudio · al responder</button><button className={mode==='exam'?'on':''} onClick={()=>setMode('exam')}>Examen · al finalizar</button></div>
-  <p className="note">{category==='viajeros'?'Los exámenes de autobús se mantienen separados y nunca se mezclan con Mercancías.':'Solo se corrigen automáticamente las preguntas con respuesta compatible con el banco original. Las dudosas quedan pendientes de revisión.'}</p>
+  <p className="note">{category==='viajeros'?'El examen de Viajeros se conserva en el archivo, pero se aplaza hasta disponer de su plantilla.':'Cada convocatoria con plantilla contiene 100 preguntas y sus 100 respuestas impresas. Las contradicciones quedan visibles y no puntúan.'}</p>
   {error&&<div className="autherror">{error}</div>}
   <h2>Formas de practicar</h2>
   <div className="cards">
@@ -155,15 +155,15 @@ function CapHome(){
    <button disabled={!available.length||working} onClick={()=>void begin('cap-mixed')}>✦<span><b>Exámenes CAP mezclados</b><small>Preguntas distintas de varias convocatorias</small></span>›</button>
   </div>
   <div className="panel"><label>Preguntas en examen mezclado</label><div className="segments">{[10,20,30,50,100].map(x=><button key={x} className={count===x?'on':''} onClick={()=>setCount(x)}>{x}</button>)}</div></div>
-  <section id="cap-historicos"><h2>Convocatorias de {category==='mercancias'?'Mercancías':'Viajeros'}</h2><p>{exams.length} documentos clasificados · {available.length} con preguntas cotejadas automáticamente</p>
-   <div className="list">{exams.map(e=><button key={e.id} disabled={e.readyCount===0||working} onClick={()=>void begin('cap-original',e)}><i>▦</i><span><b>{pretty(e)}</b><small>{e.readyCount>0?(e.readyCount<(e.expectedCount||100)?'Práctica parcial: ':'')+e.readyCount+' de '+(e.expectedCount||100)+' respuestas cotejadas':'Pendiente de transcripción o cotejo'} · págs. {e.sourcePageStart}–{e.sourcePageEnd}</small></span>›</button>)}</div>
+  <section id="cap-historicos"><h2>Convocatorias de {category==='mercancias'?'Mercancías':'Viajeros'}</h2><p>{exams.length} modelos · {available.length} con plantilla de 100 respuestas</p>
+   <div className="list">{exams.map(e=><button key={e.id} disabled={!e.hasOriginalAnswerSheet||working} onClick={()=>void begin('cap-original',e)}><i>▦</i><span><b>{pretty(e)}</b><small>{e.hasOriginalAnswerSheet?'100 preguntas · '+e.readyCount+' puntuables'+(e.disputedCount?' · '+e.disputedCount+' en revisión':''):'Aplazado: falta plantilla original'} · págs. {e.sourcePageStart}–{e.sourcePageEnd}</small></span>›</button>)}</div>
   </section>
   <section className="panel cap-pending-panel">
    <h2>Preguntas pendientes de revisión</h2>
    <p>Consulta el enunciado original y sus cuatro opciones. No se muestra una solución sin cotejar, ni se registran estas preguntas como fallos.</p>
    <select aria-label="Convocatoria con preguntas pendientes" value={pendingId} onChange={e=>{setPendingId(e.target.value);setPendingShown(false);setPendingRows([])}}>
     <option value="">Seleccionar convocatoria</option>
-    {exams.filter(e=>e.count>e.readyCount).map(e=><option key={e.id} value={e.id}>{pretty(e)} · {e.count-e.readyCount} pendientes</option>)}
+    {exams.filter(e=>e.hasOriginalAnswerSheet&&e.count>e.readyCount).map(e=><option key={e.id} value={e.id}>{pretty(e)} · {e.count-e.readyCount} pendientes</option>)}
    </select>
    <Btn kind="light" disabled={!pendingId||pendingBusy} onClick={()=>void showPending()}>{pendingBusy?'Preparando…':'Consultar sin puntuación'}</Btn>
    {pendingShown&&<div className="cap-pending-results">
@@ -177,7 +177,7 @@ function CapHome(){
    </div>}
   </section>
   <button className="btn light" onClick={()=>go('general')}>Abrir banco general · 8.655 preguntas</button>
-  <p className="note">Los exámenes completos conservan sus 100 preguntas originales; los escaneados se incorporan de forma progresiva y mantienen su número real de preguntas transcritas. El test autocorregido solo muestra las que tienen respuesta cotejada. Una práctica parcial no es un examen oficial completo. Frecuencia observada, no predicción; las ampliaciones no se cuentan dos veces.</p>
+  <p className="note">Los 22 modelos con plantilla mantienen sus 100 preguntas y las letras originales; las contradicciones documentadas no puntúan. No se duplican ampliaciones en el cómputo de frecuencia.</p>
  </div>
 }
 
