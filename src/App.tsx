@@ -82,6 +82,7 @@ function CapHome({pm}:{pm:Map<string,QuestionProgress>}){
  const [mode,setMode]=useState<'study'|'exam'>('exam')
  const [timed,setTimed]=useState(true)
  const [count,setCount]=useState(100)
+ const [showConvocations,setShowConvocations]=useState(false)
  const [working,setWorking]=useState(false)
  const [error,setError]=useState('')
  const [pendingId,setPendingId]=useState('')
@@ -95,6 +96,8 @@ function CapHome({pm}:{pm:Map<string,QuestionProgress>}){
  const [sheetReviewOnlyIssues,setSheetReviewOnlyIssues]=useState(false)
  useEffect(()=>{Promise.all([loadCapIndex(),loadCapEditorialTriage()]).then(([ix,tri])=>{setIndex(ix);setEditorialTriage(tri)}).catch(e=>setError(String(e)))},[])
  useEffect(()=>{setPendingId('');setPendingRows([]);setPendingShown(false);setSheetReviewId('');setSheetReviewRows([]);setSheetReviewShown(false)},[category])
+ function openConvocations(){setShowConvocations(true);requestAnimationFrame(()=>document.getElementById('cap-historicos')?.scrollIntoView({behavior:'smooth',block:'start'}))}
+ function closeConvocations(){setShowConvocations(false);document.getElementById('focus-other')?.scrollIntoView({behavior:'smooth',block:'start'})}
  const exams=(index?.exams||[]).filter(x=>x.category===category).sort((a,b)=>b.date.localeCompare(a.date)||a.model.localeCompare(b.model))
  const available=exams.filter(x=>x.hasOriginalAnswerSheet)
  const pretty=(x:CapExamMeta)=>new Date(x.date+'T12:00:00').toLocaleDateString('es-ES',{day:'2-digit',month:'short',year:'numeric'})+(x.model==='GLOBAL'?'':' · modelo '+x.model)
@@ -181,7 +184,7 @@ function CapHome({pm}:{pm:Map<string,QuestionProgress>}){
   <section className="focus-practices" aria-labelledby="focus-other">
    <div className="focus-section-heading"><h2 id="focus-other">Otras formas de practicar</h2><p>Elige una convocatoria, combina preguntas o repasa lo que más necesitas.</p></div>
    <div className="focus-practice-grid">
-    <button onClick={()=>document.getElementById('cap-historicos')?.scrollIntoView({behavior:'smooth'})}><span className="focus-choice-icon">▦</span><span><b>Por convocatoria</b><small>Fecha y modelo originales</small></span><span aria-hidden="true">›</span></button>
+    <button type="button" aria-expanded={showConvocations} aria-controls="cap-historicos" onClick={()=>showConvocations?closeConvocations():openConvocations()}><span className="focus-choice-icon">▦</span><span><b>Por convocatoria</b><small>Fecha y modelo originales</small></span><span aria-hidden="true">{showConvocations?'⌃':'›'}</span></button>
     <button disabled={!available.length||working} onClick={()=>void begin('cap-mixed')}><span className="focus-choice-icon">⤨</span><span><b>Examen mezclado</b><small>Sin preguntas duplicadas</small></span><span aria-hidden="true">›</span></button>
     <button disabled={working} onClick={()=>void begin('cap-errors')}><span className="focus-choice-icon">↺</span><span><b>Mis errores</b><small>Repasa las respuestas falladas</small></span><span aria-hidden="true">›</span></button>
     <button disabled={working} onClick={()=>void begin('cap-review')}><span className="focus-choice-icon">✦</span><span><b>Repaso inteligente</b><small>Prioriza las preguntas difíciles</small></span><span aria-hidden="true">›</span></button>
@@ -199,9 +202,10 @@ function CapHome({pm}:{pm:Map<string,QuestionProgress>}){
     {category==='viajeros'&&<p className="note">Viajeros permanece archivado, sin mezclar sus preguntas ni inventar soluciones hasta verificar su plantilla.</p>}
    </div>
   </details>
-  <section id="cap-historicos"><h2>Convocatorias de {category==='mercancias'?'Mercancías':'Viajeros'}</h2><p>{exams.length} modelos · {available.length} con plantilla de 100 respuestas</p>
+  {showConvocations&&<section id="cap-historicos" aria-label="Convocatorias históricas CAP" tabIndex={-1}>
+   <div className="focus-convocation-heading"><div><h2>Convocatorias de {category==='mercancias'?'Mercancías':'Viajeros'}</h2><p>{exams.length} modelos · {available.length} con plantilla de 100 respuestas</p></div><button className="focus-convocation-close" type="button" onClick={closeConvocations} aria-label="Cerrar listado de convocatorias">Cerrar <span aria-hidden="true">×</span></button></div>
    <div className="list">{exams.map(e=><button key={e.id} disabled={!e.hasOriginalAnswerSheet||working} onClick={()=>void begin('cap-original',e)}><i>▦</i><span><b>{pretty(e)}</b><small>{e.hasOriginalAnswerSheet?'100 preguntas · '+e.readyCount+' puntuables'+(e.disputedCount?' · '+e.disputedCount+' conflictos sin puntuar':''):'Aplazado: falta plantilla original'} · págs. {e.sourcePageStart}–{e.sourcePageEnd}</small></span>›</button>)}</div>
-  </section>
+  </section>}
   <details className="focus-editorial"><summary>Auditoría editorial · consulta avanzada</summary><div className="focus-editorial-inner">
   <section className="panel cap-pending-panel">
    <h2>Auditoría editorial · 26 convocatorias</h2>

@@ -92,7 +92,12 @@ function QuizSession({initial,questions,frequency,pm,refresh}:{
   async function select(k:AnswerKey){
     if(finishing||expired||s.type==='study'&&checked)return
     if(s.type==='exam'){
-      save({...s,selectedAnswers:{...s.selectedAnswers,[q.id]:k}})
+      // Persist the answer and advance in one atomic state update. On question 100,
+      // stay in place: delivery is always manual unless the real timer expires.
+      save({...s,selectedAnswers:{...s.selectedAnswers,[q.id]:k},
+        currentIndex:Math.min(s.currentIndex+1,questions.length-1)})
+      setRefShown(false)
+      window.scrollTo({top:0,behavior:'instant'})
       return
     }
     save({...s,selectedAnswers:{...s.selectedAnswers,[q.id]:k},checkedIds:[...s.checkedIds,q.id]})
