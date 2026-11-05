@@ -234,7 +234,7 @@ for exam in exams:
             assert q['options'][q['correctAnswer']]==proof['correctAnswerText']
             assert q['bankAnswer'] is None
 assert len(public_answers)==len(evidence)==7
-assert sum(q['answerStatus']=='respuesta_fuente_publica_oficial_pendiente_plantilla' for q in public_answers)==4
+assert sum(q['answerStatus']=='respuesta_fuente_publica_oficial_pendiente_plantilla' for q in public_answers)==1
 assert index['totalImportedQuestions']==2600
 assert sum(q['readyCount'] for q in exams)==2404
 print('PASS documentadas con BOE/DGT:',len(public_answers))
