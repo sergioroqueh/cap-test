@@ -68,7 +68,8 @@
   "additionalTechnicalReviewOutsideThree": {
     "examId": "2022-11-26-mercancias-global",
     "number": 6,
-    "status": "DUDOSA_TECNICA_FRENTE_DGT",
-    "note": "Una cuarta cuestión de redacción técnica, no uno de los tres conflictos de plantilla/banco. Permanece identificada por separado en R22."
+    "status": "CERRADA_A_CONFIRMADA_CONTEXTO_TRANSMISION",
+    "note": "Duda técnica adicional, ajena a las 3 contradicciones, resuelta editorialmente tras recibir imágenes del examen y plantilla; q6=A. Permanece puntuable, distinta de los 3 conflictos anulados para puntuación.",
+    "source": "Examenes TOTALES.pdf p420 y Plantilla Noviembre 2022.pdf q6=A; DGT, caja de cambios frente a embrague"
   }
 }
