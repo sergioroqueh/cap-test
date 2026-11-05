@@ -153,6 +153,8 @@ def main():
             "examId": x["examId"], "number": x["number"],
             "status": x["editorialStatus"], "explanation": x["reviewNote"],
             "source": x["sourceEvidence"],
+            **({"editorialClosure": by_case[(x["examId"], x["number"])]["editorialClosure"]}
+                if "editorialClosure" in by_case[(x["examId"], x["number"])] else {}),
         } for x in table if x["caseId"]],
     }
     (OUT / "editorial_casebook_r22.json").write_text(
