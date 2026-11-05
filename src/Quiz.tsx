@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import ConfirmDialog from './ConfirmDialog'
 import type { ActiveSession, AnswerKey, Question, QuestionProgress, SessionAnswer, StudySessionRecord } from './types'
 import { addSession, putManyProgress, putProgress } from './db'
 import { resolveQuestions } from './data'
@@ -40,7 +41,9 @@ export default function Quiz({pm,refresh}:{pm:Map<string,QuestionProgress>;refre
     resolveQuestions(initial.questionIds)
       .then(rows=>{
         if(!live)return
-        if(rows.length!==initial.questionIds.length)throw new Error('No se han recuperado las 100 preguntas originales. Se mantiene la sesión sin calificar.')
+        if(rows.length!==initial.questionIds.length)throw new Error('No se han recuperado todas las preguntas originales. Se mantiene la sesión sin calificar.')
+        if(initial.source.startsWith('cap-')&&(!initial.questionIds.every(id=>/^cap:[^:]+:\d+$/.test(id))||!rows.every(q=>!!q.examId)))
+          throw new Error('Este test CAP contiene preguntas ajenas a las convocatorias históricas verificadas. No se abrirá hasta corregirlo.')
         setQuestions(rows)
       })
       .catch(err=>{if(live)setError(err instanceof Error?err.message:String(err))})
@@ -62,6 +65,8 @@ function QuizSession({initial,questions,frequency,pm,refresh}:{
   const [now,setNow]=useState(Date.now)
   const [refShown,setRefShown]=useState(false)
   const [finishing,setFinishing]=useState(false)
+  const [confirmSubmit,setConfirmSubmit]=useState(false)
+  const [saveError,setSaveError]=useState('')
   const lock=useRef(false)
   const timed=s.type==='exam'&&s.timed===true
   const duration=s.durationMinutes||CAP_DURATION_MINUTES
@@ -117,12 +122,13 @@ function QuizSession({initial,questions,frequency,pm,refresh}:{
     if(set.has(q.id))set.delete(q.id);else set.add(q.id)
     save({...s,markedIds:[...set]})
   }
-  async function finish(force=false){
+  async function finish(force=false,confirmed=false){
     if(lock.current)return
     const ranOut=timed&&Date.now()>=deadlineAt(s.startedAt,duration)
     const timedOut=force||ranOut
     const unfilled=questions.length-answeredCount
-    if(s.type==='exam'&&!timedOut&&unfilled>0&&!window.confirm('Quedan '+unfilled+' preguntas en blanco. ¿Entregar y corregir ahora?'))return
+    if(s.type==='exam'&&!timedOut&&unfilled>0&&!confirmed){setConfirmSubmit(true);return}
+    setConfirmSubmit(false)
     lock.current=true
     setFinishing(true)
     try{
@@ -172,7 +178,7 @@ function QuizSession({initial,questions,frequency,pm,refresh}:{
       console.error(err)
       setFinishing(false)
       lock.current=false
-      alert('No se pudo guardar el resultado. Tus respuestas siguen almacenadas; vuelve a intentar entregar.')
+      setSaveError('No hemos podido guardar el resultado. Tus respuestas siguen a salvo; intenta entregarlo otra vez.')
     }
   }
   useEffect(()=>{
@@ -196,14 +202,15 @@ function QuizSession({initial,questions,frequency,pm,refresh}:{
     <div className="quizhead focus-quiz-head">
       <button aria-label="Volver al inicio; el examen no se pausa" title="Volver sin pausar" onClick={()=>go('home')}>‹</button>
       <div><b>{s.label}</b><small>{s.currentIndex+1} / {questions.length}</small><Bar value={percent(s.currentIndex+1,questions.length)}/></div>
-      <button className={favorite?'fav':''} aria-label={favorite?'Quitar de favoritas':'Guardar en favoritas'} title="Favorita" onClick={()=>void toggleFavorite()}>★</button>
+      <button className={favorite?'fav':''} aria-pressed={!!favorite} aria-label={favorite?'Quitar de favoritas':'Guardar en favoritas para próximos repasos'} title="Favorita: guardada para otros tests" onClick={()=>void toggleFavorite()}>★</button>
     </div>
     <div className="focus-exam-status">
       {timed?<div className={'focus-clock '+(left!==null&&left<=600000?'urgent':'')} role="timer" aria-label="Tiempo restante"><span>Tiempo restante</span><strong>{formatRemaining(left||0)}</strong></div>
         :<div className="focus-clock"><span>{s.type==='study'?'Estudio':'Práctica'}</span><strong>Sin límite</strong></div>}
       <div className="focus-exam-count"><span>Contestadas</span><strong>{answeredCount} / {questions.length}</strong></div>
-      <button className={'focus-mark '+((s.markedIds||[]).includes(q.id)?'on':'')} onClick={toggleMarked} aria-pressed={(s.markedIds||[]).includes(q.id)}>⚑ { (s.markedIds||[]).includes(q.id)?'Marcada':'Revisar'}</button>
+      <button className={'focus-mark '+((s.markedIds||[]).includes(q.id)?'on':'')} onClick={toggleMarked} aria-pressed={(s.markedIds||[]).includes(q.id)}>⚑ { (s.markedIds||[]).includes(q.id)?'Marcada':'Revisar luego'}</button>
     </div>
+    <p className="focus-mark-help">⚑ Revisar: solo durante este test. <span>★ Favorita: se guarda para otros repasos.</span></p>
     <details className="focus-index">
       <summary>Índice de preguntas · {markedCount} marcadas para revisar</summary>
       <div className="focus-question-grid">{questions.map((x,index)=><button key={x.id}
@@ -215,6 +222,9 @@ function QuizSession({initial,questions,frequency,pm,refresh}:{
     <article className="focus-question">
       <small>Pregunta {s.currentIndex+1} de {questions.length}{q.examId?' · original nº '+q.number:''}</small>
       <h2>{q.question}</h2>
+      <p className="focus-frequency" role="note">{frequencyInfo?.denominator
+        ?'↻ Aparece en '+frequencyInfo.count+' de '+frequencyInfo.denominator+' exámenes ('+Math.round(100*frequencyInfo.count/frequencyInfo.denominator)+' %)'
+        :'↻ Frecuencia en exámenes históricos: sin dato contrastado'}</p>
       <div className="answers">{keys.map(k=>{
         let cls=selected===k?'selected':''
         if(renderFeedback&&q.scoringEligible!==false)cls=k===q.correctAnswer?'correct':selected===k?'wrong':''
@@ -224,14 +234,22 @@ function QuizSession({initial,questions,frequency,pm,refresh}:{
       })}</div>
       {renderFeedback&&(q.scoringEligible===false
         ?<div className="feedback" role="status"><b>No puntúa · incidencia editorial</b><p>Tu respuesta no cuenta como acierto ni como error.</p>{decision&&<p>{decision.decision}</p>}{decision?.editorialAnswer&&<p>Orientación técnica: {decision.editorialAnswer}</p>}</div>
-        :<div className={'feedback '+(isCorrect?'ok':'bad')} role="status"><b>{isCorrect?'✓ Correcta':'× Incorrecta · respuesta '+q.correctAnswer}</b><button onClick={()=>setRefShown(v=>!v)}>{refShown?'Ocultar':'Ver fundamento'}</button>{refShown&&<div><p><strong>Norma:</strong> {q.norm||'Sin referencia normativa adicional'}</p><p><strong>Referencia:</strong> {q.reference||'Consultar enunciado original'}</p>{q.originalSheetAnswer&&<p>Plantilla impresa: {q.originalSheetAnswer} (casilla {q.originalSheetQuestionNumber}).</p>}</div>}</div>)}
-      {(s.type==='study'||!timed)&&<details className="focus-provenance"><summary>Frecuencia y procedencia</summary><p>{frequencyInfo?.denominator? 'Aparece en '+frequencyInfo.count+' de '+frequencyInfo.denominator+' modelos analizados.':'Frecuencia no confirmada en los modelos analizados.'}</p>{q.sourcePage&&<p>PDF original · página {q.sourcePage}</p>}{q.reviewRequired&&<p>Texto o solución con nota editorial; no modificar las fuentes originales.</p>}{q.scoringEligible===false&&<p>Pregunta excluida de la puntuación.</p>}</details>}
+        :<div className={'feedback '+(isCorrect?'ok':'bad')} role="status"><b>{isCorrect?'✓ Correcta':'× Incorrecta · respuesta '+q.correctAnswer}</b><button onClick={()=>setRefShown(v=>!v)}>{refShown?'Ocultar':'Ver fundamento'}</button>{refShown&&<div><p><strong>Norma:</strong> {q.norm||'Sin referencia normativa adicional'}</p><p><strong>Referencia:</strong> {q.reference||'Consultar enunciado original'}</p></div>}</div>)}
     </article>
+    {saveError&&<div className="focus-notice" role="alert"><span aria-hidden="true">ⓘ</span><span>{saveError}</span><button onClick={()=>setSaveError('')} aria-label="Cerrar aviso">×</button></div>}
     <footer className="focus-quiz-actions">
       <button className="btn light" disabled={s.currentIndex===0||finishing} onClick={()=>navigate(s.currentIndex-1)}>Anterior</button>
       <button className="btn light" disabled={s.currentIndex===questions.length-1||finishing} onClick={()=>navigate(s.currentIndex+1)}>Siguiente</button>
       <button className="btn primary" disabled={finishing} onClick={()=>void finish()}>{finishing?'Guardando…':'Entregar'}</button>
     </footer>
+    {confirmSubmit&&<ConfirmDialog
+      title="¿Entregar el examen?"
+      message={'Quedan '+(questions.length-answeredCount)+' preguntas en blanco. Valdrán 0 puntos y no se registrarán como fallos. Puedes seguir respondiendo si lo prefieres.'}
+      cancelLabel="Seguir respondiendo"
+      confirmLabel="Entregar y corregir"
+      onCancel={()=>setConfirmSubmit(false)}
+      onConfirm={()=>{setConfirmSubmit(false);void finish(false,true)}}
+    />}
     {isCap&&s.type==='exam'&&eligibleCount<100&&<p className="focus-muted">Este modelo conserva {questions.length} enunciados; {questions.length-eligibleCount} no puntúan. El resultado será orientativo.</p>}
   </div>
 }

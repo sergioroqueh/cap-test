@@ -139,3 +139,23 @@ nav button{min-height:58px}
 .focus-convocation-close{min-height:44px;min-width:88px;border:1px solid var(--line);background:var(--soft);color:var(--text);border-radius:12px;font-weight:750;padding:0 12px}
 .focus-convocation-close span{font-size:19px;margin-left:4px}
 @media(max-width:390px){.focus-convocation-heading{align-items:center}.focus-convocation-close{min-width:76px;padding:0 8px}}
+
+/* CAP Focus: accessible, pleasant in-app confirmations. */
+.focus-dialog-backdrop{position:fixed;inset:0;z-index:210;background:rgba(0,8,11,.74);display:grid;place-items:center;padding:18px;backdrop-filter:blur(6px)}
+.focus-dialog{width:min(100%,440px);background:var(--surface);color:var(--text);border:1px solid var(--line);border-radius:23px;padding:clamp(20px,5vw,29px);box-shadow:0 24px 70px rgba(0,0,0,.4)}
+.focus-dialog-symbol{width:43px;height:43px;border-radius:14px;background:var(--soft);color:var(--primary);display:grid;place-items:center;font-size:24px;font-weight:800}
+.focus-dialog h2{font-size:23px;margin:16px 0 9px}
+.focus-dialog p{font-size:14px;line-height:1.55;color:var(--muted)}
+.focus-dialog-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:24px}
+.focus-dialog-actions button{min-height:50px;font-size:13px;text-align:center;padding:8px 9px}
+.focus-notice{display:flex;align-items:center;gap:10px;border:1px solid var(--primary);background:var(--soft);color:var(--text);padding:13px 15px;border-radius:15px;font-size:13px;line-height:1.5}
+.focus-notice span:nth-child(2){flex:1}
+.focus-notice button{background:transparent;color:var(--muted);border:0;font-size:23px;min-width:38px;min-height:38px}
+.focus-unique-count{margin:18px 0 0!important;padding:13px 15px;background:var(--bg);border:1px solid var(--line);border-radius:14px;font-size:14px!important;color:var(--text)!important;font-weight:600;line-height:1.45}
+.focus-unique-count strong{font-size:21px;color:var(--primary);font-variant-numeric:tabular-nums}
+.focus-unique-count span{display:block;font-size:12px;font-weight:400;color:var(--muted);margin-top:3px}
+.focus-frequency{margin:0 0 18px!important;padding:10px 12px;border-radius:11px;background:var(--soft);color:var(--text);font-weight:670;font-size:12px;line-height:1.45}
+.focus-mark-help{font-size:11px;line-height:1.4;margin:-2px 4px 12px;color:var(--muted)}
+.focus-mark-help span{white-space:normal}
+.result.study{background:linear-gradient(130deg,#1a6870,#1f475b)}
+@media(max-width:400px){.focus-dialog-actions{grid-template-columns:1fr}.focus-mark-help{font-size:10px}.focus-exam-status .focus-mark{min-width:66px}}
