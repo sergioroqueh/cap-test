@@ -12,8 +12,17 @@ let checks=0
 
 async function openHome(context){
  const page=await context.newPage()
+ const errors=[]
+ page.on('pageerror',e=>errors.push('pageerror: '+e.message))
+ page.on('console',m=>{if(m.type()==='error')errors.push('console: '+m.text())})
+ page.on('response',r=>{if(r.status()>=400)errors.push('http '+r.status()+': '+r.url())})
  await page.goto(BASE,{waitUntil:'domcontentloaded'})
- await page.locator('.focus-primary').waitFor({timeout:30000})
+ try{await page.locator('.focus-primary').waitFor({timeout:12000})}
+ catch(e){
+  await page.screenshot({path:artifacts+'/home-load-error.png',fullPage:true})
+  const body=(await page.locator('body').innerText()).slice(0,1800)
+  throw new Error('CAP preview did not reach Focus home. URL='+page.url()+' BODY='+body+' ERRORS='+JSON.stringify(errors)+' CAUSE='+String(e))
+ }
  return page
 }
 async function submit(page){
