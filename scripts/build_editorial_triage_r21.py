@@ -52,7 +52,7 @@ def main() -> None:
     by_fingerprint: dict[tuple, list[dict]] = defaultdict(list)
     for exam in index["exams"]:
         eid = exam["id"]
-        questions = json.loads((DATA / exam["path"].removeprefix("data/")).read_text(encoding="utf-8"))
+        questions = json.loads((DATA / "questions" / f"{eid}.json").read_text(encoding="utf-8"))
         assert len(questions) == 100 and {r["number"] for r in questions} == set(range(1, 101))
         assert source[eid]["category"] == exam["category"]
         for q in questions:
