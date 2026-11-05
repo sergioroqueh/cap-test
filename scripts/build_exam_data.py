@@ -157,6 +157,75 @@ def r22_curate_september_display(exams):
     return affected
 
 
+# R22 explicit micro-corrections outside September: no bulk replacements.
+# Only demonstrable typing/OCR glyph anomalies are repaired, keeping a snapshot.
+R22_MINOR = {
+    ('2022-11-26-mercancias-global', 17): {
+        'field': 'question', 'from': '¿Cómo se Ilama también',
+        'to': '¿Cómo se llama también',
+        'reason': 'I mayuscula en lugar de doble l',
+    },
+    ('2023-07-29-mercancias-a', 45): {
+        'field': 'options', 'from': 'AI ', 'to': 'Al ',
+        'reason': 'AI aparece como lectura errónea de Al en 3 alternativas',
+    },
+    ('2023-07-29-mercancias-a', 48): {
+        'field': 'options', 'from': 'Iuz', 'to': 'luz',
+        'reason': 'I mayuscula por l en luz',
+    },
+    ('2023-07-29-mercancias-a', 60): {
+        'field': 'options', 'from': 'AI abandonar', 'to': 'Al abandonar',
+        'reason': 'I mayuscula por l en Al',
+    },
+    ('2023-07-29-mercancias-a', 73): {
+        'field': 'options', 'from': 'mg/I', 'to': 'mg/l',
+        'reason': 'unidad miligramos por litro, l minuscula mal interpretada',
+    },
+}
+
+
+def r22_minor_typography(exams):
+    counts = []
+    for meta, rows in exams:
+        for row in rows:
+            task = R22_MINOR.get((meta['id'], row['number']))
+            if not task:
+                continue
+            before_question = row['question']
+            before_options = dict(row['options'])
+            anchor = task['from']
+            replacement = task['to']
+            if task['field'] == 'question':
+                if before_question.count(anchor) != 1:
+                    raise RuntimeError(f"R22 {meta['id']} q{row['number']} pregunta modificada")
+                row['question'] = before_question.replace(anchor, replacement, 1)
+            else:
+                occurrences = sum(v.count(anchor) for v in before_options.values())
+                if occurrences < 1:
+                    raise RuntimeError(f"R22 {meta['id']} q{row['number']} opciones modificadas")
+                row['options'] = {
+                    k: v.replace(anchor, replacement) for k, v in before_options.items()
+                }
+            row['textCorrection'] = {
+                'round': 'R22',
+                'sourceOriginalExam': meta['sourcePdf'],
+                'sourcePage': row['sourcePage'],
+                'method': 'normalizacion_tipografica_puntual_con_guard',
+                'reviewStatus': 'correccion_contextual_pendiente_comprobacion_visual',
+                'reason': task['reason'],
+                'originalQuestion': before_question,
+                'originalOptions': before_options,
+                'changedQuestion': row['question'] != before_question,
+                'changedOptions': [k for k in 'ABCD'
+                                   if row['options'][k] != before_options[k]],
+                'answerKeysChanged': False,
+            }
+            counts.append((meta['id'], row['number']))
+    if set(counts) != set(R22_MINOR):
+        raise RuntimeError('R22 faltan correcciones puntuales no destructivas')
+    print('AUDIT R22 5 correcciones puntuales de glifos:', counts)
+
+
 def generate():
     manifest = json.loads((SRC/'manifest.json').read_text(encoding='utf-8'))['exams']
     keys = json.loads((SRC/'answer_keys_unverified.json').read_text(encoding='utf-8'))
@@ -506,6 +575,7 @@ def generate():
     if evidence_applied != set(official_evidence):
         raise RuntimeError(f'Evidencia oficial sin aplicar: {set(official_evidence)-evidence_applied}')
     r22_curate_september_display(exams)
+    r22_minor_typography(exams)
     # The denominator uses only complete textual exam models, not missing scans.
     denomination=Counter(meta['category'] for meta,rows in exams if rows)
     appears=defaultdict(set)
