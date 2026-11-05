@@ -281,7 +281,7 @@ function Study({stats,start}:P){return <div className="page"><em>MODO ESTUDIO</e
 
 function Questionnaires({bank,rows,start}:P){return <div className="page"><button className="back" onClick={()=>history.back()}>‹ Volver</button><h1>Cuestionarios</h1>{[...new Set(bank.questionnaires.map(q=>q.section))].map(sec=><section key={sec}><em>SECCIÓN {sec.replace(';',' / ')}</em><div className="qgrid">{bank.questionnaires.filter(q=>q.section===sec).map(m=>{const k=m.section+':'+m.questionnaireId,r=rows.filter(x=>x.questionnaireId===k),seen=r.filter(x=>x.attempts).length,att=r.reduce((a,x)=>a+x.attempts,0),cor=r.reduce((a,x)=>a+x.correct,0),cov=percent(seen,m.count);return <article key={m.id}><div className="qtop"><span>{m.questionnaireId}</span><b>{cov}%</b></div><h3>{m.title}</h3><small>{m.count} preguntas · {seen?percent(cor,att)+'% acierto':'Sin empezar'}</small><Bar v={cov}/><div className="actions"><Btn onClick={()=>start('study','questionnaire',Math.min(20,m.count),m.title+' · estudio',m)}>Estudiar 20</Btn><Btn kind="light" onClick={()=>start('study','questionnaire',m.count,m.title+' · completo',m)}>Todas</Btn></div></article>})}</div></section>)}</div>}
 
-function Exam({bank,stats,start}:P){const [count,setCount]=useState(30),[source,setSource]=useState<StudySource>('random'),[qid,setQid]=useState(bank.questionnaires[0].id);const meta=bank.questionnaires.find(x=>x.id===qid);return <div className="page"><em>SIMULACRO</em><h1>Como un examen</h1><p>No verás la solución hasta finalizar. Las no contestadas cuentan como fallo.</p><div className="panel"><label>Número de preguntas</label><div className="segments">{[10,20,30,50].map(n=><button className={count===n?'on':''} onClick={()=>setCount(n)} key={n}>{n}</button>)}</div><label>Contenido</label>{([['random','Todo el banco','Mezcla todos los cuestionarios'],['unseen','Solo nuevas',(stats.total-stats.seen)+' sin ver'],['errors','Solo errores',stats.review+' disponibles'],['questionnaire','Un cuestionario','Elige un bloque concreto']] as any[]).map(x=><button className={'radio '+(source===x[0]?'on':'')} onClick={()=>setSource(x[0])} key={x[0]}><i/><span><b>{x[1]}</b><small>{x[2]}</small></span></button>)}{source==='questionnaire'&&<select value={qid} onChange={e=>setQid(e.target.value)}>{bank.questionnaires.map(q=><option key={q.id} value={q.id}>Sección {q.section} · {q.questionnaireId} ({q.count})</option>)}</select>}<Btn onClick={()=>start('exam',source,count,'Simulacro · '+count,source==='questionnaire'?meta:undefined)}>Comenzar simulacro</Btn></div></div>}
+function Exam({bank,stats,start}:P){const [count,setCount]=useState(30),[source,setSource]=useState<StudySource>('random'),[qid,setQid]=useState(bank.questionnaires[0].id);const meta=bank.questionnaires.find(x=>x.id===qid);return <div className="page"><em>SIMULACRO</em><h1>Como un examen</h1><p>No verás la solución hasta finalizar. Las no contestadas quedan en blanco.</p><div className="panel"><label>Número de preguntas</label><div className="segments">{[10,20,30,50].map(n=><button className={count===n?'on':''} onClick={()=>setCount(n)} key={n}>{n}</button>)}</div><label>Contenido</label>{([['random','Todo el banco','Mezcla todos los cuestionarios'],['unseen','Solo nuevas',(stats.total-stats.seen)+' sin ver'],['errors','Solo errores',stats.review+' disponibles'],['questionnaire','Un cuestionario','Elige un bloque concreto']] as any[]).map(x=><button className={'radio '+(source===x[0]?'on':'')} onClick={()=>setSource(x[0])} key={x[0]}><i/><span><b>{x[1]}</b><small>{x[2]}</small></span></button>)}{source==='questionnaire'&&<select value={qid} onChange={e=>setQid(e.target.value)}>{bank.questionnaires.map(q=><option key={q.id} value={q.id}>Sección {q.section} · {q.questionnaireId} ({q.count})</option>)}</select>}<Btn onClick={()=>start('exam',source,count,'Simulacro · '+count,source==='questionnaire'?meta:undefined)}>Comenzar simulacro</Btn></div></div>}
 
 function Results(){
  const data=JSON.parse(localStorage.getItem(LAST)||sessionStorage.getItem(LAST)||'null') as {record:StudySessionRecord;questionIds:string[]}|null
@@ -290,6 +290,11 @@ function Results(){
  useEffect(()=>{if(data)resolveQuestions(data.questionIds).then(setQs).catch(console.error)},[])
  if(!data)return <Loading/>
  const r=data.record
+ const capExam=r.capScoring===true&&r.type==='exam'
+ const comparable=capExam&&r.passed!==null&&r.passed!==undefined
+ const netLabel=(r.netPoints??0).toLocaleString('es-ES',{maximumFractionDigits:2})
+ const resultTitle=capExam?(comparable?(r.passed?'Aprobado':'No aprobado'):'Resultado orientativo'):r.score>=80?'Muy buen resultado':r.score>=60?'Buen intento':'Toca reforzar'
+ const resultClass=capExam?(comparable?(r.passed?'good':'bad'):'mid'):(r.score>=80?'good':r.score>=60?'mid':'bad')
  const questionMap=new Map(qs.map(q=>[q.id,q]))
  const fails=r.answers.filter(a=>a.scoringEligible!==false&&!!a.selected&&!a.correct)
  const unreviewed=r.answers.filter(a=>a.scoringEligible!==false&&!a.selected)
@@ -297,17 +302,22 @@ function Results(){
  const visible=showAll?r.answers:fails
  async function review(){
   if(!fails.length)return
-  const session:ActiveSession={type:'study',source:'errors',label:'Repaso del último test',
+  const session:ActiveSession={type:'study',source:fails.every(x=>x.questionId.startsWith('cap:'))?'cap-errors':'errors',label:'Repaso del último test',
    questionIds:fails.map(x=>x.questionId),currentIndex:0,selectedAnswers:{},checkedIds:[],startedAt:Date.now()}
-  sessionStorage.setItem(ACTIVE,JSON.stringify(session))
+  localStorage.setItem(ACTIVE,JSON.stringify(session))
   go('quiz')
  }
  return <div className="page">
   <button className="back" onClick={()=>go('home')}>‹ Inicio</button>
-  <section className={'result '+(r.score>=80?'good':r.score>=60?'mid':'bad')}>
-   <em>RESULTADO</em><strong>{r.score}%</strong>
-   <h1>{r.score>=80?'Muy buen resultado':r.score>=60?'Buen intento':'Toca reforzar'}</h1>
+  <section className={'result '+resultClass}>
+   <em>{capExam?(comparable?'SIMULACRO CAP · 100 PREGUNTAS VÁLIDAS':'CAP · CALIFICACIÓN ORIENTATIVA'):'RESULTADO'}</em>
+   <strong>{capExam?netLabel+' pt':r.score+'%'}</strong>
+   <h1>{resultTitle}</h1>
    <p>{r.label}</p>
+   {capExam&&<p className="focus-result-explain">+1 por acierto · −0,5 por fallo · 0 en blanco. {r.correct} − {r.incorrect} × 0,5 = {netLabel} puntos.</p>}
+   {capExam&&!comparable&&<p className="focus-result-explain">Se han calificado {r.gradedTotal??r.total} de {r.total} enunciados. Las {r.excluded??0} excluidas no penalizan. Equivalencia orientativa sobre 100 preguntas válidas: {r.score.toLocaleString('es-ES',{maximumFractionDigits:2})} puntos. No equivale a una calificación oficial.</p>}
+   {capExam&&comparable&&<p className="focus-result-explain">El umbral del simulacro es de 50 puntos netos sobre 100 preguntas válidas.</p>}
+   {r.finishedReason==='timeout'&&<p className="focus-result-explain">Tiempo agotado · entrega automática.</p>}
   </section>
   <div className="metrics">
    <article><b>{r.correct}</b><span>Correctas</span></article>
@@ -316,7 +326,7 @@ function Results(){
   </div>
   {fails.length>0&&<Btn onClick={()=>void review()}>Repasar {fails.length} fallos</Btn>}
   <h2>Corrección de respuestas</h2>
-  <p className="note">En examen puedes comprobar aciertos, fallos y preguntas sin responder. Las preguntas sin responder no se registran como fallos en tu progreso.{unscored.length>0?' Las '+unscored.length+' preguntas con respuestas contradictorias se excluyeron del cálculo y del historial de fallos.':''}</p>
+  <p className="note">En examen puedes comprobar aciertos, fallos y preguntas sin responder. Las preguntas sin responder valen 0 puntos y no se registran como fallos en tu progreso.{unscored.length>0?' Las '+unscored.length+' preguntas con respuestas contradictorias se excluyeron del cálculo y del historial de fallos.':''}</p>
   <Btn kind="light" onClick={()=>setShowAll(v=>!v)}>{showAll?'Ver solo fallos':'Ver todas las respuestas ('+r.answers.length+')'}</Btn>
   <div className="review">
    {visible.length===0&&!showAll&&<p>No hay respuestas incorrectas.</p>}
@@ -337,7 +347,7 @@ function Results(){
  </div>
 }
 
-function Stats({bank,rows,stats,sessions}:P){return <div className="page"><em>TU PREPARACIÓN</em><h1>{stats.attempts?stats.acc+'%':'Empieza hoy'}</h1><p>{stats.attempts?'de precisión global':'Tus estadísticas aparecerán aquí.'}</p><div className="statsgrid"><article><small>Vistas</small><b>{stats.seen}</b><span>de {stats.total}</span></article><article><small>Dominadas</small><b>{stats.mastered}</b></article><article><small>Por repasar</small><b>{stats.review}</b></article><article><small>Favoritas</small><b>{stats.fav}</b></article></div><h2>Progreso por cuestionario</h2><div className="progresslist">{bank.questionnaires.map(m=>{const rr=rows.filter(x=>x.questionnaireId===m.section+':'+m.questionnaireId),seen=rr.filter(x=>x.attempts).length;if(!seen)return null;const att=rr.reduce((a,x)=>a+x.attempts,0),cor=rr.reduce((a,x)=>a+x.correct,0);return <div key={m.id}><span><b>{m.questionnaireId}</b> · Sección {m.section}</span><small>{seen}/{m.count} · {percent(cor,att)}%</small><Bar v={percent(seen,m.count)}/></div>})}</div><h2>Últimas sesiones</h2><div className="history">{sessions.slice(0,10).map((s,i)=><div key={i}><span><b>{s.label}</b><small>{s.total} preguntas</small></span><strong>{s.score}%</strong></div>)}</div></div>}
+function Stats({bank,rows,stats,sessions}:P){return <div className="page"><em>TU PREPARACIÓN</em><h1>{stats.attempts?stats.acc+'%':'Empieza hoy'}</h1><p>{stats.attempts?'de precisión global':'Tus estadísticas aparecerán aquí.'}</p><div className="statsgrid"><article><small>Vistas</small><b>{stats.seen}</b><span>de {stats.total}</span></article><article><small>Dominadas</small><b>{stats.mastered}</b></article><article><small>Por repasar</small><b>{stats.review}</b></article><article><small>Favoritas</small><b>{stats.fav}</b></article></div><h2>Progreso por cuestionario</h2><div className="progresslist">{bank.questionnaires.map(m=>{const rr=rows.filter(x=>x.questionnaireId===m.section+':'+m.questionnaireId),seen=rr.filter(x=>x.attempts).length;if(!seen)return null;const att=rr.reduce((a,x)=>a+x.attempts,0),cor=rr.reduce((a,x)=>a+x.correct,0);return <div key={m.id}><span><b>{m.questionnaireId}</b> · Sección {m.section}</span><small>{seen}/{m.count} · {percent(cor,att)}%</small><Bar v={percent(seen,m.count)}/></div>})}</div><h2>Últimas sesiones</h2><div className="history">{sessions.slice(0,10).map((s,i)=><div key={i}><span><b>{s.label}</b><small>{s.total} preguntas</small></span><strong>{s.capScoring&&s.type==='exam'?(s.netPoints??s.score).toLocaleString('es-ES',{maximumFractionDigits:2})+' pt':s.score+'%'}</strong></div>)}</div></div>}
 
 function Settings({theme,setTheme,bank,refresh,userEmail,onSignOut}:{theme:string;setTheme:(s:string)=>void;bank:BankIndex;refresh:()=>Promise<void>;userEmail:string;onSignOut:()=>Promise<void>}){async function backup(){const d=await exportDatabase(),b=new Blob([JSON.stringify(d,null,2)],{type:'application/json'}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download='cap-test-backup.json';a.click();URL.revokeObjectURL(u)}async function restore(e:any){const f=e.target.files?.[0];if(!f)return;const d=JSON.parse(await f.text());if(!Array.isArray(d.progress))return alert('Copia no válida');await importProgress(d.progress);await refresh();alert('Progreso importado')}async function reset(){if(confirm(PREVIEW?'¿Borrar solo los datos de esta versión de pruebas?':'¿Borrar todo el progreso de tu cuenta? Esta acción afectará a todos tus dispositivos.')){await clearAllData();await refresh()}}return <div className="page"><button className="back" onClick={()=>history.back()}>‹ Volver</button><h1>Ajustes</h1><div className="panel account"><small>CUENTA</small><h2>{userEmail}</h2><p>{PREVIEW?'Esta versión guarda el progreso únicamente en este navegador, separado de la aplicación real. No utiliza Supabase.':'Tu progreso está sincronizado con tu cuenta y disponible en cualquier dispositivo donde inicies sesión.'}</p>{!PREVIEW&&<Btn kind="light" onClick={()=>void onSignOut()}>Cerrar sesión</Btn>}</div><div className="panel"><label>Tema</label><div className="segments"><button className={theme==='light'?'on':''} onClick={()=>setTheme('light')}>☀ Claro</button><button className={theme==='dark'?'on':''} onClick={()=>setTheme('dark')}>◐ Oscuro</button></div></div><div className="panel"><h2>Copia de seguridad</h2><p>{PREVIEW?'Los datos de prueba se guardan localmente. Puedes exportarlos como respaldo manual.':'Tu progreso se guarda en tu cuenta. Esta copia sirve como respaldo manual.'}</p><div className="actions"><Btn kind="light" onClick={backup}>↓ Exportar</Btn><label className="btn light">↑ Importar<input type="file" accept=".json" hidden onChange={restore}/></label></div></div><div className="panel"><h2>Banco CAP 2026</h2><p>{bank.totalQuestions.toLocaleString('es-ES')} preguntas · {bank.totalQuestionnaires} cuestionarios · {bank.version}</p></div><div className="panel danger"><h2>Empezar de cero</h2><Btn kind="danger" onClick={reset}>Borrar todo mi progreso</Btn></div></div>}
 
