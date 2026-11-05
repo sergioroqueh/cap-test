@@ -13,6 +13,10 @@ export interface CapExamMeta {
   count: number
   expectedCount: number
   readyCount: number
+  originalSheetAnswersCount?: number
+  scoringEligibleCount?: number
+  disputedCount?: number
+  hasOriginalAnswerSheet?: boolean
   path: string
 }
 export interface CapExamIndex {
@@ -55,9 +59,15 @@ export async function loadCapQuestions(meta: CapExamMeta): Promise<CapQuestion[]
   const res = await fetch(BASE + meta.path)
   if (!res.ok) throw new Error('No se pudo cargar el examen ' + meta.id)
   const raw: CapRawQuestion[] = await res.json()
-  const ready = raw.filter((q): q is CapRawQuestion & { correctAnswer: AnswerKey } =>
-    q.correctAnswer === 'A' || q.correctAnswer === 'B' || q.correctAnswer === 'C' || q.correctAnswer === 'D'
+  // Complete historical exams show all 100 original questions, including
+  // contested items. A disputed printed solution is NEVER a graded answer.
+  const ready = raw.filter(q => meta.hasOriginalAnswerSheet
+    ? !!q.originalSheetAnswer
+    : !!q.correctAnswer
   ).map(q => ({
+    ...q,
+    correctAnswer: (q.correctAnswer || q.originalSheetAnswer) as AnswerKey,
+    scoringEligible: q.correctAnswer !== null,
     ...q,
     id: 'cap:' + meta.id + ':' + q.number,
     progressId: q.canonicalQuestionId || q.id,
@@ -65,6 +75,44 @@ export async function loadCapQuestions(meta: CapExamMeta): Promise<CapQuestion[]
   }))
   cache.set(meta.id, ready)
   return ready
+}
+
+export interface CapSheetReviewQuestion {
+  number: number
+  question: string
+  options: Record<AnswerKey, string>
+  sourcePage: number
+  answerStatus: string
+  correctAnswer: AnswerKey | null
+  bankAnswer: AnswerKey | null
+  originalSheetAnswer: AnswerKey | null
+  originalSheetQuestionNumber: number | null
+  originalSheetSourceFile: string | null
+  mappedSheetAnswer: AnswerKey | null
+  mappedSheetQuestionNumber: number | null
+  answerDispute: {bankAnswer: AnswerKey; pdfAnswer: AnswerKey; reason: string} | null
+  scoringEligible: boolean
+}
+
+/** Returns every question, including three documented conflicts, for audit by exam. */
+export async function loadCapSheetReview(meta: CapExamMeta): Promise<CapSheetReviewQuestion[]> {
+  if (!meta.hasOriginalAnswerSheet) return []
+  const res = await fetch(BASE + meta.path)
+  if (!res.ok) throw new Error('No se pudo cargar la plantilla original.')
+  const rows: CapRawQuestion[] = await res.json()
+  return rows.map(q => ({
+    number: q.number, question: q.question, options: q.options,
+    sourcePage: q.sourcePage, answerStatus: q.answerStatus,
+    correctAnswer: q.correctAnswer,
+    bankAnswer: q.bankAnswer || null,
+    originalSheetAnswer: q.originalSheetAnswer || null,
+    originalSheetQuestionNumber: q.originalSheetQuestionNumber || null,
+    originalSheetSourceFile: q.originalSheetSourceFile || null,
+    mappedSheetAnswer: q.mappedSheetAnswer || null,
+    mappedSheetQuestionNumber: q.mappedSheetQuestionNumber || null,
+    answerDispute: q.answerDispute || null,
+    scoringEligible: q.correctAnswer !== null,
+  }))
 }
 
 export interface CapPendingQuestion {
@@ -95,8 +143,8 @@ export async function loadCapByIds(ids: string[]): Promise<Map<string, CapQuesti
 
 export async function loadAllCapQuestions(category: CapCategory): Promise<CapQuestion[]> {
   const index = await loadCapIndex()
-  const metas = index.exams.filter(e => e.category === category && e.readyCount > 0)
-  return (await Promise.all(metas.map(loadCapQuestions))).flat()
+  const metas = index.exams.filter(e => e.category === category && e.hasOriginalAnswerSheet && e.readyCount > 0)
+  return (await Promise.all(metas.map(loadCapQuestions))).flat().filter(q => q.scoringEligible !== false)
 }
 
 export async function loadBankExamFrequency(): Promise<Record<string, { count: number; denominator: number; category: CapCategory }>> {
