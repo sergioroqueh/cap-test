@@ -274,7 +274,7 @@ def generate():
                 answer=None if disagreement else visual_letter
                 verified_pdf=True
                 verified_pdf_applied[exam_id]+=1
-                if inferred: verified_pdf_bank_matching[exam_id]+=1
+                if inferred and not disagreement: verified_pdf_bank_matching[exam_id]+=1
             public_evidence=official_evidence.get(exam_id+':'+str(original_number))
             evidence_url=''
             evidence_source=''
