@@ -37,6 +37,28 @@ jobs:
           test -f dist/data/exams/editorial_casebook_r23.json
           test -f dist/data/exams/editorial_casebook_r23.csv
 
+      - name: Install Chromium for real-browser CAP tests
+        run: npx playwright install --with-deps chromium
+
+      - name: Test Focus UI in mobile and desktop browsers
+        run: |
+          npm run preview -- --host 127.0.0.1 --port 4173 --strictPort > /tmp/cap-preview.log 2>&1 &
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:4173/ > /dev/null; then break; fi
+            sleep 1
+          done
+          curl -fsS http://127.0.0.1:4173/ > /dev/null
+          node scripts/e2e_cap_focus.mjs
+
+      - name: Upload Focus browser screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cap-focus-mobile-desktop-screenshots
+          path: artifacts/cap-focus-e2e/
+          if-no-files-found: ignore
+          retention-days: 14
+
       - name: Package beta preview files (not deployed)
         uses: actions/upload-artifact@v4
         with:
