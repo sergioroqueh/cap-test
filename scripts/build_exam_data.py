@@ -264,7 +264,7 @@ def generate():
             # A direct visual read of the actual answer-sheet PDF takes precedence
             # over inferred bank solutions, but a conflict stops the entire build.
             verified_pdf=False
-            if template_verified:
+            if template_verified and original_number<=verified_limit:
                 visual_letter=template_verified['correctAnswers'][original_number-1]
                 hold=template_verified.get('holdConflicts',{}).get(str(original_number))
                 disagreement=len(mapped)>1 or (inferred and inferred!=visual_letter)
@@ -274,7 +274,7 @@ def generate():
                     verified_pdf_bank_conflicts[exam_id]+=1
                 elif hold:
                     raise RuntimeError(f'Conflicto antiguo ya no presente y sigue bloqueado: {exam_id} pregunta {original_number}')
-                if visual_fix:
+                if visual_fix and not (template_verified.get('fromBatch') and visual_fix['verifiedLetter']==visual_letter):
                     raise RuntimeError(f'Corrección visual previa incompatible con plantilla completa: {exam_id} q{original_number}')
                 letter=visual_letter
                 original_letter=visual_letter
@@ -340,8 +340,9 @@ def generate():
         exams.append((meta,local))
         all_rows.extend(local)
     for verified_exam, proof in verified_pdf_keys.items():
-        if verified_pdf_applied[verified_exam]!=100:
-            raise RuntimeError(f'Plantilla PDF visual incompleta: {verified_exam}: {verified_pdf_applied[verified_exam]}')
+        expected_verified=proof.get('verifiedQuestionEnd',100)
+        if verified_pdf_applied[verified_exam]!=expected_verified:
+            raise RuntimeError(f'Plantilla PDF visual incompleta: {verified_exam}: {verified_pdf_applied[verified_exam]} vs {expected_verified}')
         if verified_pdf_bank_matching[verified_exam]!=proof['expectedBankConcordances']:
             raise RuntimeError(f'Concordancias visuales con banco diferentes a lo auditado: {verified_exam}')
         if verified_pdf_bank_conflicts[verified_exam]!=proof.get('expectedBankConflicts',0):
