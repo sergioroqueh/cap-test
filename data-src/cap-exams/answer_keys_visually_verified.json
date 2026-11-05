@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Claves leídas directamente de las imágenes rasterizadas de las plantillas PDF originales. No confundir con extracción automática OCR ni con el banco general.",
+  "exams": {
+    "2025-03-29-mercancias-global": {
+      "sourceFile": "Plantilla Marzo 2025.pdf",
+      "sourcePage": 1,
+      "category": "mercancias",
+      "model": "GLOBAL",
+      "sourcePdfSha256": "ef2729a312160717c732240d9dde37807a459f66e7ec2d86cfc60f1faaeeb70b",
+      "sourceZip": "Respuestas(1).zip",
+      "visualMethod": "lectura_directa_imagen_pdf_a_2x_y_comparacion_independiente_de_85_claves_de_banco",
+      "readDirection": "Cinco columnas consecutivas 1-20,21-40,41-60,61-80,81-100",
+      "correctAnswers": "ADBBDDCDDCCACADDBACDBDCACCDBBBDCBADAAADBDAACCBCACBBDACAADABADCACDCDBACBCCBBBBBDBCCAACACCCCBBBBCCDBAB",
+      "keyDigestSha256": "d6853f32d177394de4de9b358370bafc8197b4ed5906567e741007f0fbfd2b7a",
+      "verifiedOn": "2026-11-05",
+      "expectedBankConcordances": 85,
+      "expectedBankConflicts": 0,
+      "pastTextExtractionCorrections": {
+        "25": "C",
+        "46": "B",
+        "62": "C",
+        "69": "A",
+        "70": "C",
+        "80": "B",
+        "82": "C",
+        "90": "C",
+        "100": "B"
+      },
+      "approval": "lectura_visual_plantilla_original_verificada",
+      "notes": "Se observa el encabezado MERCANCÍAS GLOBAL / MARZO DE 2025. Se cotejaron las 100 casillas. Las 9 anomalías del extractor anterior eran letras mal leídas; las 85 del banco concuerdan. Las 15 sin banco reciben la clave visible en este PDF."
+    }
+  }
+}
