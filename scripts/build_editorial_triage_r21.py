@@ -176,19 +176,23 @@ def main() -> None:
          "El enunciado original pregunta por circulacion sanguinea pero las cuatro opciones tratan riesgos diferentes",
          "Examenes TOTALES.pdf pagina 355, inspeccion visual 05/11/2026; conservar hoja C y banco B")
 
-    # R22: discrepancia técnica independiente de la plantilla. Marcar sin
-    # cambiar la letra A original ni el estado del banco.
+    # R25-4: closed the gearbox terminology issue after looking at question
+    # and original template (Q6=A). Clutch couples/decouples the motor and
+    # gearbox; gearbox passes and modifies torque to the rest of drivetrain.
+    # Among the four choices A is the only valid interpretation. This is
+    # a historical editorial closure, NOT a fourth unresolved P0.
     gearbox = by_id[("2022-11-26-mercancias-global", 6)]
     assert "caja de cambios" in gearbox["question"]
-    assert gearbox["printedAnswer"] == "A"
-    assert gearbox["scoredAnswer"] == "A"
-    mark(gearbox, "dudosa_clave_caja_cambios_frente_dgt", "P0",
-         "La plantilla atribuye a la caja de cambios la función de conectar motor y transmisión, "
-         "pero el Manual VIII de la DGT atribuye el acoplamiento al embrague y a la caja "
-         "la adaptación de la relación de transmisión; no se elige una letra alternativa",
-         "https://sede.dgt.gob.es/.galleries/permisos-de-conducir/"
-         "certificacion-aptitud-profesores-formacion-vial/2022/Manual-VIII-Mecanica-2022.pdf; "
-         "TEMA 7; PDF de examen página 420")
+    assert gearbox["printedAnswer"] == gearbox["scoredAnswer"] == "A"
+    assert gearbox["options"]["A"].startswith("conectar el motor")
+    assert gearbox["options"]["B"].startswith("convertir la velocidad lineal")
+    mark(gearbox, "resuelta_caja_cambios_A_confirmada", "P2",
+         "Revisado el examen y plantilla originales: respuesta A confirmada por "
+         "contexto y descarte de B/C/D. El embrague acopla/desacopla motor-caja; "
+         "la caja de velocidades adapta la relacion y transmite el movimiento. "
+         "Precision terminologica anotada, no contradiccion de plantilla; puntua A",
+         "Examenes TOTALES.pdf pagina 420 y Plantilla Noviembre 2022.pdf q6=A, "
+         "imagenes usuario 05/11/2026; DGT https://www.dgt.es/muevete-con-seguridad/viaja-seguro/en-coche/")
 
     sept = by_id[("2025-09-27-mercancias-global", 1)]
     assert "A bordo de un vehículo que transporta animales" in sept["question"]
