@@ -156,7 +156,7 @@
       "priority": "P1",
       "reason": "Se normaliza AI → Al en una alternativa; literal previo conservado.",
       "sourceUrl": "Examenes TOTALES.pdf",
-      "expectedQuestionFragment": "declaración amistosa de accidente",
+      "expectedQuestionFragment": "Señale la afirmación incorrecta",
       "evidenceType": "CAP_FUENTE_EXTRACTO_NO_IMAGEN_FINAL",
       "expectedSheetAnswer": null,
       "changesAnswer": false,
