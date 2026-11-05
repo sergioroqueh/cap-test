@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import Quiz from './Quiz'
-import { CAP_DURATION_MINUTES, uniqueExamQuestions } from './examEngine.mjs'
+import ConfirmDialog from './ConfirmDialog'
+import { CAP_DURATION_MINUTES, gradeSession, uniqueExamQuestions } from './examEngine.mjs'
 import type { ActiveSession, AnswerKey, BankIndex, Question, QuestionProgress, QuestionnaireMeta, StudySessionRecord, StudySource } from './types'
 import { addSession, clearAllData, clearLocalCache, exportDatabase, getAllProgress, getRecentSessions, importProgress, pushLocalSnapshotToCloud, putProgress, synchronizeAccount } from './db'
 import { cloudConfigured, getSession, signIn, signOut, supabase } from './supabase'
@@ -83,6 +84,7 @@ function CapHome({pm}:{pm:Map<string,QuestionProgress>}){
  const [timed,setTimed]=useState(true)
  const [count,setCount]=useState(100)
  const [showConvocations,setShowConvocations]=useState(false)
+ const [replaceRequest,setReplaceRequest]=useState<{source:'cap-original'|'cap-random'|'cap-mixed'|'cap-errors'|'cap-favorites'|'cap-review';chosen?:CapExamMeta}|null>(null)
  const [working,setWorking]=useState(false)
  const [error,setError]=useState('')
  const [pendingId,setPendingId]=useState('')
@@ -119,10 +121,10 @@ function CapHome({pm}:{pm:Map<string,QuestionProgress>}){
  }
  const showSheetRows=sheetReviewOnlyIssues?sheetReviewRows.filter(q=>q.reviewPriority!=='P4'||!!q.r22Case||!!q.r23Case||!!q.r24Case):sheetReviewRows
  const selectedTriage=editorialTriage?.exams.find(e=>e.examId===sheetReviewId)
- async function begin(source:'cap-original'|'cap-random'|'cap-mixed'|'cap-errors'|'cap-favorites'|'cap-review',chosen?:CapExamMeta){
+ async function begin(source:'cap-original'|'cap-random'|'cap-mixed'|'cap-errors'|'cap-favorites'|'cap-review',chosen?:CapExamMeta,replaceConfirmed=false){
   setError('')
   const existing=localStorage.getItem(ACTIVE)||sessionStorage.getItem(ACTIVE)
-  if(existing&&!confirm('Tienes una sesión guardada. Si comienzas otra se sustituirá. ¿Continuar?'))return
+  if(existing&&!replaceConfirmed){setReplaceRequest({source,chosen});return}
   setWorking(true)
   try{
    let questions:Question[]=[]
@@ -145,8 +147,9 @@ function CapHome({pm}:{pm:Map<string,QuestionProgress>}){
     label='CAP '+(category==='mercancias'?'Mercancías':'Viajeros')+' · '+pretty(meta)
     if(questions.length!==(meta.expectedCount||100))throw new Error('Esta convocatoria aún no reúne sus 100 preguntas originales; se conserva sin iniciar examen.')
    }
-   if(!questions.length)throw new Error(source==='cap-errors'?'No hay errores pendientes de Mercancías.':source==='cap-favorites'?'Todavía no hay preguntas favoritas.':'No hay preguntas con este filtro.')
-   if(real&&questions.length!==100)throw new Error('El simulacro real necesita exactamente 100 preguntas. Selecciona una práctica sin reloj.')
+   if(!questions.length)throw new Error(source==='cap-errors'?'¡Vas bien! No tienes errores pendientes de Mercancías.':source==='cap-favorites'?'Aún no has guardado preguntas favoritas. Pulsa la estrella de una pregunta para añadirla.':'No hay preguntas disponibles para esta selección.')
+   if(real&&questions.length!==100)throw new Error('El simulacro real necesita 100 preguntas. Puedes elegir práctica sin reloj.')
+   if(!questions.every(q=>q.id.startsWith('cap:')&&!!q.examId))throw new Error('Seguridad del banco CAP: se ha bloqueado una pregunta ajena a los exámenes históricos.')
    const session:ActiveSession={type:runMode,source,label,questionIds:questions.map(q=>q.id),
     currentIndex:0,selectedAnswers:{},checkedIds:[],startedAt:Date.now(),
     timed:real,durationMinutes:real?CAP_DURATION_MINUTES:undefined,markedIds:[]}
@@ -175,12 +178,24 @@ function CapHome({pm}:{pm:Map<string,QuestionProgress>}){
      <span>{working?'Preparando…':mode==='study'?'Empezar estudio de 100 preguntas':timed?'Comenzar simulacro real':'Empezar examen sin reloj'}</span><span aria-hidden="true">→</span>
    </button>
    <small>{available.length} convocatorias con plantilla · corrección {mode==='study'?'inmediata':'solo al entregar'}{mode==='exam'&&timed?' · reloj sin pausa':''}</small>
+   {category==='mercancias'&&index?.mercanciasTemplateStats&&<p className="focus-unique-count">
+    <strong>{index.mercanciasTemplateStats.uniqueQuestions.toLocaleString('es-ES')}</strong> preguntas distintas
+    <span>en {index.mercanciasTemplateStats.templateExamModels} exámenes con plantilla ({index.mercanciasTemplateStats.originalAppearances.toLocaleString('es-ES')} apariciones). {index.mercanciasTemplateStats.uniqueScorableQuestions.toLocaleString('es-ES')} distintas aptas para tests mezclados.</span>
+   </p>}
   </section>
   {savedSession&&<section className="focus-resume" role="status">
    <div><strong>Test sin terminar</strong><p>{savedSession.label} · {Object.keys(savedSession.selectedAnswers).length} respuestas guardadas</p></div>
    <button className="btn light" onClick={()=>go('quiz')}>Continuar</button>
   </section>}
-  {error&&<div className="autherror" role="alert">{error}</div>}
+  {error&&<div className="focus-notice" role="alert"><span aria-hidden="true">ⓘ</span><span>{error}</span><button type="button" aria-label="Cerrar aviso" onClick={()=>setError('')}>×</button></div>}
+  {replaceRequest&&<ConfirmDialog
+    title="¿Quieres empezar otro test?"
+    message="Tienes un test guardado. Si empiezas uno nuevo, las respuestas de ese test se sustituirán. Puedes volver al anterior sin perderlas."
+    confirmLabel="Empezar nuevo test"
+    cancelLabel="Conservar mi test"
+    onCancel={()=>setReplaceRequest(null)}
+    onConfirm={()=>{const request=replaceRequest;setReplaceRequest(null);void begin(request.source,request.chosen,true)}}
+  />}
   <section className="focus-practices" aria-labelledby="focus-other">
    <div className="focus-section-heading"><h2 id="focus-other">Otras formas de practicar</h2><p>Elige una convocatoria, combina preguntas o repasa lo que más necesitas.</p></div>
    <div className="focus-practice-grid">
@@ -292,11 +307,15 @@ function Results(){
  useEffect(()=>{if(data)resolveQuestions(data.questionIds).then(setQs).catch(console.error)},[])
  if(!data)return <Loading/>
  const r=data.record
- const capExam=r.capScoring===true&&r.type==='exam'
+ const capResult=r.capScoring===true||r.answers.some(a=>a.questionId.startsWith('cap:'))
+ const capExam=capResult&&r.type==='exam'
+ const capStudy=capResult&&r.type==='study'
  const comparable=capExam&&r.passed!==null&&r.passed!==undefined
- const netLabel=(r.netPoints??0).toLocaleString('es-ES',{maximumFractionDigits:2})
- const resultTitle=capExam?(comparable?(r.passed?'Aprobado':'No aprobado'):'Resultado orientativo'):r.score>=80?'Muy buen resultado':r.score>=60?'Buen intento':'Toca reforzar'
- const resultClass=capExam?(comparable?(r.passed?'good':'bad'):'mid'):(r.score>=80?'good':r.score>=60?'mid':'bad')
+ const rebuilt=gradeSession(r.answers,true)
+ const netPoints=r.netPoints??rebuilt.netPoints
+ const netLabel=netPoints.toLocaleString('es-ES',{maximumFractionDigits:2})
+ const resultTitle=capStudy?'Sesión de estudio terminada':capExam?(comparable?(r.passed?'Aprobado':'No aprobado'):'Resultado orientativo'):r.score>=80?'Muy buen resultado':r.score>=60?'Buen intento':'Toca reforzar'
+ const resultClass=capStudy?'study':capExam?(comparable?(r.passed?'good':'bad'):'mid'):(r.score>=80?'good':r.score>=60?'mid':'bad')
  const questionMap=new Map(qs.map(q=>[q.id,q]))
  const fails=r.answers.filter(a=>a.scoringEligible!==false&&!!a.selected&&!a.correct)
  const unreviewed=r.answers.filter(a=>a.scoringEligible!==false&&!a.selected)
@@ -312,11 +331,12 @@ function Results(){
  return <div className="page">
   <button className="back" onClick={()=>go('home')}>‹ Inicio</button>
   <section className={'result '+resultClass}>
-   <em>{capExam?(comparable?'SIMULACRO CAP · 100 PREGUNTAS VÁLIDAS':'CAP · CALIFICACIÓN ORIENTATIVA'):'RESULTADO'}</em>
-   <strong>{capExam?netLabel+' pt':r.score+'%'}</strong>
+   <em>{capStudy?'ESTUDIO CAP · PUNTOS Y PRECISIÓN':capExam?(comparable?'SIMULACRO CAP · 100 PREGUNTAS VÁLIDAS':'CAP · CALIFICACIÓN ORIENTATIVA'):'RESULTADO'}</em>
+   <strong>{capResult?netLabel+' puntos':r.score+'%'}</strong>
    <h1>{resultTitle}</h1>
    <p>{r.label}</p>
-   {capExam&&<p className="focus-result-explain">+1 por acierto · −0,5 por fallo · 0 en blanco. {r.correct} − {r.incorrect} × 0,5 = {netLabel} puntos.</p>}
+   {capResult&&<p className="focus-result-explain"><b>{r.correct} aciertos × 1 − {r.incorrect} fallos × 0,5 = {netLabel} puntos netos.</b> Las preguntas en blanco valen 0.</p>}
+   {capStudy&&<p className="focus-result-explain">Precisión entre las {r.correct+r.incorrect} respuestas puntuables contestadas: {r.score.toLocaleString('es-ES',{maximumFractionDigits:2})} %. Los puntos netos no equivalen al porcentaje de aciertos.</p>}
    {capExam&&!comparable&&<p className="focus-result-explain">Se han calificado {r.gradedTotal??r.total} de {r.total} enunciados. Las {r.excluded??0} excluidas no penalizan. Equivalencia orientativa sobre 100 preguntas válidas: {r.score.toLocaleString('es-ES',{maximumFractionDigits:2})} puntos. No equivale a una calificación oficial.</p>}
    {capExam&&comparable&&<p className="focus-result-explain">El umbral del simulacro es de 50 puntos netos sobre 100 preguntas válidas.</p>}
    {r.finishedReason==='timeout'&&<p className="focus-result-explain">Tiempo agotado · entrega automática.</p>}
@@ -349,7 +369,7 @@ function Results(){
  </div>
 }
 
-function Stats({bank,rows,stats,sessions}:P){return <div className="page"><em>TU PREPARACIÓN</em><h1>{stats.attempts?stats.acc+'%':'Empieza hoy'}</h1><p>{stats.attempts?'de precisión global':'Tus estadísticas aparecerán aquí.'}</p><div className="statsgrid"><article><small>Vistas</small><b>{stats.seen}</b><span>de {stats.total}</span></article><article><small>Dominadas</small><b>{stats.mastered}</b></article><article><small>Por repasar</small><b>{stats.review}</b></article><article><small>Favoritas</small><b>{stats.fav}</b></article></div><h2>Progreso por cuestionario</h2><div className="progresslist">{bank.questionnaires.map(m=>{const rr=rows.filter(x=>x.questionnaireId===m.section+':'+m.questionnaireId),seen=rr.filter(x=>x.attempts).length;if(!seen)return null;const att=rr.reduce((a,x)=>a+x.attempts,0),cor=rr.reduce((a,x)=>a+x.correct,0);return <div key={m.id}><span><b>{m.questionnaireId}</b> · Sección {m.section}</span><small>{seen}/{m.count} · {percent(cor,att)}%</small><Bar v={percent(seen,m.count)}/></div>})}</div><h2>Últimas sesiones</h2><div className="history">{sessions.slice(0,10).map((s,i)=><div key={i}><span><b>{s.label}</b><small>{s.total} preguntas</small></span><strong>{s.capScoring&&s.type==='exam'?(s.netPoints??s.score).toLocaleString('es-ES',{maximumFractionDigits:2})+' pt':s.score+'%'}</strong></div>)}</div></div>}
+function Stats({bank,rows,stats,sessions}:P){return <div className="page"><em>TU PREPARACIÓN</em><h1>{stats.attempts?stats.acc+'%':'Empieza hoy'}</h1><p>{stats.attempts?'de precisión global':'Tus estadísticas aparecerán aquí.'}</p><div className="statsgrid"><article><small>Vistas</small><b>{stats.seen}</b><span>de {stats.total}</span></article><article><small>Dominadas</small><b>{stats.mastered}</b></article><article><small>Por repasar</small><b>{stats.review}</b></article><article><small>Favoritas</small><b>{stats.fav}</b></article></div><h2>Progreso por cuestionario</h2><div className="progresslist">{bank.questionnaires.map(m=>{const rr=rows.filter(x=>x.questionnaireId===m.section+':'+m.questionnaireId),seen=rr.filter(x=>x.attempts).length;if(!seen)return null;const att=rr.reduce((a,x)=>a+x.attempts,0),cor=rr.reduce((a,x)=>a+x.correct,0);return <div key={m.id}><span><b>{m.questionnaireId}</b> · Sección {m.section}</span><small>{seen}/{m.count} · {percent(cor,att)}%</small><Bar v={percent(seen,m.count)}/></div>})}</div><h2>Últimas sesiones</h2><div className="history">{sessions.slice(0,10).map((s,i)=><div key={i}><span><b>{s.label}</b><small>{s.total} preguntas</small></span><strong>{s.capScoring?(s.netPoints??(s.correct-0.5*s.incorrect)).toLocaleString('es-ES',{maximumFractionDigits:2})+' pt':s.score+'%'}</strong></div>)}</div></div>}
 
 function Settings({theme,setTheme,bank,refresh,userEmail,onSignOut}:{theme:string;setTheme:(s:string)=>void;bank:BankIndex;refresh:()=>Promise<void>;userEmail:string;onSignOut:()=>Promise<void>}){async function backup(){const d=await exportDatabase(),b=new Blob([JSON.stringify(d,null,2)],{type:'application/json'}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download='cap-test-backup.json';a.click();URL.revokeObjectURL(u)}async function restore(e:any){const f=e.target.files?.[0];if(!f)return;const d=JSON.parse(await f.text());if(!Array.isArray(d.progress))return alert('Copia no válida');await importProgress(d.progress);await refresh();alert('Progreso importado')}async function reset(){if(confirm(PREVIEW?'¿Borrar solo los datos de esta versión de pruebas?':'¿Borrar todo el progreso de tu cuenta? Esta acción afectará a todos tus dispositivos.')){await clearAllData();await refresh()}}return <div className="page"><button className="back" onClick={()=>history.back()}>‹ Volver</button><h1>Ajustes</h1><div className="panel account"><small>CUENTA</small><h2>{userEmail}</h2><p>{PREVIEW?'Esta versión guarda el progreso únicamente en este navegador, separado de la aplicación real. No utiliza Supabase.':'Tu progreso está sincronizado con tu cuenta y disponible en cualquier dispositivo donde inicies sesión.'}</p>{!PREVIEW&&<Btn kind="light" onClick={()=>void onSignOut()}>Cerrar sesión</Btn>}</div><div className="panel"><label>Tema</label><div className="segments"><button className={theme==='light'?'on':''} onClick={()=>setTheme('light')}>☀ Claro</button><button className={theme==='dark'?'on':''} onClick={()=>setTheme('dark')}>◐ Oscuro</button></div></div><div className="panel"><h2>Copia de seguridad</h2><p>{PREVIEW?'Los datos de prueba se guardan localmente. Puedes exportarlos como respaldo manual.':'Tu progreso se guarda en tu cuenta. Esta copia sirve como respaldo manual.'}</p><div className="actions"><Btn kind="light" onClick={backup}>↓ Exportar</Btn><label className="btn light">↑ Importar<input type="file" accept=".json" hidden onChange={restore}/></label></div></div><div className="panel"><h2>Banco CAP 2026</h2><p>{bank.totalQuestions.toLocaleString('es-ES')} preguntas · {bank.totalQuestionnaires} cuestionarios · {bank.version}</p></div><div className="panel danger"><h2>Empezar de cero</h2><Btn kind="danger" onClick={reset}>Borrar todo mi progreso</Btn></div></div>}
 

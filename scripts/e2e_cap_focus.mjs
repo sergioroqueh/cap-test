@@ -26,8 +26,12 @@ async function openHome(context){
  return page
 }
 async function submit(page){
- page.once('dialog',dialog=>dialog.accept())
  await page.locator('.focus-quiz-actions button').last().click()
+ const confirm=page.locator('.focus-dialog')
+ if(await confirm.isVisible()){
+   assert.match(await confirm.innerText(),/preguntas en blanco/i)
+   await confirm.locator('.focus-dialog-confirm').click()
+ }
  await page.locator('.result').waitFor({timeout:30000})
 }
 try{
@@ -36,13 +40,46 @@ try{
  const p=await openHome(mobile)
  assert.equal(await p.locator('html').getAttribute('data-theme'),'dark')
  await p.screenshot({path:artifacts+'/mobile-home.png',fullPage:true})
+ await p.locator('.focus-unique-count strong').waitFor({timeout:30000})
+ const displayedUnique=await p.locator('.focus-unique-count').innerText()
+ assert.match(displayedUnique,/\d+[\s.]?\d* preguntas distintas/i,'homepage must show the number of distinct historical questions')
  await p.locator('.focus-practice-grid button').filter({hasText:'Examen mezclado'}).click()
  await p.locator('.focus-question').waitFor({timeout:30000})
  const original=await readSession(p)
  assert.equal(original.questionIds.length,100,'mixed exam should contain 100 questions')
+ assert.ok(original.questionIds.every(id=>id.startsWith('cap:')),'CAP modes must not load bank questionnaire IDs')
+ const available=await p.evaluate(async()=>{
+  const index=await fetch('./data/exams/index.json').then(r=>r.json())
+  const metas=index.exams.filter(e=>e.category==='mercancias'&&e.hasOriginalAnswerSheet)
+  const rows=(await Promise.all(metas.map(async meta=>fetch('./'+meta.path).then(r=>r.json())))).flat()
+  const countUnique=questions=>{
+    const ids=new Set(), texts=new Set()
+    for(const q of questions){
+      const id=q.canonicalQuestionId||q.id
+      const text=q.question.normalize('NFKC').toLocaleLowerCase('es').replace(/\s+/g,' ').replace(/[¿?¡!.,;:()[\]{}]/g,'').trim()
+      if(ids.has(id)||texts.has(text))continue
+      ids.add(id);texts.add(text)
+    }
+    return ids.size
+  }
+  return {stats:index.mercanciasTemplateStats,metas,manualCount:countUnique(rows),manualScorable:countUnique(rows.filter(q=>q.scoringEligible))}
+ })
+ assert.equal(available.stats.templateExamModels,22)
+ assert.equal(available.stats.originalAppearances,2200)
+ assert.equal(available.stats.scorableAppearances,2197)
+ assert.equal(available.metas.length,22)
+ assert.equal(available.stats.uniqueQuestions,available.manualCount)
+ assert.equal(available.stats.uniqueScorableQuestions,available.manualScorable)
+ assert.equal(Number(displayedUnique.match(/[0-9.]+/)?.[0].replaceAll('.','')),available.stats.uniqueQuestions)
+ assert.ok(available.stats.uniqueScorableQuestions >= 100)
+ assert.ok(available.stats.uniqueQuestions>=available.stats.uniqueScorableQuestions)
+ assert.ok(available.stats.uniqueQuestions<=2200)
  assert.equal(new Set(original.questionIds).size,100,'mixed exam must not duplicate ids')
  assert.equal(original.timed,true,'real exam needs a running clock')
  assert.equal(original.durationMinutes,120)
+ assert.match(await p.locator('.focus-frequency').innerText(),/Aparece en [0-9]+ de [0-9]+ exámenes \([0-9]+ %\)/i)
+ assert.equal(await p.locator('.focus-provenance').count(),0)
+ assert.match(await p.locator('.focus-mark-help').innerText(),/Revisar.*test.*Favorita.*repasos/i)
  await p.locator('.answers button').first().click()
  assert.match(await p.locator('.focus-question>small').innerText(),/pregunta 2 de 100/i,'exam should auto-advance without revealing the solution')
  assert.equal(await p.locator('.feedback').count(),0,'exam mode must not show correction before submitting')
@@ -69,6 +106,7 @@ try{
  const result=await readResult(p)
  assert.equal(result.record.total,100)
  assert.equal(result.record.answered,2)
+ assert.match(await p.locator('.result strong').innerText(),/puntos/i)
  assert.equal(result.record.timed,true)
  assert.equal(result.record.finishedReason,'manual')
  assert.equal(await readSession(p),null,'completed test must clear active data')
@@ -117,6 +155,22 @@ try{
  checks++
  await historicContext.close()
 
+ // Replacement of a saved CAP session uses a friendly modal, not native browser confirms.
+ const modalContext=await browser.newContext({viewport:{width:390,height:844},isMobile:true})
+ const modalPage=await openHome(modalContext)
+ modalPage.on('dialog',dialog=>{throw new Error('Unexpected native dialog: '+dialog.message())})
+ await modalPage.locator('.focus-primary').click()
+ await modalPage.locator('.focus-question').waitFor()
+ await modalPage.locator('.focus-quiz-head button').first().click()
+ await modalPage.locator('.focus-practice-grid button').filter({hasText:'Examen mezclado'}).click()
+ await modalPage.locator('.focus-dialog').waitFor()
+ assert.match(await modalPage.locator('.focus-dialog').innerText(),/test guardado/i)
+ await modalPage.locator('.focus-dialog-actions button').first().click()
+ assert.equal(await modalPage.locator('.focus-dialog').count(),0)
+ assert.ok(await readSession(modalPage),'cancel must preserve saved CAP test')
+ checks++
+ await modalContext.close()
+
  // Desktop: two-column practice choices, study feedback, light theme preference.
  const desktopContext=await browser.newContext({viewport:{width:1440,height:900},deviceScaleFactor:1})
  const d=await openHome(desktopContext)
@@ -132,9 +186,27 @@ try{
  await d.locator('.focus-choice button').filter({hasText:'Estudio'}).click()
  await d.locator('.focus-primary').click()
  await d.locator('.focus-question').waitFor({timeout:30000})
- await d.locator('.answers button').first().click()
+ const sourceQuestions=await d.evaluate(async()=>{
+  const saved=JSON.parse(localStorage.getItem('cap-test-beta-active-v1'))
+  const examId=saved.questionIds[0].split(':')[1]
+  const index=await fetch('./data/exams/index.json').then(r=>r.json())
+  return fetch('./'+index.exams.find(x=>x.id===examId).path).then(r=>r.json())
+ })
+ const right=sourceQuestions[0].correctAnswer
+ const wrong=['A','B','C','D'].find(x=>x!==sourceQuestions[1].correctAnswer)
+ assert.ok(right&&wrong)
+ await d.locator('.answers button').nth(['A','B','C','D'].indexOf(right)).click()
+ await d.locator('.feedback').waitFor()
+ assert.match(await d.locator('.focus-frequency').innerText(),/[0-9]+ %/)
+ await d.locator('.focus-quiz-actions button').nth(1).click()
+ await d.locator('.answers button').nth(['A','B','C','D'].indexOf(wrong)).click()
  await d.locator('.feedback').waitFor()
  await d.screenshot({path:artifacts+'/desktop-study.png',fullPage:true})
+ await d.locator('.focus-quiz-actions button').last().click()
+ await d.locator('.result').waitFor()
+ assert.match(await d.locator('.result strong').innerText(),/0,5 puntos/i,'study points must be net CAP points')
+ assert.match(await d.locator('.result').innerText(),/Precisión entre las 2 respuestas[^\n]*50/i)
+ await d.screenshot({path:artifacts+'/desktop-study-result.png',fullPage:true})
  await d.locator('header .gear').click()
  await d.locator('.panel').filter({hasText:'Tema'}).getByRole('button',{name:/Claro/}).click()
  await d.reload()
