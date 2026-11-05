@@ -110,7 +110,7 @@ function CapHome(){
   catch(e){setError(e instanceof Error?e.message:String(e))}
   finally{setSheetReviewBusy(false)}
  }
- const showSheetRows=sheetReviewOnlyIssues?sheetReviewRows.filter(q=>q.reviewPriority!=='P4'||!!q.r22Case):sheetReviewRows
+ const showSheetRows=sheetReviewOnlyIssues?sheetReviewRows.filter(q=>q.reviewPriority!=='P4'||!!q.r22Case||!!q.r23Case):sheetReviewRows
  const selectedTriage=editorialTriage?.exams.find(e=>e.examId===sheetReviewId)
  async function begin(source:'cap-original'|'cap-random'|'cap-mixed',chosen?:CapExamMeta){
   setError('');setWorking(true)
@@ -166,19 +166,21 @@ function CapHome(){
    <Btn kind="light" disabled={!sheetReviewId||sheetReviewBusy} onClick={()=>void showSheetReview()}>{sheetReviewBusy?'Leyendo…':'Auditar las 100 preguntas'}</Btn>
    <p><a className="btn light" href={import.meta.env.BASE_URL+'data/exams/editorial_triage_r21.csv'} download="CAP_R21_2600_marcas_editoriales.csv">Exportar las 2.600 preguntas y sus marcas (CSV)</a></p>
    <p><a className="btn light" href={import.meta.env.BASE_URL+'data/exams/editorial_casebook_r22.csv'} download="CAP_R22_revision_306_casos.csv">Exportar expediente R22: 300 preguntas + 6 reconstrucciones (CSV)</a></p>
+   <p><a className="btn light" href={import.meta.env.BASE_URL+'data/exams/editorial_casebook_r23.csv'} download="CAP_R23_revision_1000_preguntas.csv">Exportar R23: 10 modelos de 2025–2026 · 1.000 preguntas (CSV)</a></p>
    <p><a className="btn light" href={import.meta.env.BASE_URL+'data/exams/sheet_audit_2200.csv'} download="CAP_2200_respuestas_plantillas_revision.csv">CSV de las 2.200 respuestas impresas</a></p>
    {sheetReviewShown&&<div className="cap-pending-results">
-    <strong>{sheetReviewRows.length} preguntas · {sheetReviewRows.filter(q=>!q.scoringEligible).length} sin puntuación · {sheetReviewRows.filter(q=>q.reviewPriority!=='P4'||!!q.r22Case).length} con alguna marca o decisión editorial</strong>
+    <strong>{sheetReviewRows.length} preguntas · {sheetReviewRows.filter(q=>!q.scoringEligible).length} sin puntuación · {sheetReviewRows.filter(q=>q.reviewPriority!=='P4'||!!q.r22Case||!!q.r23Case).length} con alguna marca o decisión editorial</strong>
     {selectedTriage&&<p className="cap-triage-summary"><b>Prioridad:</b> P0 {selectedTriage.P0} · P1 {selectedTriage.P1} · P2 {selectedTriage.P2} · P3 {selectedTriage.P3} · sin alertas P4 {selectedTriage.P4}. Texto con revisión pendiente: {selectedTriage.pendingVisualTranscription}.</p>}
     <label><input type="checkbox" checked={sheetReviewOnlyIssues} onChange={e=>setSheetReviewOnlyIssues(e.target.checked)}/> Mostrar solo preguntas marcadas para revisión (P0–P3)</label>
     <p>{showSheetRows.length} preguntas visibles. Abre cada fila para contrastar las cuatro opciones.</p>
     {showSheetRows.map(q=><details className="cap-pending-item" key={q.number}>
-     <summary>Pregunta {q.number} · página {q.sourcePage} · {q.r22Case?.status==='DUDOSA_TECNICA_FRENTE_DGT'?'DUDOSA ·':q.r22Case?.status==='TEXTO_CONTRASTADO_FUENTE_PUBLICA'?'TEXTO CONTRASTADO ·':''} {q.reviewPriority!=='P4'?q.reviewPriority+' · COTEJAR':'sin alertas automáticas'} · plantilla: {q.originalSheetAnswer||'—'}{!q.scoringEligible?' · SIN PUNTUAR':''}{q.originalSheetAnswer&&q.mappedSheetQuestionNumber!==q.originalSheetQuestionNumber?' · ajuste de numeración':''}</summary>
+     <summary>Pregunta {q.number} · página {q.sourcePage} · {q.r23Case?.priority==='P0'?'R23 PRIORIDAD ALTA ·':q.r23Case?.status==='LECTURA_EXTERNA_NO_VERIFICADA_DISCREPA'?'R23 LECTURAS DIVERGENTES ·':q.r22Case?.status==='DUDOSA_TECNICA_FRENTE_DGT'?'DUDOSA ·':q.r22Case?.status==='TEXTO_CONTRASTADO_FUENTE_PUBLICA'?'TEXTO CONTRASTADO ·':''} {q.reviewPriority!=='P4'?q.reviewPriority+' · COTEJAR':'sin alertas automáticas'} · plantilla: {q.originalSheetAnswer||'—'}{!q.scoringEligible?' · SIN PUNTUAR':''}{q.originalSheetAnswer&&q.mappedSheetQuestionNumber!==q.originalSheetQuestionNumber?' · ajuste de numeración':''}</summary>
      <p>{q.question}</p>
      <ol type="A">{keys.map(k=><li key={k}>{q.options[k]}</li>)}</ol>
      {q.reviewFlags.length>0&&<div className="cap-editorial-flags"><b>Marcas de revisión (no corrigen claves):</b>{q.reviewFlags.map(f=><p key={f.code}><strong>{f.priority} · {f.code.replaceAll('_',' ')}</strong> — {f.description}. <small>{f.evidence}</small></p>)}</div>}
      {q.textReviewRequired&&<small>La transcripción del texto sigue pendiente de cotejo editorial con la imagen fuente.</small>}
      {q.r22Case&&<div className="cap-r22-case"><b>R22 · {q.r22Case.status.replaceAll('_',' ')}</b><p>{q.r22Case.explanation}</p><small>Procedencia: {q.r22Case.source}</small></div>}
+     {q.r23Case&&<div className="cap-r23-case"><b>R23 · {q.r23Case.status.replaceAll('_',' ')}</b><p>{q.r23Case.reason}</p>{q.r23Case.unverifiedTextExtractionLetter&&<p><strong>Lectura textual no verificada:</strong> {q.r23Case.unverifiedTextExtractionLetter} · <strong>Hoja original verificada:</strong> {q.r23Case.visuallyVerifiedOriginalSheetLetter}. La lectura alternativa no sustituye la clave oficial.</p>}<small>Evidencia: {q.r23Case.evidenceType}{q.r23Case.sourceUrl?' · '+q.r23Case.sourceUrl:''}. No cambia puntuación.</small></div>}
      {q.r22TextCorrection&&<details className="cap-r22-original"><summary>Texto de origen conservado · corrección R22</summary><p><b>Antes:</b> {q.r22TextCorrection.originalQuestion}</p><ol type="A">{keys.map(k=><li key={k}>{q.r22TextCorrection?.originalOptions[k]}</li>)}</ol><small>{q.r22TextCorrection.reviewStatus.replaceAll('_',' ')}</small></details>}
      <p><b>Hoja original:</b> {q.originalSheetAnswer?'nº '+q.originalSheetQuestionNumber+' = '+q.originalSheetAnswer+' · '+q.originalSheetSourceFile:'No existe plantilla original para esta convocatoria'}</p>
      {q.originalSheetAnswer&&q.mappedSheetQuestionNumber!==q.originalSheetQuestionNumber&&<p><b>Correspondencia editorial:</b> fila {q.mappedSheetQuestionNumber||'sin asignar'} = {q.mappedSheetAnswer||'—'}. La hoja original no se modifica.</p>}
