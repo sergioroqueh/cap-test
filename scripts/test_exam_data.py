@@ -681,3 +681,57 @@ assert march23[86]['originalSheetAnswer']==march23[86]['correctAnswer']=='B'
 print('PASS R24 FINAL COVERAGE: 23 modelos / 2300 en expedientes, '
       '3 modelos / 300 aplazados, 2200 letras originales, '
       '2417 puntuables, 18 incidencias R24 y 0 cambios de clave')
+
+
+# R25-3: close three editorial decisions WITHOUT changing original CAP keys.
+decisions25 = json.loads(
+    (root/'exams'/'editorial_decisions_r25_three.json').read_text(encoding='utf-8'))
+assert decisions25['schemaVersion']==1 and decisions25['round']=='R25-3'
+assert decisions25['caseCount']==decisions25['reviewCompletedCount']==3
+assert decisions25['editorialTechnicalAnswers']==2
+assert decisions25['editoriallyInvalidatedCount']==1
+assert decisions25['scoringChanges']==0
+assert decisions25['officialErrataConfirmed'] is False
+assert decisions25['printedOriginalLettersPreserved']==2200
+assert decisions25['scoringEligibleAllExams']==2417
+assert decisions25['originalDisputesStillUnscored']==3
+keys25={
+ ('2025-07-26-mercancias-a',43):('A','B','B'),
+ ('2026-02-07-mercancias-global',61):('A','C','C'),
+ ('2026-03-28-mercancias-global',43):('C','B',None)
+}
+assert len(decisions25['cases'])==3
+assert {(c['examId'],c['number']) for c in decisions25['cases']}==set(keys25)
+for c in decisions25['cases']:
+    exam_id,n=c['examId'],c['number']
+    arr=json.loads((root/'exams'/'questions'/f'{exam_id}.json').read_text(encoding='utf-8'))
+    q=arr[n-1]
+    sheet,bank,editorial=keys25[(exam_id,n)]
+    assert q['number']==n and q['originalSheetAnswer']==sheet and q['bankAnswer']==bank
+    assert q['correctAnswer'] is None and q['scoringEligible'] is False
+    assert q['answerDispute']['pdfAnswer']==sheet
+    assert q['answerDispute']['bankAnswer']==bank
+    d=q['editorialDecision']
+    assert d['reviewCompleted'] is True and d['officialCorrectionConfirmed'] is False
+    assert d['editorialAnswer']==editorial
+    assert d['scoringPolicy']=='NO_PUNTUA'
+    assert d['originalSheetAnswer']==sheet and d['bankAnswer']==bank
+    assert len(d['sources'])>=2
+    assert d['status']==c['status']
+    assert d['reason']==c['reason']
+assert not any(
+    'editorialDecision' in row
+    for exam_id in [
+        '2022-11-26-mercancias-global','2023-07-29-mercancias-a',
+        '2025-09-27-mercancias-global'
+    ]
+    for row in json.loads((root/'exams'/'questions'/f'{exam_id}.json').read_text(encoding='utf-8'))
+)
+with (root/'exams'/'editorial_decisions_r25_three.csv').open(
+        encoding='utf-8-sig', newline='') as fh:
+    r25csv=list(csv.DictReader(fh))
+assert len(r25csv)==3
+assert all(x['scoringEligible']=='NO' and x['officialErrataVerified']=='NO' for x in r25csv)
+assert [x['editorialTechnicalLetter'] for x in r25csv]==['B','C','']
+print('PASS R25-3: tres conflictos cerrados documentalmente, dos letras tecnicas orientativas, '
+      'una anulacion editorial; cero puntuaciones y claves oficiales alteradas')
