@@ -116,14 +116,14 @@ def main() -> None:
                 proof = q["textCorrection"]
                 assert proof["answerKeysChanged"] is False
                 assert proof["sourcePage"] == q["sourcePage"]
-                source = proof.get("sourceOfficialPdf") or proof.get("sourceOriginalExam")
+                source_reference = proof.get("sourceOfficialPdf") or proof.get("sourceOriginalExam")
                 if eid == "2025-09-27-mercancias-global":
-                    assert source.startswith("https://www.castillalamancha.es/")
+                    assert source_reference.startswith("https://www.castillalamancha.es/")
                 else:
-                    assert source == "Examenes TOTALES.pdf"
+                    assert source_reference == "Examenes TOTALES.pdf"
                 mark(item, "texto_pdf_normalizado_r22", "P1",
                      "Texto de examen restaurado para lectura, con original conservado; pendiente cotejo visual individual",
-                     f"Fuente {source} pagina {q['sourcePage']}; "
+                     f"Fuente {source_reference} pagina {q['sourcePage']}; "
                      f"opciones afectadas {','.join(proof['changedOptions']) or 'ninguna'}")
             if q.get("transcriptionReview"):
                 # Etiqueta informativa: evita tratar centenares de preguntas OCR como malas.
