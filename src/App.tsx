@@ -235,8 +235,9 @@ function Results(){
  if(!data)return <Loading/>
  const r=data.record
  const questionMap=new Map(qs.map(q=>[q.id,q]))
- const fails=r.answers.filter(a=>!!a.selected&&!a.correct)
- const unreviewed=r.answers.filter(a=>!a.selected)
+ const fails=r.answers.filter(a=>a.scoringEligible!==false&&!!a.selected&&!a.correct)
+ const unreviewed=r.answers.filter(a=>a.scoringEligible!==false&&!a.selected)
+ const unscored=r.answers.filter(a=>a.scoringEligible===false)
  const visible=showAll?r.answers:fails
  async function review(){
   if(!fails.length)return
@@ -255,23 +256,24 @@ function Results(){
   <div className="metrics">
    <article><b>{r.correct}</b><span>Correctas</span></article>
    <article><b>{r.incorrect}</b><span>Fallos</span></article>
-   <article><b>{unreviewed.length}</b><span>Sin responder</span></article>
+   <article><b>{unreviewed.length}</b><span>Sin responder</span></article>{unscored.length>0&&<article><b>{unscored.length}</b><span>En revisión · sin puntuar</span></article>}
   </div>
   {fails.length>0&&<Btn onClick={()=>void review()}>Repasar {fails.length} fallos</Btn>}
   <h2>Corrección de respuestas</h2>
-  <p className="note">En examen puedes comprobar aciertos, fallos y preguntas sin responder. Las preguntas sin responder no se registran como fallos en tu progreso.</p>
+  <p className="note">En examen puedes comprobar aciertos, fallos y preguntas sin responder. Las preguntas sin responder no se registran como fallos en tu progreso.{unscored.length>0?' Las '+unscored.length+' preguntas con respuestas contradictorias se excluyeron del cálculo y del historial de fallos.':''}</p>
   <Btn kind="light" onClick={()=>setShowAll(v=>!v)}>{showAll?'Ver solo fallos':'Ver todas las respuestas ('+r.answers.length+')'}</Btn>
   <div className="review">
    {visible.length===0&&!showAll&&<p>No hay respuestas incorrectas.</p>}
    {visible.map((answer)=>{
     const q=questionMap.get(answer.questionId)
     if(!q)return null
-    const status=!answer.selected?'Sin responder':answer.correct?'Correcta':'Incorrecta'
+    const status=answer.scoringEligible===false?'En revisión · sin puntuar':!answer.selected?'Sin responder':answer.correct?'Correcta':'Incorrecta'
     return <article key={answer.questionId} className={answer.correct?'cap-review-correct':''}>
      <b>{showAll?'Pregunta '+(r.answers.indexOf(answer)+1)+' · ':''}{q.question}</b>
      <p><strong>{status}</strong> · Tu respuesta: {answer.selected?answer.selected+' · '+q.options[answer.selected]:'—'}</p>
-     <p className="green">Solución: {q.correctAnswer} · {q.options[q.correctAnswer]}</p>
-     {q.reviewRequired&&<small>Solución procedente del cotejo; pendiente de revisión editorial.</small>}
+     {answer.scoringEligible===false
+       ?<><p>Plantilla original: <b>{q.originalSheetAnswer||'—'}</b> · Banco: <b>{q.bankAnswer||'—'}</b></p><small>No hay solución aprobada todavía. Esta pregunta no se ha calificado.</small></>
+       :<><p className="green">Solución aplicada: {q.correctAnswer} · {q.options[q.correctAnswer]}</p>{q.reviewRequired&&<small>Solución procedente del cotejo; algunas transcripciones requieren revisión editorial.</small>}</>}
     </article>
    })}
   </div>
