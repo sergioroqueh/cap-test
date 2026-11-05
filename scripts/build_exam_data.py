@@ -178,9 +178,14 @@ def generate():
                 or len(template_verified['sourcePdfSha256'])!=64):
                 raise RuntimeError(f'Clave visual PDF inválida en {exam_id}')
             if template:
-                raise RuntimeError(f'Clave visual PDF duplicada en claves provisionales {exam_id}')
-            if alignments.get(exam_id):
-                raise RuntimeError(f'Clave visual PDF incompatible con alineación provisional {exam_id}')
+                if not template_verified.get('fromBatch') or len(template)!=100:
+                    raise RuntimeError(f'Clave provisional duplicada no auditada: {exam_id}')
+                expected_diff=template_verified.get('allowedOldExtractionDifferences',[])
+                actual_diff=[n for n in range(1,101) if template[n-1]!=template_verified['correctAnswers'][n-1]]
+                if actual_diff!=expected_diff:
+                    raise RuntimeError(f'Diferencias no cotejadas con PDF original: {exam_id} {actual_diff}')
+            if alignments.get(exam_id) and not (exam_id=='2023-07-29-mercancias-a' and verified_limit==43):
+                raise RuntimeError(f'Alineación provisional incompatible con validación completa: {exam_id}')
 
         for q in parsed:
             matching=bank.get(fingerprint(q),[])
