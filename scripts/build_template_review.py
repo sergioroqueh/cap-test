@@ -40,6 +40,9 @@ def main():
                                 - proof.get('expectedPreviouslyScoredExternal',0)
                                 + proof.get('expectedPreviouslyUnscoredConflicts',0)
                                 for proof in verified.values())
+    editorial = json.loads((SRC / 'editorial_alignment_verified_2023_a.json').read_text(encoding='utf-8'))['approvals']
+    if len(editorial)!=13: raise AssertionError('No se han certificado exactamente 13 respuestas por cotejo editorial')
+    newly_certified_count += len(editorial)
     if len(by_id) != len(indexed):
         raise AssertionError("Desfase entre manifiesto e índice")
     with_template, without_template = [], []
