@@ -971,9 +971,38 @@ def generate():
     print('AUDIT cross-model pending:',pending_total,'unscored,',
           len(cross_model_queue),'exact repetitions,',cross_summary)
 
+    # Exactly the 22 score-keyed historical Mercancías models available in the CAP UI.
+    # The general question bank is consulted for provenance, NEVER as a source of these counts.
+    template_exam_ids={entry['id'] for entry in index if
+                       entry['category']=='mercancias' and entry['hasOriginalAnswerSheet']}
+    template_rows=[row for row in all_rows if row['examId'] in template_exam_ids]
+    def count_unique_cap(items):
+        ids=set()
+        texts=set()
+        count=0
+        for row in items:
+            identity=row['canonicalQuestionId'] or row['id']
+            question=unicodedata.normalize('NFKC',row['question']).lower()
+            question=re.sub(r'[¿?¡!.,;:()\\[\\]{}]','',re.sub(r'\\s+',' ',question)).strip()
+            if identity in ids or question in texts:
+                continue
+            ids.add(identity)
+            texts.add(question)
+            count+=1
+        return count
+    cap_stats={
+      'templateExamModels':len(template_exam_ids),
+      'originalAppearances':len(template_rows),
+      'uniqueQuestions':count_unique_cap(template_rows),
+      'scorableAppearances':sum(q['correctAnswer'] in 'ABCD' if q['correctAnswer'] else False for q in template_rows),
+      'uniqueScorableQuestions':count_unique_cap([q for q in template_rows if q['correctAnswer'] in ('A','B','C','D')])
+    }
+    if cap_stats['templateExamModels'] != 22 or cap_stats['originalAppearances'] != 2200 or cap_stats['scorableAppearances'] != 2197:
+        raise RuntimeError(f'Modelos CAP con plantilla inesperados: {cap_stats}')
+    print('AUDIT Mercancías template-only unique count:',cap_stats)
     (OUT/'index.json').write_text(json.dumps({
       'version':'2026-11-04-auditoria','totalExamModels':len(index),'totalImportedQuestions':len(all_rows),
-      'categoryCounts':dict(denomination),'exams':index,'answerStatuses':dict(statuses),'warnings':warnings,
+      'categoryCounts':dict(denomination),'exams':index,'mercanciasTemplateStats':cap_stats,'answerStatuses':dict(statuses),'warnings':warnings,
       'frequencyExplanation':'Apariciones por modelo de examen transcrito, nunca una predicción de la siguiente prueba.'
     },ensure_ascii=False,indent=2),encoding='utf-8')
     print(f"CAP audit: {len(index)} examenes, {len(all_rows)} preguntas, {dict(statuses)}, pendientes {len(warnings)}")

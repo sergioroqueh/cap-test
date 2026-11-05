@@ -24,6 +24,14 @@ export interface CapExamIndex {
   totalExamModels: number
   totalImportedQuestions: number
   categoryCounts: Partial<Record<CapCategory, number>>
+  /** Counted solely from the 22 keyed Mercancías historical exam JSON files. */
+  mercanciasTemplateStats: {
+    templateExamModels: number
+    originalAppearances: number
+    uniqueQuestions: number
+    scorableAppearances: number
+    uniqueScorableQuestions: number
+  }
   exams: CapExamMeta[]
 }
 export interface CapQuestion extends Question {
@@ -286,7 +294,7 @@ export async function loadCapPendingQuestions(meta: CapExamMeta): Promise<CapPen
 export async function loadCapByIds(ids: string[]): Promise<Map<string, CapQuestion>> {
   const index = await loadCapIndex()
   const examIds = [...new Set(ids.map(id => /^cap:([^:]+):\d+$/.exec(id)?.[1]).filter((s): s is string => !!s))]
-  const metas = index.exams.filter(e => examIds.includes(e.id))
+  const metas = index.exams.filter(e => examIds.includes(e.id) && e.category === 'mercancias' && e.hasOriginalAnswerSheet)
   const batches = await Promise.all(metas.map(loadCapQuestions))
   return new Map(batches.flat().map(q => [q.id, q]))
 }
