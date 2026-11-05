@@ -37,7 +37,7 @@ jobs:
       - name: Package beta preview files (not deployed)
         uses: actions/upload-artifact@v4
         with:
-          name: cap-test-r23-preview-build
+          name: cap-test-r24-preview-build
           path: dist/
           retention-days: 14
 
