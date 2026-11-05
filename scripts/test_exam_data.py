@@ -484,3 +484,44 @@ assert all('correctAnswer' not in h for h in hints), 'Una sugerencia no puede co
 assert all(1<=h['candidateRank']<=3 for h in hints)
 print(f"PASS CAP: {len(exams)} modelos, {index['totalImportedQuestions']} preguntas, {len(freq)} preguntas enlazadas al banco")
 print(f"PASS sugerencias editoriales, nunca claves: {len(hints)}")
+
+# R21: auditoria editorial global, separada de las claves, paginada por convocatoria.
+triage = json.loads((root/'exams'/'editorial_triage_r21.json').read_text(encoding='utf-8'))
+assert triage['totalQuestions']==2600 and triage['totalExams']==26
+assert triage['printedAnswers']==2200 and triage['scoredBeforeAfter']==2417
+assert triage['sourceKeyChanges']==0
+assert len(triage['exams'])==len(exams)==26
+assert set(triage['questions'])=={e['id'] for e in exams}
+all_review_rows=[]
+for exam in exams:
+    records=triage['questions'][exam['id']]
+    assert len(records)==100 and [r['number'] for r in records]==list(range(1,101))
+    source_rows=json.loads((root/'exams'/'questions'/f"{exam['id']}.json").read_text())
+    for q,review in zip(source_rows,records):
+        assert review['number']==q['number']
+        assert review['sourcePage']==q['sourcePage']
+        assert review['priority'] in ('P0','P1','P2','P3','P4')
+        assert review['textReviewRequired'] is bool(q.get('transcriptionReview'))
+        assert len({f['code'] for f in review['flags']})==len(review['flags'])
+        assert all(f['sourceStatus']=='AVISO_DE_REVISION_NO_MODIFICA_RESPUESTA'
+                   for f in review['flags'])
+        assert all('correctAnswer' not in flag for flag in review['flags'])
+        if q['answerDispute']:
+            assert review['priority']=='P0'
+            assert any(f['code']=='conflicto_clave_bloqueada' for f in review['flags'])
+            assert q['correctAnswer'] is None
+        all_review_rows.append(review)
+assert len(all_review_rows)==2600
+with (root/'exams'/'editorial_triage_r21.csv').open(encoding='utf-8-sig',newline='') as fh:
+    export=list(csv.DictReader(fh))
+assert len(export)==2600 and len({(r['examId'],r['questionNumber']) for r in export})==2600
+assert triage['flagCounts']['conflicto_clave_bloqueada']==3
+assert triage['flagCounts']['desfase_numeracion_plantilla']==57
+assert triage['flagCounts']['sin_clave_plantilla_ausente']==180
+assert triage['flagCounts']['opcion_reconstruida_extractor_pdf']==6
+assert triage['repeatedSheetAnswerConflictGroups']==0
+assert any(f['code']=='enunciado_fuente_incoherente' for f in
+           triage['questions']['2026-03-28-mercancias-global'][42]['flags'])
+assert any(f['code']=='cotejo_visual_glifos_septiembre_2025' for f in
+           triage['questions']['2025-09-27-mercancias-global'][0]['flags'])
+print('PASS R21 26 exámenes y 2600 filas de auditoría, sin cambio de claves')
