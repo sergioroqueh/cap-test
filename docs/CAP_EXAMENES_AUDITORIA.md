@@ -29,6 +29,16 @@ El apartado siguiente conserva el historial de hitos y cifras de rondas anterior
   provisional, corrección visual pendiente o conflicto explícito con el banco.
   Si aparecen claves contradictorias entre modelos, se registran como
   **contradicción bloqueada**, nunca se vota por mayoría.
+- **Resultado CI medido:** 147 apariciones pendientes tienen una repetición
+  exacta en otro examen. De estas, **9** están respaldadas por plantillas
+  de al menos dos modelos independientes, **89** por la plantilla de otro
+  modelo y **49** no tienen plantilla comparable. No se han detectado
+  contradicciones entre las plantillas comparables de este subconjunto.
+  Estas cifras reflejan **apariciones** (no preguntas únicas) y son
+  pistas editoriales; las **685 pendientes** siguen sin puntuarse.
+- Pruebas de invariantes **PASS** para esta auditoría y el banco completo,
+  [GitHub Actions #41992610729](https://github.com/sergioroqueh/cap-test/actions/runs/41992610729);
+  Vercel Preview READY del commit e52f882 (entorno aislado).
 - Salidas reproducibles: public/data/exams/cross_model_pending_review.json
   (incluye evidencia por modelo) y el CSV homónimo (priorización editorial).
   Se adjuntan también al artefacto cap-exam-review de GitHub Actions.
