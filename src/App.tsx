@@ -5,7 +5,7 @@ import { cloudConfigured, getSession, signIn, signOut, supabase } from './supaba
 import type { Session } from '@supabase/supabase-js'
 import { loadAllQuestions, loadBankIndex, loadQuestionnaire, resolveQuestions } from './data'
 import { chooseSmartQuestions, getStatus, needsReview, percent, shuffle } from './utils'
-import { loadCapIndex, loadCapQuestions, loadAllCapQuestions, loadBankExamFrequency, loadCapPendingQuestions, loadCapSheetReview, loadCapEditorialTriage, type CapEditorialTriage, type CapSheetReviewQuestion, type CapPendingQuestion, type CapCategory, type CapExamMeta, type CapExamIndex } from './capExams'
+import { loadCapIndex, loadCapQuestions, loadAllCapQuestions, loadBankExamFrequency, loadCapPendingQuestions, loadCapSheetReview, loadCapEditorialTriage, type CapEditorialTriage, type CapSheetReviewQuestion, type CapPendingQuestion, type CapCategory, type CapExamMeta, type CapExamIndex, type CapEditorialDecision } from './capExams'
 
 const PREVIEW=import.meta.env.VITE_CAP_PREVIEW === 'true'
 const ACTIVE=PREVIEW?'cap-test-beta-active-v1':'cap-test-active-v1',
@@ -71,6 +71,9 @@ function CapApp({userEmail,onSignOut}:{userEmail:string;onSignOut:()=>Promise<vo
 
 type P={bank:BankIndex;rows:QuestionProgress[];pm:Map<string,QuestionProgress>;stats:any;sessions:StudySessionRecord[];start:(t:'study'|'exam',s:StudySource,c:number,l:string,m?:QuestionnaireMeta)=>Promise<void>}
 
+
+const capDecision = (q:Question):CapEditorialDecision|null =>
+ (q as Question & {editorialDecision?:CapEditorialDecision}).editorialDecision || null
 
 function CapHome(){
  const [index,setIndex]=useState<CapExamIndex|null>(null)
@@ -169,6 +172,7 @@ function CapHome(){
    <p><a className="btn light" href={import.meta.env.BASE_URL+'data/exams/editorial_casebook_r23.csv'} download="CAP_R23_revision_1000_preguntas.csv">Exportar R23: 10 modelos de 2025–2026 · 1.000 preguntas (CSV)</a></p>
    <p><a className="btn light" href={import.meta.env.BASE_URL+'data/exams/editorial_casebook_r24.csv'} download="CAP_R24_mercancias_2022_2024_con_plantilla.csv">Exportar R24: 10 modelos de Mercancías 2022–2024 · 1.000 preguntas (CSV)</a></p>
    <p className="note">Fase final aplazada: Viajeros y modelos sin plantilla. El CSV R24 solo incluye Mercancías con respuestas originales.</p>
+   <p><a className="btn light" href={import.meta.env.BASE_URL+'data/exams/editorial_decisions_r25_three.csv'} download="CAP_cierre_3_conflictos_editoriales.csv">Exportar cierre editorial de las 3 contradicciones (CSV)</a></p>
    <p><a className="btn light" href={import.meta.env.BASE_URL+'data/exams/sheet_audit_2200.csv'} download="CAP_2200_respuestas_plantillas_revision.csv">CSV de las 2.200 respuestas impresas</a></p>
    {sheetReviewShown&&<div className="cap-pending-results">
     <strong>{sheetReviewRows.length} preguntas · {sheetReviewRows.filter(q=>!q.scoringEligible).length} sin puntuación · {sheetReviewRows.filter(q=>q.reviewPriority!=='P4'||!!q.r22Case||!!q.r23Case||!!q.r24Case).length} con alguna marca o decisión editorial</strong>
@@ -176,9 +180,10 @@ function CapHome(){
     <label><input type="checkbox" checked={sheetReviewOnlyIssues} onChange={e=>setSheetReviewOnlyIssues(e.target.checked)}/> Mostrar solo preguntas marcadas para revisión (P0–P3)</label>
     <p>{showSheetRows.length} preguntas visibles. Abre cada fila para contrastar las cuatro opciones.</p>
     {showSheetRows.map(q=><details className="cap-pending-item" key={q.number}>
-     <summary>Pregunta {q.number} · página {q.sourcePage} · {q.r24Case?.priority==='P0'?'R24 PRIORIDAD ALTA ·':q.r24Case?.status==='GRAFIA_RESTAURADA_REVERSIBLE'?'R24 TEXTO CORREGIDO ·':q.r23Case?.priority==='P0'?'R23 PRIORIDAD ALTA ·':q.r23Case?.status==='LECTURA_EXTERNA_NO_VERIFICADA_DISCREPA'?'R23 LECTURAS DIVERGENTES ·':q.r22Case?.status==='DUDOSA_TECNICA_FRENTE_DGT'?'DUDOSA ·':q.r22Case?.status==='TEXTO_CONTRASTADO_FUENTE_PUBLICA'?'TEXTO CONTRASTADO ·':''} {q.reviewPriority!=='P4'?q.reviewPriority+' · COTEJAR':'sin alertas automáticas'} · plantilla: {q.originalSheetAnswer||'—'}{!q.scoringEligible?' · SIN PUNTUAR':''}{q.originalSheetAnswer&&q.mappedSheetQuestionNumber!==q.originalSheetQuestionNumber?' · ajuste de numeración':''}</summary>
+     <summary>Pregunta {q.number} · página {q.sourcePage} · {q.r24Case?.priority==='P0'?'R24 PRIORIDAD ALTA ·':q.r24Case?.status==='GRAFIA_RESTAURADA_REVERSIBLE'?'R24 TEXTO CORREGIDO ·':q.r23Case?.priority==='P0'?'R23 PRIORIDAD ALTA ·':q.r23Case?.status==='LECTURA_EXTERNA_NO_VERIFICADA_DISCREPA'?'R23 LECTURAS DIVERGENTES ·':q.r22Case?.status==='DUDOSA_TECNICA_FRENTE_DGT'?'DUDOSA ·':q.r22Case?.status==='TEXTO_CONTRASTADO_FUENTE_PUBLICA'?'TEXTO CONTRASTADO ·':''} {q.editorialDecision?'INCIDENCIA DOCUMENTADA':q.reviewPriority!=='P4'?q.reviewPriority+' · COTEJAR':'sin alertas automáticas'} · plantilla: {q.originalSheetAnswer||'—'}{!q.scoringEligible?' · SIN PUNTUAR':''}{q.originalSheetAnswer&&q.mappedSheetQuestionNumber!==q.originalSheetQuestionNumber?' · ajuste de numeración':''}</summary>
      <p>{q.question}</p>
      <ol type="A">{keys.map(k=><li key={k}>{q.options[k]}</li>)}</ol>
+     {q.editorialDecision&&<div className="cap-r25-final"><b>DECISIÓN EDITORIAL CERRADA · NO PUNTÚA</b><p>{q.editorialDecision.decision}</p><p><strong>Plantilla original:</strong> {q.editorialDecision.originalSheetAnswer} · <strong>Banco:</strong> {q.editorialDecision.bankAnswer} · <strong>Orientación técnica:</strong> {q.editorialDecision.editorialAnswer||'Pregunta inválida; sin solución'}</p><small>No se ha confirmado una fe de erratas oficial. La pregunta se muestra para estudiar y no suma ni resta puntos.</small></div>}
      {q.reviewFlags.length>0&&<div className="cap-editorial-flags"><b>Marcas de revisión (no corrigen claves):</b>{q.reviewFlags.map(f=><p key={f.code}><strong>{f.priority} · {f.code.replaceAll('_',' ')}</strong> — {f.description}. <small>{f.evidence}</small></p>)}</div>}
      {q.textReviewRequired&&<small>La transcripción del texto sigue pendiente de cotejo editorial con la imagen fuente.</small>}
      {q.r22Case&&<div className="cap-r22-case"><b>R22 · {q.r22Case.status.replaceAll('_',' ')}</b><p>{q.r22Case.explanation}</p><small>Procedencia: {q.r22Case.source}</small></div>}
@@ -195,7 +200,7 @@ function CapHome(){
   </section>
   <section className="panel cap-pending-panel">
    <h2>Preguntas pendientes de revisión</h2>
-   <p>Consulta el enunciado original y sus cuatro opciones. No se muestra una solución sin cotejar, ni se registran estas preguntas como fallos.</p>
+   <p>Consulta el enunciado original y sus cuatro opciones. Los tres conflictos de plantilla tienen ya una decisión editorial cerrada, aunque siguen sin puntuar. No se registran como fallos.</p>
    <select aria-label="Convocatoria con preguntas pendientes" value={pendingId} onChange={e=>{setPendingId(e.target.value);setPendingShown(false);setPendingRows([])}}>
     <option value="">Seleccionar convocatoria</option>
     {exams.filter(e=>e.hasOriginalAnswerSheet&&e.count>e.readyCount).map(e=><option key={e.id} value={e.id}>{pretty(e)} · {e.count-e.readyCount} pendientes</option>)}
@@ -207,7 +212,7 @@ function CapHome(){
      <summary>Pregunta {q.number} · página {q.sourcePage}{q.answerStatus.startsWith('conflicto')?' · Fuentes contradictorias':''}</summary>
      <p>{q.question}</p>
      <ol type="A">{keys.map(k=><li key={k}>{q.options[k]}</li>)}</ol>
-     <small>Solución pendiente de revisión. No se califica esta pregunta.</small>
+     {q.editorialDecision?<div className="cap-r25-final"><b>Decisión editorial cerrada · sin puntuación</b><p>{q.editorialDecision.decision}</p><small>Orientación técnica: {q.editorialDecision.editorialAnswer||'pregunta invalidada'} · Sin rectificación oficial acreditada.</small></div>:<small>Solución pendiente de revisión. No se califica esta pregunta.</small>}
     </details>)}
    </div>}
   </section>
@@ -238,6 +243,7 @@ function Quiz({pm,refresh}:{pm:Map<string,QuestionProgress>;refresh:()=>Promise<
  if(!s||loading||!qs.length)return <Loading text="Cargando test…"/>
  const session=s
  const i=session.currentIndex,q=qs[i],sel=session.selectedAnswers[q.id],checked=session.checkedIds.includes(q.id),correct=q.scoringEligible!==false&&sel===q.correctAnswer,fav=pm.get(progressId(q))?.favorite
+ const decision=capDecision(q)
  const frequency=q.examFrequency!==undefined?{count:q.examFrequency,denominator:q.examFrequencyDenominator||0,category:(q as Question & {category?:CapCategory}).category||'mercancias'}:frequencies[progressId(q)]
  const save=(n:ActiveSession)=>{setS(n);sessionStorage.setItem(ACTIVE,JSON.stringify(n))}
  async function select(k:AnswerKey){
@@ -276,8 +282,8 @@ function Quiz({pm,refresh}:{pm:Map<string,QuestionProgress>;refresh:()=>Promise<
   go('results')
  }
 
- return <div className="quiz"><div className="quizhead"><button onClick={()=>history.back()}>×</button><div><b>{session.label}</b><small>{i+1} de {qs.length}</small><Bar v={percent(i+1,qs.length)}/></div><button className={fav?'fav':''} onClick={favorite}>★</button></div><article><small>Pregunta {i+1} de {qs.length}{q.examId&&q.sourcePage?' · número original '+q.number+' · PDF pág. '+q.sourcePage:''}</small><h2>{q.question}</h2><div className="cap-frequency">{frequency&&frequency.denominator>1?'↻ Aparece en '+frequency.count+' de '+frequency.denominator+' modelos analizados ('+percent(frequency.count,frequency.denominator)+' %)':frequency&&frequency.denominator===1?'↻ Registrada en un único examen parcialmente transcrito. No hay muestra suficiente para medir repetición.':'↻ Frecuencia no identificada con coincidencia exacta en los modelos analizados'}</div>{q.reviewRequired&&<div className="cap-review-warning">{q.scoringEligible===false?'Respuesta oficial y banco en conflicto: esta pregunta se incluye para estudiar, pero NO puntúa hasta resolver la discrepancia.':q.answerStatus==='plantilla_pdf_oficial_verificada'?'Respuesta verificada en la plantilla PDF original. El texto del enunciado procede de una transcripción y sigue pendiente de revisión visual.':q.answerStatus==='respuesta_alineacion_editorial_confirmada'?'Respuesta cotejada con el texto y las opciones del examen original. La numeración de la plantilla PDF no coincide desde la pregunta 44: se usó la casilla siguiente tras validación editorial.':q.answerStatus==='respuesta_fuente_publica_oficial_pendiente_plantilla'?'Respuesta contrastada con BOE/DGT (fuente oficial externa), pendiente de cotejo con la plantilla del examen y revisión del texto.':q.transcriptionReview?'Transcripción de PDF escaneado: pregunta y solución cotejada con el banco, pendientes de revisión visual.':q.answerStatus==='coincidencia_alineacion_provisional_pendiente_revision'?'La respuesta coincide con el banco original y una alineación provisional de la plantilla de 2023. Pendiente de revisión editorial.':q.answerStatus==='coincidencia_plantilla_corregida_visual_pendiente_revision'?'Coincide con el banco y con la letra de la plantilla revisada visualmente. Revisión editorial pendiente.':'Solución obtenida del banco CAP; pendiente de revisión editorial.'}</div>}<div className="answers">{keys.map(k=>{let c=sel===k?'selected':'';if(session.type==='study'&&checked&&q.scoringEligible!==false)c=k===q.correctAnswer?'correct':sel===k?'wrong':'';return <button className={c} onClick={()=>void select(k)} key={k}><i>{k}</i><span>{q.options[k]}</span></button>})}</div>{session.type==='study'&&checked&&(q.scoringEligible===false
-  ?<div className="feedback" role="status"><b>Pregunta en revisión · no puntúa</b><p>La plantilla original marca {q.originalSheetAnswer||'—'} y el banco marca {q.bankAnswer||'—'}. Tu elección no se registra como acierto ni como error.</p>{q.answerDispute?.reason&&<small>{q.answerDispute.reason}</small>}</div>
+ return <div className="quiz"><div className="quizhead"><button onClick={()=>history.back()}>×</button><div><b>{session.label}</b><small>{i+1} de {qs.length}</small><Bar v={percent(i+1,qs.length)}/></div><button className={fav?'fav':''} onClick={favorite}>★</button></div><article><small>Pregunta {i+1} de {qs.length}{q.examId&&q.sourcePage?' · número original '+q.number+' · PDF pág. '+q.sourcePage:''}</small><h2>{q.question}</h2><div className="cap-frequency">{frequency&&frequency.denominator>1?'↻ Aparece en '+frequency.count+' de '+frequency.denominator+' modelos analizados ('+percent(frequency.count,frequency.denominator)+' %)':frequency&&frequency.denominator===1?'↻ Registrada en un único examen parcialmente transcrito. No hay muestra suficiente para medir repetición.':'↻ Frecuencia no identificada con coincidencia exacta en los modelos analizados'}</div>{q.reviewRequired&&<div className="cap-review-warning">{q.scoringEligible===false?(decision?'Incidencia editorial cerrada: '+(decision.editorialAnswer?'criterio técnico '+decision.editorialAnswer:'pregunta anulada editorialmente')+'. Se conserva sin puntuar; la plantilla original no se modifica.':'Respuesta oficial y banco en conflicto: esta pregunta no puntúa hasta resolver la discrepancia.'):q.answerStatus==='plantilla_pdf_oficial_verificada'?'Respuesta verificada en la plantilla PDF original. El texto del enunciado procede de una transcripción y sigue pendiente de revisión visual.':q.answerStatus==='respuesta_alineacion_editorial_confirmada'?'Respuesta cotejada con el texto y las opciones del examen original. La numeración de la plantilla PDF no coincide desde la pregunta 44: se usó la casilla siguiente tras validación editorial.':q.answerStatus==='respuesta_fuente_publica_oficial_pendiente_plantilla'?'Respuesta contrastada con BOE/DGT (fuente oficial externa), pendiente de cotejo con la plantilla del examen y revisión del texto.':q.transcriptionReview?'Transcripción de PDF escaneado: pregunta y solución cotejada con el banco, pendientes de revisión visual.':q.answerStatus==='coincidencia_alineacion_provisional_pendiente_revision'?'La respuesta coincide con el banco original y una alineación provisional de la plantilla de 2023. Pendiente de revisión editorial.':q.answerStatus==='coincidencia_plantilla_corregida_visual_pendiente_revision'?'Coincide con el banco y con la letra de la plantilla revisada visualmente. Revisión editorial pendiente.':'Solución obtenida del banco CAP; pendiente de revisión editorial.'}</div>}<div className="answers">{keys.map(k=>{let c=sel===k?'selected':'';if(session.type==='study'&&checked&&q.scoringEligible!==false)c=k===q.correctAnswer?'correct':sel===k?'wrong':'';return <button className={c} onClick={()=>void select(k)} key={k}><i>{k}</i><span>{q.options[k]}</span></button>})}</div>{session.type==='study'&&checked&&(q.scoringEligible===false
+  ?<div className="feedback" role="status"><b>{decision?'Decisión editorial cerrada':'Pregunta en revisión'} · no puntúa</b><p>Plantilla original: {q.originalSheetAnswer||'—'} · banco: {q.bankAnswer||'—'}. Tu respuesta no se registra como acierto ni error.</p>{decision?<><p><b>{decision.editorialAnswer?'Orientación técnica: '+decision.editorialAnswer+' · '+q.options[decision.editorialAnswer]:'Pregunta anulada editorialmente: no hay solución fiable.'}</b></p><small>{decision.decision}</small></>:q.answerDispute?.reason&&<small>{q.answerDispute.reason}</small>}</div>
   :<div className={'feedback '+(correct?'ok':'bad')}><b>{correct?'✓ ¡Correcto!':'× Incorrecto · correcta '+q.correctAnswer}</b><button onClick={()=>setRef(!ref)}>{ref?'Ocultar':'Ver fundamento'}</button>{ref&&<div><p><b>Norma:</b> {q.norm}</p><p><b>Referencia:</b> {q.reference}</p>{q.originalSheetAnswer&&<p><b>Plantilla original:</b> {q.originalSheetAnswer} · casilla {q.originalSheetQuestionNumber}. {q.mappedSheetQuestionNumber!==q.originalSheetQuestionNumber?'La correspondencia editorial utiliza la casilla '+q.mappedSheetQuestionNumber+' ('+q.mappedSheetAnswer+').':''}</p>}</div>}</div>)}</article><footer><Btn kind="light" disabled={i===0} onClick={()=>{setRef(false);save({...session,currentIndex:i-1})}}>Anterior</Btn>{i<qs.length-1?<Btn onClick={()=>{setRef(false);save({...session,currentIndex:i+1})}}>Siguiente</Btn>:<Btn onClick={finish}>Finalizar</Btn>}</footer></div>}
 
 function Results(){
@@ -320,12 +326,13 @@ function Results(){
    {visible.map((answer)=>{
     const q=questionMap.get(answer.questionId)
     if(!q)return null
-    const status=answer.scoringEligible===false?'En revisión · sin puntuar':!answer.selected?'Sin responder':answer.correct?'Correcta':'Incorrecta'
+    const decision=capDecision(q)
+    const status=answer.scoringEligible===false?(decision?'Resuelta editorialmente · sin puntuar':'En revisión · sin puntuar'):!answer.selected?'Sin responder':answer.correct?'Correcta':'Incorrecta'
     return <article key={answer.questionId} className={answer.correct?'cap-review-correct':''}>
      <b>{showAll?'Pregunta '+(r.answers.indexOf(answer)+1)+' · ':''}{q.question}</b>
      <p><strong>{status}</strong> · Tu respuesta: {answer.selected?answer.selected+' · '+q.options[answer.selected]:'—'}</p>
      {answer.scoringEligible===false
-       ?<><p>Plantilla original: <b>{q.originalSheetAnswer||'—'}</b> · Banco: <b>{q.bankAnswer||'—'}</b></p><small>No hay solución aprobada todavía. Esta pregunta no se ha calificado.</small></>
+       ?<><p>Plantilla original: <b>{q.originalSheetAnswer||'—'}</b> · Banco: <b>{q.bankAnswer||'—'}</b></p>{decision?<><p><strong>{decision.editorialAnswer?'Respuesta técnica orientativa: '+decision.editorialAnswer:'Pregunta inválida; sin respuesta técnica'}</strong></p><small>{decision.decision} No puntúa y no se presenta como fe de erratas del tribunal.</small></>:<small>No hay solución aprobada todavía. Esta pregunta no se ha calificado.</small>}</>
        :<><p className="green">Solución aplicada: {q.correctAnswer} · {q.options[q.correctAnswer]}</p>{q.reviewRequired&&<small>Solución procedente del cotejo; algunas transcripciones requieren revisión editorial.</small>}</>}
     </article>
    })}
