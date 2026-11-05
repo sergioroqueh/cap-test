@@ -33,8 +33,9 @@ def main():
     by_id = {exam["id"]: exam for exam in manifest}
     digitized = set(json.loads((SRC / "answer_keys_unverified.json").read_text(encoding="utf-8")))
     verified = json.loads((SRC / "answer_keys_visually_verified.json").read_text(encoding="utf-8"))['exams']
+    verified.update(json.loads((SRC / "visual_batch_candidates_2026_11_05.json").read_text(encoding="utf-8"))['exams'])
     # Un desacuerdo visual/banco previamente puntuado pasa a pendiente y se resta.
-    newly_certified_count = sum(100 - proof['expectedBankConcordances']
+    newly_certified_count = sum(proof.get('verifiedQuestionEnd',100) - proof['expectedBankConcordances']
                                 - 2 * proof.get('expectedBankConflicts',0)
                                 - proof.get('expectedPreviouslyScoredExternal',0)
                                 + proof.get('expectedPreviouslyUnscoredConflicts',0)
