@@ -105,7 +105,6 @@ def main():
             "disagreements": conflicts,
             "candidatesUnapproved": candidates,
         }, ensure_ascii=False, indent=2), encoding="utf-8")
-    )
     if (len(concordant), len(conflicts), len(candidates)) != (76, 9, 15):
         raise AssertionError("La extracción no reproduce la auditoría; detener")
     summary = {
