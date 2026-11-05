@@ -173,6 +173,20 @@ def main() -> None:
          "El enunciado original pregunta por circulacion sanguinea pero las cuatro opciones tratan riesgos diferentes",
          "Examenes TOTALES.pdf pagina 355, inspeccion visual 05/11/2026; conservar hoja C y banco B")
 
+    # R22: discrepancia técnica independiente de la plantilla. Marcar sin
+    # cambiar la letra A original ni el estado del banco.
+    gearbox = by_id[("2022-11-26-mercancias-global", 6)]
+    assert "caja de cambios" in gearbox["question"]
+    assert gearbox["printedAnswer"] == "A"
+    assert gearbox["scoredAnswer"] == "A"
+    mark(gearbox, "dudosa_clave_caja_cambios_frente_dgt", "P0",
+         "La plantilla atribuye a la caja de cambios la función de conectar motor y transmisión, "
+         "pero el Manual VIII de la DGT atribuye el acoplamiento al embrague y a la caja "
+         "la adaptación de la relación de transmisión; no se elige una letra alternativa",
+         "https://sede.dgt.gob.es/.galleries/permisos-de-conducir/"
+         "certificacion-aptitud-profesores-formacion-vial/2022/Manual-VIII-Mecanica-2022.pdf; "
+         "TEMA 7; PDF de examen página 420")
+
     sept = by_id[("2025-09-27-mercancias-global", 1)]
     assert "A bordo de un vehículo que transporta animales" in sept["question"]
     assert sept["options"]["A"] == "El origen y el propietario de los animales."
