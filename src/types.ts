@@ -18,6 +18,19 @@ export interface Question {
   examFrequencyDenominator?: number
   answerStatus?: string
   reviewRequired?: boolean
+  /** Raw letter printed at this question number, even if historically wrong. */
+  originalSheetAnswer?: AnswerKey | null
+  originalSheetQuestionNumber?: number | null
+  originalSheetSourceFile?: string | null
+  originalSheetSha256?: string | null
+  /** PDF letter after an explicitly recorded numbering alignment. */
+  mappedSheetAnswer?: AnswerKey | null
+  mappedSheetQuestionNumber?: number | null
+  /** The historic exam can display this question but must not score it. */
+  scoringEligible?: boolean
+  answerDispute?: {bankAnswer: AnswerKey; pdfAnswer: AnswerKey; reason: string} | null
+  bankAnswer?: AnswerKey | null
+  templateAnswer?: AnswerKey | null
   transcriptionReview?: boolean
   sourceMethod?: string
   sourcePage?: number
@@ -59,6 +72,7 @@ export interface SessionAnswer {
   selected?: AnswerKey
   correctAnswer: AnswerKey
   correct: boolean
+  scoringEligible?: boolean
 }
 
 export interface StudySessionRecord {
