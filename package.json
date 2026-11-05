@@ -4,10 +4,11 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "prepare:data": "python3 scripts/build_data.py",
+    "prepare:data": "python3 scripts/build_data.py && python3 scripts/build_exam_data.py && python3 scripts/build_template_review.py && python3 scripts/build_sheet_audit.py && python3 scripts/build_convocation_audit_r20.py && python3 scripts/build_editorial_triage_r21.py && python3 scripts/build_editorial_casebook_r22.py && python3 scripts/build_editorial_casebook_r23.py && python3 scripts/build_editorial_casebook_r24.py && python3 scripts/build_three_conflicts_decisions_r25.py",
     "dev": "npm run prepare:data && vite",
     "build": "npm run prepare:data && tsc -b && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "build:preview": "npm run prepare:data && tsc -b && vite build --mode cap-preview"
   },
   "dependencies": {
     "@vitejs/plugin-react": "latest",
@@ -19,6 +20,7 @@
   },
   "devDependencies": {
     "@types/react": "latest",
-    "@types/react-dom": "latest"
+    "@types/react-dom": "latest",
+    "playwright": "latest"
   }
 }

@@ -1,7 +1,7 @@
 import type { QuestionProgress, StudySessionRecord } from './types'
 import { cloudConfigured, supabase } from './supabase'
 
-const DB_NAME = 'cap-test-2026'
+const DB_NAME = import.meta.env.VITE_CAP_PREVIEW === 'true' ? 'cap-test-preview-local-2026' : 'cap-test-2026'
 const DB_VERSION = 1
 const PROGRESS = 'progress'
 const SESSIONS = 'sessions'

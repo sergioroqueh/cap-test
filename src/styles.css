@@ -27,3 +27,72 @@ nav{position:fixed;bottom:0;left:0;right:0;height:72px;background:color-mix(in s
 .authcard form .btn{width:100%;min-height:48px;margin-top:4px}.authcard>small{display:block;text-align:center;color:var(--muted);font-size:10px;line-height:1.45;margin-top:18px}
 .autherror{background:color-mix(in srgb,var(--danger) 11%,var(--surface));color:var(--danger);border:1px solid color-mix(in srgb,var(--danger) 28%,var(--line));padding:10px 12px;border-radius:12px;font-size:11px;font-weight:700}
 .panel.account small{display:block;color:var(--primary);font-size:9px;font-weight:900;letter-spacing:.1em}.panel.account h2{margin:5px 0 5px;font-size:18px;word-break:break-all}.panel.account .btn{margin-top:14px}
+
+/* Overlay de exámenes CAP: respeta el estilo existente y prioriza móvil. */
+.cap-page .panel{margin:16px 0}
+.cap-page .segments{display:flex;flex-wrap:wrap;gap:4px}
+.cap-page .segments button{flex:1 1 auto;min-width:85px}
+.cap-page .list button:disabled{opacity:.58;cursor:not-allowed}
+.cap-page .cards button:disabled{opacity:.55;cursor:not-allowed}
+.cap-frequency{margin:12px 0 17px;padding:9px 12px;border-radius:10px;
+  font-size:.8rem;font-weight:600;line-height:1.45;background:var(--card,rgba(127,127,127,.10));
+  border:1px solid var(--line,rgba(127,127,127,.2));}
+.cap-review-warning{font-size:.78rem;line-height:1.5;margin:0 0 13px;
+  color:var(--muted,#777);font-weight:500;}
+
+/* CAP - consulta sin autocorrección de preguntas pendientes */
+.cap-pending-panel{display:grid;gap:12px}
+.cap-pending-panel>p{font-size:13px;color:var(--muted);line-height:1.55}
+.cap-pending-panel>select{width:100%;min-width:0;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--text);padding:12px;font:inherit}
+.cap-pending-results{display:grid;gap:10px;max-width:100%}
+.cap-pending-results>strong{font-size:13px}
+.cap-pending-item{border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:12px;overflow-wrap:anywhere}
+.cap-pending-item summary{cursor:pointer;font-size:13px;font-weight:700}
+.cap-pending-item p{margin:12px 0 8px;font-size:13px;line-height:1.5}
+.cap-pending-item ol{padding-left:23px;margin:0 0 12px;display:grid;gap:8px;font-size:13px;line-height:1.5}
+.cap-pending-item small{color:var(--muted);font-size:11px}
+
+/* Beta aislada: identificación visible y persistente */
+.cap-preview-banner{padding:9px 14px;text-align:center;font-size:11px;font-weight:750;letter-spacing:.035em;line-height:1.4;color:#fff;background:#85530c;border-bottom:1px solid rgba(0,0,0,.14)}
+
+/* CAP R21 - marcas editoriales compactas, legibles en movil y modo oscuro. */
+.cap-triage-summary{padding:10px 12px;border-radius:12px;border:1px solid var(--line);
+ background:var(--soft);color:var(--text);font-size:12px;line-height:1.55}
+.cap-editorial-flags{border:1px solid color-mix(in srgb,var(--primary) 25%,var(--line));
+ background:color-mix(in srgb,var(--primary) 5%,var(--surface));border-radius:12px;
+ padding:10px 12px;margin:12px 0;overflow-wrap:anywhere}
+.cap-editorial-flags>b{font-size:12px;color:var(--text)}
+.cap-editorial-flags p{font-size:12px;line-height:1.5;margin:8px 0}
+.cap-editorial-flags strong{color:var(--primary);font-size:11px;letter-spacing:.015em}
+.cap-editorial-flags small{display:block;margin-top:2px;line-height:1.45;color:var(--muted)}
+.cap-pending-panel a.btn{font-size:11px;max-width:100%;text-align:center;white-space:normal}
+
+/* R22: distinguish editorial verification, disputed technical keys and original text. */
+.cap-r22-case{padding:12px 13px;border:1px solid var(--line);border-radius:13px;
+ background:color-mix(in srgb,var(--primary) 7%,var(--surface));margin:10px 0}
+.cap-r22-case>b{font-size:12px;color:var(--primary);overflow-wrap:anywhere}
+.cap-r22-case p{font-size:12px;line-height:1.55;margin:7px 0}
+.cap-r22-case small{display:block;overflow-wrap:anywhere;line-height:1.4}
+.cap-r22-original{border:1px dashed var(--line);background:var(--soft);
+ border-radius:12px;padding:10px 12px;margin:10px 0}
+.cap-r22-original summary{font-size:11px;font-weight:750;color:var(--muted)}
+.cap-r22-original p{font-size:12px}
+.cap-r22-original li{font-size:11px}
+
+/* R23: evidencia de lectura discrepante sin sugerir una clave nueva. */
+.cap-r23-case{border:1px solid color-mix(in srgb,var(--primary) 29%,var(--line));
+ border-radius:12px;padding:12px 13px;margin:10px 0;
+ background:color-mix(in srgb,var(--primary) 5%,var(--surface));overflow-wrap:anywhere}
+.cap-r23-case>b{font-size:12px;color:var(--primary)}
+.cap-r23-case p{font-size:12px;line-height:1.55;margin:7px 0}
+.cap-r23-case small{display:block;font-size:11px;line-height:1.4;color:var(--muted)}
+
+/* Closed editorial decisions preserve source letters and score neutrality. */
+.cap-r25-final{
+ border:1px solid color-mix(in srgb,var(--primary) 38%,var(--line));
+ background:color-mix(in srgb,var(--primary) 7%,var(--surface));
+ padding:13px 14px;border-radius:13px;margin:12px 0;overflow-wrap:anywhere;
+}
+.cap-r25-final>b{font-size:12px;letter-spacing:.02em;color:var(--primary)}
+.cap-r25-final p{margin:8px 0;font-size:12px;line-height:1.65}
+.cap-r25-final small{font-size:11px;line-height:1.55;color:var(--muted)}

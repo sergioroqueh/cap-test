@@ -1,0 +1,144 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Claves leídas directamente de las imágenes rasterizadas de las plantillas PDF originales. No confundir con extracción automática OCR ni con el banco general.",
+  "exams": {
+    "2025-03-29-mercancias-global": {
+      "sourceFile": "Plantilla Marzo 2025.pdf",
+      "sourcePage": 1,
+      "category": "mercancias",
+      "model": "GLOBAL",
+      "sourcePdfSha256": "ef2729a312160717c732240d9dde37807a459f66e7ec2d86cfc60f1faaeeb70b",
+      "sourceZip": "Respuestas(1).zip",
+      "visualMethod": "lectura_directa_imagen_pdf_a_2x_y_comparacion_independiente_de_85_claves_de_banco",
+      "readDirection": "Cinco columnas consecutivas 1-20,21-40,41-60,61-80,81-100",
+      "correctAnswers": "ADBBDDCDDCCACADDBACDBDCACCDBBBDCBADAAADBDAACCBCACBBDACAADABADCACDCDBACBCCBBBBBDBCCAACACCCCBBBBCCDBAB",
+      "keyDigestSha256": "d6853f32d177394de4de9b358370bafc8197b4ed5906567e741007f0fbfd2b7a",
+      "verifiedOn": "2026-11-05",
+      "expectedBankConcordances": 85,
+      "expectedBankConflicts": 0,
+      "pastTextExtractionCorrections": {
+        "25": "C",
+        "46": "B",
+        "62": "C",
+        "69": "A",
+        "70": "C",
+        "80": "B",
+        "82": "C",
+        "90": "C",
+        "100": "B"
+      },
+      "approval": "lectura_visual_plantilla_original_verificada",
+      "notes": "Se observa el encabezado MERCANCÍAS GLOBAL / MARZO DE 2025. Se cotejaron las 100 casillas. Las 9 anomalías del extractor anterior eran letras mal leídas; las 85 del banco concuerdan. Las 15 sin banco reciben la clave visible en este PDF."
+    },
+    "2025-07-26-mercancias-a": {
+      "sourceFile": "Plantilla A Julio 2025.pdf",
+      "sourcePage": 1,
+      "category": "mercancias",
+      "model": "A",
+      "sourcePdfSha256": "8dd030ebdb4bdfd739b07a009018253200666da47355d1e152bc5b14a3b88d5c",
+      "sourceZip": "Respuestas(1).zip",
+      "visualMethod": "lectura_directa_imagen_pdf_a_2x_cinco_columnas_y_cruce_con_banco",
+      "readDirection": "Cinco columnas consecutivas 1-20,21-40,41-60,61-80,81-100",
+      "correctAnswers": "BACABAABBDBCDCCBCDDBAACCDBCACBCBCAACDCACDBAAABBACDBBBADAACABDCABCCDACCCCCABBDADDBBDDBBDBBABCCCACDADB",
+      "keyDigestSha256": "8386c95ad396aa357ffe50fb0d1559ca60ac53a7a66578be202bf70f89910500",
+      "verifiedOn": "2026-11-05",
+      "expectedBankConcordances": 66,
+      "expectedBankConflicts": 1,
+      "approval": "lectura_visual_plantilla_original_verificada",
+      "notes": "Plantilla original MERCANCÍAS GLOBAL / JULIO 2025 MODELO A, 100 casillas leídas visualmente. 66 de 67 claves del banco coinciden; pregunta 43 se bloquea por conflicto. La transcripción del examen es provisional. Las 33 preguntas sin clave previa pueden usarse con la respuesta visual del PDF.",
+      "holdConflicts": {
+        "43": {
+          "bankAnswer": "B",
+          "pdfAnswer": "A",
+          "reason": "La plantilla original marca A; la transcripción provisional del enunciado y opciones sugiere B (orden decreciente de consumo específico). Revisar imagen del examen antes de decidir, sin autocorrección."
+        }
+      }
+    },
+    "2026-03-28-mercancias-global": {
+      "sourceFile": "Plantilla Marzo 2026.pdf",
+      "sourcePage": 1,
+      "category": "mercancias",
+      "model": "GLOBAL",
+      "sourcePdfSha256": "b3be17781d019f25e621490c2f01d671ab7449f156d140ed52be5a1d1d572d23",
+      "sourceZip": "Respuestas(1).zip",
+      "visualMethod": "lectura_directa_imagen_pdf_a_2x_con_100_casillas_y_contraste_con_81_respuestas_del_banco",
+      "readDirection": "Cinco columnas consecutivas 1-20,21-40,41-60,61-80,81-100",
+      "correctAnswers": "CBDBBCBDAAAABAABBCACCACCACCBDACBDBBBBBABBACBBACBACDACBCCACABCCBABBAABBDCCBCCDDCCABADCCCCDDBBCACBCBCD",
+      "keyDigestSha256": "61f65d736ac566f4e99a5d3f856c8e318757f16580d6111d21c146021bde29cc",
+      "verifiedOn": "2026-11-05",
+      "expectedBankConcordances": 80,
+      "expectedBankConflicts": 1,
+      "expectedPreviouslyScoredExternal": 1,
+      "holdConflicts": {
+        "43": {
+          "bankAnswer": "B",
+          "pdfAnswer": "C",
+          "reason": "La plantilla original marca C, pero la transcripción provisional del examen pregunta por riesgos para circulación sanguínea, cuya opción B es levantar pesos. Verificar imagen del examen antes de puntuar."
+        }
+      },
+      "approval": "lectura_visual_plantilla_original_verificada",
+      "notes": "MER­CANCÍAS GLOBAL MARZO 2026: 100 casillas cotejadas; 80/81 concordancias con banco, q43 bloqueada, q58 coincide con evidencia independiente DGT existente. La transcripción del texto original es provisional."
+    },
+    "2024-04-06-mercancias-global": {
+      "sourceFile": "Plantilla Abril 2024.pdf",
+      "sourcePage": 1,
+      "category": "mercancias",
+      "model": "GLOBAL",
+      "sourcePdfSha256": "6355052fdc3440ebd4ca01dbd15d8c19b9a53104d9f8e2d095b6473b5360c934",
+      "sourceZip": "Respuestas(1).zip",
+      "visualMethod": "lectura_de_marcas_A_B_C_D_en_imagen_del_pdf_original_con_cotejo_visual_muestra_y_73_claves_del_banco",
+      "readDirection": "Sección superior: 1-5,6-10,11-15,16-20,21-25; inferior: 26-40,41-55,56-70,71-85,86-100; ignorar 1ª/2ª de reserva.",
+      "correctAnswers": "BDBDDACDADBCDCDBDCABDCABCBBBBBCCDDCDCDCDCBCCACADACDADDAABAACAAACADDBDAADABBCCACAAAACADDCCCCBACABBBAA",
+      "keyDigestSha256": "5c01ad76e8a8608b152647172a935282c524d6cffea02ab542d45c43243c4469",
+      "verifiedOn": "2026-11-05",
+      "expectedBankConcordances": 73,
+      "expectedBankConflicts": 0,
+      "expectedPreviouslyScoredExternal": 1,
+      "approval": "lectura_visual_marca_pdf_original_y_validacion_banco",
+      "notes": "100 casillas detectadas sin ambigüedad, 73/73 coincidencias con banco, q71 A coincide con Ley 16/1987; 26 respuestas adicionales. Se excluyen reservas."
+    },
+    "2024-07-20-mercancias-b": {
+      "sourceFile": "Plantilla B Julio 2024.pdf",
+      "sourcePage": 1,
+      "category": "mercancias",
+      "model": "B",
+      "sourcePdfSha256": "c315413c24be4c22cecc0cb458c4ab4006be5c708319ba379cc5319ca4a4ee95",
+      "sourceZip": "Respuestas(1).zip",
+      "visualMethod": "lectura_de_marcas_negras_A_B_C_D_de_imagen_pdf_original_cotejo_con_85_claves_banco",
+      "readDirection": "Sección superior: 1-5,6-10,11-15,16-20,21-25; inferior: 26-40,41-55,56-70,71-85,86-100; ignorar reservas 1ª/2ª/3ª.",
+      "correctAnswers": "CCCBABBDABCDBBBCACABACDABCCDDDCBBACBACDCCCCCCCABCACACBAAADBDDDBCAADDDBBBBBBCAAABCCDBCAAACBDBACCCABBC",
+      "keyDigestSha256": "ef37972c9471f699ec8c38e5feb9ed0bcc499825703eb3e26ac3ada5fc459878",
+      "verifiedOn": "2026-11-05",
+      "expectedBankConcordances": 85,
+      "expectedBankConflicts": 0,
+      "expectedPreviouslyScoredExternal": 1,
+      "approval": "lectura_visual_marca_pdf_original_y_validacion_banco",
+      "notes": "100 casillas de preguntas principales; 85/85 banco, q84 B = PHEV DGT, 14 nuevas, reservas excluidas."
+    },
+    "2026-02-07-mercancias-global": {
+      "sourceFile": "Plantilla Febrero 2026.pdf",
+      "sourcePage": 1,
+      "category": "mercancias",
+      "model": "GLOBAL",
+      "sourcePdfSha256": "df29f426fc22c50502b8afcc448a374b78a079a89b5bf1fbc2818f25c55f6d87",
+      "sourceZip": "Respuestas(1).zip",
+      "visualMethod": "lectura_directa_imagen_pdf_original_1_7x_cinco_columnas_contraste_plantilla_previa",
+      "readDirection": "Cinco columnas consecutivas 1-20, 21-40, 41-60, 61-80, 81-100",
+      "correctAnswers": "CABDBCDDAABBDCCADDAAAAACDDBADBDBAAAAAAADDACCBBBCBAACCDBCBADCACDCDAAACDCCCABACBCACDAABDDBBDABAAADABDC",
+      "keyDigestSha256": "2a79e1b3d26ab9a60b45666bdab43f5d4ffa68889349dca9fc52fbcdbd4d70cb",
+      "verifiedOn": "2026-11-05",
+      "expectedBankConcordances": 86,
+      "expectedBankConflicts": 1,
+      "holdConflicts": {
+        "61": {
+          "bankAnswer": "C",
+          "pdfAnswer": "A",
+          "reason": "La plantilla oficial FEBRERO 2026 confirma visualmente A; banco CAP/normativa Reglamento UE 165/2014 art. 36 sugieren C. Conflicto documental real: conservar sin autocorrección hasta auditoría editorial del enunciado."
+        }
+      },
+      "approval": "lectura_visual_plantilla_original_verificada",
+      "notes": "Cabecera MERCANCÍAS GLOBAL / FEBRERO DE 2026 confirmada. 100 respuestas leídas visualmente. 86 coincidencias con banco, 13 claves PDF sin equivalente, q61 bloqueada por conflicto real.",
+      "expectedPreviouslyUnscoredConflicts": 1
+    }
+  }
+}

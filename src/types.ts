@@ -11,6 +11,29 @@ export interface Question {
   correctAnswer: AnswerKey
   norm: string
   reference: string
+  /** For original CAP questions, the progress is shared by canonical question id. */
+  progressId?: string
+  examId?: string
+  examFrequency?: number
+  examFrequencyDenominator?: number
+  answerStatus?: string
+  reviewRequired?: boolean
+  /** Raw letter printed at this question number, even if historically wrong. */
+  originalSheetAnswer?: AnswerKey | null
+  originalSheetQuestionNumber?: number | null
+  originalSheetSourceFile?: string | null
+  originalSheetSha256?: string | null
+  /** PDF letter after an explicitly recorded numbering alignment. */
+  mappedSheetAnswer?: AnswerKey | null
+  mappedSheetQuestionNumber?: number | null
+  /** The historic exam can display this question but must not score it. */
+  scoringEligible?: boolean
+  answerDispute?: {bankAnswer: AnswerKey; pdfAnswer: AnswerKey; reason: string} | null
+  bankAnswer?: AnswerKey | null
+  templateAnswer?: AnswerKey | null
+  transcriptionReview?: boolean
+  sourceMethod?: string
+  sourcePage?: number
 }
 
 export interface QuestionnaireMeta {
@@ -49,6 +72,7 @@ export interface SessionAnswer {
   selected?: AnswerKey
   correctAnswer: AnswerKey
   correct: boolean
+  scoringEligible?: boolean
 }
 
 export interface StudySessionRecord {
@@ -63,10 +87,21 @@ export interface StudySessionRecord {
   correct: number
   incorrect: number
   score: number
+  /** CAP net points, +1 correct / -0.5 incorrect / 0 blank. */
+  netPoints?: number
+  gradedTotal?: number
+  blank?: number
+  excluded?: number
+  passed?: boolean | null
+  capScoring?: boolean
+  timed?: boolean
+  durationMinutes?: number
+  finishedReason?: 'manual' | 'timeout'
+  elapsedSeconds?: number
   answers: SessionAnswer[]
 }
 
-export type StudySource = 'questionnaire' | 'random' | 'unseen' | 'errors' | 'smart' | 'favorites'
+export type StudySource = 'questionnaire' | 'random' | 'unseen' | 'errors' | 'smart' | 'favorites' | 'cap-original' | 'cap-random' | 'cap-mixed' | 'cap-errors' | 'cap-favorites' | 'cap-review'
 
 export interface ActiveSession {
   type: 'study' | 'exam'
@@ -78,4 +113,9 @@ export interface ActiveSession {
   selectedAnswers: Record<string, AnswerKey>
   checkedIds: string[]
   startedAt: number
+  /** A CAP real exam uses persisted wall clock and cannot be paused. */
+  timed?: boolean
+  durationMinutes?: number
+  /** Questions flagged for later review, not graded differently. */
+  markedIds?: string[]
 }

@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "purpose": "Corrección de transcripción de letras de plantillas escaneadas, comprobadas visualmente; el JSON original extraído por imagen queda inalterado.",
+  "overrides": {
+    "2023-07-29-mercancias-b": {
+      "6": {
+        "expectedExtracted": "C",
+        "verifiedLetter": "D",
+        "sourceFile": "Plantilla B Julio 2023.pdf",
+        "imagePage": 1,
+        "proof": "Casilla 6 = D, inspección visual de plantilla escaneada",
+        "reviewStatus": "verificado_visual_pendiente_revision_editorial"
+      },
+      "19": {
+        "expectedExtracted": "C",
+        "verifiedLetter": "D",
+        "sourceFile": "Plantilla B Julio 2023.pdf",
+        "imagePage": 1,
+        "proof": "Casilla 19 = D, inspección visual de plantilla escaneada",
+        "reviewStatus": "verificado_visual_pendiente_revision_editorial"
+      }
+    }
+  }
+}

@@ -1,0 +1,321 @@
+{
+  "schemaVersion": 1,
+  "round": "R22",
+  "date": "2026-11-05",
+  "scope": "26 modelos importados, primera revisión dirigida a septiembre 2025, noviembre 2022 y julio 2023 A",
+  "classificationNotice": "Revisión de texto, coherencia técnica y numeración no implica aprobación normativa global; nunca cambiar respuestas mediante este fichero.",
+  "cases": [
+    {
+      "examId": "2022-11-26-mercancias-global",
+      "number": 1,
+      "expectedQuestionFragment": "El vehículo jaula",
+      "status": "COHERENCIA_TECNICA_PRELIMINAR",
+      "expectedAppliedAnswer": "B",
+      "explanation": "El vehículo jaula transporta animales vivos; lectura de las cuatro alternativas y plantilla conservada, NO revisión visual independiente de todo el PDF",
+      "source": "Examenes TOTALES.pdf, páginas 420–422; Plantilla Noviembre 2022.pdf"
+    },
+    {
+      "examId": "2022-11-26-mercancias-global",
+      "number": 2,
+      "expectedQuestionFragment": "velocidad angular",
+      "status": "COHERENCIA_TECNICA_PRELIMINAR",
+      "expectedAppliedAnswer": "A",
+      "explanation": "Deslizamiento por diferencia entre velocidad angular y lineal; lectura de las cuatro alternativas y plantilla conservada, NO revisión visual independiente de todo el PDF",
+      "source": "Examenes TOTALES.pdf, páginas 420–422; Plantilla Noviembre 2022.pdf"
+    },
+    {
+      "examId": "2022-11-26-mercancias-global",
+      "number": 3,
+      "expectedQuestionFragment": "resistencia por rozamiento",
+      "status": "COHERENCIA_TECNICA_PRELIMINAR",
+      "expectedAppliedAnswer": "A",
+      "explanation": "Definición de oposición al movimiento entre superficies; lectura de las cuatro alternativas y plantilla conservada, NO revisión visual independiente de todo el PDF",
+      "source": "Examenes TOTALES.pdf, páginas 420–422; Plantilla Noviembre 2022.pdf"
+    },
+    {
+      "examId": "2022-11-26-mercancias-global",
+      "number": 4,
+      "expectedQuestionFragment": "resistencia aerodinámica",
+      "status": "COHERENCIA_TECNICA_PRELIMINAR",
+      "expectedAppliedAnswer": "B",
+      "explanation": "Oposición al avance del vehículo a través del aire; lectura de las cuatro alternativas y plantilla conservada, NO revisión visual independiente de todo el PDF",
+      "source": "Examenes TOTALES.pdf, páginas 420–422; Plantilla Noviembre 2022.pdf"
+    },
+    {
+      "examId": "2022-11-26-mercancias-global",
+      "number": 5,
+      "expectedQuestionFragment": "volumen útil de la caja",
+      "status": "COHERENCIA_TECNICA_PRELIMINAR",
+      "expectedAppliedAnswer": "B",
+      "explanation": "Producto de longitud, anchura y altura interiores; lectura de las cuatro alternativas y plantilla conservada, NO revisión visual independiente de todo el PDF",
+      "source": "Examenes TOTALES.pdf, páginas 420–422; Plantilla Noviembre 2022.pdf"
+    },
+    {
+      "examId": "2022-11-26-mercancias-global",
+      "number": 6,
+      "expectedQuestionFragment": "caja de cambios o caja de velocidades",
+      "status": "CERRADA_A_CONFIRMADA_CONTEXTO_TRANSMISION",
+      "expectedAppliedAnswer": "A",
+      "explanation": "Cierre editorial tras comprobar imagen del examen y su plantilla original: q6 = A. La caja de velocidades recibe el giro procedente del motor y lo transmite al resto de la transmisión, adaptando par y velocidad. Aunque la expresión 'conectar el motor' es funcionalmente imprecisa (el embrague acopla/desacopla el motor de la caja), las alternativas B/C/D no describen la caja de cambios. A es la única respuesta defendible en este test. Mantener A y puntuación; no es una fe de erratas oficial ni una revisión visual de todas las preguntas.",
+      "source": "Examenes TOTALES.pdf, página 420, y Plantilla Noviembre 2022.pdf, casilla 6=A, imagen aportada por el usuario el 05/11/2026; DGT https://www.dgt.es/muevete-con-seguridad/viaja-seguro/en-coche/ (embrague); DGT https://www.dgt.es/export/sites/web-DGT/.galleries/downloads/nuestros_servicios/Sistema_relacional_DGT.pdf (caja de cambios y relación de transmisión); Manual VIII Mecánica DGT 2022, tema 7.",
+      "editorialClosure": {
+        "round": "R25-4",
+        "date": "2026-11-05",
+        "originalSheetAnswer": "A",
+        "appliedAnswer": "A",
+        "scoringEligible": true,
+        "reviewComplete": true,
+        "remainingControversy": "PRECISION_TERMINOLOGICA_SIN_CAMBIO_CLAVE",
+        "visualEvidence": "Cuestionario y hoja de 100 respuestas aportados en imagen por el usuario",
+        "alternativeAnswersRejected": [
+          "B",
+          "C",
+          "D"
+        ]
+      }
+    },
+    {
+      "examId": "2022-11-26-mercancias-global",
+      "number": 7,
+      "expectedQuestionFragment": "partes más pesadas",
+      "status": "COHERENCIA_TECNICA_PRELIMINAR",
+      "expectedAppliedAnswer": "D",
+      "explanation": "Situar peso abajo disminuye riesgo de vuelco; lectura de las cuatro alternativas y plantilla conservada, NO revisión visual independiente de todo el PDF",
+      "source": "Examenes TOTALES.pdf, páginas 420–422; Plantilla Noviembre 2022.pdf"
+    },
+    {
+      "examId": "2022-11-26-mercancias-global",
+      "number": 8,
+      "expectedQuestionFragment": "vehículo apropiado para efectuar mudanzas",
+      "status": "COHERENCIA_TECNICA_PRELIMINAR",
+      "expectedAppliedAnswer": "C",
+      "explanation": "Capitoné apropiado para mudanzas; lectura de las cuatro alternativas y plantilla conservada, NO revisión visual independiente de todo el PDF",
+      "source": "Examenes TOTALES.pdf, páginas 420–422; Plantilla Noviembre 2022.pdf"
+    },
+    {
+      "examId": "2022-11-26-mercancias-global",
+      "number": 9,
+      "expectedQuestionFragment": "régimen de cabotaje",
+      "status": "COHERENCIA_TECNICA_PRELIMINAR",
+      "expectedAppliedAnswer": "B",
+      "explanation": "Transporte interno efectuado por transportista no establecido; lectura de las cuatro alternativas y plantilla conservada, NO revisión visual independiente de todo el PDF",
+      "source": "Examenes TOTALES.pdf, páginas 420–422; Plantilla Noviembre 2022.pdf"
+    },
+    {
+      "examId": "2022-11-26-mercancias-global",
+      "number": 10,
+      "expectedQuestionFragment": "funciones más habituales de un administrativo",
+      "status": "COHERENCIA_TECNICA_PRELIMINAR",
+      "expectedAppliedAnswer": "B",
+      "explanation": "Contabilidad ordinaria es función administrativa; lectura de las cuatro alternativas y plantilla conservada, NO revisión visual independiente de todo el PDF",
+      "source": "Examenes TOTALES.pdf, páginas 420–422; Plantilla Noviembre 2022.pdf"
+    },
+    {
+      "examId": "2025-09-27-mercancias-global",
+      "number": 1,
+      "expectedQuestionFragment": "A bordo de un vehículo que transporta animales",
+      "status": "TEXTO_CONTRASTADO_FUENTE_PUBLICA",
+      "expectedAppliedAnswer": "A",
+      "explanation": "Texto cotejado contra el cuestionario oficial público JCCM (página 1); la calificación sigue siendo exclusivamente la de la plantilla original",
+      "source": "https://www.castillalamancha.es/sites/default/files/documentos/pdf/20250929/cap_2025_5a_cuestionarios.pdf#page=2"
+    },
+    {
+      "examId": "2025-09-27-mercancias-global",
+      "number": 2,
+      "expectedQuestionFragment": "vehículo apropiado para efectuar mudanzas",
+      "status": "TEXTO_CONTRASTADO_FUENTE_PUBLICA",
+      "expectedAppliedAnswer": "C",
+      "explanation": "Texto cotejado contra el cuestionario oficial público JCCM (página 1); la calificación sigue siendo exclusivamente la de la plantilla original",
+      "source": "https://www.castillalamancha.es/sites/default/files/documentos/pdf/20250929/cap_2025_5a_cuestionarios.pdf#page=2"
+    },
+    {
+      "examId": "2025-09-27-mercancias-global",
+      "number": 3,
+      "expectedQuestionFragment": "En razón de la especificidad",
+      "status": "TEXTO_CONTRASTADO_FUENTE_PUBLICA",
+      "expectedAppliedAnswer": "C",
+      "explanation": "Texto cotejado contra el cuestionario oficial público JCCM (página 1); la calificación sigue siendo exclusivamente la de la plantilla original",
+      "source": "https://www.castillalamancha.es/sites/default/files/documentos/pdf/20250929/cap_2025_5a_cuestionarios.pdf#page=2"
+    },
+    {
+      "examId": "2025-09-27-mercancias-global",
+      "number": 4,
+      "expectedQuestionFragment": "Respecto de la sociedad anónima",
+      "status": "TEXTO_CONTRASTADO_FUENTE_PUBLICA",
+      "expectedAppliedAnswer": "C",
+      "explanation": "Texto cotejado contra el cuestionario oficial público JCCM (página 1); la calificación sigue siendo exclusivamente la de la plantilla original",
+      "source": "https://www.castillalamancha.es/sites/default/files/documentos/pdf/20250929/cap_2025_5a_cuestionarios.pdf#page=2"
+    },
+    {
+      "examId": "2025-09-27-mercancias-global",
+      "number": 5,
+      "expectedQuestionFragment": "Según el acuerdo ATP",
+      "status": "TEXTO_CONTRASTADO_FUENTE_PUBLICA",
+      "expectedAppliedAnswer": "B",
+      "explanation": "Texto cotejado contra el cuestionario oficial público JCCM (página 1); la calificación sigue siendo exclusivamente la de la plantilla original",
+      "source": "https://www.castillalamancha.es/sites/default/files/documentos/pdf/20250929/cap_2025_5a_cuestionarios.pdf#page=2"
+    },
+    {
+      "examId": "2025-09-27-mercancias-global",
+      "number": 6,
+      "expectedQuestionFragment": "Respecto de los neumáticos de un camión",
+      "status": "TEXTO_CONTRASTADO_FUENTE_PUBLICA",
+      "expectedAppliedAnswer": "C",
+      "explanation": "Texto cotejado contra el cuestionario oficial público JCCM (página 1); la calificación sigue siendo exclusivamente la de la plantilla original",
+      "source": "https://www.castillalamancha.es/sites/default/files/documentos/pdf/20250929/cap_2025_5a_cuestionarios.pdf#page=2"
+    },
+    {
+      "examId": "2023-07-29-mercancias-a",
+      "number": 44,
+      "expectedQuestionFragment": "enfermedades",
+      "status": "DESFASE_DE_HOJA_REVISADO_SIN_FE_DE_ERRATAS",
+      "expectedAppliedAnswer": "B",
+      "explanation": "Comprobación semántica del enunciado y alternativas; la casilla n+1 concuerda. Esta coincidencia NO prueba la causa del desfase ni valida la hoja por numeración ordinaria",
+      "source": "Examenes TOTALES.pdf páginas 66–78; Plantilla A Julio 2023.pdf; CAP_R18_REVISION_16_2026_11_05.md"
+    },
+    {
+      "examId": "2023-07-29-mercancias-a",
+      "number": 47,
+      "expectedQuestionFragment": "suscribe un seguro",
+      "status": "DESFASE_DE_HOJA_REVISADO_SIN_FE_DE_ERRATAS",
+      "expectedAppliedAnswer": "A",
+      "explanation": "Comprobación semántica del enunciado y alternativas; la casilla n+1 concuerda. Esta coincidencia NO prueba la causa del desfase ni valida la hoja por numeración ordinaria",
+      "source": "Examenes TOTALES.pdf páginas 66–78; Plantilla A Julio 2023.pdf; CAP_R18_REVISION_16_2026_11_05.md"
+    },
+    {
+      "examId": "2023-07-29-mercancias-a",
+      "number": 48,
+      "expectedQuestionFragment": "conductor evacúe el vehículo",
+      "status": "DESFASE_DE_HOJA_REVISADO_SIN_FE_DE_ERRATAS",
+      "expectedAppliedAnswer": "B",
+      "explanation": "Comprobación semántica del enunciado y alternativas; la casilla n+1 concuerda. Esta coincidencia NO prueba la causa del desfase ni valida la hoja por numeración ordinaria",
+      "source": "Examenes TOTALES.pdf páginas 66–78; Plantilla A Julio 2023.pdf; CAP_R18_REVISION_16_2026_11_05.md"
+    },
+    {
+      "examId": "2023-07-29-mercancias-a",
+      "number": 49,
+      "expectedQuestionFragment": "consumo específico en un motor",
+      "status": "DESFASE_DE_HOJA_REVISADO_SIN_FE_DE_ERRATAS",
+      "expectedAppliedAnswer": "C",
+      "explanation": "Comprobación semántica del enunciado y alternativas; la casilla n+1 concuerda. Esta coincidencia NO prueba la causa del desfase ni valida la hoja por numeración ordinaria",
+      "source": "Examenes TOTALES.pdf páginas 66–78; Plantilla A Julio 2023.pdf; CAP_R18_REVISION_16_2026_11_05.md"
+    },
+    {
+      "examId": "2023-07-29-mercancias-a",
+      "number": 61,
+      "expectedQuestionFragment": "unidades se mide el par motor",
+      "status": "DESFASE_DE_HOJA_REVISADO_SIN_FE_DE_ERRATAS",
+      "expectedAppliedAnswer": "C",
+      "explanation": "Comprobación semántica del enunciado y alternativas; la casilla n+1 concuerda. Esta coincidencia NO prueba la causa del desfase ni valida la hoja por numeración ordinaria",
+      "source": "Examenes TOTALES.pdf páginas 66–78; Plantilla A Julio 2023.pdf; CAP_R18_REVISION_16_2026_11_05.md"
+    },
+    {
+      "examId": "2023-07-29-mercancias-a",
+      "number": 73,
+      "expectedQuestionFragment": "tasa máxima permitida de alcohol",
+      "status": "DESFASE_DE_HOJA_REVISADO_SIN_FE_DE_ERRATAS",
+      "expectedAppliedAnswer": "D",
+      "explanation": "Comprobación semántica del enunciado y alternativas; la casilla n+1 concuerda. Esta coincidencia NO prueba la causa del desfase ni valida la hoja por numeración ordinaria",
+      "source": "Examenes TOTALES.pdf páginas 66–78; Plantilla A Julio 2023.pdf; CAP_R18_REVISION_16_2026_11_05.md"
+    },
+    {
+      "examId": "2023-07-29-mercancias-a",
+      "number": 76,
+      "expectedQuestionFragment": "resistencias intervienen",
+      "status": "DESFASE_DE_HOJA_REVISADO_SIN_FE_DE_ERRATAS",
+      "expectedAppliedAnswer": "A",
+      "explanation": "Comprobación semántica del enunciado y alternativas; la casilla n+1 concuerda. Esta coincidencia NO prueba la causa del desfase ni valida la hoja por numeración ordinaria",
+      "source": "Examenes TOTALES.pdf páginas 66–78; Plantilla A Julio 2023.pdf; CAP_R18_REVISION_16_2026_11_05.md"
+    },
+    {
+      "examId": "2023-07-29-mercancias-a",
+      "number": 89,
+      "expectedQuestionFragment": "prevención de riesgos laborales",
+      "status": "DESFASE_DE_HOJA_REVISADO_SIN_FE_DE_ERRATAS",
+      "expectedAppliedAnswer": "D",
+      "explanation": "Comprobación semántica del enunciado y alternativas; la casilla n+1 concuerda. Esta coincidencia NO prueba la causa del desfase ni valida la hoja por numeración ordinaria",
+      "source": "Examenes TOTALES.pdf páginas 66–78; Plantilla A Julio 2023.pdf; CAP_R18_REVISION_16_2026_11_05.md"
+    },
+    {
+      "examId": "2023-07-29-mercancias-a",
+      "number": 94,
+      "expectedQuestionFragment": "adelante a un ciclista",
+      "status": "DESFASE_DE_HOJA_REVISADO_SIN_FE_DE_ERRATAS",
+      "expectedAppliedAnswer": "B",
+      "explanation": "Comprobación semántica del enunciado y alternativas; la casilla n+1 concuerda. Esta coincidencia NO prueba la causa del desfase ni valida la hoja por numeración ordinaria",
+      "source": "Examenes TOTALES.pdf páginas 66–78; Plantilla A Julio 2023.pdf; CAP_R18_REVISION_16_2026_11_05.md"
+    },
+    {
+      "examId": "2023-07-29-mercancias-a",
+      "number": 99,
+      "expectedQuestionFragment": "responsable de las infracciones",
+      "status": "DESFASE_DE_HOJA_REVISADO_SIN_FE_DE_ERRATAS",
+      "expectedAppliedAnswer": "C",
+      "explanation": "Comprobación semántica del enunciado y alternativas; la casilla n+1 concuerda. Esta coincidencia NO prueba la causa del desfase ni valida la hoja por numeración ordinaria",
+      "source": "Examenes TOTALES.pdf páginas 66–78; Plantilla A Julio 2023.pdf; CAP_R18_REVISION_16_2026_11_05.md"
+    },
+    {
+      "examId": "2023-07-29-mercancias-a",
+      "number": 100,
+      "expectedQuestionFragment": "círculo de Kamm",
+      "status": "SIN_CASILLA_OFICIAL_VINCULABLE",
+      "expectedAppliedAnswer": "C",
+      "explanation": "La plantilla tiene 100 casillas y la regla +1 produciría una casilla 101 inexistente. La letra C mostrada es del banco, no validación por hoja.",
+      "source": "Examenes TOTALES.pdf página 78; Plantilla A Julio 2023.pdf"
+    },
+    {
+      "examId": "2023-02-04-mercancias-global",
+      "number": 9,
+      "expectedQuestionFragment": "transporte internacional de mercancías",
+      "status": "ALTERNATIVA_RECONSTRUIDA_PENDIENTE_IMAGEN",
+      "expectedAppliedAnswer": null,
+      "explanation": "La etiqueta de una alternativa faltaba o estaba pegada en el extractor; la reparación conserva las cuatro opciones pero no equivale a validación visual",
+      "source": "data-src/cap-exams/override_transcriptions_review.json"
+    },
+    {
+      "examId": "2023-02-04-mercancias-global",
+      "number": 17,
+      "expectedQuestionFragment": "masa del camión es elevada",
+      "status": "ALTERNATIVA_RECONSTRUIDA_PENDIENTE_IMAGEN",
+      "expectedAppliedAnswer": null,
+      "explanation": "La etiqueta de una alternativa faltaba o estaba pegada en el extractor; la reparación conserva las cuatro opciones pero no equivale a validación visual",
+      "source": "data-src/cap-exams/override_transcriptions_review.json"
+    },
+    {
+      "examId": "2023-02-04-mercancias-global",
+      "number": 82,
+      "expectedQuestionFragment": "ahorrar carburante",
+      "status": "ALTERNATIVA_RECONSTRUIDA_PENDIENTE_IMAGEN",
+      "expectedAppliedAnswer": null,
+      "explanation": "La etiqueta de una alternativa faltaba o estaba pegada en el extractor; la reparación conserva las cuatro opciones pero no equivale a validación visual",
+      "source": "data-src/cap-exams/override_transcriptions_review.json"
+    },
+    {
+      "examId": "2025-02-01-mercancias-global",
+      "number": 22,
+      "expectedQuestionFragment": "afirmaciones es incorrecta",
+      "status": "ALTERNATIVA_RECONSTRUIDA_PENDIENTE_IMAGEN",
+      "expectedAppliedAnswer": null,
+      "explanation": "La etiqueta de una alternativa faltaba o estaba pegada en el extractor; la reparación conserva las cuatro opciones pero no equivale a validación visual",
+      "source": "data-src/cap-exams/override_transcriptions_review.json"
+    },
+    {
+      "examId": "2025-02-01-mercancias-global",
+      "number": 57,
+      "expectedQuestionFragment": "conductas no está considerada",
+      "status": "ALTERNATIVA_RECONSTRUIDA_PENDIENTE_IMAGEN",
+      "expectedAppliedAnswer": null,
+      "explanation": "La etiqueta de una alternativa faltaba o estaba pegada en el extractor; la reparación conserva las cuatro opciones pero no equivale a validación visual",
+      "source": "data-src/cap-exams/override_transcriptions_review.json"
+    },
+    {
+      "examId": "2023-06-03-mercancias-global",
+      "number": 97,
+      "expectedQuestionFragment": "auxilio a los heridos",
+      "status": "ALTERNATIVA_RECONSTRUIDA_PENDIENTE_IMAGEN",
+      "expectedAppliedAnswer": null,
+      "explanation": "La etiqueta de una alternativa faltaba o estaba pegada en el extractor; la reparación conserva las cuatro opciones pero no equivale a validación visual",
+      "source": "data-src/cap-exams/override_transcriptions_review.json"
+    }
+  ]
+}

@@ -1,11 +1,13 @@
-const CACHE = 'cap-test-2026-10-06'
+const CACHE = 'cap-test-2026-11-04-cap-exams'
 const BASE = '/cap-test/'
 const CORE = [
   BASE,
   `${BASE}index.html`,
   `${BASE}manifest.webmanifest`,
   `${BASE}icon.svg`,
-  `${BASE}data/index.json`
+  `${BASE}data/index.json`,
+  `${BASE}data/exams/index.json`,
+  `${BASE}data/exams/frequency_by_bank.json`
 ]
 
 self.addEventListener('install', (event) => {
@@ -17,6 +19,9 @@ self.addEventListener('install', (event) => {
       const index = await response.json()
       const bankFiles = index.questionnaires.map((item) => `${BASE}${item.path}`)
       await cache.addAll(bankFiles)
+      const exams = await fetch(BASE + 'data/exams/index.json').then(r=>r.json())
+      const examFiles = exams.exams.map(item => BASE + item.path)
+      await cache.addAll(examFiles)
     } catch (_) {
       // La app sigue siendo instalable aunque falle la precarga completa del banco.
     }

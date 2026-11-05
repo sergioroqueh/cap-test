@@ -1,0 +1,150 @@
+{
+  "schemaVersion": 1,
+  "examId": "2023-07-29-mercancias-a",
+  "sourceExam": "Examenes TOTALES.pdf",
+  "sourceTemplate": "Plantilla A Julio 2023.pdf",
+  "sourceTemplateSha256": "f6aa466561082940f9ce0697aa134c6c4b473b15363b69c54717b9bf933b9f1d",
+  "reviewedOn": "2026-11-05",
+  "meaning": "Trece preguntas cuya clave no se puede leer por el mismo número de la hoja original por un desfase sistemático a partir de q44. Se revisó el enunciado y las cuatro opciones del cuestionario original, y la letra correspondiente a la posición +1; no declarar como coincidencia posicional directa. No cambiar el PDF original ni la alineación provisional de las restantes.",
+  "status": "aprobacion_editorial_explicita_para_autocorreccion_con_aviso_de_desfase",
+  "approvals": {
+    "48": {
+      "number": 48,
+      "sourcePage": 67,
+      "expectedQuestion": "¿Cuándo en las siguientes causas, está especialmente aconsejado que el conductor evacúe el vehículo?",
+      "expectedAnswerText": "Cuando el vehículo se ha detenido sobre un cruce con una vía de ferrocarril y no es posible moverlo.",
+      "approvedAnswer": "B",
+      "templateNumberUsed": 49,
+      "verificationMethod": "lectura_texto_cuatro_opciones_examen_original_mas_plantilla_desplazada_una_posicion",
+      "rationale": "Evacuación necesaria ante vehículo inmovilizado sobre vía férrea."
+    },
+    "51": {
+      "number": 51,
+      "sourcePage": 67,
+      "expectedQuestion": "El máximo par motor coincide normalmente:",
+      "expectedAnswerText": "con un régimen medio de revoluciones del motor.",
+      "approvedAnswer": "C",
+      "templateNumberUsed": 52,
+      "verificationMethod": "lectura_texto_cuatro_opciones_examen_original_mas_plantilla_desplazada_una_posicion",
+      "rationale": "Par motor máximo normalmente en régimen medio."
+    },
+    "52": {
+      "number": 52,
+      "sourcePage": 67,
+      "expectedQuestion": "Un motor consumirá menos combustible si se circula:",
+      "expectedAnswerText": "aprovechando la inercia del vehículo.",
+      "approvedAnswer": "C",
+      "templateNumberUsed": 53,
+      "verificationMethod": "lectura_texto_cuatro_opciones_examen_original_mas_plantilla_desplazada_una_posicion",
+      "rationale": "El aprovechamiento de inercia reduce consumo."
+    },
+    "53": {
+      "number": 53,
+      "sourcePage": 68,
+      "expectedQuestion": "Señale la afirmación incorrecta:",
+      "expectedAnswerText": "La declaración amistosa de accidente hace que disminuya el consumo de los vehículos.",
+      "approvedAnswer": "A",
+      "templateNumberUsed": 54,
+      "verificationMethod": "lectura_texto_cuatro_opciones_examen_original_mas_plantilla_desplazada_una_posicion",
+      "rationale": "La declaración amistosa no altera consumo de vehículos."
+    },
+    "60": {
+      "number": 60,
+      "sourcePage": 69,
+      "expectedQuestion": "¿Cuándo, al menos, debe volcarse la información de las tarjetas de conductor?",
+      "expectedAnswerText": "AI abandonar la empresa el conductor.",
+      "approvedAnswer": "D",
+      "templateNumberUsed": 61,
+      "verificationMethod": "lectura_texto_cuatro_opciones_examen_original_mas_plantilla_desplazada_una_posicion",
+      "rationale": "Orden FOM/1190/2005, art.24, exige descargar al abandonar conductor la empresa.",
+      "officialExternalSource": "https://www.boe.es/buscar/act.php?id=BOE-A-2005-7137&p=20130105&tn=1"
+    },
+    "61": {
+      "number": 61,
+      "sourcePage": 69,
+      "expectedQuestion": "¿En qué unidades se mide el par motor en el Sistema Internacional de Unidades?",
+      "expectedAnswerText": "En Newton - metro (N-m).",
+      "approvedAnswer": "C",
+      "templateNumberUsed": 62,
+      "verificationMethod": "lectura_texto_cuatro_opciones_examen_original_mas_plantilla_desplazada_una_posicion",
+      "rationale": "La unidad del par de fuerzas es N·m."
+    },
+    "62": {
+      "number": 62,
+      "sourcePage": 70,
+      "expectedQuestion": "Un vehículo pesado posee un ralentizador hidrodinámico, al accionarlo ¿cómo reaccionará?",
+      "expectedAnswerText": "actuará sobre las ruedas motrices.",
+      "approvedAnswer": "B",
+      "templateNumberUsed": 63,
+      "verificationMethod": "lectura_texto_cuatro_opciones_examen_original_mas_plantilla_desplazada_una_posicion",
+      "rationale": "Frena la transmisión a las ruedas motrices."
+    },
+    "73": {
+      "number": 73,
+      "sourcePage": 72,
+      "expectedQuestion": "Para los conductores de vehículos de transporte de mercancías con MMA superior a 3.500 kg y de transporte de viajeros de más de nueve plazas, ¿cuál es la tasa máxima permitida de alcohol en aire expirado?",
+      "expectedAnswerText": "0,15 mg/I.",
+      "approvedAnswer": "D",
+      "templateNumberUsed": 74,
+      "verificationMethod": "lectura_texto_cuatro_opciones_examen_original_mas_plantilla_desplazada_una_posicion",
+      "rationale": "Límite profesional histórico de 0,15 mg/l en aire expirado.",
+      "officialExternalSource": "https://sede.dgt.gob.es/.galleries/permisos-de-conducir/certificacion-aptitud-profesores-formacion-vial/2023/Manual-II-Cuestiones-de-Seguridad-Vial-2023.pdf"
+    },
+    "76": {
+      "number": 76,
+      "sourcePage": 73,
+      "expectedQuestion": "¿Qué resistencias intervienen normalmente en el movimiento de los vehículos?",
+      "expectedAnswerText": "La resistencia aerodinámica, la resistencia a la rodadura y la resistencia a la pendiente.",
+      "approvedAnswer": "A",
+      "templateNumberUsed": 77,
+      "verificationMethod": "lectura_texto_cuatro_opciones_examen_original_mas_plantilla_desplazada_una_posicion",
+      "rationale": "La misma pregunta y las mismas opciones figuran en Mercancías B julio 2023 q34; la hoja B original marca A. Se certifica la clave histórica de examen, no una afirmación de que no exista rozamiento de transmisión.",
+      "secondModelProof": {
+        "examId": "2023-07-29-mercancias-b",
+        "number": 34,
+        "answer": "A",
+        "identicalQuestionAndOptions": true
+      }
+    },
+    "85": {
+      "number": 85,
+      "sourcePage": 75,
+      "expectedQuestion": "¿Qué factores afectan al consumo energético del motor de un automóvil?",
+      "expectedAnswerText": "El perfil de la carretera, la presión del pedal del acelerador y la relación de marchas seleccionada en la caja de velocidades.",
+      "approvedAnswer": "B",
+      "templateNumberUsed": 86,
+      "verificationMethod": "lectura_texto_cuatro_opciones_examen_original_mas_plantilla_desplazada_una_posicion",
+      "rationale": "Pendiente, acelerador y marcha influyen en consumo."
+    },
+    "91": {
+      "number": 91,
+      "sourcePage": 76,
+      "expectedQuestion": "¿En qué unidad se mide la potencia en el Sistema Internacional de Unidades?",
+      "expectedAnswerText": "Kilovatios (kW).",
+      "approvedAnswer": "B",
+      "templateNumberUsed": 92,
+      "verificationMethod": "lectura_texto_cuatro_opciones_examen_original_mas_plantilla_desplazada_una_posicion",
+      "rationale": "El vatio es la unidad SI de potencia; kW es su múltiplo."
+    },
+    "93": {
+      "number": 93,
+      "sourcePage": 77,
+      "expectedQuestion": "¿Qué variable de las que a continuación se relacionan, se utiliza para definir el tráfico existente en una carretera?",
+      "expectedAnswerText": "Intensidad del tráfico.",
+      "approvedAnswer": "C",
+      "templateNumberUsed": 94,
+      "verificationMethod": "lectura_texto_cuatro_opciones_examen_original_mas_plantilla_desplazada_una_posicion",
+      "rationale": "Intensidad de tráfico mide el flujo de circulación."
+    },
+    "96": {
+      "number": 96,
+      "sourcePage": 77,
+      "expectedQuestion": "En caso de causas meteorológicas extremas, ¿cuándo es aconsejable detenerse fuera de la carretera y esperar a su mejora, como norma general?",
+      "expectedAnswerText": "Cuando la circulación se realice con peligro para la seguridad vial.",
+      "approvedAnswer": "B",
+      "templateNumberUsed": 97,
+      "verificationMethod": "lectura_texto_cuatro_opciones_examen_original_mas_plantilla_desplazada_una_posicion",
+      "rationale": "Detenerse fuera de calzada cuando hay peligro vial."
+    }
+  }
+}
