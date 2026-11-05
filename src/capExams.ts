@@ -269,6 +269,7 @@ export interface CapPendingQuestion {
   options: Record<AnswerKey, string>
   sourcePage: number
   answerStatus: string
+  editorialDecision: CapEditorialDecision | null
 }
 
 export async function loadCapPendingQuestions(meta: CapExamMeta): Promise<CapPendingQuestion[]> {
@@ -277,7 +278,8 @@ export async function loadCapPendingQuestions(meta: CapExamMeta): Promise<CapPen
   const rows: CapRawQuestion[] = await res.json()
   return rows.filter(q => q.correctAnswer === null).map(q => ({
     number:q.number,question:q.question,options:q.options,
-    sourcePage:q.sourcePage,answerStatus:q.answerStatus
+    sourcePage:q.sourcePage,answerStatus:q.answerStatus,
+    editorialDecision:q.editorialDecision || null
   }))
 }
 
