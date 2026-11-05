@@ -8,7 +8,7 @@ assert bank['totalQuestions'] == 8655
 assert bank['totalQuestionnaires'] == 33
 index = json.loads((root/'exams'/'index.json').read_text())
 assert index['totalExamModels'] == 26
-assert index['totalImportedQuestions'] == 2500
+assert index['totalImportedQuestions'] == 2600
 exams = index['exams']
 # No overlapping PDF source pages across principal models. The only unassigned
 # ranges are the two known six-page ampliaciones, excluded from frequency.
@@ -24,7 +24,7 @@ assert next(e for e in exams if e['id']=='2026-03-28-mercancias-global')['source
 assert next(e for e in exams if e['id']=='2022-05-21-mercancias-global')['sourcePageStart']==364
 assert len([e for e in exams if e['category'] == 'mercancias']) == 25
 assert len([e for e in exams if e['category'] == 'viajeros']) == 1
-assert index['categoryCounts']['mercancias'] == 24
+assert index['categoryCounts']['mercancias'] == 25
 assert index['categoryCounts'].get('viajeros',0) == 1
 
 for exam in exams:
@@ -45,10 +45,17 @@ for exam in exams:
         assert next(q for q in rows if q['number']==1)['sourcePage']==364
         assert next(q for q in rows if q['number']==100)['sourcePage']==383
     if exam['id']=='2024-04-06-mercancias-global':
-        # 25 questions are staged as raw source; no partial test is published.
-        assert len(rows)==0
-        assert exam['count']==0
-        assert exam['readyCount']==0
+        assert len(rows)==100
+        assert {q['number'] for q in rows}==set(range(1,101))
+        assert {q['sourcePage'] for q in rows}==set(range(1,22))
+        assert all(q.get('transcriptionReview') is True for q in rows)
+        assert all(q.get('sourceMethod')=='LECTURA_VISUAL_PDF_PENDIENTE_REVISION' for q in rows)
+        assert all(q['reviewRequired'] is True for q in rows)
+        assert all(q['category']=='mercancias' for q in rows)
+        assert all(q['correctAnswer'] is None or q['correctAnswer']==q['bankAnswer'] for q in rows)
+        assert next(q for q in rows if q['number']==1)['sourcePage']==1
+        assert next(q for q in rows if q['number']==100)['sourcePage']==21
+        assert all(q['number']<=100 for q in rows), 'No incluir reservas 101-103'
     if exam['id']=='2026-03-28-mercancias-global':
         assert len(rows)==100
         assert {q['number'] for q in rows}==set(range(1,101))
@@ -132,6 +139,8 @@ for exam in exams:
                 assert q['templateNumberUsed'] is None
                 assert q['templateAnswer'] is None
                 assert q['reviewRequired']
+    assert len(rows)==100, ('Todos los 26 examenes principales deben estar completos', exam['id'])
+    assert exam['count']==100 and exam['expectedCount']==100
     assert sum(q['correctAnswer'] in ('A','B','C','D') for q in rows) == exam['readyCount']
     assert len({q['number'] for q in rows}) == len(rows)
     for q in rows:
