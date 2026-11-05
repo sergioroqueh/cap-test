@@ -63,6 +63,11 @@ def generate():
     manifest = json.loads((SRC/'manifest.json').read_text(encoding='utf-8'))['exams']
     keys = json.loads((SRC/'answer_keys_unverified.json').read_text(encoding='utf-8'))
     verified_pdf_keys = json.loads((SRC/'answer_keys_visually_verified.json').read_text(encoding='utf-8'))['exams']
+    visual_batch = json.loads((SRC/'visual_batch_candidates_2026_11_05.json').read_text(encoding='utf-8'))['exams']
+    if set(visual_batch) & set(verified_pdf_keys): raise RuntimeError('Plantillas duplicadas')
+    for exam_id, proof in visual_batch.items():
+        proof['fromBatch']=True
+        verified_pdf_keys[exam_id]=proof
     verified_pdf_applied = defaultdict(int)
     verified_pdf_bank_matching = defaultdict(int)
     verified_pdf_bank_conflicts = defaultdict(int)
