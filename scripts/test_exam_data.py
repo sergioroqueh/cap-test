@@ -212,6 +212,52 @@ assert all(q['transcriptionReview']=='True' and q['sourceMethod'] for q in ocr_a
 assert all(q['optionA'] and q['optionB'] and q['optionC'] and q['optionD'] for q in ocr_audit)
 assert sum(q['bankAnswer'] in ('A','B','C','D') for q in ocr_audit)==67
 
+# Cross-exam review is advisory and must never silently assign a correct answer.
+cross=json.loads((root/'exams'/'cross_model_pending_review.json').read_text())
+assert cross['schemaVersion']==1
+all_questions={}
+for exam in exams:
+    for question in json.loads((root/exam['path'].removeprefix('data/')).read_text()):
+        all_questions[(exam['id'],question['number'])]=question
+pending_count=sum(q['correctAnswer'] is None for q in all_questions.values())
+assert cross['totalUnscoredBeforeAndAfter']==pending_count
+assert cross['exactRepeatCases']==len(cross['items'])
+assert all(item['approved'] is False and item['willAffectCorrectAnswer'] is False
+           and item['usage']=='SOLO_REVISION_NO_AUTOCORREGIR'
+           for item in cross['items'])
+assert all('correctAnswer' not in item for item in cross['items'])
+seen=set()
+for item in cross['items']:
+    key=(item['examId'],item['number'])
+    assert key not in seen
+    seen.add(key)
+    target=all_questions[key]
+    assert target['correctAnswer'] is None
+    assert target['category']==item['category']
+    assert 1<=item['number']<=100
+    assert item['exactRepeatedModels']
+    assert item['examId'] not in item['exactRepeatedModels']
+    assert all(all_questions[(source['examId'],source['number'])]['category']==item['category']
+               for source in item['supportingTemplateRows'])
+    assert item['supportingModels']==len(set(
+        source['examId'] for source in item['supportingTemplateRows']))
+    if item['reviewStatus']=='contradiccion_plantillas_bloqueada':
+        assert item['candidateLetterUnapproved'] is None
+        assert len(set(e['candidateLetterInTarget']
+                       for e in item['supportingTemplateRows']))>1
+    elif item['candidateLetterUnapproved'] is not None:
+        assert item['candidateLetterUnapproved'] in 'ABCD'
+        assert item['candidateAnswerTextUnapproved']==target['options'][
+            item['candidateLetterUnapproved']]
+        assert item['supportingModels']>=1
+        assert {e['candidateLetterInTarget'] for e in item['supportingTemplateRows']}=={
+            item['candidateLetterUnapproved']}
+    else:
+        assert not item['supportingTemplateRows']
+with (root/'exams'/'cross_model_pending_review.csv').open('r',encoding='utf-8-sig',newline='') as fh:
+    cross_csv=list(csv.DictReader(fh))
+assert len(cross_csv)==len(cross['items'])
+
 freq = json.loads((root/'exams'/'frequency_by_bank.json').read_text())
 assert all(1<=v['count']<=v['denominator'] for v in freq.values())
 assert all(v['category']=='mercancias' for v in freq.values()), 'El banco general no debe heredar el denominador de Viajeros'
