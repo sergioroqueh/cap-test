@@ -78,3 +78,11 @@ nav{position:fixed;bottom:0;left:0;right:0;height:72px;background:color-mix(in s
 .cap-r22-original summary{font-size:11px;font-weight:750;color:var(--muted)}
 .cap-r22-original p{font-size:12px}
 .cap-r22-original li{font-size:11px}
+
+/* R23: evidencia de lectura discrepante sin sugerir una clave nueva. */
+.cap-r23-case{border:1px solid color-mix(in srgb,var(--primary) 29%,var(--line));
+ border-radius:12px;padding:12px 13px;margin:10px 0;
+ background:color-mix(in srgb,var(--primary) 5%,var(--surface));overflow-wrap:anywhere}
+.cap-r23-case>b{font-size:12px;color:var(--primary)}
+.cap-r23-case p{font-size:12px;line-height:1.55;margin:7px 0}
+.cap-r23-case small{display:block;font-size:11px;line-height:1.4;color:var(--muted)}
