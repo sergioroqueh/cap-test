@@ -525,3 +525,40 @@ assert any(f['code']=='enunciado_fuente_incoherente' for f in
 assert any(f['code']=='cotejo_visual_glifos_septiembre_2025' for f in
            triage['questions']['2025-09-27-mercancias-global'][0]['flags'])
 print('PASS R21 26 exámenes y 2600 filas de auditoría, sin cambio de claves')
+
+
+# R22: independent editorial casebook + reversible text fixes.
+r22=json.loads((root/'exams'/'editorial_casebook_r22.json').read_text(encoding='utf-8'))
+assert r22['schemaVersion']==1 and r22['totalRows']==306
+assert r22['manualCaseCount']==33
+assert r22['correctAnswerChangeCount']==r22['sourceAnswerSheetChangeCount']==0
+assert r22['preservedSourceLetters']==300
+assert len(r22['targetExams'])==3
+assert all(e['reviewedRows']==100 and e['editoriallyComplete'] is False
+           for e in r22['targetExams'])
+assert sum(e['textFixes'] for e in r22['targetExams'])==99
+with (root/'exams'/'editorial_casebook_r22.csv').open(encoding='utf-8-sig',newline='') as fh:
+    rows22=list(csv.DictReader(fh))
+assert len(rows22)==306 and len({(r['examId'],r['number']) for r in rows22})==306
+cases22={(c['examId'],c['number']):c for c in r22['cases']}
+assert len(cases22)==33
+nov6=cases22[('2022-11-26-mercancias-global',6)]
+assert nov6['status']=='DUDOSA_TECNICA_FRENTE_DGT'
+assert 'sede.dgt.gob.es' in nov6['source']
+qnov6=json.loads((root/'exams'/'questions'/'2022-11-26-mercancias-global.json').read_text())[5]
+assert qnov6['originalSheetAnswer']==qnov6['correctAnswer']=='A'
+sept=json.loads((root/'exams'/'questions'/'2025-09-27-mercancias-global.json').read_text())
+assert sum(bool(q.get('textCorrection')) for q in sept)==94
+assert sept[0]['options']['A']=='El origen y el propietario de los animales.'
+assert sept[0]['textCorrection']['originalOptions']['A'].startswith('EI origen')
+assert sept[1]['options']['A']=='Vehículo jaula.'
+assert sept[2]['question'].startswith('En razón de la especificidad')
+assert sept[2]['textCorrection']['answerKeysChanged'] is False
+jul23=json.loads((root/'exams'/'questions'/'2023-07-29-mercancias-a.json').read_text())
+assert sum(bool(q.get('textCorrection')) for q in jul23)==4
+assert jul23[72]['options']['D']=='0,15 mg/l.'
+assert jul23[99]['mappedSheetQuestionNumber'] is None
+assert cases22[('2023-07-29-mercancias-a',100)]['status']=='SIN_CASILLA_OFICIAL_VINCULABLE'
+assert sum(c['status']=='ALTERNATIVA_RECONSTRUIDA_PENDIENTE_IMAGEN'
+           for c in cases22.values())==6
+print('PASS R22 criterios editoriales: 306 filas, 33 casos, 99 textos reversibles y q6 DGT dudosa')
