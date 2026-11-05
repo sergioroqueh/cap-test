@@ -14,6 +14,36 @@ se excluyen del recuento. Siguen pendientes revisiones visuales y cotejos
 de las respuestas con sus plantillas oficiales.
 El apartado siguiente conserva el historial de hitos y cifras de rondas anteriores.
 
+### Ronda 12 — Cruce exacto de preguntas pendientes (05/11/2026)
+
+- El inventario **ya está completo**: 26 modelos, 2.600 apariciones.
+  Esta ronda **no añade preguntas ni adjudica letras**; mejora la auditoría
+  de las 685 apariciones todavía sin autocorrección.
+- Se comparan solamente preguntas de la **misma modalidad** con enunciado y
+  **las cuatro opciones normalizadas idénticas** (independientemente de su
+  orden). No se equiparan paráfrasis ni preguntas solamente parecidas.
+- Para una coincidencia se comprueba por separado la **respuesta textual**
+  de cualquier plantilla registrada de *otro modelo*. No se copia su letra
+  A/B/C/D, que puede haber cambiado al reordenar las opciones.
+- Se descartan como apoyo las respuestas de plantilla con desplazamiento
+  provisional, corrección visual pendiente o conflicto explícito con el banco.
+  Si aparecen claves contradictorias entre modelos, se registran como
+  **contradicción bloqueada**, nunca se vota por mayoría.
+- Salidas reproducibles: public/data/exams/cross_model_pending_review.json
+  (incluye evidencia por modelo) y el CSV homónimo (priorización editorial).
+  Se adjuntan también al artefacto cap-exam-review de GitHub Actions.
+- **Separación importante:** las coincidencias se llaman *candidatos
+  editoriales*, **no respuestas verificadas**. Tienen approved=false y
+  willAffectCorrectAnswer=false. No cambian el valor de correctAnswer,
+  las notas ni las frecuencias.
+- La [plantilla correctora oficial del 28/03/2026](https://transporte.castillalamancha.es/sites/default/files/2026-03/CAP%202026_2%C2%AA%20-%20Plantillas%20Correctoras.pdf)
+  está localizada y fechada por el tribunal el 30/03/2026, pero su
+  tabla de casillas aún no ha podido leerse visualmente con seguridad;
+  **no se ha usado para completar ninguna de las 19 pendientes**.
+- Siguen pendientes la inspección visual de los exámenes escaneados, la
+  validación de las plantillas y las pruebas de uso en móvil/escritorio.
+  **PR #6 en borrador**; no se toca producción.
+
 ### Ronda 11 — Mercancías Global 06/04/2024 (PDF pp. 1–21)
 
 - Examen finalizado: **100 preguntas 1–100, cada una con A–D** y página
