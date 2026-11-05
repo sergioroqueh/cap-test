@@ -1,17 +1,56 @@
-# CAP Test — importación auditada de exámenes (04/11/2026)
+# CAP Test — importación auditada de exámenes (05/11/2026)
 
 ## Estado: PR de trabajo, sin aprobar para producción
 
 Se conserva el banco original: **8.655 preguntas / 33 cuestionarios**, el login y
 el progreso existente. No modifica ni sobrescribe los TXT de origen.
 
-**Estado vigente — Ronda 10 (04/11/2026):** 26 convocatorias catalogadas;
-**2.500 apariciones** importadas (**24** modelos completos de Mercancías y
-**1** de Viajeros); **1.842 respuestas** recuperadas por cotejo automático con el
-banco maestro (**1.766 Mercancías + 76 Viajeros**). **658** sin autocorrección.
-**Un modelo** escaneado de Mercancías continúa pendiente (abril de 2024):
-25 preguntas transcritas en la fuente sin publicar y 75 aún no disponibles.
+**Estado vigente — Ronda 11 (05/11/2026):** **26/26 modelos completos**
+(**25 Mercancías y 1 Viajeros**) con **2.600 apariciones históricas** importadas,
+**1.915 respuestas** recuperadas por cotejo con el banco maestro
+(**1.839 Mercancías + 76 Viajeros**) y **685 sin autocorrección**.
+No faltan preguntas principales por transcribir; las reservas y ampliaciones
+se excluyen del recuento. Siguen pendientes revisiones visuales y cotejos
+de las respuestas con sus plantillas oficiales.
 El apartado siguiente conserva el historial de hitos y cifras de rondas anteriores.
+
+### Ronda 11 — Mercancías Global 06/04/2024 (PDF pp. 1–21)
+
+- Examen finalizado: **100 preguntas 1–100, cada una con A–D** y página
+  original del PDF guardada en
+  `data-src/cap-exams/raw/2024-04-06-mercancias-global.json`.
+- La página 21 incluye reservas **101–103**, que quedan
+  **excluidas** del banco histórico de apariciones y del simulacro.
+- Resultado del cotejo: **73/100** respuestas recuperadas
+  exclusivamente del banco maestro; **27/100 sin autocorrección**.
+  No se han inventado letras correctas.
+- La transcripción visual de las 100 preguntas lleva
+  `TRANSCRIPCION_VISUAL_PENDIENTE_REVISION`,
+  `transcriptionReview=true`, `reviewRequired=true` y
+  `sourceMethod=LECTURA_VISUAL_PDF_PENDIENTE_REVISION`.
+  Recuperar una clave del banco no equivale a validar editorialmente la
+  transcripción ni a confirmar la respuesta con plantilla original.
+- La referencia a `Plantilla Abril 2024.pdf` existe en el manifiesto,
+  pero **su clave no está digitalizada** en
+  `answer_keys_unverified.json`.
+- El informe `docs/CAP_ABRIL_2024_PENDIENTES.md` registra la cola
+  de 27 preguntas, posibles candidatos de búsqueda y prioridades de
+  comprobación de los enunciados y las respuestas.
+- **Final del histórico:** 26 modelos, **2.600 apariciones** (2.500
+  Mercancías + 100 Viajeros), **1.915** con respuesta recuperada del banco,
+  **685** sin autocorrección y **1.081 IDs distintos** enlazados con
+  el banco maestro. Los 8.655 originales y 33 cuestionarios no se
+  modifican.
+- Nuevas pruebas bloquean la importación de un modelo visual incompleto:
+  solo se publican modelos 100/100, se exigen las cuatro opciones,
+  páginas válidas, numeración 1–100, ausencia de reservas y separación
+  entre Mercancías y Viajeros.
+- **CI PASS** del commit `44a0a951eb40069acc5412e431c9ace337abdae0`
+  ([ejecución 41988843256](https://github.com/sergioroqueh/cap-test/actions/runs/41988843256))
+  y beta independiente Vercel **READY** para ese commit.
+- Se conserva **PR #6 como borrador**; no fusionar todavía hasta las
+  pruebas de usuario (móvil, escritorio, persistencia, examen y estudio)
+  y las validaciones editoriales pendientes.
 
 ### Ronda 10 — Mercancías Global 21/05/2022 (PDF pp. 364–383)
 
