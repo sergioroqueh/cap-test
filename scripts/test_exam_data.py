@@ -562,3 +562,46 @@ assert cases22[('2023-07-29-mercancias-a',100)]['status']=='SIN_CASILLA_OFICIAL_
 assert sum(c['status']=='ALTERNATIVA_RECONSTRUIDA_PENDIENTE_IMAGEN'
            for c in cases22.values())==6
 print('PASS R22 criterios editoriales: 306 filas, 33 casos, 99 textos reversibles y q6 DGT dudosa')
+
+
+# R23: 10 convocatorias 2025-2026 en cola de revisión, evidencias
+# individualizadas y lectura secundaria NO verificada siempre separada.
+r23 = json.loads((root/'exams'/'editorial_casebook_r23.json').read_text(encoding='utf-8'))
+assert r23['schemaVersion'] == 1 and r23['round'] == 'R23'
+assert r23['totalExamModels'] == 10 and r23['totalQuestionRows'] == 1000
+assert r23['manualEvidenceCases'] == 17 and len(r23['cases']) == 17
+assert r23['originalSheetLetters'] == 900
+assert r23['scoringEligibleBeforeAfter'] == 982 and r23['withoutScoring'] == 18
+assert r23['blockedTemplateConflicts'] == 3 and r23['sourceKeyChanges'] == 0
+assert r23['manualVisualReviewCompleted'] is False
+assert r23['unverifiedMarch2025Numbers'] == [25,46,62,69,70,80,82,90,100]
+assert len(r23['exams']) == 10 and all(x['questions'] == 100 for x in r23['exams'])
+assert all(x['visualReviewCompletedAllQuestions'] is False for x in r23['exams'])
+assert sum(x['originalPrintedLetters'] for x in r23['exams']) == 900
+assert sum(x['scoringEligible'] for x in r23['exams']) == 982
+assert sum(x['withoutScoring'] for x in r23['exams']) == 18
+with (root/'exams'/'editorial_casebook_r23.csv').open(encoding='utf-8-sig',newline='') as fh:
+    audit23 = list(csv.DictReader(fh))
+assert len(audit23) == 1000
+assert len({(x['examId'],int(x['questionNumber'])) for x in audit23}) == 1000
+assert all(x['verifiedQuestionIndividually'] == 'NO' for x in audit23)
+assert sum(x['scoringEligible'] == 'SI' for x in audit23) == 982
+assert sum(bool(x['pdfOriginalLetter']) for x in audit23) == 900
+assert {x['editorialState'] for x in audit23 if x['priority'] == 'P0'} == {
+    'CONFLICTO_PLANTILLA_BANCO_SIN_PUNTUAR',
+    'CONFLICTO_NORMATIVO_SIN_PUNTUAR',
+    'ENUNCIADO_INCOHERENTE_PDF_SIN_PUNTUAR',
+}
+assert all(x['scoringEligible'] == 'NO' for x in audit23 if x['priority'] == 'P0')
+march_r23 = [x for x in r23['cases'] if x['status'] == 'LECTURA_EXTERNA_NO_VERIFICADA_DISCREPA']
+assert len(march_r23) == 9
+assert all(x['unverifiedTextExtractionLetter'] != x['visuallyVerifiedOriginalSheetLetter']
+           and x['originalSheetAnswer'] == x['visuallyVerifiedOriginalSheetLetter']
+           and x['appliedAnswer'] == x['originalSheetAnswer']
+           for x in march_r23)
+assert all(c['changesAnswer'] is False and c['reviewCompleted'] is False for c in r23['cases'])
+assert any(c['status'] == 'MISMA_PREGUNTA_SIN_PLANTILLA_INDEPENDIENTE'
+           and c['number'] == 83 for c in r23['cases'])
+assert any(c['status'] == 'EXPLICACION_DGT_EXTERNA_COTEJADA'
+           and 'dgt.es' in c['sourceUrl'] for c in r23['cases'])
+print('PASS R23: auditable 1000 preguntas, 17 casos, 900 originales, 982 puntuables; 0 claves alteradas')
