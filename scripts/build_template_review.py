@@ -36,6 +36,7 @@ def main():
     # Un desacuerdo visual/banco previamente puntuado pasa a pendiente y se resta.
     newly_certified_count = sum(100 - proof['expectedBankConcordances']
                                 - 2 * proof.get('expectedBankConflicts',0)
+                                - proof.get('expectedPreviouslyScoredExternal',0)
                                 for proof in verified.values())
     if len(by_id) != len(indexed):
         raise AssertionError("Desfase entre manifiesto e índice")
