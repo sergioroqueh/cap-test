@@ -70,8 +70,15 @@ for exam_id,proof in staging.items():
         'withoutBank':counts['withoutBank'],
         'holdConflicts':holds,
     }
+newly_certified=sum(
+    proof['verifiedQuestionEnd']-proof['expectedBankConcordances']
+    -2*proof.get('expectedBankConflicts',0)-proof.get('expectedPreviouslyScoredExternal',0)
+    for proof in staging.values()
+)
+if newly_certified!=365:raise AssertionError('Se esperaba certificar 365 respuestas nuevas')
 summary={'schemaVersion':1,'models':len(report),'visualPositions':sum(e['positionsVerifiable'] for e in report.values()),
  'newFromPdf':sum(e['newFromPdf'] for e in report.values()),
+ 'newlyCertifiedComparedToR16':newly_certified,
  'bankConflicts':sum(e['bankConflicts'] for e in report.values()),
  'items':report,
  'note':'Auditoría del PDF original sin promoción automática; conservar bloqueos por conflicto de enunciado y desalineación de 2023 A'}
@@ -79,4 +86,4 @@ summary={'schemaVersion':1,'models':len(report),'visualPositions':sum(e['positio
 for name,v in report.items():
     print(f"BATCH {name}: {v['positionsVerifiable']} posiciones, banco={v['bankConcordances']} conflictos={v['bankConflicts']} rescates={v['newFromPdf']} dif_lectura={len(v['provisionalDifferences'])}")
     if v['bankConflicts']:print('   BLOQUEADOS: ',[(h['number'],h['bankAnswer'],h['pdfAnswer']) for h in v['holdConflicts']])
-print('BATCH TOTAL',summary['visualPositions'],summary['newFromPdf'],'conflicts',summary['bankConflicts'])
+print('BATCH TOTAL',summary['visualPositions'],'nuevas_certificadas=',newly_certified,'restantes_no_certificadas=',summary['newFromPdf'],'conflictos=',summary['bankConflicts'])
