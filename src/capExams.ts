@@ -35,6 +35,7 @@ export interface CapQuestion extends Question {
   answerStatus: string
   reviewRequired: boolean
   sourcePage: number
+  editorialDecision?: CapEditorialDecision
 }
 interface CapRawQuestion extends Omit<CapQuestion, 'correctAnswer' | 'progressId'> {
   correctAnswer: AnswerKey | null
@@ -98,6 +99,7 @@ export interface CapSheetReviewQuestion {
   r22Case: CapR22Case | null
   r23Case: CapR23Case | null
   r24Case: CapR23Case | null
+  editorialDecision: CapEditorialDecision | null
   r22TextCorrection: CapRawQuestion['textCorrection'] | null
 }
 
@@ -130,8 +132,24 @@ export async function loadCapSheetReview(meta: CapExamMeta): Promise<CapSheetRev
     r22Case: r22Cases.get(meta.id + ':' + q.number) || null,
     r23Case: r23Cases.get(meta.id + ':' + q.number) || null,
     r24Case: r24Cases.get(meta.id + ':' + q.number) || null,
+    editorialDecision: q.editorialDecision || null,
     r22TextCorrection: q.textCorrection || null,
   }))
+}
+
+export interface CapEditorialDecision {
+  round: string
+  status: string
+  reviewCompleted: boolean
+  officialCorrectionConfirmed: boolean
+  editorialAnswer: AnswerKey | null
+  originalSheetAnswer: AnswerKey
+  bankAnswer: AnswerKey
+  scoringPolicy: 'NO_PUNTUA'
+  decision: string
+  reason: string
+  scope: string
+  sources: string[]
 }
 
 export interface CapR22Case {
