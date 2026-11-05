@@ -454,7 +454,7 @@ def generate():
           sum(q['matchMethod']=='enunciado_y_texto_respuesta_exactos' for q in all_rows))
     print('AUDIT incomplete models:',[(e['id'],e['count']) for e in index if e['count'] not in (0,100)])
     print('AUDIT parse warnings:', warnings[:20])
-    if len(index)!=26 or len(all_rows)!=2500:
-        raise RuntimeError(f"Auditoria incompleta: {len(index)} examenes y {len(all_rows)} preguntas; esperados 26 y 2500")
+    if len(index)!=26 or len(all_rows)!=2600:
+        raise RuntimeError(f"Auditoria incompleta: {len(index)} examenes y {len(all_rows)} preguntas; esperados 26 y 2600")
 
 if __name__=='__main__':generate()
