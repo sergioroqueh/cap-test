@@ -281,6 +281,46 @@ with (root/'exams'/'cross_model_pending_review.csv').open('r',encoding='utf-8-si
     cross_csv=list(csv.DictReader(fh))
 assert len(cross_csv)==len(cross['items'])
 
+
+# R14: solo analizar pendientes con archivo de plantilla; las restantes
+# conservan su posición en CAP Test, pero se aplazan en auditoría editorial.
+template_summary=json.loads((root/'exams'/'template_review_summary.json').read_text())
+assert template_summary['totalUnscored']==678
+assert template_summary['prioritizedWithTemplate']==498
+assert template_summary['deferredWithoutTemplate']==180
+assert template_summary['publishedAnswerChanges']==0
+expected_deferred={
+    '2025-07-26-mercancias-b',
+    '2023-12-02-mercancias-global',
+    '2022-05-21-mercancias-global',
+    '2024-04-06-viajeros-global',
+}
+assert set(template_summary['modelsWithoutTemplate'])==expected_deferred
+with (root/'exams'/'template_review_priority.csv').open(encoding='utf-8-sig',newline='') as fh:
+    priority_rows=list(csv.DictReader(fh))
+with (root/'exams'/'without_template_deferred.csv').open(encoding='utf-8-sig',newline='') as fh:
+    deferred_rows=list(csv.DictReader(fh))
+assert len(priority_rows)==498 and len(deferred_rows)==180
+assert all(r['templateFile'] and r['pendingReason']=='VERIFICAR_IMAGEN_PLANTILLA' for r in priority_rows)
+assert all(not r['templateFile'] and r['pendingReason']=='APLAZADO_SIN_ARCHIVO_PLANTILLA' for r in deferred_rows)
+assert all(r['examId'] not in expected_deferred for r in priority_rows)
+assert all(r['examId'] in expected_deferred for r in deferred_rows)
+prioritized_keys={(r['examId'],int(r['number'])) for r in priority_rows}
+deferred_keys={(r['examId'],int(r['number'])) for r in deferred_rows}
+assert len(prioritized_keys)==498 and len(deferred_keys)==180
+assert not (prioritized_keys & deferred_keys)
+assert all(all_questions[key]['correctAnswer'] is None for key in prioritized_keys | deferred_keys)
+unverified=json.loads((root/'exams'/'template_2025_03_29_unverified_comparison.json').read_text())
+assert unverified['matchingExistingBank']==76
+assert unverified['disagreeingWithExistingBank']==9
+assert unverified['noExistingBankAnswer']==15
+assert 'BLOQUEADO' in unverified['reviewStatus']
+assert len(unverified['disagreements'])==9
+assert len(unverified['candidatesUnapproved'])==15
+assert all(all_questions[('2025-03-29-mercancias-global',int(q['number']))]['correctAnswer'] is None
+           for q in unverified['candidatesUnapproved'])
+print('PASS R14: 498 con plantilla, 180 aplazadas, 9 discrepancias PDF sin publicar')
+
 freq = json.loads((root/'exams'/'frequency_by_bank.json').read_text())
 assert all(1<=v['count']<=v['denominator'] for v in freq.values())
 assert all(v['category']=='mercancias' for v in freq.values()), 'El banco general no debe heredar el denominador de Viajeros'
