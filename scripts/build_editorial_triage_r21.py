@@ -19,6 +19,7 @@ LETTERS = set("ABCD")
 # Posibles confusiones entre I mayuscula y l minuscula en capas de texto PDF.
 BAD_OCR = re.compile(r"\b(?:EI|eI|Ios|Ias|Ia|SoIo|soIo|AI)\b|(?<=[a-záéíóúüñ])I(?=[a-záéíóúüñ])")
 FIELDS = ("examId", "date", "category", "model", "questionNumber", "sourcePage",
+          "question", "optionA", "optionB", "optionC", "optionD",
           "priority", "flags", "explanation", "printedAnswer", "mappedAnswer",
           "bankAnswer", "scoredAnswer", "textReviewRequired", "sheetSource")
 
@@ -199,6 +200,9 @@ def main() -> None:
                 "examId": item["examId"], "date": item["date"],
                 "category": item["category"], "model": item["model"],
                 "questionNumber": item["questionNumber"], "sourcePage": item["sourcePage"],
+                "question": item["question"], "optionA": item["options"]["A"],
+                "optionB": item["options"]["B"], "optionC": item["options"]["C"],
+                "optionD": item["options"]["D"],
                 "priority": priority,
                 "flags": " | ".join(f["code"] for f in item["flags"]),
                 "explanation": " | ".join(f["description"] for f in item["flags"]),
