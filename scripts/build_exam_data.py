@@ -226,6 +226,91 @@ def r22_minor_typography(exams):
     print('AUDIT R22 5 correcciones puntuales de glifos:', counts)
 
 
+# R24: minimal, reversible glyph corrections for Mercancias 2022-2024 ONLY.
+# Source examination pages are preserved in data-src/cap-exams/raw; the
+# original text is stored on each derived question. No source answer changes.
+R24_MINOR = {
+    ('2023-07-29-mercancias-b', 35): {
+        'options': [('AI ', 'Al ')], 'note': "AI mayúscula por Al en las alternativas de partes del cuerpo",
+    },
+    ('2023-07-29-mercancias-b', 52): {
+        'options': [('AI cumplimentar', 'Al cumplimentar')], 'note': "AI por Al",
+    },
+    ('2023-07-29-mercancias-b', 85): {
+        'options': [('AI abandonar', 'Al abandonar')], 'note': "AI por Al",
+    },
+    ('2023-06-03-mercancias-global', 73): {
+        'options': [('nuIo', 'nulo')], 'note': "I mayúscula por l minúscula en nulo",
+    },
+    ('2023-03-25-mercancias-global', 33): {
+        'options': [('AI rozamiento', 'Al rozamiento')], 'note': "AI por Al",
+    },
+    ('2023-03-25-mercancias-global', 87): {
+        'question': [('tiene Iugar', 'tiene lugar')],
+        'options': [('AI menos', 'Al menos')],
+        'note': "I mayúscula por l en lugar y Al menos; norma BOE RD 284/2021 art 7",
+    },
+    ('2022-10-01-mercancias-global', 13): {
+        'options': [('AI de animales', 'Al de animales')], 'note': "AI por Al al introducir alternativas",
+    },
+}
+
+
+def r24_restore_display_glyphs(exams):
+    affected = []
+    for meta, rows in exams:
+        for row in rows:
+            key = (meta['id'], row['number'])
+            patch = R24_MINOR.get(key)
+            if not patch:
+                continue
+            if row.get('textCorrection'):
+                raise RuntimeError(f'R24 no puede sobreescribir otra correccion: {key}')
+            original_question, original_options = row['question'], dict(row['options'])
+            frozen = (
+                row['correctAnswer'], row['originalSheetAnswer'],
+                row['mappedSheetAnswer'], row['bankAnswer'],
+                row['answerStatus'], row['frequencyGroup'],
+                row['canonicalQuestionId'], row['sourcePage'],
+            )
+            for old, new in patch.get('question', []):
+                if row['question'].count(old) != 1:
+                    raise RuntimeError(f'R24 fragmento enunciado ausente: {key} {old}')
+                row['question'] = row['question'].replace(old, new, 1)
+            for old, new in patch.get('options', []):
+                found = sum(value.count(old) for value in row['options'].values())
+                if found < 1:
+                    raise RuntimeError(f'R24 fragmento opcion ausente: {key} {old}')
+                row['options'] = {k: v.replace(old, new)
+                                  for k,v in row['options'].items()}
+            assert set(row['options']) == set('ABCD')
+            assert frozen == (
+                row['correctAnswer'], row['originalSheetAnswer'],
+                row['mappedSheetAnswer'], row['bankAnswer'],
+                row['answerStatus'], row['frequencyGroup'],
+                row['canonicalQuestionId'], row['sourcePage'],
+            ), f'R24 cambio prohibido de clave o fuente {key}'
+            row['textCorrection'] = {
+                'round': 'R24',
+                'method': 'normalizacion_tipografica_puntual_con_guard',
+                'reviewStatus': 'CORRECCION_TIPOGRAFICA_COTEJO_IMAGEN_PENDIENTE',
+                'sourceOriginalExam': meta['sourcePdf'],
+                'sourcePage': row['sourcePage'],
+                'reason': patch['note'],
+                'originalQuestion': original_question,
+                'originalOptions': original_options,
+                'changedQuestion': original_question != row['question'],
+                'changedOptions': [k for k in 'ABCD'
+                                   if original_options[k] != row['options'][k]],
+                'answerKeysChanged': False,
+            }
+            affected.append(key)
+    if set(affected) != set(R24_MINOR):
+        raise RuntimeError('R24 faltan correcciones puntuales no destructivas')
+    print('AUDIT R24: 7 correcciones tipograficas reversibles: ', sorted(affected))
+    return affected
+
+
 def generate():
     manifest = json.loads((SRC/'manifest.json').read_text(encoding='utf-8'))['exams']
     keys = json.loads((SRC/'answer_keys_unverified.json').read_text(encoding='utf-8'))
@@ -576,6 +661,7 @@ def generate():
         raise RuntimeError(f'Evidencia oficial sin aplicar: {set(official_evidence)-evidence_applied}')
     r22_curate_september_display(exams)
     r22_minor_typography(exams)
+    r24_restore_display_glyphs(exams)
     # The denominator uses only complete textual exam models, not missing scans.
     denomination=Counter(meta['category'] for meta,rows in exams if rows)
     appears=defaultdict(set)
