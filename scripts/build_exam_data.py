@@ -66,6 +66,8 @@ def generate():
     visual_keys = json.loads((SRC/'answer_key_visual_corrections.json').read_text(encoding='utf-8'))['overrides']
     normative_notes = json.loads((SRC/'normative_conflicts_review.json').read_text(encoding='utf-8'))['reviews']
     corrections = json.loads((SRC/'override_transcriptions_review.json').read_text(encoding='utf-8'))
+    official_evidence = json.loads((SRC/'official_public_evidence_2026_11_05.json').read_text(encoding='utf-8'))['cases']
+    evidence_applied = set()
     bank = defaultdict(list)
     bank_by_question = defaultdict(list)
     bank_rows = []
@@ -229,6 +231,35 @@ def generate():
             answer=inferred if status in ('coincidencia_automatica','coincidencia_alineacion_provisional_pendiente_revision','coincidencia_plantilla_corregida_visual_pendiente_revision','respuesta_banco_pendiente_revision',
                                            'coincidencia_enunciado_banco_plantilla_pendiente_revision',
                                            'respuesta_banco_enunciado_pendiente_revision') else None
+            public_evidence=official_evidence.get(exam_id+':'+str(original_number))
+            evidence_url=''
+            evidence_source=''
+            if public_evidence:
+                evidence_id=exam_id+':'+str(original_number)
+                if answer is not None or status not in (
+                    'sin_respuesta_verificada','solo_plantilla_pendiente_cotejo',
+                    'solo_plantilla_alineada_pendiente_cotejo'):
+                    raise RuntimeError(f'No sobrescribir una respuesta ya cotejada: {evidence_id}')
+                if (public_evidence['examId']!=exam_id
+                    or public_evidence['number']!=original_number
+                    or public_evidence['sourcePage']!=q['page']
+                    or norm(public_evidence['expectedQuestion'])!=norm(q['question'])):
+                    raise RuntimeError(f'La pregunta pública documentada no corresponde a la fuente: {evidence_id}')
+                expected_text=norm(public_evidence['correctAnswerText'])
+                evidence_letters=[k for k,v in q['options'].items() if norm(v)==expected_text]
+                if len(evidence_letters)!=1:
+                    raise RuntimeError(f'La respuesta pública no aparece exactamente una vez en el examen: {evidence_id}')
+                if letter and letter!=evidence_letters[0]:
+                    raise RuntimeError(f'Conflicto entre plantilla y fuente pública: {evidence_id}')
+                if public_evidence['sourceKind']!='fuente_publica_oficial_independiente':
+                    raise RuntimeError(f'Fuente pública no clasificada: {evidence_id}')
+                if public_evidence['editorialReviewRequired'] is not True:
+                    raise RuntimeError(f'La verificación editorial debe seguir pendiente: {evidence_id}')
+                answer=evidence_letters[0]
+                status='respuesta_fuente_publica_oficial_pendiente_plantilla'
+                evidence_url=public_evidence['sourceUrl']
+                evidence_source=public_evidence['officialSource']
+                evidence_applied.add(evidence_id)
             local.append({**q,'examId':exam_id,'date':meta['date'],'category':meta['category'],'model':meta['model'],
               'id':original['id'] if original else 'cap-'+sha256(key.encode()).hexdigest()[:24],
               'canonicalQuestionId':original['id'] if original else None,'canonicalCode':original['code'] if original else None,
@@ -241,9 +272,14 @@ def generate():
               'rawTemplateAnswer':original_letter,'templateNumberUsed':template_number,
               'templateAlignmentStatus':align_status,'templateVisualCorrectionStatus':visual_status,
               'answerStatus':status,'matchMethod':method,'sourcePage':q['page'],'frequencyGroup':group,
-              'reviewRequired':bool(q.get('transcriptionReview')) or status!='coincidencia_automatica'})
+              'reviewRequired':bool(q.get('transcriptionReview')) or status!='coincidencia_automatica',
+              'answerEvidenceUrl':evidence_url,
+              'answerEvidenceSource':evidence_source,
+              'answerTemplateOfficiallyVerified':False if public_evidence else None})
         exams.append((meta,local))
         all_rows.extend(local)
+    if evidence_applied != set(official_evidence):
+        raise RuntimeError(f'Evidencia oficial sin aplicar: {set(official_evidence)-evidence_applied}')
     # The denominator uses only complete textual exam models, not missing scans.
     denomination=Counter(meta['category'] for meta,rows in exams if rows)
     appears=defaultdict(set)
@@ -275,6 +311,7 @@ def generate():
               'solo_plantilla_pendiente_cotejo':1,
               'solo_plantilla_alineada_pendiente_cotejo':1,
               'sin_respuesta_verificada':2,
+              'respuesta_fuente_publica_oficial_pendiente_plantilla':3,
               'coincidencia_alineacion_provisional_pendiente_revision':3,
               'coincidencia_plantilla_corregida_visual_pendiente_revision':3,
               'coincidencia_enunciado_banco_plantilla_pendiente_revision':3,
@@ -288,6 +325,8 @@ def generate():
           'examId':row['examId'],'date':row['date'],'category':row['category'],'model':row['model'],
           'number':row['number'],'page':row['sourcePage'],'status':row['answerStatus'],
           'matchMethod':row['matchMethod'],
+          'answerEvidenceUrl':row.get('answerEvidenceUrl',''),
+          'answerEvidenceSource':row.get('answerEvidenceSource',''),
           'question':row['question'],'bankAnswer':row['bankAnswer'],'templateAnswer':row['templateAnswer'],
           'rawTemplateAnswer':row['rawTemplateAnswer'],
           'templateNumberUsed':row['templateNumberUsed'],
@@ -536,6 +575,7 @@ def generate():
         for entry in cross_model_queue:
             writer.writerow({**{field:entry.get(field,'') for field in fields},
                              'exactRepeatedModels':' | '.join(entry['exactRepeatedModels'])})
+    print('AUDIT independently sourced public answers:',len(evidence_applied),sorted(evidence_applied))
     print('AUDIT cross-model pending:',pending_total,'unscored,',
           len(cross_model_queue),'exact repetitions,',cross_summary)
 
