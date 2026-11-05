@@ -32,6 +32,9 @@ def main():
     indexed = json.loads((OUT / "index.json").read_text(encoding="utf-8"))["exams"]
     by_id = {exam["id"]: exam for exam in manifest}
     digitized = set(json.loads((SRC / "answer_keys_unverified.json").read_text(encoding="utf-8")))
+    verified = json.loads((SRC / "answer_keys_visually_verified.json").read_text(encoding="utf-8"))['exams']
+    newly_certified_count = sum(100 - proof['expectedBankConcordances']
+                                for proof in verified.values())
     if len(by_id) != len(indexed):
         raise AssertionError("Desfase entre manifiesto e índice")
     with_template, without_template = [], []
@@ -65,9 +68,9 @@ def main():
         rows.sort(key=lambda row: (row["examId"], row["number"]))
     dump_csv("template_review_priority.csv", with_template)
     dump_csv("without_template_deferred.csv", without_template)
-    if len(with_template) + len(without_template) != 663:
+    if len(with_template) + len(without_template) != 678 - newly_certified_count:
         raise AssertionError("La cola debería contener 678 preguntas pendientes")
-    if len(with_template) != 483 or len(without_template) != 180:
+    if len(with_template) != 498 - newly_certified_count or len(without_template) != 180:
         raise AssertionError("Desfase de cola prioritaria y aplazada")
 
     # Una lectura textual de la plantilla oficial no basta para corregirla:
@@ -122,9 +125,9 @@ def main():
             "conflictsBlocked": len(conflicts),
             "withoutBankCandidateBlocked": len(candidates),
         },
-        "publishedAnswerChanges": 15,
-        "visualVerifiedModels": ["2025-03-29-mercancias-global"],
-        "instructions": "Marzo 2025 ya verificado visualmente con el PDF original; la lectura textual antigua permanece bloqueada. Las restantes plantillas siguen pendientes de cotejo visual.",
+        "publishedAnswerChanges": newly_certified_count,
+        "visualVerifiedModels": sorted(verified),
+        "instructions": "Los exámenes incluidos en visualVerifiedModels tienen clave cotejada directamente con PDF original. La lectura textual antigua de marzo permanece bloqueada como ejemplo histórico de errores. Las demás plantillas siguen pendientes.",
     }
     (OUT / "template_review_summary.json").write_text(json.dumps(summary, ensure_ascii=False, indent=2), encoding="utf-8")
     print("PASS R14", summary["prioritizedWithTemplate"], "con plantilla;",
