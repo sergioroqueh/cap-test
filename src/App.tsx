@@ -83,10 +83,15 @@ function CapHome(){
  const [pendingRows,setPendingRows]=useState<CapPendingQuestion[]>([])
  const [pendingShown,setPendingShown]=useState(false)
  const [pendingBusy,setPendingBusy]=useState(false)
+ const [sheetReviewId,setSheetReviewId]=useState('')
+ const [sheetReviewRows,setSheetReviewRows]=useState<CapSheetReviewQuestion[]>([])
+ const [sheetReviewBusy,setSheetReviewBusy]=useState(false)
+ const [sheetReviewShown,setSheetReviewShown]=useState(false)
+ const [sheetReviewOnlyIssues,setSheetReviewOnlyIssues]=useState(false)
  useEffect(()=>{loadCapIndex().then(setIndex).catch(e=>setError(String(e)))},[])
- useEffect(()=>{setPendingId('');setPendingRows([]);setPendingShown(false)},[category])
+ useEffect(()=>{setPendingId('');setPendingRows([]);setPendingShown(false);setSheetReviewId('');setSheetReviewRows([]);setSheetReviewShown(false)},[category])
  const exams=(index?.exams||[]).filter(x=>x.category===category).sort((a,b)=>b.date.localeCompare(a.date)||a.model.localeCompare(b.model))
- const available=exams.filter(x=>x.readyCount>0)
+ const available=exams.filter(x=>x.hasOriginalAnswerSheet)
  const pretty=(x:CapExamMeta)=>new Date(x.date+'T12:00:00').toLocaleDateString('es-ES',{day:'2-digit',month:'short',year:'numeric'})+(x.model==='GLOBAL'?'':' · modelo '+x.model)
  async function showPending(){
   const selected=exams.find(x=>x.id===pendingId)
@@ -96,6 +101,19 @@ function CapHome(){
   catch(e){setError(e instanceof Error?e.message:String(e))}
   finally{setPendingBusy(false)}
  }
+ async function showSheetReview(){
+  const selected=exams.find(x=>x.id===sheetReviewId)
+  if(!selected||!selected.hasOriginalAnswerSheet)return
+  setSheetReviewBusy(true);setError('')
+  try{setSheetReviewRows(await loadCapSheetReview(selected));setSheetReviewShown(true)}
+  catch(e){setError(e instanceof Error?e.message:String(e))}
+  finally{setSheetReviewBusy(false)}
+ }
+ const showSheetRows=sheetReviewOnlyIssues?sheetReviewRows.filter(q=>
+  !q.scoringEligible||q.mappedSheetQuestionNumber!==q.originalSheetQuestionNumber||
+  q.answerStatus==='respuesta_alineacion_editorial_confirmada'||
+  (!!q.bankAnswer&&!!q.mappedSheetAnswer&&q.bankAnswer!==q.mappedSheetAnswer)
+ ):sheetReviewRows
  async function begin(source:'cap-original'|'cap-random'|'cap-mixed',chosen?:CapExamMeta){
   setError('');setWorking(true)
   try{
