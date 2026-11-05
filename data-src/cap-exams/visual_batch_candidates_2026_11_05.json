@@ -13,7 +13,13 @@
       "visualMethod": "segunda_lectura_de_glifos_sobre_imagen_pdf_100_casillas_cruzada_con_plantilla_provisional",
       "verifiedOn": "2026-11-05",
       "sourceConfidence": "cotejo_independiente_pdf_visual_y_lectura_previa",
-      "questionAlignmentCaveat": "Mantener desplazamiento provisional +1 para preguntas 44-99; q100 sin alineacion fiable. No promocionar esas posiciones."
+      "questionAlignmentCaveat": "Mantener desplazamiento provisional +1 para preguntas 44-99; q100 sin alineacion fiable. No promocionar esas posiciones.",
+      "expectedBankConcordances": 29,
+      "expectedBankConflicts": 0,
+      "expectedPreviouslyScoredExternal": 0,
+      "verifiedQuestionEnd": 43,
+      "allowedOldExtractionDifferences": [],
+      "approval": "confirmada_lectura_pdf_solo_preguntas_1_43_por_desfase_44_100"
     },
     "2024-07-20-mercancias-a": {
       "sourceFile": "Plantilla A Julio 2024.pdf",
@@ -25,7 +31,13 @@
       "model": "A",
       "visualMethod": "segunda_lectura_de_glifos_sobre_imagen_pdf_100_casillas_cruzada_con_plantilla_provisional",
       "verifiedOn": "2026-11-05",
-      "sourceConfidence": "cotejo_independiente_pdf_visual_y_lectura_previa"
+      "sourceConfidence": "cotejo_independiente_pdf_visual_y_lectura_previa",
+      "expectedBankConcordances": 82,
+      "expectedBankConflicts": 0,
+      "expectedPreviouslyScoredExternal": 0,
+      "verifiedQuestionEnd": 100,
+      "allowedOldExtractionDifferences": [],
+      "approval": "plantilla_pdf_original_doble_cotejo_imagen_sin_conflicto_banco"
     },
     "2026-07-25-mercancias-a": {
       "sourceFile": "Plantilla A Julio 2026.pdf",
@@ -37,7 +49,13 @@
       "model": "A",
       "visualMethod": "segunda_lectura_de_glifos_sobre_imagen_pdf_100_casillas_cruzada_con_plantilla_provisional",
       "verifiedOn": "2026-11-05",
-      "sourceConfidence": "cotejo_independiente_pdf_visual_y_lectura_previa"
+      "sourceConfidence": "cotejo_independiente_pdf_visual_y_lectura_previa",
+      "expectedBankConcordances": 98,
+      "expectedBankConflicts": 0,
+      "expectedPreviouslyScoredExternal": 0,
+      "verifiedQuestionEnd": 100,
+      "allowedOldExtractionDifferences": [],
+      "approval": "plantilla_pdf_original_doble_cotejo_imagen_sin_conflicto_banco"
     },
     "2023-07-29-mercancias-b": {
       "sourceFile": "Plantilla B Julio 2023.pdf",
@@ -49,7 +67,17 @@
       "model": "B",
       "visualMethod": "segunda_lectura_de_glifos_sobre_imagen_pdf_100_casillas_cruzada_con_plantilla_provisional",
       "verifiedOn": "2026-11-05",
-      "sourceConfidence": "cotejo_independiente_pdf_visual_y_lectura_previa"
+      "sourceConfidence": "cotejo_independiente_pdf_visual_y_lectura_previa",
+      "expectedBankConcordances": 72,
+      "expectedBankConflicts": 0,
+      "expectedPreviouslyScoredExternal": 1,
+      "verifiedQuestionEnd": 100,
+      "allowedOldExtractionDifferences": [
+        6,
+        13,
+        19
+      ],
+      "approval": "plantilla_pdf_original_doble_cotejo_imagen_sin_conflicto_banco"
     },
     "2026-07-25-mercancias-b": {
       "sourceFile": "Plantilla B Julio 2026.pdf",
@@ -61,7 +89,13 @@
       "model": "B",
       "visualMethod": "segunda_lectura_de_glifos_sobre_imagen_pdf_100_casillas_cruzada_con_plantilla_provisional",
       "verifiedOn": "2026-11-05",
-      "sourceConfidence": "cotejo_independiente_pdf_visual_y_lectura_previa"
+      "sourceConfidence": "cotejo_independiente_pdf_visual_y_lectura_previa",
+      "expectedBankConcordances": 97,
+      "expectedBankConflicts": 0,
+      "expectedPreviouslyScoredExternal": 0,
+      "verifiedQuestionEnd": 100,
+      "allowedOldExtractionDifferences": [],
+      "approval": "plantilla_pdf_original_doble_cotejo_imagen_sin_conflicto_banco"
     },
     "2023-02-04-mercancias-global": {
       "sourceFile": "Plantilla Febrero 2023.pdf",
@@ -73,7 +107,13 @@
       "model": "GLOBAL",
       "visualMethod": "segunda_lectura_de_glifos_sobre_imagen_pdf_100_casillas_cruzada_con_plantilla_provisional",
       "verifiedOn": "2026-11-05",
-      "sourceConfidence": "cotejo_independiente_pdf_visual_y_lectura_previa"
+      "sourceConfidence": "cotejo_independiente_pdf_visual_y_lectura_previa",
+      "expectedBankConcordances": 89,
+      "expectedBankConflicts": 0,
+      "expectedPreviouslyScoredExternal": 0,
+      "verifiedQuestionEnd": 100,
+      "allowedOldExtractionDifferences": [],
+      "approval": "plantilla_pdf_original_doble_cotejo_imagen_sin_conflicto_banco"
     },
     "2025-02-01-mercancias-global": {
       "sourceFile": "Plantilla Febrero 2025.pdf",
@@ -85,7 +125,13 @@
       "model": "GLOBAL",
       "visualMethod": "segunda_lectura_de_glifos_sobre_imagen_pdf_100_casillas_cruzada_con_plantilla_provisional",
       "verifiedOn": "2026-11-05",
-      "sourceConfidence": "cotejo_independiente_pdf_visual_y_lectura_previa"
+      "sourceConfidence": "cotejo_independiente_pdf_visual_y_lectura_previa",
+      "expectedBankConcordances": 84,
+      "expectedBankConflicts": 0,
+      "expectedPreviouslyScoredExternal": 0,
+      "verifiedQuestionEnd": 100,
+      "allowedOldExtractionDifferences": [],
+      "approval": "plantilla_pdf_original_doble_cotejo_imagen_sin_conflicto_banco"
     },
     "2023-06-03-mercancias-global": {
       "sourceFile": "Plantilla Junio 2023.pdf",
@@ -97,7 +143,13 @@
       "model": "GLOBAL",
       "visualMethod": "segunda_lectura_de_glifos_sobre_imagen_pdf_100_casillas_cruzada_con_plantilla_provisional",
       "verifiedOn": "2026-11-05",
-      "sourceConfidence": "cotejo_independiente_pdf_visual_y_lectura_previa"
+      "sourceConfidence": "cotejo_independiente_pdf_visual_y_lectura_previa",
+      "expectedBankConcordances": 83,
+      "expectedBankConflicts": 0,
+      "expectedPreviouslyScoredExternal": 0,
+      "verifiedQuestionEnd": 100,
+      "allowedOldExtractionDifferences": [],
+      "approval": "plantilla_pdf_original_doble_cotejo_imagen_sin_conflicto_banco"
     },
     "2023-03-25-mercancias-global": {
       "sourceFile": "Plantilla Marzo 2023.pdf",
@@ -109,7 +161,13 @@
       "model": "GLOBAL",
       "visualMethod": "segunda_lectura_de_glifos_sobre_imagen_pdf_100_casillas_cruzada_con_plantilla_provisional",
       "verifiedOn": "2026-11-05",
-      "sourceConfidence": "cotejo_independiente_pdf_visual_y_lectura_previa"
+      "sourceConfidence": "cotejo_independiente_pdf_visual_y_lectura_previa",
+      "expectedBankConcordances": 67,
+      "expectedBankConflicts": 0,
+      "expectedPreviouslyScoredExternal": 1,
+      "verifiedQuestionEnd": 100,
+      "allowedOldExtractionDifferences": [],
+      "approval": "plantilla_pdf_original_doble_cotejo_imagen_sin_conflicto_banco"
     },
     "2024-05-25-mercancias-global": {
       "sourceFile": "Plantilla Mayo 2024.pdf",
@@ -121,7 +179,13 @@
       "model": "GLOBAL",
       "visualMethod": "segunda_lectura_de_glifos_sobre_imagen_pdf_100_casillas_cruzada_con_plantilla_provisional",
       "verifiedOn": "2026-11-05",
-      "sourceConfidence": "cotejo_independiente_pdf_visual_y_lectura_previa"
+      "sourceConfidence": "cotejo_independiente_pdf_visual_y_lectura_previa",
+      "expectedBankConcordances": 69,
+      "expectedBankConflicts": 0,
+      "expectedPreviouslyScoredExternal": 1,
+      "verifiedQuestionEnd": 100,
+      "allowedOldExtractionDifferences": [],
+      "approval": "plantilla_pdf_original_doble_cotejo_imagen_sin_conflicto_banco"
     },
     "2026-05-30-mercancias-global": {
       "sourceFile": "Plantilla Mayo 2026.pdf",
@@ -133,7 +197,13 @@
       "model": "GLOBAL",
       "visualMethod": "segunda_lectura_de_glifos_sobre_imagen_pdf_100_casillas_cruzada_con_plantilla_provisional",
       "verifiedOn": "2026-11-05",
-      "sourceConfidence": "cotejo_independiente_pdf_visual_y_lectura_previa"
+      "sourceConfidence": "cotejo_independiente_pdf_visual_y_lectura_previa",
+      "expectedBankConcordances": 79,
+      "expectedBankConflicts": 0,
+      "expectedPreviouslyScoredExternal": 0,
+      "verifiedQuestionEnd": 100,
+      "allowedOldExtractionDifferences": [],
+      "approval": "plantilla_pdf_original_doble_cotejo_imagen_sin_conflicto_banco"
     },
     "2022-11-26-mercancias-global": {
       "sourceFile": "Plantilla Noviembre 2022.pdf",
@@ -145,7 +215,13 @@
       "model": "GLOBAL",
       "visualMethod": "segunda_lectura_de_glifos_sobre_imagen_pdf_100_casillas_cruzada_con_plantilla_provisional",
       "verifiedOn": "2026-11-05",
-      "sourceConfidence": "cotejo_independiente_pdf_visual_y_lectura_previa"
+      "sourceConfidence": "cotejo_independiente_pdf_visual_y_lectura_previa",
+      "expectedBankConcordances": 55,
+      "expectedBankConflicts": 0,
+      "expectedPreviouslyScoredExternal": 0,
+      "verifiedQuestionEnd": 100,
+      "allowedOldExtractionDifferences": [],
+      "approval": "plantilla_pdf_original_doble_cotejo_imagen_sin_conflicto_banco"
     },
     "2022-10-01-mercancias-global": {
       "sourceFile": "Plantilla Octubre 2022.pdf",
@@ -157,7 +233,13 @@
       "model": "GLOBAL",
       "visualMethod": "segunda_lectura_de_glifos_sobre_imagen_pdf_100_casillas_cruzada_con_plantilla_provisional",
       "verifiedOn": "2026-11-05",
-      "sourceConfidence": "cotejo_independiente_pdf_visual_y_lectura_previa"
+      "sourceConfidence": "cotejo_independiente_pdf_visual_y_lectura_previa",
+      "expectedBankConcordances": 70,
+      "expectedBankConflicts": 0,
+      "expectedPreviouslyScoredExternal": 0,
+      "verifiedQuestionEnd": 100,
+      "allowedOldExtractionDifferences": [],
+      "approval": "plantilla_pdf_original_doble_cotejo_imagen_sin_conflicto_banco"
     },
     "2023-09-23-mercancias-global": {
       "sourceFile": "Plantilla Septiembre 2023.pdf",
@@ -169,7 +251,13 @@
       "model": "GLOBAL",
       "visualMethod": "segunda_lectura_de_glifos_sobre_imagen_pdf_100_casillas_cruzada_con_plantilla_provisional",
       "verifiedOn": "2026-11-05",
-      "sourceConfidence": "cotejo_independiente_pdf_visual_y_lectura_previa"
+      "sourceConfidence": "cotejo_independiente_pdf_visual_y_lectura_previa",
+      "expectedBankConcordances": 81,
+      "expectedBankConflicts": 0,
+      "expectedPreviouslyScoredExternal": 0,
+      "verifiedQuestionEnd": 100,
+      "allowedOldExtractionDifferences": [],
+      "approval": "plantilla_pdf_original_doble_cotejo_imagen_sin_conflicto_banco"
     },
     "2025-09-27-mercancias-global": {
       "sourceFile": "Plantilla Septiembre 2025.pdf",
@@ -181,7 +269,13 @@
       "model": "GLOBAL",
       "visualMethod": "segunda_lectura_de_glifos_sobre_imagen_pdf_100_casillas_cruzada_con_plantilla_provisional",
       "verifiedOn": "2026-11-05",
-      "sourceConfidence": "cotejo_independiente_pdf_visual_y_lectura_previa"
+      "sourceConfidence": "cotejo_independiente_pdf_visual_y_lectura_previa",
+      "expectedBankConcordances": 30,
+      "expectedBankConflicts": 0,
+      "expectedPreviouslyScoredExternal": 0,
+      "verifiedQuestionEnd": 100,
+      "allowedOldExtractionDifferences": [],
+      "approval": "plantilla_pdf_original_doble_cotejo_imagen_sin_conflicto_banco"
     },
     "2026-09-26-mercancias-a": {
       "sourceFile": "Plantilla A Septiembre 2026.pdf",
@@ -193,7 +287,13 @@
       "model": "A",
       "visualMethod": "lectura_de_casillas_marcadas_en_pdf_original_100_respuestas_sin_reservas",
       "verifiedOn": "2026-11-05",
-      "sourceConfidence": "cotejo_independiente_pdf_visual_y_lectura_previa"
+      "sourceConfidence": "cotejo_independiente_pdf_visual_y_lectura_previa",
+      "expectedBankConcordances": 90,
+      "expectedBankConflicts": 0,
+      "expectedPreviouslyScoredExternal": 0,
+      "verifiedQuestionEnd": 100,
+      "allowedOldExtractionDifferences": [],
+      "approval": "plantilla_pdf_original_doble_cotejo_imagen_sin_conflicto_banco"
     }
   }
 }
