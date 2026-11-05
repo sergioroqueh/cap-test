@@ -544,7 +544,10 @@ cases22={(c['examId'],c['number']):c for c in r22['cases']}
 assert len(cases22)==33
 nov6=cases22[('2022-11-26-mercancias-global',6)]
 assert nov6['status']=='CERRADA_A_CONFIRMADA_CONTEXTO_TRANSMISION'
-assert 'sede.dgt.gob.es' in nov6['source']
+assert 'dgt.es' in nov6['source']
+assert nov6['editorialClosure']['reviewComplete'] is True
+assert nov6['editorialClosure']['appliedAnswer'] == 'A'
+assert nov6['editorialClosure']['scoringEligible'] is True
 qnov6=json.loads((root/'exams'/'questions'/'2022-11-26-mercancias-global.json').read_text())[5]
 assert qnov6['originalSheetAnswer']==qnov6['correctAnswer']=='A'
 sept=json.loads((root/'exams'/'questions'/'2025-09-27-mercancias-global.json').read_text())
