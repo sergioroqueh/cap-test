@@ -121,7 +121,10 @@ def main() -> None:
                     assert source_reference.startswith("https://www.castillalamancha.es/")
                 else:
                     assert source_reference == "Examenes TOTALES.pdf"
-                mark(item, "texto_pdf_normalizado_r22", "P1",
+                correction_round = proof.get("round", "R22").lower()
+                if correction_round not in ("r22", "r24"):
+                    raise AssertionError("Ronda editorial inesperada")
+                mark(item, "texto_pdf_normalizado_" + correction_round, "P1",
                      "Texto de examen restaurado para lectura, con original conservado; pendiente cotejo visual individual",
                      f"Fuente {source_reference} pagina {q['sourcePage']}; "
                      f"opciones afectadas {','.join(proof['changedOptions']) or 'ninguna'}")
