@@ -67,6 +67,7 @@ def main() -> None:
                 "bankAnswer": q.get("bankAnswer"),
                 "scoredAnswer": q.get("correctAnswer"),
                 "sheetSource": q.get("originalSheetSourceFile"),
+                "textCorrection": q.get("textCorrection"),
                 "textReviewRequired": bool(q.get("transcriptionReview")),
                 "numberOffset": q.get("mappedSheetQuestionNumber") != q["number"]
                     if exam.get("hasOriginalAnswerSheet") else False,
@@ -111,6 +112,15 @@ def main() -> None:
                 mark(item, "sin_segundo_cotejo_banco", "P2",
                      "La hoja original no tiene coincidencia comparable con el banco de 8.655",
                      "No es evidencia de error; verificar texto/opciones antes de certificar")
+            if q.get("textCorrection"):
+                proof = q["textCorrection"]
+                assert proof["answerKeysChanged"] is False
+                assert proof["sourcePage"] == q["sourcePage"]
+                assert proof["sourceOfficialPdf"].startswith("https://www.castillalamancha.es/")
+                mark(item, "texto_pdf_normalizado_r22", "P1",
+                     "Texto de examen restaurado para lectura, con original conservado; pendiente cotejo visual individual",
+                     f"PDF oficial {proof['sourceOfficialPdf']} pagina {q['sourcePage']}; "
+                     f"opciones afectadas {','.join(proof['changedOptions']) or 'ninguna'}")
             if q.get("transcriptionReview"):
                 # Etiqueta informativa: evita tratar centenares de preguntas OCR como malas.
                 item["transcriptionStatus"] = "LECTURA_VISUAL_U_OCR_PENDIENTE_COTEJO"
@@ -161,10 +171,13 @@ def main() -> None:
 
     sept = by_id[("2025-09-27-mercancias-global", 1)]
     assert "A bordo de un vehículo que transporta animales" in sept["question"]
-    assert BAD_OCR.search(" ".join(sept["options"].values()))
+    assert sept["options"]["A"] == "El origen y el propietario de los animales."
+    assert sept["textCorrection"] is not None
+    original_options = sept["textCorrection"]["originalOptions"]
+    assert BAD_OCR.search(" ".join(original_options.values()))
     mark(sept, "cotejo_visual_glifos_septiembre_2025", "P1",
-         "Palabras deformadas en el texto publicado por el extractor, sin prueba de error en la respuesta",
-         "Examenes TOTALES.pdf paginas 482-499; ejemplo q1 'EI origen'/'Ios animaIes'")
+         "Capa de texto incorrecta ya normalizada para estudio; conservar el original y revisar visualmente",
+         "Cuestionario oficial JCCM septiembre 2025, pagina 1; copia compilada PDF 482-499")
 
     # Seis opciones recuperadas manualmente porque el extractor omitio
     # o pego la letra de una alternativa. Permanecen pendientes de cotejo visual.
