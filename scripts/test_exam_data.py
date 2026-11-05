@@ -152,7 +152,7 @@ for exam in exams:
         assert q['examFrequency'] <= q['examFrequencyDenominator']
         if q['answerStatus'] in ('conflicto_banco','conflicto_plantilla_banco',
                                   'solo_plantilla_pendiente_cotejo','solo_plantilla_alineada_pendiente_cotejo',
-                                  'sin_respuesta_verificada','conflicto_pdf_original_banco_pendiente_cotejo_enunciado')
+                                  'sin_respuesta_verificada','conflicto_pdf_original_banco_pendiente_cotejo_enunciado'):
             assert q['correctAnswer'] is None, (exam['id'],q['number'])
         if q['correctAnswer'] is not None:
             assert q['answerStatus'] in (
