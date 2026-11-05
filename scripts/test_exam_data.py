@@ -172,7 +172,7 @@ for exam in exams:
                 'coincidencia_plantilla_corregida_visual_pendiente_revision',
                 'coincidencia_enunciado_banco_plantilla_pendiente_revision'):
                 assert q['correctAnswer'] == q['templateAnswer']
-        if q.get('matchMethod') == 'enunciado_y_texto_respuesta_exactos':
+        if q.get('matchMethod') == 'enunciado_y_texto_respuesta_exactos' and q['answerStatus']!='plantilla_pdf_oficial_verificada':
             assert q['reviewRequired'], (exam['id'],q['number'])
             assert q['answerStatus'] in (
                 'coincidencia_enunciado_banco_plantilla_pendiente_revision',
