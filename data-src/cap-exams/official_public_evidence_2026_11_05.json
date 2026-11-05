@@ -1,0 +1,91 @@
+{
+  "schemaVersion": 1,
+  "createdAt": "2026-11-05",
+  "purpose": "Respuestas documentadas por fuentes oficiales publicas externas, sin adjudicar verificacion de la plantilla CAP original; los siete casos siguen marcados para revision editorial y cotejo visual.",
+  "cases": {
+    "2023-03-25-mercancias-global:50": {
+      "examId": "2023-03-25-mercancias-global",
+      "number": 50,
+      "sourcePage": 321,
+      "expectedQuestion": "Cuando, a consecuencia de una inspección de transporte en carretera, deba ser trasladado un vehículo en sentido distinto al de su marcha, la autoridad competente podrá ordenarlo siempre que el recorrido de ida no sea superior a:",
+      "correctAnswerText": "30 kilómetros.",
+      "officialSource": "LOTT Ley 16/1987, art. 33.4, texto 2022",
+      "sourceUrl": "https://boe.es/buscar/act.php?id=BOE-A-1987-17803&p=20220302&tn=0",
+      "sourceKind": "fuente_publica_oficial_independiente",
+      "sourceMeaning": "contraste_de_contenido_no_plantilla_del_examen",
+      "editorialReviewRequired": true
+    },
+    "2023-07-29-mercancias-a:79": {
+      "examId": "2023-07-29-mercancias-a",
+      "number": 79,
+      "sourcePage": 74,
+      "expectedQuestion": "Cuando, a consecuencia de una inspección de transporte en carretera, deba ser trasladado un vehículo en sentido distinto al de su marcha, la autoridad competente podrá ordenarlo siempre que el recorrido de ida no sea superior a:",
+      "correctAnswerText": "30 kilómetros.",
+      "officialSource": "LOTT Ley 16/1987, art. 33.4, texto 2022",
+      "sourceUrl": "https://boe.es/buscar/act.php?id=BOE-A-1987-17803&p=20220302&tn=0",
+      "sourceKind": "fuente_publica_oficial_independiente",
+      "sourceMeaning": "contraste_de_contenido_no_plantilla_del_examen",
+      "editorialReviewRequired": true
+    },
+    "2023-07-29-mercancias-b:33": {
+      "examId": "2023-07-29-mercancias-b",
+      "number": 33,
+      "sourcePage": 151,
+      "expectedQuestion": "Cuando, a consecuencia de una inspección de transporte en carretera, deba ser trasladado un vehículo en sentido distinto al de su marcha, la autoridad competente podrá ordenarlo siempre que el recorrido de ida no sea superior a:",
+      "correctAnswerText": "30 kilómetros.",
+      "officialSource": "LOTT Ley 16/1987, art. 33.4, texto 2022",
+      "sourceUrl": "https://boe.es/buscar/act.php?id=BOE-A-1987-17803&p=20220302&tn=0",
+      "sourceKind": "fuente_publica_oficial_independiente",
+      "sourceMeaning": "contraste_de_contenido_no_plantilla_del_examen",
+      "editorialReviewRequired": true
+    },
+    "2024-05-25-mercancias-global:32": {
+      "examId": "2024-05-25-mercancias-global",
+      "number": 32,
+      "sourcePage": 390,
+      "expectedQuestion": "Cuando, a consecuencia de una inspección de transporte en carretera, deba ser trasladado un vehículo en sentido distinto al de su marcha, la autoridad competente podrá ordenarlo siempre que el recorrido de ida no sea superior a:",
+      "correctAnswerText": "30 kilómetros.",
+      "officialSource": "LOTT Ley 16/1987, art. 33.4, texto 2022",
+      "sourceUrl": "https://boe.es/buscar/act.php?id=BOE-A-1987-17803&p=20220302&tn=0",
+      "sourceKind": "fuente_publica_oficial_independiente",
+      "sourceMeaning": "contraste_de_contenido_no_plantilla_del_examen",
+      "editorialReviewRequired": true
+    },
+    "2024-04-06-mercancias-global:71": {
+      "examId": "2024-04-06-mercancias-global",
+      "number": 71,
+      "sourcePage": 15,
+      "expectedQuestion": "Cuando en una inspección de transporte por carretera se detecte que un vehículo muestra indicios fundados de exceso de peso, la autoridad competente podrá ordenar su traslado a una báscula, siempre que esta no se encuentre a una distancia superior a:",
+      "correctAnswerText": "30 kilómetros en sentido distinto al de la marcha del vehículo.",
+      "officialSource": "LOTT Ley 16/1987, art. 33.4, texto 2022",
+      "sourceUrl": "https://boe.es/buscar/act.php?id=BOE-A-1987-17803&p=20220302&tn=0",
+      "sourceKind": "fuente_publica_oficial_independiente",
+      "sourceMeaning": "contraste_de_contenido_no_plantilla_del_examen",
+      "editorialReviewRequired": true
+    },
+    "2024-07-20-mercancias-b:84": {
+      "examId": "2024-07-20-mercancias-b",
+      "number": 84,
+      "sourcePage": 181,
+      "expectedQuestion": "¿Con qué siglas se conocen los vehículos eléctricos híbridos enchufables?",
+      "correctAnswerText": "PHEV.",
+      "officialSource": "DGT, clasificación de vehículos eléctricos híbridos enchufables PHEV",
+      "sourceUrl": "https://www.dgt.es/nuestros-servicios/tu-vehiculo/tus-vehiculos/distintivo-ambiental/",
+      "sourceKind": "fuente_publica_oficial_independiente",
+      "sourceMeaning": "contraste_de_contenido_no_plantilla_del_examen",
+      "editorialReviewRequired": true
+    },
+    "2026-03-28-mercancias-global:58": {
+      "examId": "2026-03-28-mercancias-global",
+      "number": 58,
+      "sourcePage": 357,
+      "expectedQuestion": "Si en la caja de un medicamento encontramos un triángulo rojo con un coche negro en su interior significará que:",
+      "correctAnswerText": "Puede disminuir las capacidades necesarias para la conducción.",
+      "officialSource": "DGT, medicamentos y conducción, significado del pictograma",
+      "sourceUrl": "https://www.dgt.es/export/sites/web-DGT/.galleries/downloads/muevete-con-seguridad/evita-conductas-riesgo/Medicamentos_conduccion_PoblacionGeneral.pdf",
+      "sourceKind": "fuente_publica_oficial_independiente",
+      "sourceMeaning": "contraste_de_contenido_no_plantilla_del_examen",
+      "editorialReviewRequired": true
+    }
+  }
+}
