@@ -432,6 +432,113 @@ def generate():
     print('AUDIT review suggestions:',len(review_hints),
           'questions with suggestions:',len({(x['examId'],x['number']) for x in review_hints}))
 
+    # Additional cross-model evidence for unresolved questions. This is a review
+    # queue only: the result must NEVER change correctAnswer or published scoring.
+    # A different position of an identical answer is mapped by exact option TEXT,
+    # not by copying an A/B/C/D letter from another exam.
+    by_exact_fingerprint=defaultdict(list)
+    for existing in all_rows:
+        by_exact_fingerprint[(existing['category'], fingerprint(existing))].append(existing)
+    pending_total=sum(row['correctAnswer'] is None for row in all_rows)
+    cross_model_queue=[]
+    for unresolved_row in all_rows:
+        if unresolved_row['correctAnswer'] is not None:
+            continue
+        others=[candidate for candidate in by_exact_fingerprint[
+            (unresolved_row['category'],fingerprint(unresolved_row))]
+            if candidate['examId']!=unresolved_row['examId']]
+        if not others:
+            continue
+        evidence=[]
+        for other in others:
+            # Only a directly positioned template (never a shifted/visually
+            # corrected or already-conflicting key) can be candidate evidence.
+            if other['templateAnswer'] not in ('A','B','C','D'):
+                continue
+            if other['templateAlignmentStatus']!='sin_ajuste':
+                continue
+            if other['templateVisualCorrectionStatus']!='sin_correccion_visual':
+                continue
+            if other['answerStatus'] in ('conflicto_banco','conflicto_plantilla_banco'):
+                continue
+            answer_text=norm(other['options'][other['templateAnswer']])
+            positions=[k for k,v in unresolved_row['options'].items() if norm(v)==answer_text]
+            if len(positions)!=1:
+                continue
+            evidence.append({
+                'examId':other['examId'],
+                'number':other['number'],
+                'sourcePage':other['sourcePage'],
+                'candidateLetterInTarget':positions[0],
+                'templateLetterInSource':other['templateAnswer'],
+                'templateFile':by_id[other['examId']].get('templateFile') or '',
+                'sourceStatus':other['answerStatus'],
+                'transcriptionReview':bool(other.get('transcriptionReview')),
+            })
+        # One source model counts only once. Contradictory template positions
+        # are kept visible for editorial review, never majority-voted.
+        letters=set(item['candidateLetterInTarget'] for item in evidence)
+        unique_models=len(set(item['examId'] for item in evidence))
+        if len(letters)>1:
+            status='contradiccion_plantillas_bloqueada'
+            candidate_letter=None
+        elif unique_models>=2:
+            status='consenso_multimodelo_pendiente_revision'
+            candidate_letter=next(iter(letters))
+        elif unique_models==1:
+            status='una_plantilla_pendiente_revision'
+            candidate_letter=next(iter(letters))
+        else:
+            status='repeticion_sin_plantilla_comparable'
+            candidate_letter=None
+        cross_model_queue.append({
+            'examId':unresolved_row['examId'],
+            'number':unresolved_row['number'],
+            'category':unresolved_row['category'],
+            'sourcePage':unresolved_row['sourcePage'],
+            'question':unresolved_row['question'],
+            'originalStatus':unresolved_row['answerStatus'],
+            'exactRepeatedModels':sorted(set(item['examId'] for item in others)),
+            'reviewStatus':status,
+            'candidateLetterUnapproved':candidate_letter,
+            'candidateAnswerTextUnapproved':(
+                unresolved_row['options'][candidate_letter] if candidate_letter else ''),
+            'supportingModels':unique_models,
+            'supportingTemplateRows':evidence,
+            'approved':False,
+            'willAffectCorrectAnswer':False,
+            'usage':'SOLO_REVISION_NO_AUTOCORREGIR'
+        })
+    review_order={
+        'contradiccion_plantillas_bloqueada':0,
+        'consenso_multimodelo_pendiente_revision':1,
+        'una_plantilla_pendiente_revision':2,
+        'repeticion_sin_plantilla_comparable':3,
+    }
+    cross_model_queue.sort(key=lambda item:(
+        review_order[item['reviewStatus']],-item['supportingModels'],
+        item['examId'],item['number']))
+    cross_summary=dict(Counter(item['reviewStatus'] for item in cross_model_queue))
+    (OUT/'cross_model_pending_review.json').write_text(json.dumps({
+        'schemaVersion':1,
+        'purpose':'Coincidencias de preguntas pendientes entre exámenes; no valida respuestas ni modifica puntuación.',
+        'totalUnscoredBeforeAndAfter':pending_total,
+        'exactRepeatCases':len(cross_model_queue),
+        'statusCounts':cross_summary,
+        'items':cross_model_queue,
+    },ensure_ascii=False,indent=2),encoding='utf-8')
+    with (OUT/'cross_model_pending_review.csv').open('w',encoding='utf-8-sig',newline='') as fh:
+        fields=['examId','number','category','sourcePage','originalStatus','reviewStatus',
+                'candidateLetterUnapproved','candidateAnswerTextUnapproved',
+                'supportingModels','exactRepeatedModels','question','approved','willAffectCorrectAnswer']
+        writer=csv.DictWriter(fh,fieldnames=fields)
+        writer.writeheader()
+        for entry in cross_model_queue:
+            writer.writerow({**{field:entry.get(field,'') for field in fields},
+                             'exactRepeatedModels':' | '.join(entry['exactRepeatedModels'])})
+    print('AUDIT cross-model pending:',pending_total,'unscored,',
+          len(cross_model_queue),'exact repetitions,',cross_summary)
+
     (OUT/'index.json').write_text(json.dumps({
       'version':'2026-11-04-auditoria','totalExamModels':len(index),'totalImportedQuestions':len(all_rows),
       'categoryCounts':dict(denomination),'exams':index,'answerStatuses':dict(statuses),'warnings':warnings,
