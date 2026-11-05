@@ -39,6 +39,7 @@ export interface CapQuestion extends Question {
 interface CapRawQuestion extends Omit<CapQuestion, 'correctAnswer' | 'progressId'> {
   correctAnswer: AnswerKey | null
   canonicalQuestionId: string | null
+  textCorrection?: {method:string;reviewStatus:string;originalQuestion:string;originalOptions:Record<AnswerKey,string>;sourceOfficialPdf?:string;sourceOriginalExam?:string}
 }
 const BASE = import.meta.env.BASE_URL
 let cachedIndex: CapExamIndex | null = null
@@ -94,14 +95,17 @@ export interface CapSheetReviewQuestion {
   reviewFlags: CapEditorialFlag[]
   reviewPriority: string
   textReviewRequired: boolean
+  r22Case: CapR22Case | null
+  r22TextCorrection: CapRawQuestion['textCorrection'] | null
 }
 
 /** Returns every question, including three documented conflicts, for audit by exam. */
 export async function loadCapSheetReview(meta: CapExamMeta): Promise<CapSheetReviewQuestion[]> {
-  const [res, triage] = await Promise.all([fetch(BASE + meta.path), loadCapEditorialTriage()])
+  const [res, triage, casebook] = await Promise.all([fetch(BASE + meta.path), loadCapEditorialTriage(), loadCapR22Casebook()])
   if (!res.ok) throw new Error('No se pudo cargar la convocatoria.')
   const rows: CapRawQuestion[] = await res.json()
   const sourceFlags = new Map((triage.questions[meta.id] || []).map(x => [x.number, x]))
+  const r22Cases = new Map(casebook.cases.map(x => [x.examId + ':' + x.number, x]))
   if (rows.length !== 100 || sourceFlags.size !== 100)
     throw new Error('Auditoría incompleta: esta convocatoria necesita 100 preguntas.')
   return rows.map(q => ({
@@ -119,7 +123,35 @@ export async function loadCapSheetReview(meta: CapExamMeta): Promise<CapSheetRev
     reviewFlags: sourceFlags.get(q.number)?.flags || [],
     reviewPriority: sourceFlags.get(q.number)?.priority || 'P4',
     textReviewRequired: sourceFlags.get(q.number)?.textReviewRequired || false,
+    r22Case: r22Cases.get(meta.id + ':' + q.number) || null,
+    r22TextCorrection: q.textCorrection || null,
   }))
+}
+
+export interface CapR22Case {
+  examId: string
+  number: number
+  status: string
+  explanation: string
+  source: string
+}
+export interface CapR22Casebook {
+  totalRows: number
+  manualCaseCount: number
+  correctAnswerChangeCount: number
+  cases: CapR22Case[]
+}
+let r22Cache: CapR22Casebook | null = null
+export async function loadCapR22Casebook(): Promise<CapR22Casebook> {
+  if (r22Cache) return r22Cache
+  const res = await fetch(BASE + 'data/exams/editorial_casebook_r22.json')
+  if (!res.ok) throw new Error('No se ha podido cargar el expediente editorial R22.')
+  const payload = await res.json() as CapR22Casebook
+  if (payload.totalRows !== 306 || payload.manualCaseCount !== 33 ||
+      payload.correctAnswerChangeCount !== 0)
+    throw new Error('El expediente R22 no coincide con la versión actual del banco.')
+  r22Cache = payload
+  return payload
 }
 
 export interface CapEditorialFlag {
