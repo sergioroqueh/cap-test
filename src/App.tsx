@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import Quiz from './Quiz'
 import ConfirmDialog from './ConfirmDialog'
+import StudyPdfButton from './StudyPdfButton'
 import TopFrequencyDialog from './TopFrequencyDialog'
 import { CAP_DURATION_MINUTES, gradeSession, frequentExamQuestionsAtOrAbove, mostFrequentExamQuestions, uniqueExamQuestions } from './examEngine.mjs'
 import type { ActiveSession, AnswerKey, BankIndex, Question, QuestionProgress, QuestionnaireMeta, StudySessionRecord, StudySource } from './types'
@@ -352,12 +353,12 @@ function Results(){
  const unreviewed=r.answers.filter(a=>a.scoringEligible!==false&&!a.selected)
  const unscored=r.answers.filter(a=>a.scoringEligible===false)
  const visible=showAll?r.answers:fails
- async function downloadPdf(withSolutions:boolean){
+ async function downloadPdf(){
   if(!data||pdfBusy||qs.length!==data.questionIds.length)return
   setPdfBusy(true);setPdfError('')
   try{
    const {exportExamPdf}=await import('./pdfExport')
-   exportExamPdf({label:r.label,questions:qs,withSolutions})
+   exportExamPdf({label:r.label,questions:qs,withSolutions:true})
   }catch(err){console.error(err);setPdfError('No se pudo generar el PDF. Inténtalo de nuevo.')}
   finally{setPdfBusy(false)}
  }
@@ -386,10 +387,7 @@ function Results(){
    <article><b>{r.incorrect}</b><span>Fallos</span></article>
    <article><b>{unreviewed.length}</b><span>Sin responder</span></article>{unscored.length>0&&<article><b>{unscored.length}</b><span>Sin puntuar · no penalizan</span></article>}
   </div>
-  <div className="focus-result-exports">
-   <button className="btn light" disabled={pdfBusy||qs.length!==data.questionIds.length} onClick={()=>void downloadPdf(false)}>{pdfBusy?'Generando PDF…':'↓ Exportar examen en PDF'}</button>
-   <button className="btn light" disabled={pdfBusy||qs.length!==data.questionIds.length} onClick={()=>void downloadPdf(true)}>↓ PDF para estudiar (respuestas marcadas)</button>
-  </div>
+  <StudyPdfButton busy={pdfBusy} disabled={qs.length!==data.questionIds.length} onClick={()=>void downloadPdf()}/>
   {pdfError&&<p role="alert" className="focus-muted">{pdfError}</p>}
   {fails.length>0&&<Btn onClick={()=>void review()}>Repasar {fails.length} fallos</Btn>}
   <h2>Corrección de respuestas</h2>
