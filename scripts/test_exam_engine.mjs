@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { gradeSession, deadlineAt, remainingMs, formatRemaining, uniqueExamQuestions, mostFrequentExamQuestions } from '../src/examEngine.mjs';
+import { gradeSession, deadlineAt, remainingMs, formatRemaining, uniqueExamQuestions, mostFrequentExamQuestions, frequentExamQuestionsAtOrAbove } from '../src/examEngine.mjs';
 
 const answers = (right, wrong, empty, excluded = 0) => [
   ...Array.from({length:right},()=>({selected:'A',correct:true,scoringEligible:true})),
@@ -80,4 +80,18 @@ test('Top frequency ties prefer less flagged copies and then newer exam models',
   {id:'cap:2024:1',progressId:'distinct',examId:'2024',question:'Otra pregunta',examFrequency:4,reviewRequired:false}
  ];
  assert.deepEqual(mostFrequentExamQuestions(rows,2).map(q=>q.id),['cap:2025:1','cap:2024:1']);
+});
+
+test('Frequency presets select every distinct scorable question at 3+ and 4+',()=>{
+ const rows=[
+  {id:'1',progressId:'a',question:'Primera',examFrequency:5,scoringEligible:true},
+  {id:'2',progressId:'a',question:'Primera',examFrequency:5,scoringEligible:true},
+  {id:'3',progressId:'b',question:'Segunda',examFrequency:4,scoringEligible:true},
+  {id:'4',progressId:'c',question:'Tercera',examFrequency:3,scoringEligible:true},
+  {id:'5',progressId:'d',question:'Cuarta',examFrequency:2,scoringEligible:true},
+  {id:'6',progressId:'e',question:'Excluida',examFrequency:9,scoringEligible:false},
+ ];
+ assert.deepEqual(frequentExamQuestionsAtOrAbove(rows,3).map(q=>q.id),['1','3','4']);
+ assert.deepEqual(frequentExamQuestionsAtOrAbove(rows,4).map(q=>q.id),['1','3']);
+ assert.throws(()=>frequentExamQuestionsAtOrAbove(rows,0),/Frecuencia/);
 });
