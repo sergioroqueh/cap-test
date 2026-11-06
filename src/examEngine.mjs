@@ -90,3 +90,10 @@ export function mostFrequentExamQuestions(questions, count = CAP_QUESTION_COUNT)
   );
   return uniqueExamQuestions(ranked).slice(0, Math.max(0, count));
 }
+
+/** Every eligible, distinct question seen at least minFrequency times. */
+export function frequentExamQuestionsAtOrAbove(questions, minFrequency) {
+  if (!Number.isInteger(minFrequency) || minFrequency < 1) throw new Error('Frecuencia mínima inválida')
+  return mostFrequentExamQuestions(questions, questions.length)
+    .filter(q => q.examFrequency >= minFrequency)
+}
