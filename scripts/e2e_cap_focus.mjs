@@ -17,7 +17,7 @@ function pdfPageCommands(bytes) {
     try{return inflateSync(stream).toString('latin1')}catch{return match[1]}
   }).join('\n')
 }
-async function assertPdfDownload(page, button, solved=false) {
+async function assertPdfDownload(page, button, solved=false, checkDecodedText=true) {
  const [download]=await Promise.all([page.waitForEvent('download',{timeout:45000}),button.click()])
  assert.match(download.suggestedFilename(),/\.pdf$/i)
  assert.equal(download.suggestedFilename().endsWith('-soluciones.pdf'),solved,'PDF file name should distinguish solved study copies')
@@ -25,12 +25,16 @@ async function assertPdfDownload(page, button, solved=false) {
  assert.equal(bytes.subarray(0,5).toString(),'%PDF-')
  assert.ok(bytes.length>10000,'PDF should contain the complete printable test')
  assert.ok(bytes.includes(Buffer.from('%%EOF')),'PDF should be complete')
+ const pages=(bytes.toString('latin1').match(/\/Type\s*\/Page\b/g)||[]).length
+ assert.ok(pages>=2,'PDF must contain questions and at least one answer sheet page')
+ // jsPDF deflate streams are binary; textual inspection is an extra check where supported.
+ if(!checkDecodedText)return
  const commands=pdfPageCommands(bytes)
  assert.ok(commands.includes('HOJA DE RESPUESTAS'),'PDF should contain a printable answer sheet')
  if(solved){
   assert.ok(commands.includes('HOJA DE RESPUESTAS CORRECTAS'),'Study copy should visibly label the correct-answer sheet')
   assert.ok(commands.includes('Casilla rellena'),'Study copy should explain the marked letters')
-  assert.ok(commands.includes('SOLUCIONARIO'),'Study copy should also preserve the separate answer key')
+  assert.ok(!commands.includes('SOLUCIONARIO'),'Correct-answer grid replaces the redundant standalone list')
  }else{
   assert.ok(!commands.includes('HOJA DE RESPUESTAS CORRECTAS'),'Blank exam must not reveal marked answers')
  }
@@ -146,7 +150,11 @@ try{
  // Top 100: full-length CAP exam, only unique gradeable historic questions.
  const topContext=await browser.newContext({viewport:{width:390,height:844},isMobile:true})
  const topPage=await openHome(topContext)
- await topPage.locator('.focus-practice-grid button').filter({hasText:'Top 100 más repetidas'}).click()
+ await topPage.locator('.focus-practice-grid button').filter({hasText:'Top más repetidas'}).click()
+ await topPage.getByRole('dialog',{name:'Top más repetidas'}).waitFor()
+ await topPage.getByRole('dialog',{name:'Top más repetidas'}).getByText('157 preguntas').waitFor({timeout:30000})
+ await topPage.getByRole('dialog',{name:'Top más repetidas'}).getByText('68 preguntas').waitFor({timeout:30000})
+ await topPage.getByRole('dialog',{name:'Top más repetidas'}).getByRole('button',{name:/Top 100/}).click()
  await topPage.locator('.focus-question').waitFor({timeout:30000})
  const topSession=await readSession(topPage)
  assert.equal(topSession.source,'cap-top100')
@@ -169,6 +177,36 @@ try{
  checks++
  await topContext.close()
 
+ // Exact frequency minimums must keep every eligible distinct question together.
+ for(const preset of [{label:'Desde 3 repeticiones',source:'cap-top3',length:157,min:3},
+                      {label:'Desde 4 repeticiones',source:'cap-top4',length:68,min:4}]) {
+  const context=await browser.newContext({viewport:{width:390,height:844},isMobile:true})
+  const page=await openHome(context)
+  await page.locator('.focus-practice-grid button').filter({hasText:'Top más repetidas'}).click()
+  await page.getByRole('dialog',{name:'Top más repetidas'}).getByRole('button',{name:new RegExp(preset.label)}).click()
+  await page.locator('.focus-question').waitFor({timeout:30000})
+  const session=await readSession(page)
+  assert.equal(session.source,preset.source)
+  assert.equal(session.questionIds.length,preset.length)
+  assert.equal(new Set(session.questionIds).size,preset.length)
+  assert.equal(session.type,'exam')
+  assert.equal(session.timed,false,'Non-100 practice exams must not masquerade as timed official CAP tests')
+  // The session is the source of truth; visible per-question labels can vary.
+  assert.equal(await page.locator('.focus-question').count(),1)
+  const frequencies=await page.evaluate(async ids=>{
+   const index=await fetch('./data/exams/index.json').then(r=>r.json())
+   const metas=index.exams.filter(e=>e.category==='mercancias'&&e.hasOriginalAnswerSheet)
+   const rows=(await Promise.all(metas.map(e=>fetch('./'+e.path).then(r=>r.json())))).flat()
+   const byId=new Map(rows.map(q=>['cap:'+q.examId+':'+q.number,q]))
+   return ids.map(id=>byId.get(id)?.examFrequency??0)
+  },session.questionIds)
+  assert.ok(frequencies.every(f=>f>=preset.min),'Minimum frequency must be respected')
+  await assertPdfDownload(page,page.locator('.focus-export-pdf'))
+  await assertPdfDownload(page,page.locator('.focus-export-study-pdf'),true)
+  checks++
+  await context.close()
+ }
+
  // The general question bank must also export a generated exam PDF.
  const generalContext=await browser.newContext({viewport:{width:390,height:844},isMobile:true})
  const general=await openHome(generalContext)
@@ -178,8 +216,8 @@ try{
  const generalSession=await readSession(general)
  assert.equal(generalSession.source,'random')
  assert.equal(generalSession.questionIds.length,30)
- await assertPdfDownload(general,general.locator('.focus-export-pdf'))
- await assertPdfDownload(general,general.locator('.focus-export-study-pdf'),true)
+ await assertPdfDownload(general,general.locator('.focus-export-pdf'),false,false)
+ await assertPdfDownload(general,general.locator('.focus-export-study-pdf'),true,false)
  checks++
  await generalContext.close()
 

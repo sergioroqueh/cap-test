@@ -9,7 +9,6 @@ export interface ExamPdfOptions {
 
 const LETTERS: AnswerKey[] = ['A', 'B', 'C', 'D']
 const PAGE_WIDTH = 210
-const PAGE_HEIGHT = 297
 const LEFT = 17
 const RIGHT = 17
 const CONTENT_WIDTH = PAGE_WIDTH - LEFT - RIGHT
@@ -50,25 +49,24 @@ function fileName(label: string, withSolutions: boolean): string {
 export function exportExamPdf({ label, questions, withSolutions = false }: ExamPdfOptions): void {
   if (!questions.length) throw new Error('No hay preguntas para exportar.')
   const doc = new jsPDF({ orientation:'portrait', unit:'mm', format:'a4', compress:true })
-  let y = 30
-  let currentPage = 1
+  let y = 24
 
   function pageHeader() {
-    doc.setFillColor(12, 27, 34)
-    doc.rect(0, 0, PAGE_WIDTH, 18, 'F')
+    // Monochrome, ink-friendly letterhead: no full-width filled rectangle.
+    doc.setTextColor(26, 39, 49)
     doc.setFont('helvetica', 'bold')
     doc.setFontSize(10)
-    doc.setTextColor(255, 255, 255)
-    doc.text('CAP TEST', LEFT, 11.5)
+    doc.text('CAP TEST', LEFT, 10.5)
     doc.setFont('helvetica', 'normal')
     doc.setFontSize(8)
-    doc.text('DOCUMENTO DE ESTUDIO - NO OFICIAL', PAGE_WIDTH-RIGHT, 11.5, { align:'right' })
-    doc.setTextColor(26, 39, 49)
+    doc.text('DOCUMENTO DE ESTUDIO - NO OFICIAL', PAGE_WIDTH-RIGHT, 10.5, { align:'right' })
+    doc.setDrawColor(170, 179, 184)
+    doc.setLineWidth(0.25)
+    doc.line(LEFT, 14, PAGE_WIDTH-RIGHT, 14)
   }
   function nextPage() {
     doc.addPage()
-    currentPage++
-    y = 29
+    y = 24
     pageHeader()
   }
   function ensure(space: number) {
@@ -96,7 +94,7 @@ export function exportExamPdf({ label, questions, withSolutions = false }: ExamP
   writeLines(title, 17, 8, LEFT, 'bold')
   y += 2
   doc.setTextColor(81, 98, 108)
-  writeLines([questions.length + ' preguntas  |  A4  |  ' + (withSolutions ? 'Incluye solucionario' : 'Sin respuestas')], 9, 5)
+  writeLines([questions.length + ' preguntas  |  A4  |  ' + (withSolutions ? 'Hoja de respuestas correctas' : 'Sin respuestas')], 9, 5)
   writeLines(['Generado: ' + new Date().toLocaleDateString('es-ES')], 8, 5)
   doc.setTextColor(26, 39, 49)
   y += 6
@@ -186,30 +184,6 @@ export function exportExamPdf({ label, questions, withSolutions = false }: ExamP
     })
   }
 
-  if (withSolutions) {
-    nextPage()
-    doc.setFont('helvetica','bold')
-    doc.setFontSize(15)
-    doc.text('SOLUCIONARIO', LEFT, y)
-    y += 10
-    doc.setFont('helvetica','normal')
-    doc.setFontSize(9)
-    doc.setTextColor(81, 98, 108)
-    doc.text('Las preguntas excluidas de puntuacion figuran como NP.', LEFT, y)
-    doc.setTextColor(26, 39, 49)
-    y += 10
-    questions.forEach((q,i)=>{
-      const col = i % 4
-      const row = Math.floor(i / 4)
-      if (row>0 && row%45===0 && col===0) nextPage()
-      const onPageRow = row%45
-      const letter = q.scoringEligible===false ? 'NP' : q.correctAnswer
-      const x=LEFT+col*43.5
-      const cellY=y+onPageRow*5.1
-      doc.setFontSize(9)
-      doc.text(String(i+1).padStart(3,'0')+'. '+letter, x, cellY)
-    })
-  }
   const totalPages = doc.getNumberOfPages()
   for (let p=1;p<=totalPages;p++) {
     doc.setPage(p)

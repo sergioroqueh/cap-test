@@ -24,6 +24,10 @@ const rows = (await Promise.all(metas.map(async meta => {
 const ranked = mostFrequentExamQuestions(rows, rows.length)
 const top = ranked.slice(0, 100)
 assert.equal(top.length, 100)
+const threePlus=ranked.filter(q=>q.examFrequency>=3)
+const fourPlus=ranked.filter(q=>q.examFrequency>=4)
+assert.equal(threePlus.length,157,'Current archive: 157 unique scoreable questions appeared 3+ times')
+assert.equal(fourPlus.length,68,'Current archive: 68 unique scoreable questions appeared 4+ times')
 assert.equal(new Set(top.map(q=>q.id)).size,100)
 assert.ok(top.every(q=>q.scoringEligible && q.examFrequency > 0))
 assert.ok(top.every((q,i) => i===0||top[i-1].examFrequency>=q.examFrequency))
@@ -35,6 +39,8 @@ function histogram(rows){
 }
 const report = {
   topSize:top.length,
+  threePlus:threePlus.length,
+  fourPlus:fourPlus.length,
   scoredModels:metas.length,
   historyModels:index.categoryCounts.mercancias,
   uniqueEligible:ranked.length,

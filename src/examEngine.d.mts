@@ -26,3 +26,5 @@ export function formatRemaining(ms: number): string;
 export function uniqueExamQuestions<T extends {id:string;progressId?:string;question:string}>(questions:T[]):T[];
 
 export function mostFrequentExamQuestions<T extends {id:string;progressId?:string;question:string;examFrequency?:number;examId?:string;reviewRequired?:boolean;scoringEligible?:boolean}>(questions:T[], count?:number):T[];
+
+export function frequentExamQuestionsAtOrAbove<T extends {id:string;progressId?:string;question:string;examFrequency?:number;examId?:string;reviewRequired?:boolean;scoringEligible?:boolean}>(questions:T[], minFrequency:number):T[];

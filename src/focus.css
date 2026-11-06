@@ -159,3 +159,15 @@ nav button{min-height:58px}
 .focus-mark-help span{white-space:normal}
 .result.study{background:linear-gradient(130deg,#1a6870,#1f475b)}
 @media(max-width:400px){.focus-dialog-actions{grid-template-columns:1fr}.focus-mark-help{font-size:10px}.focus-exam-status .focus-mark{min-width:66px}}
+
+/* Frequency preset picker: compact, touch-friendly, accessible in either theme. */
+.focus-top-dialog-options{display:grid;gap:10px;margin-top:19px}
+.focus-top-dialog-options>button{width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;text-align:left;padding:15px 13px;min-height:76px;border:1px solid var(--line);border-radius:14px;background:var(--bg);color:var(--text);cursor:pointer}
+.focus-top-dialog-options>button:hover,.focus-top-dialog-options>button:focus-visible{border-color:var(--primary);outline-offset:2px}
+.focus-top-dialog-options>button>span:first-child{display:grid;gap:5px;min-width:0}
+.focus-top-dialog-options strong{font-size:14px;font-weight:780}
+.focus-top-dialog-options small{font-size:12px;color:var(--muted);line-height:1.4}
+.focus-top-dialog-count{flex-shrink:0;font-size:11px;font-weight:750;color:var(--primary);text-align:right}
+.focus-top-dialog .focus-top-dialog-note{margin:14px 0 0;font-size:11px;color:var(--muted)}
+.focus-top-dialog-cancel{margin-top:18px;min-height:44px;width:100%}
+@media(max-width:400px){.focus-top-dialog-options>button{align-items:flex-start;flex-direction:column;gap:5px}.focus-top-dialog-count{text-align:left}}

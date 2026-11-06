@@ -101,7 +101,7 @@ export interface StudySessionRecord {
   answers: SessionAnswer[]
 }
 
-export type StudySource = 'questionnaire' | 'random' | 'unseen' | 'errors' | 'smart' | 'favorites' | 'cap-original' | 'cap-random' | 'cap-mixed' | 'cap-top100' | 'cap-errors' | 'cap-favorites' | 'cap-review'
+export type StudySource = 'questionnaire' | 'random' | 'unseen' | 'errors' | 'smart' | 'favorites' | 'cap-original' | 'cap-random' | 'cap-mixed' | 'cap-top100' | 'cap-top3' | 'cap-top4' | 'cap-errors' | 'cap-favorites' | 'cap-review'
 
 export interface ActiveSession {
   type: 'study' | 'exam'
