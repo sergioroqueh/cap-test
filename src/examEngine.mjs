@@ -69,3 +69,24 @@ export function uniqueExamQuestions(questions) {
     return true;
   });
 }
+
+/**
+ * Rank historic CAP questions by per-model frequency, excluding unscored
+ * questions and repeated canonical IDs or normalized statements.
+ * Ties prefer a less-flagged copy and then the newest historic exam.
+ * @template {{id:string,progressId?:string,question:string,examFrequency?:number,examId?:string,reviewRequired?:boolean,scoringEligible?:boolean}} T
+ * @param {T[]} questions
+ * @param {number} count
+ * @returns {T[]}
+ */
+export function mostFrequentExamQuestions(questions, count = CAP_QUESTION_COUNT) {
+  const ranked = questions.filter(q =>
+    q.scoringEligible !== false && Number.isFinite(q.examFrequency) && q.examFrequency > 0
+  ).sort((a, b) =>
+    b.examFrequency - a.examFrequency ||
+    Number(!!a.reviewRequired) - Number(!!b.reviewRequired) ||
+    String(b.examId || '').localeCompare(String(a.examId || '')) ||
+    a.id.localeCompare(b.id)
+  );
+  return uniqueExamQuestions(ranked).slice(0, Math.max(0, count));
+}
