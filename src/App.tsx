@@ -334,7 +334,7 @@ function Results(){
  const unscored=r.answers.filter(a=>a.scoringEligible===false)
  const visible=showAll?r.answers:fails
  async function downloadPdf(withSolutions:boolean){
-  if(pdfBusy||qs.length!==data.questionIds.length)return
+  if(!data||pdfBusy||qs.length!==data.questionIds.length)return
   setPdfBusy(true);setPdfError('')
   try{
    const {exportExamPdf}=await import('./pdfExport')
