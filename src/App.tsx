@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import Quiz from './Quiz'
 import ConfirmDialog from './ConfirmDialog'
-import { CAP_DURATION_MINUTES, gradeSession, uniqueExamQuestions } from './examEngine.mjs'
+import { CAP_DURATION_MINUTES, gradeSession, mostFrequentExamQuestions, uniqueExamQuestions } from './examEngine.mjs'
 import type { ActiveSession, AnswerKey, BankIndex, Question, QuestionProgress, QuestionnaireMeta, StudySessionRecord, StudySource } from './types'
 import { addSession, clearAllData, clearLocalCache, exportDatabase, getAllProgress, getRecentSessions, importProgress, pushLocalSnapshotToCloud, putProgress, synchronizeAccount } from './db'
 import { cloudConfigured, getSession, signIn, signOut, supabase } from './supabase'
@@ -84,7 +84,7 @@ function CapHome({pm}:{pm:Map<string,QuestionProgress>}){
  const [timed,setTimed]=useState(true)
  const [count,setCount]=useState(100)
  const [showConvocations,setShowConvocations]=useState(false)
- const [replaceRequest,setReplaceRequest]=useState<{source:'cap-original'|'cap-random'|'cap-mixed'|'cap-errors'|'cap-favorites'|'cap-review';chosen?:CapExamMeta}|null>(null)
+ const [replaceRequest,setReplaceRequest]=useState<{source:'cap-original'|'cap-random'|'cap-mixed'|'cap-top100'|'cap-errors'|'cap-favorites'|'cap-review';chosen?:CapExamMeta}|null>(null)
  const [working,setWorking]=useState(false)
  const [error,setError]=useState('')
  const [pendingId,setPendingId]=useState('')
@@ -121,7 +121,7 @@ function CapHome({pm}:{pm:Map<string,QuestionProgress>}){
  }
  const showSheetRows=sheetReviewOnlyIssues?sheetReviewRows.filter(q=>q.reviewPriority!=='P4'||!!q.r22Case||!!q.r23Case||!!q.r24Case):sheetReviewRows
  const selectedTriage=editorialTriage?.exams.find(e=>e.examId===sheetReviewId)
- async function begin(source:'cap-original'|'cap-random'|'cap-mixed'|'cap-errors'|'cap-favorites'|'cap-review',chosen?:CapExamMeta,replaceConfirmed=false){
+ async function begin(source:'cap-original'|'cap-random'|'cap-mixed'|'cap-top100'|'cap-errors'|'cap-favorites'|'cap-review',chosen?:CapExamMeta,replaceConfirmed=false){
   setError('')
   const existing=localStorage.getItem(ACTIVE)||sessionStorage.getItem(ACTIVE)
   if(existing&&!replaceConfirmed){setReplaceRequest({source,chosen});return}
@@ -132,14 +132,23 @@ function CapHome({pm}:{pm:Map<string,QuestionProgress>}){
    const practiceSource=['cap-errors','cap-favorites','cap-review'].includes(source)
    const runMode=practiceSource?'study':mode
    const real=runMode==='exam'&&timed
-   if(['cap-mixed','cap-errors','cap-favorites','cap-review'].includes(source)){
+   if(['cap-mixed','cap-top100','cap-errors','cap-favorites','cap-review'].includes(source)){
     const rows=await loadAllCapQuestions(category)
-    let pool=uniqueExamQuestions(shuffle(rows))
-    if(source==='cap-errors')pool=pool.filter(x=>needsReview(pm.get(x.progressId||x.id)))
-    if(source==='cap-favorites')pool=pool.filter(x=>pm.get(x.progressId||x.id)?.favorite)
-    if(source==='cap-review')pool=pool.sort((a,b)=>smartScore(pm.get(b.progressId||b.id))-smartScore(pm.get(a.progressId||a.id)))
-    questions=source==='cap-review'?pool.slice(0,20):shuffle(pool).slice(0,source==='cap-mixed'?(real?100:count):20)
-    label=source==='cap-errors'?'CAP Mercancías · mis errores':source==='cap-favorites'?'CAP Mercancías · favoritas':source==='cap-review'?'CAP Mercancías · repaso inteligente':'CAP Mercancías · mezclado · '+questions.length+' preguntas'
+    if(source==='cap-top100'){
+     // Select first by historical frequency, then shuffle presentation order.
+     if(category!=='mercancias')throw new Error('El Top 100 de Viajeros estará disponible al verificar sus plantillas.')
+     const top=mostFrequentExamQuestions(rows,100)
+     if(top.length!==100)throw new Error('Aún no hay 100 preguntas distintas y puntuables para el Top 100.')
+     questions=shuffle(top)
+     label='CAP Mercancías · Top 100 más repetidas'
+    }else{
+     let pool=uniqueExamQuestions(shuffle(rows))
+     if(source==='cap-errors')pool=pool.filter(x=>needsReview(pm.get(x.progressId||x.id)))
+     if(source==='cap-favorites')pool=pool.filter(x=>pm.get(x.progressId||x.id)?.favorite)
+     if(source==='cap-review')pool=pool.sort((a,b)=>smartScore(pm.get(b.progressId||b.id))-smartScore(pm.get(a.progressId||a.id)))
+     questions=source==='cap-review'?pool.slice(0,20):shuffle(pool).slice(0,source==='cap-mixed'?(real?100:count):20)
+     label=source==='cap-errors'?'CAP Mercancías · mis errores':source==='cap-favorites'?'CAP Mercancías · favoritas':source==='cap-review'?'CAP Mercancías · repaso inteligente':'CAP Mercancías · mezclado · '+questions.length+' preguntas'
+    }
    }else{
     const meta=chosen||(available.length?shuffle(available)[0]:undefined)
     if(!meta)throw new Error('No hay convocatorias con plantilla disponibles para esta modalidad.')
@@ -200,6 +209,7 @@ function CapHome({pm}:{pm:Map<string,QuestionProgress>}){
    <div className="focus-section-heading"><h2 id="focus-other">Otras formas de practicar</h2><p>Elige una convocatoria, combina preguntas o repasa lo que más necesitas.</p></div>
    <div className="focus-practice-grid">
     <button type="button" aria-expanded={showConvocations} aria-controls="cap-historicos" onClick={()=>showConvocations?closeConvocations():openConvocations()}><span className="focus-choice-icon">▦</span><span><b>Por convocatoria</b><small>Fecha y modelo originales</small></span><span aria-hidden="true">{showConvocations?'⌃':'›'}</span></button>
+    <button disabled={category!=='mercancias'||!available.length||working} onClick={()=>void begin('cap-top100')}><span className="focus-choice-icon">★</span><span><b>Top 100 más repetidas</b><small>Las de mayor frecuencia histórica · sin duplicados</small></span><span aria-hidden="true">›</span></button>
     <button disabled={!available.length||working} onClick={()=>void begin('cap-mixed')}><span className="focus-choice-icon">⤨</span><span><b>Examen mezclado</b><small>Sin preguntas duplicadas</small></span><span aria-hidden="true">›</span></button>
     <button disabled={working} onClick={()=>void begin('cap-errors')}><span className="focus-choice-icon">↺</span><span><b>Mis errores</b><small>Repasa las respuestas falladas</small></span><span aria-hidden="true">›</span></button>
     <button disabled={working} onClick={()=>void begin('cap-review')}><span className="focus-choice-icon">✦</span><span><b>Repaso inteligente</b><small>Prioriza las preguntas difíciles</small></span><span aria-hidden="true">›</span></button>
