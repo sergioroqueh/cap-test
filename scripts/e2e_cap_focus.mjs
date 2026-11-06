@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict'
-import { mkdir } from 'node:fs/promises'
+import { mkdir, readFile } from 'node:fs/promises'
 import { chromium } from 'playwright'
 
 const BASE=process.env.CAP_PREVIEW_URL||'http://127.0.0.1:4173/'
@@ -8,6 +8,14 @@ await mkdir(artifacts,{recursive:true})
 const browser=await chromium.launch({headless:true,args:['--no-sandbox']})
 const readSession=page=>page.evaluate(()=>JSON.parse(localStorage.getItem('cap-test-beta-active-v1')||'null'))
 const readResult=page=>page.evaluate(()=>JSON.parse(localStorage.getItem('cap-test-beta-last-v1')||'null'))
+async function assertPdfDownload(page, button) {
+ const [download]=await Promise.all([page.waitForEvent('download',{timeout:45000}),button.click()])
+ assert.match(download.suggestedFilename(),/\.pdf$/i)
+ const bytes=await readFile(await download.path())
+ assert.equal(bytes.subarray(0,5).toString(),'%PDF-')
+ assert.ok(bytes.length>10000,'PDF should contain the complete printable test')
+ assert.ok(bytes.includes(Buffer.from('%%EOF')),'PDF should be complete')
+}
 let checks=0
 
 async function openHome(context){
@@ -110,6 +118,8 @@ try{
  assert.equal(result.record.timed,true)
  assert.equal(result.record.finishedReason,'manual')
  assert.equal(await readSession(p),null,'completed test must clear active data')
+ await assertPdfDownload(p,p.locator('.focus-result-exports button').first())
+ await assertPdfDownload(p,p.locator('.focus-result-exports button').last())
  await p.screenshot({path:artifacts+'/mobile-result.png',fullPage:true})
  checks++
  await mobile.close()
@@ -126,6 +136,7 @@ try{
  assert.equal(topSession.durationMinutes,120)
  assert.equal(topSession.questionIds.length,100)
  assert.equal(new Set(topSession.questionIds).size,100)
+ await assertPdfDownload(topPage,topPage.locator('.focus-export-pdf'))
  const topAudit=await topPage.evaluate(async ids=>{
   const index=await fetch('./data/exams/index.json').then(r=>r.json())
   const metas=index.exams.filter(e=>e.category==='mercancias'&&e.hasOriginalAnswerSheet)
@@ -137,6 +148,19 @@ try{
  await topPage.screenshot({path:artifacts+'/mobile-top-100.png',fullPage:true})
  checks++
  await topContext.close()
+
+ // The general question bank must also export a generated exam PDF.
+ const generalContext=await browser.newContext({viewport:{width:390,height:844},isMobile:true})
+ const general=await openHome(generalContext)
+ await general.locator('nav button').filter({hasText:'Test general'}).click()
+ await general.getByRole('button',{name:'Comenzar simulacro'}).click()
+ await general.locator('.focus-question').waitFor({timeout:30000})
+ const generalSession=await readSession(general)
+ assert.equal(generalSession.source,'random')
+ assert.equal(generalSession.questionIds.length,30)
+ await assertPdfDownload(general,general.locator('.focus-export-pdf'))
+ checks++
+ await generalContext.close()
 
  // Deadline: altering only the stored start time simulates returning after 2 hours.
  const timeoutContext=await browser.newContext({viewport:{width:390,height:844},isMobile:true})

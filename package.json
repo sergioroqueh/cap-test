@@ -16,7 +16,8 @@
     "typescript": "latest",
     "react": "latest",
     "react-dom": "latest",
-    "@supabase/supabase-js": "latest"
+    "@supabase/supabase-js": "latest",
+    "jspdf": "^3.0.3"
   },
   "devDependencies": {
     "@types/react": "latest",

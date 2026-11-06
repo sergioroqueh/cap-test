@@ -24,6 +24,9 @@ jobs:
       - name: Verify real CAP scoring and persisted wall clock
         run: node --test scripts/test_exam_engine.mjs
 
+      - name: Audit actual Top 100 frequency distribution
+        run: node scripts/audit_top100_frequency.mjs
+
       - name: Validate CAP overlay isolation and answer provenance
         run: python3 scripts/test_exam_data.py
 
