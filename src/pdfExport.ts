@@ -121,32 +121,70 @@ export function exportExamPdf({ label, questions, withSolutions = false }: ExamP
     y += 5
   })
 
-  // A printable answer grid. Solutions are never exposed in the PDF of an active test.
+  // Answer sheet: in the study PDF, the correct option is visibly filled.
+  // An editorially excluded question NEVER presents a provisional key as correct.
+  // Blank PDFs keep four empty boxes so the test can still be printed and answered.
   nextPage()
-  doc.setFont('helvetica','bold')
-  doc.setFontSize(14)
-  doc.text('HOJA DE RESPUESTAS', LEFT, y)
-  y += 8
-  doc.setFont('helvetica','normal')
-  doc.setFontSize(8)
-  doc.setTextColor(81, 98, 108)
-  doc.text('Marca una opcion por pregunta. Las no contestadas quedan en blanco.', LEFT, y)
-  doc.setTextColor(26, 39, 49)
-  y += 11
+  function answerSheetHeading() {
+    doc.setFont('helvetica','bold')
+    doc.setFontSize(14)
+    doc.setTextColor(26,39,49)
+    doc.text(withSolutions ? 'HOJA DE RESPUESTAS CORRECTAS' : 'HOJA DE RESPUESTAS', LEFT, y)
+    y += 8
+    doc.setFont('helvetica','normal')
+    doc.setFontSize(8)
+    doc.setTextColor(81,98,108)
+    doc.text(withSolutions
+      ? 'Casilla rellena = respuesta correcta. NP = pregunta sin puntuacion.'
+      : 'Marca una opcion por pregunta. Las no contestadas quedan en blanco.', LEFT, y)
+    y += 11
+  }
+  answerSheetHeading()
+  const ROWS_PER_COLUMN=34
+  const ENTRIES_PER_PAGE=ROWS_PER_COLUMN*3
   for (let index=0; index<questions.length; index++) {
-    const column = Math.floor(index/34)
-    const row = index%34
-    if (column>2) { // More than 102 questions: start another answer sheet.
-      if (row===0) nextPage()
+    if (index>0 && index%ENTRIES_PER_PAGE===0) {
+      nextPage()
+      answerSheetHeading()
     }
-    const x = LEFT + (column%3)*59
-    const cellY = y + row*6.3
+    const localIndex=index%ENTRIES_PER_PAGE
+    const column=Math.floor(localIndex/ROWS_PER_COLUMN)
+    const row=localIndex%ROWS_PER_COLUMN
+    const x=LEFT+column*59
+    const cellY=y+row*6.3
+    const question=questions[index]
+    const answer=question.scoringEligible===false ? null : question.correctAnswer
     doc.setFont('helvetica','normal')
     doc.setFontSize(8.5)
-    doc.text(String(index+1).padStart(3,'0')+'   A  B  C  D', x, cellY)
+    doc.setTextColor(26,39,49)
+    doc.text(String(index+1).padStart(3,'0'),x,cellY)
+    if (withSolutions && !answer) {
+      doc.setFont('helvetica','bold')
+      doc.setTextColor(105,68,33)
+      doc.text('NP - sin puntuar',x+11,cellY)
+      continue
+    }
+    LETTERS.forEach((letter, letterIndex)=>{
+      const boxX=x+12+letterIndex*9.6
+      const boxY=cellY-3.7
+      const chosen=withSolutions && answer===letter
+      if (chosen) {
+        // Dark fill with white bold letter remains identifiable when printed in B/W.
+        doc.setFillColor(16,84,94)
+        doc.roundedRect(boxX,boxY,7.8,6,1,1,'F')
+        doc.setTextColor(255,255,255)
+        doc.setFont('helvetica','bold')
+      } else {
+        doc.setDrawColor(145,155,159)
+        doc.setLineWidth(0.22)
+        doc.roundedRect(boxX,boxY,7.8,6,1,1,'S')
+        doc.setTextColor(26,39,49)
+        doc.setFont('helvetica','normal')
+      }
+      doc.setFontSize(8.5)
+      doc.text(letter,boxX+3.9,cellY+0.3,{align:'center'})
+    })
   }
-  // The grid is at most 100 questions for CAP tests; larger bank sessions
-  // are also supported by starting additional answer sheets when necessary.
 
   if (withSolutions) {
     nextPage()
