@@ -83,14 +83,16 @@ export function exportExamPdf({ label, questions, withSolutions = false }: ExamP
       y += lineHeight
     }
   }
-  function split(text:string, width:number):string[] {
+  function split(text:string, width:number, fontSize=9.2, font:'normal'|'bold'='normal'):string[] {
+    doc.setFont('helvetica',font)
+    doc.setFontSize(fontSize)
     return doc.splitTextToSize(pdfText(text), width) as string[]
   }
 
   pageHeader()
   doc.setFont('helvetica','bold')
   doc.setFontSize(17)
-  const title = split(label, CONTENT_WIDTH)
+  const title = split(label, CONTENT_WIDTH, 17, 'bold')
   writeLines(title, 17, 8, LEFT, 'bold')
   y += 2
   doc.setTextColor(81, 98, 108)
@@ -101,8 +103,8 @@ export function exportExamPdf({ label, questions, withSolutions = false }: ExamP
 
   questions.forEach((q, index) => {
     const heading = 'PREGUNTA ' + (index + 1)
-    const questionLines = split(q.question, CONTENT_WIDTH)
-    const optionLines = LETTERS.map(letter => split(letter + ')  ' + q.options[letter], CONTENT_WIDTH-5))
+    const questionLines = split(q.question, CONTENT_WIDTH, 10, 'bold')
+    const optionLines = LETTERS.map(letter => split(letter + ')  ' + q.options[letter], CONTENT_WIDTH-5, 9.2))
     const estimated = 6 + questionLines.length*5 + optionLines.reduce((s,lines)=>s+lines.length*4.65+2, 0) + 7
     // Avoid orphan question headings when a question fits a new page.
     if (estimated < BOTTOM-30 && y+estimated > BOTTOM) nextPage()
