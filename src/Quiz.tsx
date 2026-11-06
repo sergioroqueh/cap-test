@@ -67,6 +67,8 @@ function QuizSession({initial,questions,frequency,pm,refresh}:{
   const [finishing,setFinishing]=useState(false)
   const [confirmSubmit,setConfirmSubmit]=useState(false)
   const [saveError,setSaveError]=useState('')
+  const [pdfBusy,setPdfBusy]=useState(false)
+  const [pdfError,setPdfError]=useState('')
   const lock=useRef(false)
   const timed=s.type==='exam'&&s.timed===true
   const duration=s.durationMinutes||CAP_DURATION_MINUTES
@@ -196,6 +198,19 @@ function QuizSession({initial,questions,frequency,pm,refresh}:{
   // eslint-disable-next-line react-hooks/exhaustive-deps
   },[now,s.startedAt,s.durationMinutes,timed])
 
+  async function downloadPdf(){
+    if(pdfBusy)return
+    setPdfBusy(true)
+    setPdfError('')
+    try{
+      const {exportExamPdf}=await import('./pdfExport')
+      exportExamPdf({label:s.label,questions})
+    }catch(err){
+      console.error(err)
+      setPdfError('No se pudo generar el PDF. Inténtalo de nuevo.')
+    }finally{setPdfBusy(false)}
+  }
+
   const renderFeedback=s.type==='study'&&checked
   const isCorrect=q.scoringEligible!==false&&selected===q.correctAnswer
   return <div className="quiz focus-quiz">
@@ -211,6 +226,8 @@ function QuizSession({initial,questions,frequency,pm,refresh}:{
       <button className={'focus-mark '+((s.markedIds||[]).includes(q.id)?'on':'')} onClick={toggleMarked} aria-pressed={(s.markedIds||[]).includes(q.id)}>⚑ { (s.markedIds||[]).includes(q.id)?'Marcada':'Revisar luego'}</button>
     </div>
     <p className="focus-mark-help">⚑ Revisar: solo durante este test. <span>★ Favorita: se guarda para otros repasos.</span></p>
+    <button className="btn light focus-export-pdf" disabled={pdfBusy} onClick={()=>void downloadPdf()}>{pdfBusy?'Generando PDF…':'↓ Exportar examen en PDF'}</button>
+    {pdfError&&<p className="focus-muted" role="alert">{pdfError}</p>}
     <details className="focus-index">
       <summary>Índice de preguntas · {markedCount} marcadas para revisar</summary>
       <div className="focus-question-grid">{questions.map((x,index)=><button key={x.id}
