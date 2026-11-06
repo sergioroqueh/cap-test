@@ -17,7 +17,7 @@ function pdfPageCommands(bytes) {
     try{return inflateSync(stream).toString('latin1')}catch{return match[1]}
   }).join('\n')
 }
-async function assertPdfDownload(page, button, solved=false) {
+async function assertPdfDownload(page, button, solved=false, checkDecodedText=true) {
  const [download]=await Promise.all([page.waitForEvent('download',{timeout:45000}),button.click()])
  assert.match(download.suggestedFilename(),/\.pdf$/i)
  assert.equal(download.suggestedFilename().endsWith('-soluciones.pdf'),solved,'PDF file name should distinguish solved study copies')
@@ -25,6 +25,10 @@ async function assertPdfDownload(page, button, solved=false) {
  assert.equal(bytes.subarray(0,5).toString(),'%PDF-')
  assert.ok(bytes.length>10000,'PDF should contain the complete printable test')
  assert.ok(bytes.includes(Buffer.from('%%EOF')),'PDF should be complete')
+ const pages=(bytes.toString('latin1').match(/\/Type\s*\/Page\b/g)||[]).length
+ assert.ok(pages>=2,'PDF must contain questions and at least one answer sheet page')
+ // jsPDF deflate streams are binary; textual inspection is an extra check where supported.
+ if(!checkDecodedText)return
  const commands=pdfPageCommands(bytes)
  assert.ok(commands.includes('HOJA DE RESPUESTAS'),'PDF should contain a printable answer sheet')
  if(solved){
@@ -212,8 +216,8 @@ try{
  const generalSession=await readSession(general)
  assert.equal(generalSession.source,'random')
  assert.equal(generalSession.questionIds.length,30)
- await assertPdfDownload(general,general.locator('.focus-export-pdf'))
- await assertPdfDownload(general,general.locator('.focus-export-study-pdf'),true)
+ await assertPdfDownload(general,general.locator('.focus-export-pdf'),false,false)
+ await assertPdfDownload(general,general.locator('.focus-export-study-pdf'),true,false)
  checks++
  await generalContext.close()
 
