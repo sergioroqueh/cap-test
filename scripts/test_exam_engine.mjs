@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { gradeSession, deadlineAt, remainingMs, formatRemaining, uniqueExamQuestions } from '../src/examEngine.mjs';
+import { gradeSession, deadlineAt, remainingMs, formatRemaining, uniqueExamQuestions, mostFrequentExamQuestions } from '../src/examEngine.mjs';
 
 const answers = (right, wrong, empty, excluded = 0) => [
   ...Array.from({length:right},()=>({selected:'A',correct:true,scoringEligible:true})),
@@ -60,4 +60,24 @@ test('mixed exams discard repeated canonical ids and identical enunciados',()=>{
   {id:'4',progressId:'canonical-c',question:'Pregunta realmente diferente'}
  ];
  assert.deepEqual(uniqueExamQuestions(input).map(q=>q.id),['1','4']);
+});
+
+test('Top 100 sorts by historical frequency, excludes unscored questions and repeats',()=>{
+ const rows=[
+  {id:'cap:2024:1',progressId:'same',examId:'2024',question:'¿Qué documentación se necesita?',examFrequency:5,scoringEligible:true},
+  {id:'cap:2026:1',progressId:'same',examId:'2026',question:'¿Qué documentación se necesita?',examFrequency:5,scoringEligible:true},
+  {id:'cap:2026:2',progressId:'other',examId:'2026',question:'Otra pregunta',examFrequency:4,scoringEligible:true},
+  {id:'cap:2025:3',progressId:'third',examId:'2025',question:'¿Qué documentación se necesita ? ',examFrequency:3,scoringEligible:true},
+  {id:'cap:2024:4',progressId:'excluded',examId:'2024',question:'Pregunta discutida',examFrequency:100,scoringEligible:false},
+  {id:'cap:2024:5',progressId:'low',examId:'2024',question:'Muy poco repetida',examFrequency:1,scoringEligible:true}
+ ];
+ assert.deepEqual(mostFrequentExamQuestions(rows,2).map(q=>q.id),['cap:2026:1','cap:2026:2']);
+});
+test('Top frequency ties prefer less flagged copies and then newer exam models',()=>{
+ const rows=[
+  {id:'cap:2026:1',progressId:'id',examId:'2026',question:'Pregunta repetida',examFrequency:4,reviewRequired:true},
+  {id:'cap:2025:1',progressId:'id',examId:'2025',question:'Pregunta repetida',examFrequency:4,reviewRequired:false},
+  {id:'cap:2024:1',progressId:'distinct',examId:'2024',question:'Otra pregunta',examFrequency:4,reviewRequired:false}
+ ];
+ assert.deepEqual(mostFrequentExamQuestions(rows,2).map(q=>q.id),['cap:2025:1','cap:2024:1']);
 });

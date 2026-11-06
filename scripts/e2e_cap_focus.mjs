@@ -114,6 +114,30 @@ try{
  checks++
  await mobile.close()
 
+ // Top 100: full-length CAP exam, only unique gradeable historic questions.
+ const topContext=await browser.newContext({viewport:{width:390,height:844},isMobile:true})
+ const topPage=await openHome(topContext)
+ await topPage.locator('.focus-practice-grid button').filter({hasText:'Top 100 más repetidas'}).click()
+ await topPage.locator('.focus-question').waitFor({timeout:30000})
+ const topSession=await readSession(topPage)
+ assert.equal(topSession.source,'cap-top100')
+ assert.equal(topSession.type,'exam')
+ assert.equal(topSession.timed,true)
+ assert.equal(topSession.durationMinutes,120)
+ assert.equal(topSession.questionIds.length,100)
+ assert.equal(new Set(topSession.questionIds).size,100)
+ const topAudit=await topPage.evaluate(async ids=>{
+  const index=await fetch('./data/exams/index.json').then(r=>r.json())
+  const metas=index.exams.filter(e=>e.category==='mercancias'&&e.hasOriginalAnswerSheet)
+  const all=(await Promise.all(metas.map(e=>fetch('./'+e.path).then(r=>r.json())))).flat()
+  const rows=new Map(all.map(q=>['cap:'+q.examId+':'+q.number,q]))
+  return ids.map(id=>rows.get(id)).map(q=>({found:!!q,valid:q?.scoringEligible===true,frequency:q?.examFrequency||0}))
+ },topSession.questionIds)
+ assert.ok(topAudit.every(q=>q.found&&q.valid&&q.frequency>0),'Top 100 includes only gradeable questions')
+ await topPage.screenshot({path:artifacts+'/mobile-top-100.png',fullPage:true})
+ checks++
+ await topContext.close()
+
  // Deadline: altering only the stored start time simulates returning after 2 hours.
  const timeoutContext=await browser.newContext({viewport:{width:390,height:844},isMobile:true})
  const t=await openHome(timeoutContext)
