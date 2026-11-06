@@ -171,3 +171,16 @@ nav button{min-height:58px}
 .focus-top-dialog .focus-top-dialog-note{margin:14px 0 0;font-size:11px;color:var(--muted)}
 .focus-top-dialog-cancel{margin-top:18px;min-height:44px;width:100%}
 @media(max-width:400px){.focus-top-dialog-options>button{align-items:flex-start;flex-direction:column;gap:5px}.focus-top-dialog-count{text-align:left}}
+
+/* One study-PDF action, shared across active and completed tests. */
+.focus-study-pdf-button{appearance:none;display:flex;align-items:center;gap:13px;width:100%;min-height:82px;margin:14px 0 20px;padding:13px 15px;border:1px solid var(--primary);border-radius:18px;background:var(--surface);color:var(--text);cursor:pointer;text-align:left;box-shadow:0 7px 28px rgba(0,0,0,.08);transition:border-color .15s ease,transform .15s ease,box-shadow .15s ease}
+.focus-study-pdf-button:hover:not(:disabled){border-color:var(--primary);background:var(--soft);transform:translateY(-1px);box-shadow:0 11px 26px rgba(0,0,0,.15)}
+.focus-study-pdf-button:focus-visible{outline:3px solid var(--primary);outline-offset:3px}
+.focus-study-pdf-button:disabled{cursor:wait;opacity:.65}
+.focus-study-pdf-symbol{display:grid;place-items:center;flex:0 0 48px;height:48px;border-radius:14px;background:var(--soft);color:var(--primary)}
+.focus-study-pdf-copy{display:flex;flex:1;flex-direction:column;gap:4px;min-width:0}
+.focus-study-pdf-copy strong{font-size:15px;font-weight:800;line-height:1.3;color:var(--text)}
+.focus-study-pdf-copy small{font-size:11px;line-height:1.4;color:var(--muted)}
+.focus-study-pdf-arrow{display:grid;place-items:center;flex:0 0 28px;height:28px;border-radius:50%;background:var(--soft);color:var(--primary);font-size:19px;font-weight:800}
+@media(max-width:390px){.focus-study-pdf-button{gap:10px;padding:12px}.focus-study-pdf-symbol{flex-basis:42px;height:42px}.focus-study-pdf-copy strong{font-size:14px}.focus-study-pdf-arrow{flex-basis:24px;height:24px}}
+@media(prefers-reduced-motion:reduce){.focus-study-pdf-button{transition:none}}

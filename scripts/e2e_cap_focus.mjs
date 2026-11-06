@@ -141,8 +141,8 @@ try{
  assert.equal(result.record.timed,true)
  assert.equal(result.record.finishedReason,'manual')
  assert.equal(await readSession(p),null,'completed test must clear active data')
- await assertPdfDownload(p,p.locator('.focus-result-exports button').first())
- await assertPdfDownload(p,p.locator('.focus-result-exports button').last(),true)
+ assert.equal(await p.locator('.focus-study-pdf-button').count(),1,'Only one PDF action after exam')
+ await assertPdfDownload(p,p.locator('.focus-study-pdf-button'),true)
  await p.screenshot({path:artifacts+'/mobile-result.png',fullPage:true})
  checks++
  await mobile.close()
@@ -163,8 +163,8 @@ try{
  assert.equal(topSession.durationMinutes,120)
  assert.equal(topSession.questionIds.length,100)
  assert.equal(new Set(topSession.questionIds).size,100)
- await assertPdfDownload(topPage,topPage.locator('.focus-export-pdf'))
- await assertPdfDownload(topPage,topPage.locator('.focus-export-study-pdf'),true)
+ assert.equal(await topPage.locator('.focus-study-pdf-button').count(),1,'Only one PDF action in Top 100')
+ await assertPdfDownload(topPage,topPage.locator('.focus-study-pdf-button'),true)
  const topAudit=await topPage.evaluate(async ids=>{
   const index=await fetch('./data/exams/index.json').then(r=>r.json())
   const metas=index.exams.filter(e=>e.category==='mercancias'&&e.hasOriginalAnswerSheet)
@@ -201,8 +201,8 @@ try{
    return ids.map(id=>byId.get(id)?.examFrequency??0)
   },session.questionIds)
   assert.ok(frequencies.every(f=>f>=preset.min),'Minimum frequency must be respected')
-  await assertPdfDownload(page,page.locator('.focus-export-pdf'))
-  await assertPdfDownload(page,page.locator('.focus-export-study-pdf'),true)
+  assert.equal(await page.locator('.focus-study-pdf-button').count(),1)
+  await assertPdfDownload(page,page.locator('.focus-study-pdf-button'),true)
   checks++
   await context.close()
  }
@@ -216,8 +216,8 @@ try{
  const generalSession=await readSession(general)
  assert.equal(generalSession.source,'random')
  assert.equal(generalSession.questionIds.length,30)
- await assertPdfDownload(general,general.locator('.focus-export-pdf'),false,false)
- await assertPdfDownload(general,general.locator('.focus-export-study-pdf'),true,false)
+ assert.equal(await general.locator('.focus-study-pdf-button').count(),1)
+ await assertPdfDownload(general,general.locator('.focus-study-pdf-button'),true,false)
  checks++
  await generalContext.close()
 
@@ -257,7 +257,8 @@ try{
  await submit(h)
  const historicResult=await readResult(h)
  assert.ok(historicResult.record.excluded>0)
- await assertPdfDownload(h,h.locator('.focus-result-exports button').last(),true)
+ assert.equal(await h.locator('.focus-study-pdf-button').count(),1)
+ await assertPdfDownload(h,h.locator('.focus-study-pdf-button'),true)
  assert.equal(historicResult.record.passed,null)
  assert.match(await h.locator('.result').innerText(),/orientativo/i)
  checks++
