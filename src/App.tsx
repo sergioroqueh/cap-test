@@ -369,7 +369,7 @@ function Results(){
   </div>
   <div className="focus-result-exports">
    <button className="btn light" disabled={pdfBusy||qs.length!==data.questionIds.length} onClick={()=>void downloadPdf(false)}>{pdfBusy?'Generando PDF…':'↓ Exportar examen en PDF'}</button>
-   <button className="btn light" disabled={pdfBusy||qs.length!==data.questionIds.length} onClick={()=>void downloadPdf(true)}>↓ PDF con solucionario</button>
+   <button className="btn light" disabled={pdfBusy||qs.length!==data.questionIds.length} onClick={()=>void downloadPdf(true)}>↓ PDF para estudiar (respuestas marcadas)</button>
   </div>
   {pdfError&&<p role="alert" className="focus-muted">{pdfError}</p>}
   {fails.length>0&&<Btn onClick={()=>void review()}>Repasar {fails.length} fallos</Btn>}

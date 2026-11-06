@@ -198,13 +198,13 @@ function QuizSession({initial,questions,frequency,pm,refresh}:{
   // eslint-disable-next-line react-hooks/exhaustive-deps
   },[now,s.startedAt,s.durationMinutes,timed])
 
-  async function downloadPdf(){
+  async function downloadPdf(withSolutions=false){
     if(pdfBusy)return
     setPdfBusy(true)
     setPdfError('')
     try{
       const {exportExamPdf}=await import('./pdfExport')
-      exportExamPdf({label:s.label,questions})
+      exportExamPdf({label:s.label,questions,withSolutions})
     }catch(err){
       console.error(err)
       setPdfError('No se pudo generar el PDF. Inténtalo de nuevo.')
@@ -226,7 +226,10 @@ function QuizSession({initial,questions,frequency,pm,refresh}:{
       <button className={'focus-mark '+((s.markedIds||[]).includes(q.id)?'on':'')} onClick={toggleMarked} aria-pressed={(s.markedIds||[]).includes(q.id)}>⚑ { (s.markedIds||[]).includes(q.id)?'Marcada':'Revisar luego'}</button>
     </div>
     <p className="focus-mark-help">⚑ Revisar: solo durante este test. <span>★ Favorita: se guarda para otros repasos.</span></p>
-    <button className="btn light focus-export-pdf" disabled={pdfBusy} onClick={()=>void downloadPdf()}>{pdfBusy?'Generando PDF…':'↓ Exportar examen en PDF'}</button>
+    <div className="focus-result-exports">
+      <button className="btn light focus-export-pdf" disabled={pdfBusy} onClick={()=>void downloadPdf(false)}>{pdfBusy?'Generando PDF…':'↓ PDF para practicar (sin respuestas)'}</button>
+      <button className="btn light focus-export-study-pdf" disabled={pdfBusy} onClick={()=>void downloadPdf(true)}>{pdfBusy?'Generando PDF…':'↓ PDF para estudiar (con respuestas)'}</button>
+    </div>
     {pdfError&&<p className="focus-muted" role="alert">{pdfError}</p>}
     <details className="focus-index">
       <summary>Índice de preguntas · {markedCount} marcadas para revisar</summary>

@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict'
 import { mkdir, readFile } from 'node:fs/promises'
+import { inflateSync } from 'node:zlib'
 import { chromium } from 'playwright'
 
 const BASE=process.env.CAP_PREVIEW_URL||'http://127.0.0.1:4173/'
@@ -8,13 +9,31 @@ await mkdir(artifacts,{recursive:true})
 const browser=await chromium.launch({headless:true,args:['--no-sandbox']})
 const readSession=page=>page.evaluate(()=>JSON.parse(localStorage.getItem('cap-test-beta-active-v1')||'null'))
 const readResult=page=>page.evaluate(()=>JSON.parse(localStorage.getItem('cap-test-beta-last-v1')||'null'))
-async function assertPdfDownload(page, button) {
+function pdfPageCommands(bytes) {
+ const binary=bytes.toString('latin1')
+ return [...binary.matchAll(/stream\r?\n([\s\S]*?)\r?\nendstream/g)]
+  .map(match=>{
+    const stream=Buffer.from(match[1],'latin1')
+    try{return inflateSync(stream).toString('latin1')}catch{return match[1]}
+  }).join('\n')
+}
+async function assertPdfDownload(page, button, solved=false) {
  const [download]=await Promise.all([page.waitForEvent('download',{timeout:45000}),button.click()])
  assert.match(download.suggestedFilename(),/\.pdf$/i)
+ assert.equal(download.suggestedFilename().endsWith('-soluciones.pdf'),solved,'PDF file name should distinguish solved study copies')
  const bytes=await readFile(await download.path())
  assert.equal(bytes.subarray(0,5).toString(),'%PDF-')
  assert.ok(bytes.length>10000,'PDF should contain the complete printable test')
  assert.ok(bytes.includes(Buffer.from('%%EOF')),'PDF should be complete')
+ const commands=pdfPageCommands(bytes)
+ assert.ok(commands.includes('HOJA DE RESPUESTAS'),'PDF should contain a printable answer sheet')
+ if(solved){
+  assert.ok(commands.includes('HOJA DE RESPUESTAS CORRECTAS'),'Study copy should visibly label the correct-answer sheet')
+  assert.ok(commands.includes('Casilla rellena'),'Study copy should explain the marked letters')
+  assert.ok(commands.includes('SOLUCIONARIO'),'Study copy should also preserve the separate answer key')
+ }else{
+  assert.ok(!commands.includes('HOJA DE RESPUESTAS CORRECTAS'),'Blank exam must not reveal marked answers')
+ }
 }
 let checks=0
 
@@ -119,7 +138,7 @@ try{
  assert.equal(result.record.finishedReason,'manual')
  assert.equal(await readSession(p),null,'completed test must clear active data')
  await assertPdfDownload(p,p.locator('.focus-result-exports button').first())
- await assertPdfDownload(p,p.locator('.focus-result-exports button').last())
+ await assertPdfDownload(p,p.locator('.focus-result-exports button').last(),true)
  await p.screenshot({path:artifacts+'/mobile-result.png',fullPage:true})
  checks++
  await mobile.close()
@@ -137,6 +156,7 @@ try{
  assert.equal(topSession.questionIds.length,100)
  assert.equal(new Set(topSession.questionIds).size,100)
  await assertPdfDownload(topPage,topPage.locator('.focus-export-pdf'))
+ await assertPdfDownload(topPage,topPage.locator('.focus-export-study-pdf'),true)
  const topAudit=await topPage.evaluate(async ids=>{
   const index=await fetch('./data/exams/index.json').then(r=>r.json())
   const metas=index.exams.filter(e=>e.category==='mercancias'&&e.hasOriginalAnswerSheet)
@@ -159,6 +179,7 @@ try{
  assert.equal(generalSession.source,'random')
  assert.equal(generalSession.questionIds.length,30)
  await assertPdfDownload(general,general.locator('.focus-export-pdf'))
+ await assertPdfDownload(general,general.locator('.focus-export-study-pdf'),true)
  checks++
  await generalContext.close()
 
@@ -198,6 +219,7 @@ try{
  await submit(h)
  const historicResult=await readResult(h)
  assert.ok(historicResult.record.excluded>0)
+ await assertPdfDownload(h,h.locator('.focus-result-exports button').last(),true)
  assert.equal(historicResult.record.passed,null)
  assert.match(await h.locator('.result').innerText(),/orientativo/i)
  checks++
