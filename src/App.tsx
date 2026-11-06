@@ -314,6 +314,8 @@ function Results(){
  const data=JSON.parse(localStorage.getItem(LAST)||sessionStorage.getItem(LAST)||'null') as {record:StudySessionRecord;questionIds:string[]}|null
  const [qs,setQs]=useState<Question[]>([])
  const [showAll,setShowAll]=useState(false)
+ const [pdfBusy,setPdfBusy]=useState(false)
+ const [pdfError,setPdfError]=useState('')
  useEffect(()=>{if(data)resolveQuestions(data.questionIds).then(setQs).catch(console.error)},[])
  if(!data)return <Loading/>
  const r=data.record
@@ -331,6 +333,15 @@ function Results(){
  const unreviewed=r.answers.filter(a=>a.scoringEligible!==false&&!a.selected)
  const unscored=r.answers.filter(a=>a.scoringEligible===false)
  const visible=showAll?r.answers:fails
+ async function downloadPdf(withSolutions:boolean){
+  if(pdfBusy||qs.length!==data.questionIds.length)return
+  setPdfBusy(true);setPdfError('')
+  try{
+   const {exportExamPdf}=await import('./pdfExport')
+   exportExamPdf({label:r.label,questions:qs,withSolutions})
+  }catch(err){console.error(err);setPdfError('No se pudo generar el PDF. Inténtalo de nuevo.')}
+  finally{setPdfBusy(false)}
+ }
  async function review(){
   if(!fails.length)return
   const session:ActiveSession={type:'study',source:fails.every(x=>x.questionId.startsWith('cap:'))?'cap-errors':'errors',label:'Repaso del último test',
@@ -356,6 +367,11 @@ function Results(){
    <article><b>{r.incorrect}</b><span>Fallos</span></article>
    <article><b>{unreviewed.length}</b><span>Sin responder</span></article>{unscored.length>0&&<article><b>{unscored.length}</b><span>Sin puntuar · no penalizan</span></article>}
   </div>
+  <div className="focus-result-exports">
+   <button className="btn light" disabled={pdfBusy||qs.length!==data.questionIds.length} onClick={()=>void downloadPdf(false)}>{pdfBusy?'Generando PDF…':'↓ Exportar examen en PDF'}</button>
+   <button className="btn light" disabled={pdfBusy||qs.length!==data.questionIds.length} onClick={()=>void downloadPdf(true)}>↓ PDF con solucionario</button>
+  </div>
+  {pdfError&&<p role="alert" className="focus-muted">{pdfError}</p>}
   {fails.length>0&&<Btn onClick={()=>void review()}>Repasar {fails.length} fallos</Btn>}
   <h2>Corrección de respuestas</h2>
   <p className="note">En examen puedes comprobar aciertos, fallos y preguntas sin responder. Las preguntas sin responder valen 0 puntos y no se registran como fallos en tu progreso.{unscored.length>0?' Las '+unscored.length+' preguntas con respuestas contradictorias se excluyeron del cálculo y del historial de fallos.':''}</p>
