@@ -18,3 +18,8 @@ No purchase or deployment authorized.
 
 ## Validation
 Existing CI and browser regression suite plus new mobile region picker, bank navigation and overflow check. Review CI and screenshots before approving C1.
+
+## C2 — Regional badges refinement
+C1 CI run 43951506628 passed app and preview compilation, exam engine, historical scoring/data audits and R32 staging; browser suite stopped on the new assertion '8655' vs '8.655' (Spanish Intl convention does not always group four-digit numbers). C2 fixes the presentation with deterministic grouping, without changing bank counts or scoring.
+All 19 placeholder outline icons are replaced with original solid 48-unit SVG regional emblems, enamel-like colored tiles, local vector resources, and responsive sizing. Castilla-La Mancha uses a crenellated castle with negative-space arch and windows; Madrid uses seven stars; all shapes are illustrative rather than official institutional heraldry. Regional source availability remains unverified, not implied by the badge.
+Added mobile/desktop catalog screenshots and checks for 19 unique shapes, IDs, legibility and overflow. C2 validation is required before considering the preview ready. No live deployment / production changes.
