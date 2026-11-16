@@ -283,6 +283,53 @@ try{
   await ctx.close()
  }
 
+ // R29: verify every new exclusion in real study sessions, preserving existing alignments.
+ for(const [pages,items] of [['1–21',[[6,0]]],['97–111',[[5,1],[6,0]]],['291–311',[[39,0]]],['460–481',[[41,0]]],['128–144',[[60,0]]]]){
+  const ctx=await browser.newContext({viewport:{width:390,height:844},isMobile:true})
+  const page=await openHome(ctx)
+  await page.getByRole('button',{name:'Estudio',exact:true}).click()
+  await page.locator('.focus-practice-grid button').filter({hasText:'Por convocatoria'}).click()
+  await page.locator('#cap-historicos .list button').filter({hasText:pages}).click()
+  await page.locator('.focus-question').waitFor({timeout:30000})
+  await page.locator('.focus-index summary').click()
+  for(const [n,letter] of items){
+   await page.locator('.focus-question-grid button').nth(n-1).click()
+   await page.locator('.answers button').nth(letter).click()
+   assert.match(await page.locator('.feedback').innerText(),/No puntúa/)
+   assert.match(await page.locator('.focus-question .cap-r25-final').innerText(),/R29/)
+  }
+  const [download]=await Promise.all([page.waitForEvent('download'),page.locator('.focus-study-pdf-button').click()])
+  const commands=pdfPageCommands(await readFile(await download.path()))
+  for(const [n,letter] of items)assert.ok(commands.includes('Pregunta '+n+' | Original: '+'ABCD'[letter]+' | Tecnica: NP'))
+  await submit(page)
+  const result=await readResult(page)
+  assert.equal(result.record.correct,0)
+  assert.equal(result.record.incorrect,0)
+  checks++
+  await ctx.close()
+ }
+ {
+  const ctx=await browser.newContext({viewport:{width:390,height:844},isMobile:true})
+  const page=await openHome(ctx)
+  await page.getByRole('button',{name:'Estudio',exact:true}).click()
+  await page.locator('.focus-practice-grid button').filter({hasText:'Por convocatoria'}).click()
+  await page.locator('#cap-historicos .list button').filter({hasText:'57–78'}).click()
+  await page.locator('.focus-question').waitFor({timeout:30000})
+  await page.locator('.focus-index summary').click()
+  for(const [n,letter] of [[44,1],[49,2]]){
+   await page.locator('.focus-question-grid button').nth(n-1).click()
+   await page.locator('.answers button').nth(letter).click()
+   assert.match(await page.locator('.feedback').innerText(),/Correcta/)
+   assert.match(await page.locator('.focus-question .cap-r25-final').innerText(),/R29/)
+  }
+  await submit(page)
+  const result=await readResult(page)
+  assert.equal(result.record.correct,2)
+  assert.equal(result.record.incorrect,0)
+  checks++
+  await ctx.close()
+ }
+
  // The general question bank must also export a generated exam PDF.
  const generalContext=await browser.newContext({viewport:{width:390,height:844},isMobile:true})
  const general=await openHome(generalContext)

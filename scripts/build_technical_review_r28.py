@@ -59,10 +59,8 @@ for k,c in targets.items():
     action=d['action']
     assert action in ('note','exclude') and ((technical is None)==(action=='exclude'))
     reason=c.get('reason',d['reason'])
-    sources=[s.replace('Manual-IX-Primeros-Auxilios_2024.pdf','Manual-IX-Primeros-Auxilios-2024.pdf') for s in d['sources']]
-    # Correct the inherited DGT URL; clarify supporting direct evidence.
-    if orig==('2023-12-02-mercancias-global',44):
-        sources.append('https://sede.dgt.gob.es/export/sites/dgt/.galleries/permisos-de-conducir/certificacion-aptitud-profesores-formacion-vial/2025/Manual-IX-Primeros-Auxilios-2025.pdf')
+    sources=list(d['sources'])
+    # Use the verified 2024 DGT source URL from R27.
     decision={**c,'round':'R28','technicalAnswer':technical,'action':action,'reason':reason,'sources':list(dict.fromkeys(sources))}
     q['technicalDecision']=decision; decisions.append(decision)
 assert Counter(c['action'] for c in decisions)=={'note':22,'exclude':3}
