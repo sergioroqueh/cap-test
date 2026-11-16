@@ -41,6 +41,16 @@ async function assertPdfDownload(page, button, solved=false, checkDecodedText=tr
  }
 }
 let checks=0
+async function assertViewportFit(page,label){
+ const width=page.viewportSize()?.width
+ const actual=await page.evaluate(()=>document.documentElement.scrollWidth)
+ assert.ok(width&&actual<=width+1,label+': document '+actual+'px exceeds viewport '+width+'px')
+}
+async function captureViewport(page,name){
+ await page.evaluate(()=>window.scrollTo({top:0,behavior:'instant'}))
+ await page.screenshot({path:artifacts+'/'+name,fullPage:false})
+}
+
 
 async function openHome(context){
  const page=await context.newPage()
@@ -71,6 +81,9 @@ try{
  const mobile=await browser.newContext({viewport:{width:390,height:844},isMobile:true,deviceScaleFactor:1})
  const p=await openHome(mobile)
  await p.locator('.pro-dashboard').waitFor()
+ await assertViewportFit(p,'390px commercial home')
+ assert.equal(await p.locator('.pro-brand').first().evaluate(el=>getComputedStyle(el).color),'rgb(245, 247, 250)','brand must be legible in dark mode')
+ await captureViewport(p,'c3-mobile-home-viewport.png')
  assert.equal(await p.locator('.pro-bank>strong').innerText(),'8.655')
  assert.equal(await p.locator('.pro-track').getAttribute('aria-valuenow'),'0')
  assert.equal(await p.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth),false,'commercial home must fit mobile')
@@ -97,6 +110,8 @@ try{
  assert.match(displayedUnique,/\d+[\s.]?\d* preguntas distintas/i,'homepage must show the number of distinct historical questions')
  await p.locator('.focus-practice-grid button').filter({hasText:'Examen mezclado'}).click()
  await p.locator('.focus-question').waitFor({timeout:30000})
+ await assertViewportFit(p,'390px quiz')
+ await captureViewport(p,'c3-mobile-quiz-viewport.png')
  const original=await readSession(p)
  assert.equal(original.questionIds.length,100,'mixed exam should contain 100 questions')
  assert.ok(original.questionIds.every(id=>id.startsWith('cap:')),'CAP modes must not load bank questionnaire IDs')
@@ -194,6 +209,7 @@ try{
   return ids.map(id=>rows.get(id)).map(q=>({found:!!q,valid:q?.scoringEligible===true&&q?.technicalDecision?.action!=='exclude',frequency:q?.examFrequency||0}))
  },topSession.questionIds)
  assert.ok(topAudit.every(q=>q.found&&q.valid&&q.frequency>0),'Top 100 includes only gradeable questions')
+ await assertViewportFit(topPage,'390px Top 100 quiz')
  await topPage.screenshot({path:artifacts+'/mobile-top-100.png',fullPage:true})
  checks++
  await topContext.close()
@@ -459,6 +475,18 @@ try{
 
  // Desktop: two-column practice choices, study feedback, light theme preference.
  const desktopContext=await browser.newContext({viewport:{width:1440,height:900},deviceScaleFactor:1})
+ const narrow=await browser.newContext({viewport:{width:320,height:740},isMobile:true,deviceScaleFactor:1})
+ const n=await openHome(narrow)
+ await assertViewportFit(n,'320px commercial home')
+ await n.locator('.pro-region-feature').click()
+ await assertViewportFit(n,'320px regional catalog')
+ await n.locator('.pro-region-feature').click()
+ await n.locator('.focus-primary').click()
+ await n.locator('.focus-question').waitFor({timeout:30000})
+ await assertViewportFit(n,'320px quiz')
+ await captureViewport(n,'c3-narrow-quiz-viewport.png')
+ await narrow.close()
+ checks++
  const d=await openHome(desktopContext)
  assert.equal(await d.locator('html').getAttribute('data-theme'),'dark')
  assert.equal(await d.locator('#cap-historicos').count(),0)
@@ -469,6 +497,8 @@ try{
  const overflow=await d.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth)
  assert.equal(overflow,false,'desktop must not have horizontal overflow')
  await d.screenshot({path:artifacts+'/desktop-home.png',fullPage:true})
+ await assertViewportFit(d,'desktop home')
+ await captureViewport(d,'c3-desktop-home-viewport.png')
  await d.locator('.pro-region-feature').click()
  assert.equal(await d.locator('.pro-region-row').count(),19)
  assert.equal(await d.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth),false,'expanded region collection must fit desktop')
