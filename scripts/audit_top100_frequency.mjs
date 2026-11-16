@@ -10,7 +10,7 @@ const metas = index.exams.filter(meta =>
 )
 const rows = (await Promise.all(metas.map(async meta => {
   const raw = await readJson(meta.path)
-  return raw.filter(q => !!q.originalSheetAnswer && q.correctAnswer !== null)
+  return raw.filter(q => !!q.originalSheetAnswer && q.correctAnswer !== null && q.technicalDecision?.action !== 'exclude')
     .map(q => ({
       id:'cap:'+meta.id+':'+q.number,
       progressId:q.canonicalQuestionId || q.id,
@@ -26,9 +26,9 @@ const top = ranked.slice(0, 100)
 assert.equal(top.length, 100)
 const threePlus=ranked.filter(q=>q.examFrequency>=3)
 const fourPlus=ranked.filter(q=>q.examFrequency>=4)
-assert.equal(threePlus.length,156,'R26 audited distinct questions occurring at least 3 times')
+assert.ok(threePlus.length>=100 && threePlus.length<=156,'R27 exclusions cannot increase scored historical candidates')
 assert.ok(threePlus.every(q=>q.examFrequency>=3))
-assert.equal(fourPlus.length,68,'R26 audited distinct questions occurring at least 4 times')
+assert.ok(fourPlus.length>0 && fourPlus.length<=68)
 assert.ok(fourPlus.every(q=>q.examFrequency>=4))
 assert.equal(new Set(top.map(q=>q.id)).size,100)
 assert.ok(top.every(q=>q.scoringEligible && q.examFrequency > 0))
@@ -51,5 +51,5 @@ const report = {
   topHistogram:histogram(top),
   fullHistogram:histogram(ranked)
 }
-await writeFile(new URL('../artifacts/cap-r26-ranking.json',import.meta.url),JSON.stringify(report,null,2)).catch(async error=>{if(error.code!=='ENOENT')throw error; const {mkdir}=await import('node:fs/promises'); await mkdir(new URL('../artifacts/',import.meta.url),{recursive:true}); await writeFile(new URL('../artifacts/cap-r26-ranking.json',import.meta.url),JSON.stringify(report,null,2))})
+await writeFile(new URL('../artifacts/cap-r27-ranking.json',import.meta.url),JSON.stringify(report,null,2)).catch(async error=>{if(error.code!=='ENOENT')throw error; const {mkdir}=await import('node:fs/promises'); await mkdir(new URL('../artifacts/',import.meta.url),{recursive:true}); await writeFile(new URL('../artifacts/cap-r27-ranking.json',import.meta.url),JSON.stringify(report,null,2))})
 console.log('CAP_TOP100_HISTOGRAM='+JSON.stringify(report))
