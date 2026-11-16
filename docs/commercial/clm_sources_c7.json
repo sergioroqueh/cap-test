@@ -23,14 +23,24 @@
       "status": "indexed_text",
       "historicalCandidates": [
         "2025-03-29-mercancias-global"
-      ]
+      ],
+      "lastRetrieval": {
+        "run": 43967155007,
+        "httpStatus": 404,
+        "requiresNewUrlOrManualCopy": true
+      }
     },
     {
       "id": "2025-03-key",
       "kind": "answer_key",
       "date": "2025-03-29",
       "url": "https://www.castillalamancha.es/sites/default/files/documentos/pdf/20250331/2a_prueba_cap_2025_-_plantillas_correctoras.pdf",
-      "status": "indexed_text_initial_key"
+      "status": "indexed_text_initial_key",
+      "lastRetrieval": {
+        "run": 43967155007,
+        "httpStatus": 404,
+        "requiresNewUrlOrManualCopy": true
+      }
     },
     {
       "id": "2025-05-questions",
@@ -42,7 +52,12 @@
       "modalities": [
         "mercancias_global",
         "viajeros_ampliacion"
-      ]
+      ],
+      "lastRetrieval": {
+        "run": 43967155007,
+        "httpStatus": 404,
+        "requiresNewUrlOrManualCopy": true
+      }
     },
     {
       "id": "2025-07-key",
@@ -53,7 +68,12 @@
       "historicalCandidates": [
         "2025-07-26-mercancias-a",
         "2025-07-26-mercancias-b"
-      ]
+      ],
+      "lastRetrieval": {
+        "run": 43967155007,
+        "httpStatus": 404,
+        "requiresNewUrlOrManualCopy": true
+      }
     },
     {
       "id": "2025-09-questions",
@@ -63,7 +83,12 @@
       "status": "previously_referenced_R22",
       "historicalCandidates": [
         "2025-09-27-mercancias-global"
-      ]
+      ],
+      "lastRetrieval": {
+        "run": 43967155007,
+        "httpStatus": 404,
+        "requiresNewUrlOrManualCopy": true
+      }
     },
     {
       "id": "2025-09-confirmation",
@@ -88,50 +113,68 @@
       "kind": "questionnaire",
       "date": "2026-05-30",
       "url": "https://transporte.castillalamancha.es/sites/default/files/2026-06/Cuestionarios%203%C2%AA%20prueba%20CAP%202026.pdf",
-      "status": "indexed_text",
+      "status": "retrieved_pdfinfo_success_visual_pending",
       "historicalCandidates": [
         "2026-05-30-mercancias-global"
-      ]
+      ],
+      "sha256": "a99e67b195eb245e1ae150e692a5cfafb2f6958c5b1401f4bf69344b8c159d64",
+      "pages": 40,
+      "evidenceRun": 43967155007
     },
     {
       "id": "2026-05-30-answer_key",
       "kind": "answer_key",
       "date": "2026-05-30",
       "prueba": 3,
-      "status": "portal_index_only",
-      "url": null
+      "status": "retrieved_pdfinfo_success_visual_pending",
+      "url": "https://transporte.castillalamancha.es/sites/default/files/2026-06/3%C2%AA%20prueba%20CAP%202026.%20Plantillas%20correctoras.pdf",
+      "sha256": "fa7a6916324df8c423e1b7f26eea8ef37393a4475860b60cfcd4e578bae60bb6",
+      "pages": 5,
+      "evidenceRun": 43967155007
     },
     {
       "id": "2026-07-25-questionnaire",
       "kind": "questionnaire",
       "date": "2026-07-25",
       "prueba": 4,
-      "status": "portal_index_only",
-      "url": null
+      "status": "retrieved_pdfinfo_success_visual_pending",
+      "url": "https://transporte.castillalamancha.es/sites/default/files/2026-07/CAP%202026_4%C2%AA_cuestionarios.pdf",
+      "sha256": "d1220c44c21d784487c3b6792eb45bce130088b5b9bf038d13712a03d4df9244",
+      "pages": 67,
+      "evidenceRun": 43967155007
     },
     {
       "id": "2026-07-25-answer_key",
       "kind": "answer_key",
       "date": "2026-07-25",
       "prueba": 4,
-      "status": "portal_index_only",
-      "url": null
+      "status": "retrieved_pdfinfo_success_visual_pending",
+      "url": "https://transporte.castillalamancha.es/sites/default/files/2026-07/CAP%202026_4%C2%AA_plantillas%20correctoras.pdf",
+      "sha256": "04a031d7bd008187140a66fa65563fce5da862e86968187b611af84a5ff4e680",
+      "pages": 7,
+      "evidenceRun": 43967155007
     },
     {
       "id": "2026-09-26-questionnaire",
       "kind": "questionnaire",
       "date": "2026-09-26",
       "prueba": 5,
-      "status": "portal_index_only",
-      "url": null
+      "status": "bytes_retrieved_pdfinfo_failed_visual_pending",
+      "url": "https://transporte.castillalamancha.es/sites/default/files/2026-09/CAP%202026%20-%20Cuestionarios%205%C2%AA%20prueba.pdf",
+      "sha256": "fa4bf7d38f9569c7ad47c8e5f69b82c30a9a33a4e8f481a9b87c1055cb8e38af",
+      "pages": null,
+      "evidenceRun": 43967155007
     },
     {
       "id": "2026-09-26-answer_key",
       "kind": "answer_key",
       "date": "2026-09-26",
       "prueba": 5,
-      "status": "portal_index_only",
-      "url": null
+      "status": "retrieved_pdfinfo_success_visual_pending",
+      "url": "https://transporte.castillalamancha.es/sites/default/files/2026-09/CAP%202026%20-%20Plantillas%20correctoras%205%C2%AA%20prueba_0.pdf",
+      "sha256": "1bf6a46650cd4854face47e35b8a5872d6d00d186bcdb4ae0d2026e4fe44c2bd",
+      "pages": 5,
+      "evidenceRun": 43967155007
     },
     {
       "id": "2025-05-key",
@@ -145,7 +188,12 @@
         "mercancias_promocion",
         "viajeros_global",
         "viajeros_promocion"
-      ]
+      ],
+      "lastRetrieval": {
+        "run": 43967155007,
+        "httpStatus": 500,
+        "requiresNewUrlOrManualCopy": true
+      }
     },
     {
       "id": "2024-09-questions",
@@ -157,7 +205,12 @@
       "modalities": [
         "mercancias_global",
         "viajeros_global"
-      ]
+      ],
+      "lastRetrieval": {
+        "run": 43967155007,
+        "httpStatus": 404,
+        "requiresNewUrlOrManualCopy": true
+      }
     },
     {
       "id": "2024-11-questions",
@@ -169,7 +222,12 @@
       "modalities": [
         "mercancias_global",
         "viajeros_global"
-      ]
+      ],
+      "lastRetrieval": {
+        "run": 43967155007,
+        "httpStatus": 404,
+        "requiresNewUrlOrManualCopy": true
+      }
     },
     {
       "id": "2025-11-key-mercancias",
@@ -177,17 +235,25 @@
       "date": "2025-11-29",
       "url": "https://www.castillalamancha.es/sites/default/files/documentos/pdf/20251201/cap_2025_6a_plantilla_mercancias.firmado.pdf",
       "status": "indexed_initial_key_tribunal_2025-12-01_csv_not_verified",
-      "historicalCandidates": []
+      "historicalCandidates": [],
+      "lastRetrieval": {
+        "run": 43967155007,
+        "httpStatus": 404,
+        "requiresNewUrlOrManualCopy": true
+      }
     },
     {
       "id": "2026-03-key",
       "kind": "answer_key",
       "date": "2026-03-28",
       "url": "https://transporte.castillalamancha.es/sites/default/files/2026-03/CAP%202026_2%C2%AA%20-%20Plantillas%20Correctoras.pdf",
-      "status": "indexed_initial_key_tribunal_2026-03-30_csv_not_verified",
+      "status": "retrieved_pdfinfo_success_visual_pending",
       "historicalCandidates": [
         "2026-03-28-mercancias-global"
-      ]
+      ],
+      "sha256": "395dee86a428262363bfa9dcd5ad126ff8e8e8e45c847946b0f3288c15b4005f",
+      "pages": 5,
+      "evidenceRun": 43967155007
     }
   ]
 }

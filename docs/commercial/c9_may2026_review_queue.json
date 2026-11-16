@@ -1,0 +1,356 @@
+{
+  "schemaVersion": 1,
+  "sourceRun": 43967155007,
+  "artifactId": 14276232947,
+  "examId": "2026-05-30-mercancias-global",
+  "documentId": "2026-05-questions",
+  "officialModel": "A",
+  "officialPages": [
+    1,
+    16
+  ],
+  "reviewRequired": true,
+  "releaseAllowed": false,
+  "summary": {
+    "main": 100,
+    "reserve": 3,
+    "normalizedStemExact": 95,
+    "optionDifferenceRows": 32,
+    "anyDifferenceRows": 35,
+    "unchangedNormalized": 65
+  },
+  "cases": [
+    {
+      "number": 2,
+      "changedOptions": [
+        "D"
+      ],
+      "stemSimilarity": 1,
+      "priority": "P1",
+      "decision": null
+    },
+    {
+      "number": 3,
+      "changedOptions": [
+        "D"
+      ],
+      "stemSimilarity": 1,
+      "priority": "P1",
+      "decision": null
+    },
+    {
+      "number": 5,
+      "changedOptions": [
+        "C"
+      ],
+      "stemSimilarity": 1,
+      "priority": "P1",
+      "decision": null
+    },
+    {
+      "number": 6,
+      "changedOptions": [
+        "B"
+      ],
+      "stemSimilarity": 1,
+      "priority": "P1",
+      "decision": null
+    },
+    {
+      "number": 7,
+      "changedOptions": [
+        "B"
+      ],
+      "stemSimilarity": 1,
+      "priority": "P1",
+      "decision": null
+    },
+    {
+      "number": 9,
+      "changedOptions": [
+        "D"
+      ],
+      "stemSimilarity": 1,
+      "priority": "P1",
+      "decision": null
+    },
+    {
+      "number": 11,
+      "changedOptions": [
+        "C",
+        "D"
+      ],
+      "stemSimilarity": 1,
+      "priority": "P1",
+      "decision": null
+    },
+    {
+      "number": 12,
+      "changedOptions": [
+        "D"
+      ],
+      "stemSimilarity": 1,
+      "priority": "P1",
+      "decision": null
+    },
+    {
+      "number": 13,
+      "changedOptions": [
+        "A"
+      ],
+      "stemSimilarity": 1,
+      "priority": "P1",
+      "decision": null
+    },
+    {
+      "number": 14,
+      "changedOptions": [
+        "C"
+      ],
+      "stemSimilarity": 1,
+      "priority": "P1",
+      "decision": null
+    },
+    {
+      "number": 15,
+      "changedOptions": [
+        "D"
+      ],
+      "stemSimilarity": 1,
+      "priority": "P1",
+      "decision": null
+    },
+    {
+      "number": 18,
+      "changedOptions": [
+        "C"
+      ],
+      "stemSimilarity": 1,
+      "priority": "P1",
+      "decision": null
+    },
+    {
+      "number": 19,
+      "changedOptions": [],
+      "stemSimilarity": 0.9841,
+      "priority": "P1",
+      "decision": null
+    },
+    {
+      "number": 20,
+      "changedOptions": [
+        "D"
+      ],
+      "stemSimilarity": 1,
+      "priority": "P1",
+      "decision": null
+    },
+    {
+      "number": 22,
+      "changedOptions": [
+        "A",
+        "B",
+        "C"
+      ],
+      "stemSimilarity": 1,
+      "priority": "P1",
+      "decision": null
+    },
+    {
+      "number": 28,
+      "changedOptions": [
+        "D"
+      ],
+      "stemSimilarity": 1,
+      "priority": "P1",
+      "decision": null
+    },
+    {
+      "number": 29,
+      "changedOptions": [
+        "C"
+      ],
+      "stemSimilarity": 1,
+      "priority": "P1",
+      "decision": null
+    },
+    {
+      "number": 32,
+      "changedOptions": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "stemSimilarity": 0.2785,
+      "priority": "P0",
+      "decision": null
+    },
+    {
+      "number": 33,
+      "changedOptions": [
+        "B"
+      ],
+      "stemSimilarity": 1,
+      "priority": "P1",
+      "decision": null
+    },
+    {
+      "number": 37,
+      "changedOptions": [
+        "A",
+        "B"
+      ],
+      "stemSimilarity": 1,
+      "priority": "P1",
+      "decision": null
+    },
+    {
+      "number": 40,
+      "changedOptions": [
+        "A",
+        "B"
+      ],
+      "stemSimilarity": 1,
+      "priority": "P1",
+      "decision": null
+    },
+    {
+      "number": 41,
+      "changedOptions": [
+        "D"
+      ],
+      "stemSimilarity": 1,
+      "priority": "P1",
+      "decision": null
+    },
+    {
+      "number": 42,
+      "changedOptions": [
+        "D"
+      ],
+      "stemSimilarity": 1,
+      "priority": "P1",
+      "decision": null
+    },
+    {
+      "number": 45,
+      "changedOptions": [
+        "A"
+      ],
+      "stemSimilarity": 1,
+      "priority": "P1",
+      "decision": null
+    },
+    {
+      "number": 48,
+      "changedOptions": [
+        "B",
+        "C"
+      ],
+      "stemSimilarity": 1,
+      "priority": "P1",
+      "decision": null
+    },
+    {
+      "number": 50,
+      "changedOptions": [
+        "A"
+      ],
+      "stemSimilarity": 1,
+      "priority": "P1",
+      "decision": null
+    },
+    {
+      "number": 52,
+      "changedOptions": [],
+      "stemSimilarity": 0.9369,
+      "priority": "P1",
+      "decision": null
+    },
+    {
+      "number": 54,
+      "changedOptions": [
+        "B"
+      ],
+      "stemSimilarity": 1,
+      "priority": "P1",
+      "decision": null
+    },
+    {
+      "number": 73,
+      "changedOptions": [],
+      "stemSimilarity": 0.995,
+      "priority": "P1",
+      "decision": null
+    },
+    {
+      "number": 76,
+      "changedOptions": [
+        "B"
+      ],
+      "stemSimilarity": 1,
+      "priority": "P1",
+      "decision": null
+    },
+    {
+      "number": 80,
+      "changedOptions": [
+        "D"
+      ],
+      "stemSimilarity": 1,
+      "priority": "P1",
+      "decision": null
+    },
+    {
+      "number": 91,
+      "changedOptions": [
+        "A",
+        "C"
+      ],
+      "stemSimilarity": 1,
+      "priority": "P1",
+      "decision": null
+    },
+    {
+      "number": 95,
+      "changedOptions": [
+        "A",
+        "B"
+      ],
+      "stemSimilarity": 1,
+      "priority": "P1",
+      "decision": null
+    },
+    {
+      "number": 98,
+      "changedOptions": [
+        "A"
+      ],
+      "stemSimilarity": 0.9192,
+      "priority": "P1",
+      "decision": null
+    },
+    {
+      "number": 100,
+      "changedOptions": [
+        "D"
+      ],
+      "stemSimilarity": 1,
+      "priority": "P1",
+      "decision": null
+    }
+  ],
+  "reserves": [
+    101,
+    102,
+    103
+  ],
+  "excludeBlock": {
+    "pages": [
+      17,
+      21
+    ],
+    "reason": "26 rows extracted (1-25 and 101); likely promotion/partial duplicate, classification pending visual; never include as another full test"
+  }
+}
