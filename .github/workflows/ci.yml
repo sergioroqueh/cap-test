@@ -19,7 +19,9 @@ jobs:
       - name: Install dependencies
         run: npm install
       - name: Validate question bank and build
-        run: npm run build
+        run: |
+          npm run build
+          if grep -R -l 'RUTACAP_PRIVATE_CATALOG_C14' dist; then exit 1; fi
 
       - name: Verify real CAP scoring and persisted wall clock
         run: node --test scripts/test_exam_engine.mjs
