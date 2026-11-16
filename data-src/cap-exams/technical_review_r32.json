@@ -1,0 +1,4496 @@
+{
+  "schemaVersion": 1,
+  "round": "R32",
+  "reviewDate": "2026-11-16",
+  "baselineCommit": "35b56bf5a7ad65c218126db05973460091a4112d",
+  "selectionRun": 43899580500,
+  "scope": "All 92 candidate groups triaged; individual rows preserved. Pending cases excluded from audited count. Staged editorial decisions only; no score or display changes. Historical versions selected by date for ATP; other historical article changes not exhaustively reconstructed, visual originals not individually checked. Exclusion recommendation must be visually checked before applying.",
+  "counts": {
+    "confirmed": 80,
+    "note": 36,
+    "pending": 11,
+    "exclude": 1
+  },
+  "cases": [
+    {
+      "examId": "2023-07-29-mercancias-a",
+      "number": 21,
+      "sourcePage": 61,
+      "question": "Según la normativa, ¿qué vehículo de los siguientes necesita autorización administrativa para efectuar un transporte privado complementario de mercancías?",
+      "options": {
+        "A": "Los de más de 1.500 kg de MMA.",
+        "B": "Los de más de 3.500 kg de MMA.",
+        "C": "Los de más de 2.000 kg de MMA.",
+        "D": "Los de más de 3.000 kg de MMA."
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "B",
+      "bankAnswer": "B",
+      "examFrequency": 4,
+      "topicCandidates": [
+        "authorizations",
+        "lott_rott"
+      ],
+      "group": 1,
+      "frequency": 4,
+      "round": "R32",
+      "examDate": "2023-07-29",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "confirmed",
+      "reason": "ROTT art. 155.e: exención de transporte privado complementario de mercancías hasta 3,5 t de MMA; por encima, regla general de autorización.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1990-24442",
+        "https://www.boe.es/buscar/doc.php?id=BOE-A-2019-2289"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2023-07-29-mercancias-b",
+      "number": 11,
+      "sourcePage": 147,
+      "question": "Según la normativa, ¿qué vehículo de los siguientes necesita autorización administrativa para efectuar un transporte privado complementario de mercancías?",
+      "options": {
+        "A": "Los de más de 1.500 kg de MMA.",
+        "B": "Los de más de 3.500 kg de MMA.",
+        "C": "Los de más de 2.000 kg de MMA.",
+        "D": "Los de más de 3.000 kg de MMA."
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "B",
+      "bankAnswer": "B",
+      "examFrequency": 4,
+      "topicCandidates": [
+        "authorizations",
+        "lott_rott"
+      ],
+      "group": 1,
+      "frequency": 4,
+      "round": "R32",
+      "examDate": "2023-07-29",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "confirmed",
+      "reason": "ROTT art. 155.e: exención de transporte privado complementario de mercancías hasta 3,5 t de MMA; por encima, regla general de autorización.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1990-24442",
+        "https://www.boe.es/buscar/doc.php?id=BOE-A-2019-2289"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2023-03-25-mercancias-global",
+      "number": 14,
+      "sourcePage": 314,
+      "question": "Según la normativa, ¿qué vehículo de los siguientes necesita autorización administrativa para efectuar un transporte privado complementario de mercancías?",
+      "options": {
+        "A": "Los de más de 1.500 kg de MMA.",
+        "B": "Los de más de 3.500 kg de MMA.",
+        "C": "Los de más de 2.000 kg de MMA.",
+        "D": "Los de más de 3.000 kg de MMA."
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "B",
+      "bankAnswer": "B",
+      "examFrequency": 4,
+      "topicCandidates": [
+        "authorizations",
+        "lott_rott"
+      ],
+      "group": 1,
+      "frequency": 4,
+      "round": "R32",
+      "examDate": "2023-03-25",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "confirmed",
+      "reason": "ROTT art. 155.e: exención de transporte privado complementario de mercancías hasta 3,5 t de MMA; por encima, regla general de autorización.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1990-24442",
+        "https://www.boe.es/buscar/doc.php?id=BOE-A-2019-2289"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2023-09-23-mercancias-global",
+      "number": 3,
+      "sourcePage": 460,
+      "question": "Según la normativa, ¿qué vehículo de los siguientes necesita autorización administrativa para efectuar un transporte privado complementario de mercancías?",
+      "options": {
+        "A": "Los de más de 1.500 kg de MMA.",
+        "B": "Los de más de 3.500 kg de MMA.",
+        "C": "Los de más de 2.000 kg de MMA.",
+        "D": "Los de más de 3.000 kg de MMA."
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "B",
+      "bankAnswer": "B",
+      "examFrequency": 4,
+      "topicCandidates": [
+        "authorizations",
+        "lott_rott"
+      ],
+      "group": 1,
+      "frequency": 4,
+      "round": "R32",
+      "examDate": "2023-09-23",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "confirmed",
+      "reason": "ROTT art. 155.e: exención de transporte privado complementario de mercancías hasta 3,5 t de MMA; por encima, regla general de autorización.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1990-24442",
+        "https://www.boe.es/buscar/doc.php?id=BOE-A-2019-2289"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2024-04-06-mercancias-global",
+      "number": 21,
+      "sourcePage": 5,
+      "question": "¿Qué plazo de duración tienen las autorizaciones de transporte público de mercancías por carretera?",
+      "options": {
+        "A": "5 años.",
+        "B": "10 años.",
+        "C": "12 años.",
+        "D": "No tienen plazo de duración prefijado."
+      },
+      "originalSheetAnswer": "D",
+      "correctAnswer": "D",
+      "bankAnswer": "D",
+      "examFrequency": 4,
+      "topicCandidates": [
+        "authorizations",
+        "lott_rott"
+      ],
+      "group": 2,
+      "frequency": 4,
+      "round": "R32",
+      "examDate": "2024-04-06",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "D",
+      "previousAppliedAnswer": "D",
+      "technicalAnswer": "D",
+      "action": "confirmed",
+      "reason": "LOTT art. 51.1: autorización sin vencimiento prefijado; sujeta a mantenimiento de requisitos y visado.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1987-17803"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2023-07-29-mercancias-a",
+      "number": 20,
+      "sourcePage": 60,
+      "question": "¿Qué plazo de duración tienen las autorizaciones de transporte público de mercancías por carretera?",
+      "options": {
+        "A": "5 años.",
+        "B": "10 años.",
+        "C": "12 años.",
+        "D": "No tienen plazo de duración prefijado."
+      },
+      "originalSheetAnswer": "D",
+      "correctAnswer": "D",
+      "bankAnswer": "D",
+      "examFrequency": 4,
+      "topicCandidates": [
+        "authorizations",
+        "lott_rott"
+      ],
+      "group": 2,
+      "frequency": 4,
+      "round": "R32",
+      "examDate": "2023-07-29",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "D",
+      "previousAppliedAnswer": "D",
+      "technicalAnswer": "D",
+      "action": "confirmed",
+      "reason": "LOTT art. 51.1: autorización sin vencimiento prefijado; sujeta a mantenimiento de requisitos y visado.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1987-17803"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2023-07-29-mercancias-b",
+      "number": 6,
+      "sourcePage": 146,
+      "question": "¿Qué plazo de duración tienen las autorizaciones de transporte público de mercancías por carretera?",
+      "options": {
+        "A": "5 años.",
+        "B": "10 años.",
+        "C": "12 años.",
+        "D": "No tienen plazo de duración prefijado."
+      },
+      "originalSheetAnswer": "D",
+      "correctAnswer": "D",
+      "bankAnswer": "D",
+      "examFrequency": 4,
+      "topicCandidates": [
+        "authorizations",
+        "lott_rott"
+      ],
+      "group": 2,
+      "frequency": 4,
+      "round": "R32",
+      "examDate": "2023-07-29",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "D",
+      "previousAppliedAnswer": "D",
+      "technicalAnswer": "D",
+      "action": "confirmed",
+      "reason": "LOTT art. 51.1: autorización sin vencimiento prefijado; sujeta a mantenimiento de requisitos y visado.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1987-17803"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2023-06-03-mercancias-global",
+      "number": 19,
+      "sourcePage": 294,
+      "question": "¿Qué plazo de duración tienen las autorizaciones de transporte público de mercancías por carretera?",
+      "options": {
+        "A": "5 años.",
+        "B": "10 años.",
+        "C": "12 años.",
+        "D": "No tienen plazo de duración prefijado."
+      },
+      "originalSheetAnswer": "D",
+      "correctAnswer": "D",
+      "bankAnswer": "D",
+      "examFrequency": 4,
+      "topicCandidates": [
+        "authorizations",
+        "lott_rott"
+      ],
+      "group": 2,
+      "frequency": 4,
+      "round": "R32",
+      "examDate": "2023-06-03",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "D",
+      "previousAppliedAnswer": "D",
+      "technicalAnswer": "D",
+      "action": "confirmed",
+      "reason": "LOTT art. 51.1: autorización sin vencimiento prefijado; sujeta a mantenimiento de requisitos y visado.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1987-17803"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2024-07-20-mercancias-a",
+      "number": 8,
+      "sourcePage": 80,
+      "question": "Según el acuerdo ATP, ¿qué es un vehículo identificado con las letras IR?",
+      "options": {
+        "A": "Isotermo normal.",
+        "B": "Isotermo reforzado.",
+        "C": "Refrigerado normal.",
+        "D": "Refrigerado reforzado."
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "B",
+      "bankAnswer": "B",
+      "examFrequency": 4,
+      "topicCandidates": [
+        "atp"
+      ],
+      "group": 3,
+      "frequency": 4,
+      "round": "R32",
+      "examDate": "2024-07-20",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "confirmed",
+      "reason": "ATP anejo 1 apéndice 4: IR identifica unidad isoterma reforzada.",
+      "sources": [
+        "https://www.boe.es/diario_boe/txt.php?id=BOE-A-2024-14997",
+        "https://boe.es/diario_boe/txt.php?id=BOE-A-2026-20469"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2024-07-20-mercancias-b",
+      "number": 14,
+      "sourcePage": 169,
+      "question": "Según el acuerdo ATP, ¿qué es un vehículo identificado con las letras IR?",
+      "options": {
+        "A": "Isotermo normal.",
+        "B": "Isotermo reforzado.",
+        "C": "Refrigerado normal.",
+        "D": "Refrigerado reforzado."
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "B",
+      "bankAnswer": "B",
+      "examFrequency": 4,
+      "topicCandidates": [
+        "atp"
+      ],
+      "group": 3,
+      "frequency": 4,
+      "round": "R32",
+      "examDate": "2024-07-20",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "confirmed",
+      "reason": "ATP anejo 1 apéndice 4: IR identifica unidad isoterma reforzada.",
+      "sources": [
+        "https://www.boe.es/diario_boe/txt.php?id=BOE-A-2024-14997",
+        "https://boe.es/diario_boe/txt.php?id=BOE-A-2026-20469"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2023-03-25-mercancias-global",
+      "number": 11,
+      "sourcePage": 314,
+      "question": "Según el acuerdo ATP, ¿qué es un vehículo identificado con las letras IR?",
+      "options": {
+        "A": "Isotermo normal.",
+        "B": "Isotermo reforzado.",
+        "C": "Refrigerado normal.",
+        "D": "Refrigerado reforzado."
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "B",
+      "bankAnswer": "B",
+      "examFrequency": 4,
+      "topicCandidates": [
+        "atp"
+      ],
+      "group": 3,
+      "frequency": 4,
+      "round": "R32",
+      "examDate": "2023-03-25",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "confirmed",
+      "reason": "ATP anejo 1 apéndice 4: IR identifica unidad isoterma reforzada.",
+      "sources": [
+        "https://www.boe.es/buscar/doc.php?id=BOE-A-2022-9980",
+        "https://boe.es/diario_boe/txt.php?id=BOE-A-2026-20469"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2024-05-25-mercancias-global",
+      "number": 14,
+      "sourcePage": 386,
+      "question": "Según el acuerdo ATP, ¿qué es un vehículo identificado con las letras IR?",
+      "options": {
+        "A": "Isotermo normal.",
+        "B": "Isotermo reforzado.",
+        "C": "Refrigerado normal.",
+        "D": "Refrigerado reforzado."
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "B",
+      "bankAnswer": "B",
+      "examFrequency": 4,
+      "topicCandidates": [
+        "atp"
+      ],
+      "group": 3,
+      "frequency": 4,
+      "round": "R32",
+      "examDate": "2024-05-25",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "confirmed",
+      "reason": "ATP anejo 1 apéndice 4: IR identifica unidad isoterma reforzada.",
+      "sources": [
+        "https://www.boe.es/buscar/doc.php?id=BOE-A-2022-9980",
+        "https://boe.es/diario_boe/txt.php?id=BOE-A-2026-20469"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2024-05-25-mercancias-global",
+      "number": 18,
+      "sourcePage": 387,
+      "question": "La actividad de arrendamiento de vehículos sin conductor para la realización de transporte público de mercancías por carretera necesitará autorización administrativa del órgano competente en materia de transporte:",
+      "options": {
+        "A": "si su actividad consiste en el alquiler de remolques.",
+        "B": "si su actividad consiste en el alquiler de semirremolques.",
+        "C": "si su actividad consiste en el alquiler de cabezas tractoras pesadas.",
+        "D": "No la necesitará en ningún caso."
+      },
+      "originalSheetAnswer": "D",
+      "correctAnswer": "D",
+      "bankAnswer": "D",
+      "examFrequency": 4,
+      "topicCandidates": [
+        "authorizations",
+        "lott_rott"
+      ],
+      "group": 4,
+      "frequency": 4,
+      "round": "R32",
+      "examDate": "2024-05-25",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "D",
+      "previousAppliedAnswer": "D",
+      "technicalAnswer": "D",
+      "action": "note",
+      "reason": "LOTT art. 133.1: arrendamiento sin conductor liberalizado; permanecen obligaciones fiscales, sociales, laborales y de seguridad. No confundir con habilitación del transportista arrendatario.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1987-17803"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2022-10-01-mercancias-global",
+      "number": 19,
+      "sourcePage": 443,
+      "question": "La actividad de arrendamiento de vehículos sin conductor para la realización de transporte público de mercancías por carretera necesitará autorización administrativa del órgano competente en materia de transporte:",
+      "options": {
+        "A": "si su actividad consiste en el alquiler de remolques.",
+        "B": "si su actividad consiste en el alquiler de semirremolques.",
+        "C": "si su actividad consiste en el alquiler de cabezas tractoras pesadas.",
+        "D": "No la necesitará en ningún caso."
+      },
+      "originalSheetAnswer": "D",
+      "correctAnswer": "D",
+      "bankAnswer": "D",
+      "examFrequency": 4,
+      "topicCandidates": [
+        "authorizations",
+        "lott_rott"
+      ],
+      "group": 4,
+      "frequency": 4,
+      "round": "R32",
+      "examDate": "2022-10-01",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "D",
+      "previousAppliedAnswer": "D",
+      "technicalAnswer": "D",
+      "action": "note",
+      "reason": "LOTT art. 133.1: arrendamiento sin conductor liberalizado; permanecen obligaciones fiscales, sociales, laborales y de seguridad. No confundir con habilitación del transportista arrendatario.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1987-17803"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2023-09-23-mercancias-global",
+      "number": 18,
+      "sourcePage": 463,
+      "question": "La actividad de arrendamiento de vehículos sin conductor para la realización de transporte público de mercancías por carretera necesitará autorización administrativa del órgano competente en materia de transporte:",
+      "options": {
+        "A": "si su actividad consiste en el alquiler de remolques.",
+        "B": "si su actividad consiste en el alquiler de semirremolques.",
+        "C": "si su actividad consiste en el alquiler de cabezas tractoras pesadas.",
+        "D": "No la necesitará en ningún caso."
+      },
+      "originalSheetAnswer": "D",
+      "correctAnswer": "D",
+      "bankAnswer": "D",
+      "examFrequency": 4,
+      "topicCandidates": [
+        "authorizations",
+        "lott_rott"
+      ],
+      "group": 4,
+      "frequency": 4,
+      "round": "R32",
+      "examDate": "2023-09-23",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "D",
+      "previousAppliedAnswer": "D",
+      "technicalAnswer": "D",
+      "action": "note",
+      "reason": "LOTT art. 133.1: arrendamiento sin conductor liberalizado; permanecen obligaciones fiscales, sociales, laborales y de seguridad. No confundir con habilitación del transportista arrendatario.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1987-17803"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2024-07-20-mercancias-a",
+      "number": 12,
+      "sourcePage": 81,
+      "question": "Están exentos de autorización administrativa los transportes públicos de mercancías realizados en vehículos de:",
+      "options": {
+        "A": "hasta 2 toneladas de Masa Máxima Autorizada.",
+        "B": "hasta 3,5 toneladas de Masa Máxima Autorizada.",
+        "C": "hasta 8 toneladas de Masa Máxima Autorizada.",
+        "D": "hasta 12 toneladas de Masa Máxima Autorizada"
+      },
+      "originalSheetAnswer": "A",
+      "correctAnswer": "A",
+      "bankAnswer": "A",
+      "examFrequency": 4,
+      "topicCandidates": [
+        "authorizations"
+      ],
+      "group": 5,
+      "frequency": 4,
+      "round": "R32",
+      "examDate": "2024-07-20",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "A",
+      "previousAppliedAnswer": "A",
+      "technicalAnswer": "A",
+      "action": "note",
+      "reason": "ROTT art. 33.2.d: regla general interior hasta 2 t MMA. No confundir con umbral internacional 2,5 t; comprobar régimen especial N1 de combustibles alternativos de hasta 2,5 t.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1990-24442",
+        "https://www.boe.es/buscar/doc.php?id=BOE-A-2019-2289",
+        "https://www.boe.es/buscar/doc.php?id=DOUE-L-2009-82158",
+        "https://www.boe.es/buscar/doc.php?id=DOUE-L-2020-81224"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2024-07-20-mercancias-b",
+      "number": 24,
+      "sourcePage": 171,
+      "question": "Están exentos de autorización administrativa los transportes públicos de mercancías realizados en vehículos de:",
+      "options": {
+        "A": "hasta 2 toneladas de Masa Máxima Autorizada.",
+        "B": "hasta 3,5 toneladas de Masa Máxima Autorizada.",
+        "C": "hasta 8 toneladas de Masa Máxima Autorizada.",
+        "D": "hasta 12 toneladas de Masa Máxima Autorizada"
+      },
+      "originalSheetAnswer": "A",
+      "correctAnswer": "A",
+      "bankAnswer": "A",
+      "examFrequency": 4,
+      "topicCandidates": [
+        "authorizations"
+      ],
+      "group": 5,
+      "frequency": 4,
+      "round": "R32",
+      "examDate": "2024-07-20",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "A",
+      "previousAppliedAnswer": "A",
+      "technicalAnswer": "A",
+      "action": "note",
+      "reason": "ROTT art. 33.2.d: regla general interior hasta 2 t MMA. No confundir con umbral internacional 2,5 t; comprobar régimen especial N1 de combustibles alternativos de hasta 2,5 t.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1990-24442",
+        "https://www.boe.es/buscar/doc.php?id=BOE-A-2019-2289",
+        "https://www.boe.es/buscar/doc.php?id=DOUE-L-2009-82158",
+        "https://www.boe.es/buscar/doc.php?id=DOUE-L-2020-81224"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2023-03-25-mercancias-global",
+      "number": 15,
+      "sourcePage": 314,
+      "question": "Están exentos de autorización administrativa los transportes públicos de mercancías realizados en vehículos de:",
+      "options": {
+        "A": "hasta 2 toneladas de Masa Máxima Autorizada.",
+        "B": "hasta 3,5 toneladas de Masa Máxima Autorizada.",
+        "C": "hasta 8 toneladas de Masa Máxima Autorizada.",
+        "D": "hasta 12 toneladas de Masa Máxima Autorizada."
+      },
+      "originalSheetAnswer": "A",
+      "correctAnswer": "A",
+      "bankAnswer": "A",
+      "examFrequency": 4,
+      "topicCandidates": [
+        "authorizations"
+      ],
+      "group": 5,
+      "frequency": 4,
+      "round": "R32",
+      "examDate": "2023-03-25",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "A",
+      "previousAppliedAnswer": "A",
+      "technicalAnswer": "A",
+      "action": "note",
+      "reason": "ROTT art. 33.2.d: regla general interior hasta 2 t MMA. No confundir con umbral internacional 2,5 t; comprobar régimen especial N1 de combustibles alternativos de hasta 2,5 t.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1990-24442",
+        "https://www.boe.es/buscar/doc.php?id=BOE-A-2019-2289",
+        "https://www.boe.es/buscar/doc.php?id=DOUE-L-2009-82158",
+        "https://www.boe.es/buscar/doc.php?id=DOUE-L-2020-81224"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2023-02-04-mercancias-global",
+      "number": 13,
+      "sourcePage": 240,
+      "question": "¿Cómo se denomina la comprobación periódica que realiza la Administración del mantenimiento, por parte del transportista, de los requisitos para ser titular de la autorización de transporte?",
+      "options": {
+        "A": "Revisión periódica.",
+        "B": "Visado.",
+        "C": "Constatación periódica.",
+        "D": "Certificación periódica."
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "B",
+      "bankAnswer": "B",
+      "examFrequency": 3,
+      "topicCandidates": [
+        "authorizations"
+      ],
+      "group": 6,
+      "frequency": 3,
+      "round": "R32",
+      "examDate": "2023-02-04",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "confirmed",
+      "reason": "LOTT art. 51 y ROTT art. 42: el visado comprueba periódicamente la conservación de requisitos.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1987-17803",
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1990-24442"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2023-03-25-mercancias-global",
+      "number": 1,
+      "sourcePage": 312,
+      "question": "¿Cómo se denomina la comprobación periódica que realiza la Administración del mantenimiento, por parte del transportista, de los requisitos para ser titular de la autorización de transporte?",
+      "options": {
+        "A": "Revisión periódica.",
+        "B": "Visado.",
+        "C": "Constatación periódica.",
+        "D": "Certificación periódica."
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "B",
+      "bankAnswer": "B",
+      "examFrequency": 3,
+      "topicCandidates": [
+        "authorizations"
+      ],
+      "group": 6,
+      "frequency": 3,
+      "round": "R32",
+      "examDate": "2023-03-25",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "confirmed",
+      "reason": "LOTT art. 51 y ROTT art. 42: el visado comprueba periódicamente la conservación de requisitos.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1987-17803",
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1990-24442"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2025-03-29-mercancias-global",
+      "number": 17,
+      "sourcePage": 334,
+      "question": "¿Cómo se denomina la comprobación periódica que realiza la Administración del mantenimiento, por parte del transportista, de los requisitos para ser titular de la autorización de transporte?",
+      "options": {
+        "A": "Revisión periódica.",
+        "B": "Visado.",
+        "C": "Constatación periódica.",
+        "D": "Certificación periódica."
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "B",
+      "bankAnswer": "B",
+      "examFrequency": 3,
+      "topicCandidates": [
+        "authorizations"
+      ],
+      "group": 6,
+      "frequency": 3,
+      "round": "R32",
+      "examDate": "2025-03-29",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "confirmed",
+      "reason": "LOTT art. 51 y ROTT art. 42: el visado comprueba periódicamente la conservación de requisitos.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1987-17803",
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1990-24442"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2023-07-29-mercancias-a",
+      "number": 3,
+      "sourcePage": 57,
+      "question": "El acuerdo internacional denominado ATP:",
+      "options": {
+        "A": "se refiere al transporte de personas con movilidad reducida.",
+        "B": "se refiere al transporte de mercancías perecederas.",
+        "C": "se refiere al transporte combinado carretera-ferrocarril.",
+        "D": "es un acuerdo aduanero para mercancías en tránsito."
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "B",
+      "bankAnswer": "B",
+      "examFrequency": 3,
+      "topicCandidates": [
+        "atp"
+      ],
+      "group": 7,
+      "frequency": 3,
+      "round": "R32",
+      "examDate": "2023-07-29",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "confirmed",
+      "reason": "El objeto del ATP son mercancías perecederas y las unidades especiales utilizadas en su transporte.",
+      "sources": [
+        "https://www.boe.es/buscar/doc.php?id=BOE-A-2022-9980",
+        "https://boe.es/diario_boe/txt.php?id=BOE-A-2026-20469"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2023-07-29-mercancias-b",
+      "number": 1,
+      "sourcePage": 145,
+      "question": "El acuerdo internacional denominado ATP:",
+      "options": {
+        "A": "se refiere al transporte de personas con movilidad reducida.",
+        "B": "se refiere al transporte de mercancías perecederas.",
+        "C": "se refiere al transporte combinado carretera-ferrocarril.",
+        "D": "es un acuerdo aduanero para mercancías en tránsito."
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "B",
+      "bankAnswer": "B",
+      "examFrequency": 3,
+      "topicCandidates": [
+        "atp"
+      ],
+      "group": 7,
+      "frequency": 3,
+      "round": "R32",
+      "examDate": "2023-07-29",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "confirmed",
+      "reason": "El objeto del ATP son mercancías perecederas y las unidades especiales utilizadas en su transporte.",
+      "sources": [
+        "https://www.boe.es/buscar/doc.php?id=BOE-A-2022-9980",
+        "https://boe.es/diario_boe/txt.php?id=BOE-A-2026-20469"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2023-03-25-mercancias-global",
+      "number": 6,
+      "sourcePage": 313,
+      "question": "El acuerdo internacional denominado ATP:",
+      "options": {
+        "A": "se refiere al transporte de personas con movilidad reducida.",
+        "B": "se refiere al transporte de mercancías perecederas.",
+        "C": "se refiere al transporte combinado carretera-ferrocarril.",
+        "D": "es un acuerdo aduanero para mercancías en tránsito."
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "B",
+      "bankAnswer": "B",
+      "examFrequency": 3,
+      "topicCandidates": [
+        "atp"
+      ],
+      "group": 7,
+      "frequency": 3,
+      "round": "R32",
+      "examDate": "2023-03-25",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "confirmed",
+      "reason": "El objeto del ATP son mercancías perecederas y las unidades especiales utilizadas en su transporte.",
+      "sources": [
+        "https://www.boe.es/buscar/doc.php?id=BOE-A-2022-9980",
+        "https://boe.es/diario_boe/txt.php?id=BOE-A-2026-20469"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2024-07-20-mercancias-a",
+      "number": 23,
+      "sourcePage": 82,
+      "question": "¿Se requiere alguna autorización para ejercer la actividad de operador logístico en España?",
+      "options": {
+        "A": "La autorización de almacenista distribuidor",
+        "B": "La autorización de operador de transporte de mercancías",
+        "C": "La autorización de agencia de transporte.",
+        "D": "No se requiere ninguna, es una actividad liberalizada."
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "B",
+      "bankAnswer": "B",
+      "examFrequency": 3,
+      "topicCandidates": [
+        "authorizations"
+      ],
+      "group": 8,
+      "frequency": 3,
+      "round": "R32",
+      "examDate": "2024-07-20",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "note",
+      "reason": "LOTT arts. 119 y 122 y ROTT art. 159: la intermediación habitual requiere habilitación de operador de transporte; existen excepciones legales para titulares habilitados y supuestos específicos.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1987-17803",
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1990-24442"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2024-07-20-mercancias-b",
+      "number": 15,
+      "sourcePage": 169,
+      "question": "¿Se requiere alguna autorización para ejercer la actividad de operador logístico en España?",
+      "options": {
+        "A": "La autorización de almacenista distribuidor",
+        "B": "La autorización de operador de transporte de mercancías",
+        "C": "La autorización de agencia de transporte.",
+        "D": "No se requiere ninguna, es una actividad liberalizada."
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "B",
+      "bankAnswer": "B",
+      "examFrequency": 3,
+      "topicCandidates": [
+        "authorizations"
+      ],
+      "group": 8,
+      "frequency": 3,
+      "round": "R32",
+      "examDate": "2024-07-20",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "note",
+      "reason": "LOTT arts. 119 y 122 y ROTT art. 159: la intermediación habitual requiere habilitación de operador de transporte; existen excepciones legales para titulares habilitados y supuestos específicos.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1987-17803",
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1990-24442"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2023-02-04-mercancias-global",
+      "number": 24,
+      "sourcePage": 243,
+      "question": "¿Se requiere alguna autorización para ejercer la actividad de operador logístico en España?",
+      "options": {
+        "A": "La autorización de almacenista-distribuidor.",
+        "B": "La autorización de operador de transporte de mercancías.",
+        "C": "La autorización de agencia de transporte.",
+        "D": "No se requiere ninguna, es una actividad liberalizada."
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "B",
+      "bankAnswer": "B",
+      "examFrequency": 3,
+      "topicCandidates": [
+        "authorizations"
+      ],
+      "group": 8,
+      "frequency": 3,
+      "round": "R32",
+      "examDate": "2023-02-04",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "note",
+      "reason": "LOTT arts. 119 y 122 y ROTT art. 159: la intermediación habitual requiere habilitación de operador de transporte; existen excepciones legales para titulares habilitados y supuestos específicos.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1987-17803",
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1990-24442"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2023-07-29-mercancias-a",
+      "number": 23,
+      "sourcePage": 61,
+      "question": "¿Qué capacidad financiera se requiere acreditar para obtener una autorización de transporte público de mercancías?",
+      "options": {
+        "A": "5.000 euros por cada vehículo utilizado.",
+        "B": "9.000 euros por cada vehículo utilizado.",
+        "C": "5.000 euros por el primer vehículo y 9.000 más por cada vehículo adicional utilizado.",
+        "D": "9.000 euros por el primer vehículo y 5.000 más por cada vehículo adicional utilizado."
+      },
+      "originalSheetAnswer": "D",
+      "correctAnswer": "D",
+      "bankAnswer": "D",
+      "examFrequency": 3,
+      "topicCandidates": [
+        "authorizations",
+        "lott_rott"
+      ],
+      "group": 9,
+      "frequency": 3,
+      "round": "R32",
+      "examDate": "2023-07-29",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "D",
+      "previousAppliedAnswer": "D",
+      "technicalAnswer": "D",
+      "action": "note",
+      "reason": "ROTT art. 111 y Reglamento 1071/2009 art. 7, reformado por 2020/1055: 9.000 primer vehículo y 5.000 adicionales pesados. Flotas ligeras tienen régimen específico (y las exclusivamente ligeras interiores pueden no estar sujetas al requisito). La respuesta es la regla para pesados, no universal.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1990-24442",
+        "https://www.boe.es/buscar/doc.php?id=DOUE-L-2020-81224"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2023-06-03-mercancias-global",
+      "number": 20,
+      "sourcePage": 294,
+      "question": "¿Qué capacidad financiera se requiere acreditar para obtener una autorización de transporte público de mercancías?",
+      "options": {
+        "A": "5.000 euros por cada vehículo utilizado.",
+        "B": "9.000 euros por cada vehículo utilizado.",
+        "C": "5.000 euros por el primer vehículo y 9.000 más por cada vehículo adicional utilizado.",
+        "D": "9.000 euros por el primer vehículo y 5.000 más por cada vehículo adicional utilizado."
+      },
+      "originalSheetAnswer": "D",
+      "correctAnswer": "D",
+      "bankAnswer": "D",
+      "examFrequency": 3,
+      "topicCandidates": [
+        "authorizations",
+        "lott_rott"
+      ],
+      "group": 9,
+      "frequency": 3,
+      "round": "R32",
+      "examDate": "2023-06-03",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "D",
+      "previousAppliedAnswer": "D",
+      "technicalAnswer": "D",
+      "action": "note",
+      "reason": "ROTT art. 111 y Reglamento 1071/2009 art. 7, reformado por 2020/1055: 9.000 primer vehículo y 5.000 adicionales pesados. Flotas ligeras tienen régimen específico (y las exclusivamente ligeras interiores pueden no estar sujetas al requisito). La respuesta es la regla para pesados, no universal.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1990-24442",
+        "https://www.boe.es/buscar/doc.php?id=DOUE-L-2020-81224"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2022-10-01-mercancias-global",
+      "number": 1,
+      "sourcePage": 440,
+      "question": "¿Cómo se llama el acuerdo internacional, al cual está adherido España, que reglamenta las condiciones de transporte de las distintas mercancías perecederas y los requisitos que deben reunir los vehículos utilizados?",
+      "options": {
+        "A": "ACP.",
+        "B": "ADP.",
+        "C": "AFP.",
+        "D": "ATP."
+      },
+      "originalSheetAnswer": "D",
+      "correctAnswer": "D",
+      "bankAnswer": "D",
+      "examFrequency": 2,
+      "topicCandidates": [
+        "atp"
+      ],
+      "group": 10,
+      "frequency": 2,
+      "round": "R32",
+      "examDate": "2022-10-01",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "D",
+      "previousAppliedAnswer": "D",
+      "technicalAnswer": "D",
+      "action": "confirmed",
+      "reason": "ATP es la denominación del acuerdo; cada modelo conserva la letra correspondiente a su propia opción ATP (D o C).",
+      "sources": [
+        "https://www.boe.es/buscar/doc.php?id=BOE-A-2022-9980",
+        "https://boe.es/diario_boe/txt.php?id=BOE-A-2026-20469"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2023-09-23-mercancias-global",
+      "number": 1,
+      "sourcePage": 460,
+      "question": "¿Cómo se llama el acuerdo internacional, al cual está adherido España, que reglamenta las condiciones de transporte de las distintas mercancías perecederas y los requisitos que deben reunir los vehículos utilizados?",
+      "options": {
+        "A": "ACP.",
+        "B": "ADP.",
+        "C": "ATP.",
+        "D": "AFP."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "examFrequency": 2,
+      "topicCandidates": [
+        "atp"
+      ],
+      "group": 10,
+      "frequency": 2,
+      "round": "R32",
+      "examDate": "2023-09-23",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "confirmed",
+      "reason": "ATP es la denominación del acuerdo; cada modelo conserva la letra correspondiente a su propia opción ATP (D o C).",
+      "sources": [
+        "https://www.boe.es/buscar/doc.php?id=BOE-A-2022-9980",
+        "https://boe.es/diario_boe/txt.php?id=BOE-A-2026-20469"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2023-02-04-mercancias-global",
+      "number": 14,
+      "sourcePage": 240,
+      "question": "¿Cuántas autorizaciones administrativas de transporte público de mercancías se otorgan por empresa?",
+      "options": {
+        "A": "Una por cada vehículo ligero que posea la empresa.",
+        "B": "Siete.",
+        "C": "Diez.",
+        "D": "Una, que habilita para realizar transporte con los vehículos que se le hayan vinculado."
+      },
+      "originalSheetAnswer": "D",
+      "correctAnswer": "D",
+      "bankAnswer": "D",
+      "examFrequency": 2,
+      "topicCandidates": [
+        "authorizations",
+        "lott_rott"
+      ],
+      "group": 11,
+      "frequency": 2,
+      "round": "R32",
+      "examDate": "2023-02-04",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "D",
+      "previousAppliedAnswer": "D",
+      "technicalAnswer": "D",
+      "action": "confirmed",
+      "reason": "Autorización de empresa, con vehículos vinculados registralmente; no una autorización separada por vehículo. ROTT arts. 38 y 44.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1987-17803",
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1990-24442",
+        "https://www.boe.es/buscar/doc.php?id=BOE-A-2019-2289"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2022-11-26-mercancias-global",
+      "number": 14,
+      "sourcePage": 422,
+      "question": "¿Cuántas autorizaciones administrativas de transporte público de mercancías se otorgan por empresa?",
+      "options": {
+        "A": "Una por cada vehículo ligero que posea la empresa.",
+        "B": "Siete.",
+        "C": "Diez.",
+        "D": "Una, que habilita para realizar transporte con los vehículos que se le hayan vinculado."
+      },
+      "originalSheetAnswer": "D",
+      "correctAnswer": "D",
+      "bankAnswer": "D",
+      "examFrequency": 2,
+      "topicCandidates": [
+        "authorizations",
+        "lott_rott"
+      ],
+      "group": 11,
+      "frequency": 2,
+      "round": "R32",
+      "examDate": "2022-11-26",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "D",
+      "previousAppliedAnswer": "D",
+      "technicalAnswer": "D",
+      "action": "confirmed",
+      "reason": "Autorización de empresa, con vehículos vinculados registralmente; no una autorización separada por vehículo. ROTT arts. 38 y 44.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1987-17803",
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1990-24442",
+        "https://www.boe.es/buscar/doc.php?id=BOE-A-2019-2289"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2023-07-29-mercancias-a",
+      "number": 11,
+      "sourcePage": 59,
+      "question": "Según el acuerdo ATP, ¿qué es un vehículo identificado con las letras RND?",
+      "options": {
+        "A": "Un vehículo refrigerante reforzado de la clase D.",
+        "B": "Un vehículo refrigerante normal de la clase D.",
+        "C": "Un vehículo isotermo normal de la clase D.",
+        "D": "Un vehículo calorífico normal de la clase D."
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "B",
+      "bankAnswer": "B",
+      "examFrequency": 2,
+      "topicCandidates": [
+        "atp"
+      ],
+      "group": 12,
+      "frequency": 2,
+      "round": "R32",
+      "examDate": "2023-07-29",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "confirmed",
+      "reason": "ATP anejo 1 apéndice 4: RND identifica refrigerante normal clase D.",
+      "sources": [
+        "https://www.boe.es/buscar/doc.php?id=BOE-A-2022-9980",
+        "https://boe.es/diario_boe/txt.php?id=BOE-A-2026-20469"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2023-07-29-mercancias-b",
+      "number": 22,
+      "sourcePage": 149,
+      "question": "Según el acuerdo ATP, ¿qué es un vehículo identificado con las letras RND?",
+      "options": {
+        "A": "Un vehículo refrigerante reforzado de la clase D.",
+        "B": "Un vehículo refrigerante normal de la clase D.",
+        "C": "Un vehículo isotermo normal de la clase D.",
+        "D": "Un vehículo calorífico normal de la clase D."
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "B",
+      "bankAnswer": "B",
+      "examFrequency": 2,
+      "topicCandidates": [
+        "atp"
+      ],
+      "group": 12,
+      "frequency": 2,
+      "round": "R32",
+      "examDate": "2023-07-29",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "confirmed",
+      "reason": "ATP anejo 1 apéndice 4: RND identifica refrigerante normal clase D.",
+      "sources": [
+        "https://www.boe.es/buscar/doc.php?id=BOE-A-2022-9980",
+        "https://boe.es/diario_boe/txt.php?id=BOE-A-2026-20469"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2023-07-29-mercancias-a",
+      "number": 17,
+      "sourcePage": 60,
+      "question": "¿Puede realizar transporte público de mercancías una empresa con forma jurídica de cooperativa?",
+      "options": {
+        "A": "Sí, pero solo en ámbito local.",
+        "B": "Sí, pero solo en el ámbito de una Comunidad Autónoma.",
+        "C": "Sí, pero solo en ámbito nacional.",
+        "D": "Sí."
+      },
+      "originalSheetAnswer": "D",
+      "correctAnswer": "D",
+      "bankAnswer": "D",
+      "examFrequency": 2,
+      "topicCandidates": [
+        "lott_rott"
+      ],
+      "group": 13,
+      "frequency": 2,
+      "round": "R32",
+      "examDate": "2023-07-29",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "D",
+      "previousAppliedAnswer": "D",
+      "technicalAnswer": "D",
+      "action": "note",
+      "reason": "LOTT art. 43: la condición de persona jurídica no excluye una cooperativa que reúna los requisitos y disponga de autorización; no hay límite territorial inherente a la forma cooperativa.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1987-17803"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2023-07-29-mercancias-b",
+      "number": 19,
+      "sourcePage": 148,
+      "question": "¿Puede realizar transporte público de mercancías una empresa con forma jurídica de cooperativa?",
+      "options": {
+        "A": "Sí, pero solo en ámbito local.",
+        "B": "Sí, pero solo en el ámbito de una Comunidad Autónoma.",
+        "C": "Sí, pero solo en ámbito nacional.",
+        "D": "Sí."
+      },
+      "originalSheetAnswer": "D",
+      "correctAnswer": "D",
+      "bankAnswer": "D",
+      "examFrequency": 2,
+      "topicCandidates": [
+        "lott_rott"
+      ],
+      "group": 13,
+      "frequency": 2,
+      "round": "R32",
+      "examDate": "2023-07-29",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "D",
+      "previousAppliedAnswer": "D",
+      "technicalAnswer": "D",
+      "action": "note",
+      "reason": "LOTT art. 43: la condición de persona jurídica no excluye una cooperativa que reúna los requisitos y disponga de autorización; no hay límite territorial inherente a la forma cooperativa.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1987-17803"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2024-04-06-mercancias-global",
+      "number": 22,
+      "sourcePage": 5,
+      "question": "Están exentos de autorización administrativa los transportes de mercancías de carácter privado complementario realizados en vehículos de:",
+      "options": {
+        "A": "hasta 8 toneladas de Masa Máxima Autorizada.",
+        "B": "hasta 4,5 toneladas de Masa Máxima Autorizada.",
+        "C": "hasta 3,5 toneladas de Masa Máxima Autorizada.",
+        "D": "hasta 7 toneladas de Masa Máxima Autorizada."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "examFrequency": 2,
+      "topicCandidates": [
+        "authorizations"
+      ],
+      "group": 14,
+      "frequency": 2,
+      "round": "R32",
+      "examDate": "2024-04-06",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "confirmed",
+      "reason": "ROTT art. 155.e: exención hasta 3,5 t MMA en privado complementario.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1990-24442",
+        "https://www.boe.es/buscar/doc.php?id=BOE-A-2019-2289"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2025-03-29-mercancias-global",
+      "number": 25,
+      "sourcePage": 335,
+      "question": "Están exentos de autorización administrativa los transportes de mercancías de carácter privado complementario realizados en vehículos de:",
+      "options": {
+        "A": "Hasta 8 toneladas de Masa Máxima Autorizada.",
+        "B": "Hasta 4,5 toneladas de Masa Máxima Autorizada.",
+        "C": "Hasta 3,5 toneladas de Masa Máxima Autorizada.",
+        "D": "Hasta 7 toneladas de Masa Máxima Autorizada."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "examFrequency": 2,
+      "topicCandidates": [
+        "authorizations"
+      ],
+      "group": 14,
+      "frequency": 2,
+      "round": "R32",
+      "examDate": "2025-03-29",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "confirmed",
+      "reason": "ROTT art. 155.e: exención hasta 3,5 t MMA en privado complementario.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1990-24442",
+        "https://www.boe.es/buscar/doc.php?id=BOE-A-2019-2289"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2024-07-20-mercancias-a",
+      "number": 7,
+      "sourcePage": 80,
+      "question": "La Ley de Ordenación de los Transportes Terrestres considera la actividad de almacenista- distribuidor como:",
+      "options": {
+        "A": "una actividad independiente del transporte.",
+        "B": "una actividad auxiliar y complementaria del transporte.",
+        "C": "una actividad sustitutiva del transporte.",
+        "D": "Esta ley no contempla esa actividad, se regula por otras normas"
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "B",
+      "bankAnswer": "B",
+      "examFrequency": 2,
+      "topicCandidates": [
+        "lott_rott"
+      ],
+      "group": 15,
+      "frequency": 2,
+      "round": "R32",
+      "examDate": "2024-07-20",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "confirmed",
+      "reason": "LOTT art. 1.3 incluye almacenistas-distribuidores entre actividades auxiliares y complementarias.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1987-17803"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2024-07-20-mercancias-b",
+      "number": 7,
+      "sourcePage": 168,
+      "question": "La Ley de Ordenación de los Transportes Terrestres considera la actividad de almacenista-distribuidor como:",
+      "options": {
+        "A": "una actividad independiente del transporte.",
+        "B": "una actividad auxiliar y complementaria del transporte.",
+        "C": "una actividad sustitutiva del transporte.",
+        "D": "Esta ley no contempla esa actividad, se regula por otras normas"
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "B",
+      "bankAnswer": "B",
+      "examFrequency": 2,
+      "topicCandidates": [
+        "lott_rott"
+      ],
+      "group": 15,
+      "frequency": 2,
+      "round": "R32",
+      "examDate": "2024-07-20",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "confirmed",
+      "reason": "LOTT art. 1.3 incluye almacenistas-distribuidores entre actividades auxiliares y complementarias.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1987-17803"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2024-07-20-mercancias-a",
+      "number": 19,
+      "sourcePage": 82,
+      "question": "¿Qué efectos produce la carta de porte electrónica en el caso de un transporte sujeto al Convenio CMR?",
+      "options": {
+        "A": "Ninguno",
+        "B": "Los mismos que la carta expedida en papel, a la que se considera equivalente.",
+        "C": "Cuando no vaya acompañada de la carta expedida en papel, solo produce efectos limitados.",
+        "D": "La carta de porte electrónica no existe"
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "B",
+      "bankAnswer": "B",
+      "examFrequency": 2,
+      "topicCandidates": [
+        "contract_cmr"
+      ],
+      "group": 16,
+      "frequency": 2,
+      "round": "R32",
+      "examDate": "2024-07-20",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "confirmed",
+      "reason": "Protocolo e-CMR art. 2.2: equivalencia jurídica y probatoria si cumple el protocolo.",
+      "sources": [
+        "https://www.boe.es/diario_boe/txt.php?id=BOE-A-2011-10283"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2024-07-20-mercancias-b",
+      "number": 6,
+      "sourcePage": 167,
+      "question": "¿Qué efectos produce la carta de porte electrónica en el caso de un transporte sujeto al Convenio CMR?",
+      "options": {
+        "A": "Ninguno",
+        "B": "Los mismos que la carta expedida en papel, a la que se considera equivalente.",
+        "C": "Cuando no vaya acompañada de la carta expedida en papel, solo produce efectos limitados.",
+        "D": "La carta de porte electrónica no existe"
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "B",
+      "bankAnswer": "B",
+      "examFrequency": 2,
+      "topicCandidates": [
+        "contract_cmr"
+      ],
+      "group": 16,
+      "frequency": 2,
+      "round": "R32",
+      "examDate": "2024-07-20",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "confirmed",
+      "reason": "Protocolo e-CMR art. 2.2: equivalencia jurídica y probatoria si cumple el protocolo.",
+      "sources": [
+        "https://www.boe.es/diario_boe/txt.php?id=BOE-A-2011-10283"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2025-03-29-mercancias-global",
+      "number": 23,
+      "sourcePage": 335,
+      "question": "¿Cuántos vehículos se pueden autorizar, como máximo, a una empresa para efectuar transporte privado complementario de mercancías?",
+      "options": {
+        "A": "Tres.",
+        "B": "Cinco.",
+        "C": "El número necesario para cubrir las necesidades de transporte que justifique.",
+        "D": "Todos los que solicite."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "examFrequency": 2,
+      "topicCandidates": [
+        "lott_rott"
+      ],
+      "group": 17,
+      "frequency": 2,
+      "round": "R32",
+      "examDate": "2025-03-29",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "confirmed",
+      "reason": "ROTT art. 157: justificar necesidad y proporcionalidad respecto a capacidad de los vehículos; no existe número fijo general.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1990-24442",
+        "https://www.boe.es/buscar/doc.php?id=BOE-A-2019-2289"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2026-03-28-mercancias-global",
+      "number": 24,
+      "sourcePage": 352,
+      "question": "¿Cuántos vehículos se pueden autorizar, como máximo, a una empresa para efectuar transporte privado complementario de mercancías?",
+      "options": {
+        "A": "Tres.",
+        "B": "Cinco.",
+        "C": "El número necesario para cubrir las necesidades de transporte que justifique.",
+        "D": "Todos los que solicite."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "examFrequency": 2,
+      "topicCandidates": [
+        "lott_rott"
+      ],
+      "group": 17,
+      "frequency": 2,
+      "round": "R32",
+      "examDate": "2026-03-28",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "confirmed",
+      "reason": "ROTT art. 157: justificar necesidad y proporcionalidad respecto a capacidad de los vehículos; no existe número fijo general.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1990-24442",
+        "https://www.boe.es/buscar/doc.php?id=BOE-A-2019-2289"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2025-07-26-mercancias-b",
+      "number": 8,
+      "sourcePage": 186,
+      "question": "El convenio CMR se aplicará a los transportes efectuados:",
+      "options": {
+        "A": "en ferrocarril entre dos estados signatarios del acuerdo.",
+        "B": "por vía navegable, siempre que esta no sea marítima, y se efectúe entre dos países signatarios del acuerdo.",
+        "C": "por vehículos de carretera entre dos países y que uno de ellos, al menos, sea signatario del acuerdo.",
+        "D": "por cualquiera de los sistemas enunciados en las respuestas anteriores."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "examFrequency": 2,
+      "topicCandidates": [
+        "contract_cmr"
+      ],
+      "group": 18,
+      "frequency": 2,
+      "round": "R32",
+      "examDate": "2025-07-26",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "note",
+      "reason": "CMR art. 1: transporte oneroso por carretera entre países distintos, basta que uno sea contratante; existen exclusiones expresas.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1974-753"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2025-02-01-mercancias-global",
+      "number": 18,
+      "sourcePage": 261,
+      "question": "El convenio CMR se aplicará a los transportes efectuados:",
+      "options": {
+        "A": "en ferrocarril entre dos estados signatarios del acuerdo.",
+        "B": "por vía navegable, siempre que esta no sea marítima, y se efectúe entre dos países signatarios del acuerdo.",
+        "C": "por vehículos de carretera entre dos países y que uno de ellos, al menos, sea signatario del acuerdo.",
+        "D": "por cualquiera de los sistemas enunciados en las respuestas anteriores."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "examFrequency": 2,
+      "topicCandidates": [
+        "contract_cmr"
+      ],
+      "group": 18,
+      "frequency": 2,
+      "round": "R32",
+      "examDate": "2025-02-01",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "note",
+      "reason": "CMR art. 1: transporte oneroso por carretera entre países distintos, basta que uno sea contratante; existen exclusiones expresas.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1974-753"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2026-03-28-mercancias-global",
+      "number": 15,
+      "sourcePage": 350,
+      "question": "¿Se necesita autorización para realizar transporte privado complementario de mercancías con un vehículo de 2,5 toneladas de MMA?",
+      "options": {
+        "A": "No.",
+        "B": "Sí.",
+        "C": "Solo si el transporte tiene el origen y el destino en diferentes municipios.",
+        "D": "Solo si el transporte es de mercancías peligrosas o perecederas."
+      },
+      "originalSheetAnswer": "A",
+      "correctAnswer": "A",
+      "bankAnswer": "A",
+      "examFrequency": 2,
+      "topicCandidates": [
+        "authorizations",
+        "lott_rott"
+      ],
+      "group": 19,
+      "frequency": 2,
+      "round": "R32",
+      "examDate": "2026-03-28",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "A",
+      "previousAppliedAnswer": "A",
+      "technicalAnswer": "A",
+      "action": "confirmed",
+      "reason": "ROTT art. 155.e: 2,5 t queda dentro de la exención hasta 3,5 t MMA.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1990-24442",
+        "https://www.boe.es/buscar/doc.php?id=BOE-A-2019-2289"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2024-05-25-mercancias-global",
+      "number": 15,
+      "sourcePage": 386,
+      "question": "¿Se necesita autorización para realizar transporte privado complementario de mercancías con un vehículo de 2,5 toneladas de MMA?",
+      "options": {
+        "A": "No.",
+        "B": "Sí.",
+        "C": "Solo si el transporte tiene el origen y el destino en diferentes municipios.",
+        "D": "Solo si el transporte es de mercancías peligrosas o perecederas."
+      },
+      "originalSheetAnswer": "A",
+      "correctAnswer": "A",
+      "bankAnswer": "A",
+      "examFrequency": 2,
+      "topicCandidates": [
+        "authorizations",
+        "lott_rott"
+      ],
+      "group": 19,
+      "frequency": 2,
+      "round": "R32",
+      "examDate": "2024-05-25",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "A",
+      "previousAppliedAnswer": "A",
+      "technicalAnswer": "A",
+      "action": "confirmed",
+      "reason": "ROTT art. 155.e: 2,5 t queda dentro de la exención hasta 3,5 t MMA.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1990-24442",
+        "https://www.boe.es/buscar/doc.php?id=BOE-A-2019-2289"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2026-07-25-mercancias-a",
+      "number": 2,
+      "sourcePage": 112,
+      "question": "Un vehículo cisterna cargado de mercancías en estado líquido, en el momento de la subida de una pendiente:",
+      "options": {
+        "A": "sufre una pérdida de adherencia sobre el terreno por pérdida de peso sobre el eje de tracción al desplazarse la carga.",
+        "B": "tiene un incremento de adherencia sobre el terreno como consecuencia del desplazamiento de la carga.",
+        "C": "sufre un desgaste superior en la pared posterior del depósito como consecuencia del desplazamiento de la carga.",
+        "D": "no sufre ningún desplazamiento de la carga."
+      },
+      "originalSheetAnswer": "A",
+      "correctAnswer": "A",
+      "bankAnswer": "A",
+      "examFrequency": 2,
+      "topicCandidates": [
+        "adr"
+      ],
+      "group": 20,
+      "frequency": 2,
+      "round": "R32",
+      "examDate": "2026-07-25",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "A",
+      "previousAppliedAnswer": "A",
+      "technicalAnswer": null,
+      "action": "pending",
+      "reason": "Pregunta de dinámica, no ADR por sí misma. La variación de carga sobre eje tractor depende de configuración, eje motriz, llenado y pendiente. Requiere fuente técnica específica; no cambiar ni contar aún.",
+      "sources": [],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2026-07-25-mercancias-b",
+      "number": 12,
+      "sourcePage": 203,
+      "question": "Un vehículo cisterna cargado de mercancías en estado líquido, en el momento de la subida de una pendiente:",
+      "options": {
+        "A": "sufre una pérdida de adherencia sobre el terreno por pérdida de peso sobre el eje de tracción al desplazarse la carga.",
+        "B": "tiene un incremento de adherencia sobre el terreno como consecuencia del desplazamiento de la carga.",
+        "C": "sufre un desgaste superior en la pared posterior del depósito como consecuencia del desplazamiento de la carga.",
+        "D": "no sufre ningún desplazamiento de la carga."
+      },
+      "originalSheetAnswer": "A",
+      "correctAnswer": "A",
+      "bankAnswer": "A",
+      "examFrequency": 2,
+      "topicCandidates": [
+        "adr"
+      ],
+      "group": 20,
+      "frequency": 2,
+      "round": "R32",
+      "examDate": "2026-07-25",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "A",
+      "previousAppliedAnswer": "A",
+      "technicalAnswer": null,
+      "action": "pending",
+      "reason": "Pregunta de dinámica, no ADR por sí misma. La variación de carga sobre eje tractor depende de configuración, eje motriz, llenado y pendiente. Requiere fuente técnica específica; no cambiar ni contar aún.",
+      "sources": [],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2026-07-25-mercancias-a",
+      "number": 16,
+      "sourcePage": 114,
+      "question": "En un transporte de mercancías por carretera, si se ha producido un retraso probado debido a un caso fortuito, ¿qué responsabilidad tendrá el porteador?",
+      "options": {
+        "A": "Ninguna, quedará exento.",
+        "B": "Responderá a partes iguales con el cargador.",
+        "C": "Toda.",
+        "D": "Ninguna de las tres respuestas anteriores es correcta."
+      },
+      "originalSheetAnswer": "A",
+      "correctAnswer": "A",
+      "bankAnswer": "A",
+      "examFrequency": 2,
+      "topicCandidates": [
+        "contract_cmr"
+      ],
+      "group": 21,
+      "frequency": 2,
+      "round": "R32",
+      "examDate": "2026-07-25",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "A",
+      "previousAppliedAnswer": "A",
+      "technicalAnswer": "A",
+      "action": "note",
+      "reason": "Ley 15/2009 arts. 47–48: el porteador debe probar circunstancias que no pudo evitar y consecuencias que no pudo impedir; no todo caso fortuito alegado exime automáticamente.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2009-18004",
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2009-18004&p=20220802"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2026-07-25-mercancias-b",
+      "number": 15,
+      "sourcePage": 204,
+      "question": "En un transporte de mercancías por carretera, si se ha producido un retraso probado debido a un caso fortuito, ¿qué responsabilidad tendrá el porteador?",
+      "options": {
+        "A": "Ninguna, quedará exento.",
+        "B": "Responderá a partes iguales con el cargador.",
+        "C": "Toda.",
+        "D": "Ninguna de las tres respuestas anteriores es correcta."
+      },
+      "originalSheetAnswer": "A",
+      "correctAnswer": "A",
+      "bankAnswer": "A",
+      "examFrequency": 2,
+      "topicCandidates": [
+        "contract_cmr"
+      ],
+      "group": 21,
+      "frequency": 2,
+      "round": "R32",
+      "examDate": "2026-07-25",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "A",
+      "previousAppliedAnswer": "A",
+      "technicalAnswer": "A",
+      "action": "note",
+      "reason": "Ley 15/2009 arts. 47–48: el porteador debe probar circunstancias que no pudo evitar y consecuencias que no pudo impedir; no todo caso fortuito alegado exime automáticamente.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2009-18004",
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2009-18004&p=20220802"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2026-07-25-mercancias-a",
+      "number": 20,
+      "sourcePage": 115,
+      "question": "¿En qué año se adhirió España al Convenio CMR?",
+      "options": {
+        "A": "En 1956.",
+        "B": "En 1971.",
+        "C": "En 1973.",
+        "D": "En 1982."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "examFrequency": 2,
+      "topicCandidates": [
+        "contract_cmr"
+      ],
+      "group": 22,
+      "frequency": 2,
+      "round": "R32",
+      "examDate": "2026-07-25",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "note",
+      "reason": "BOE: instrumento firmado el 12-09-1973. Depositario ONU: adhesión 12-02-1974, efectiva 13-05-1974. La opción 1973 corresponde a la firma, no al depósito. Conservar provisionalmente el criterio histórico y advertir distinción; valorar exclusión tras cotejo visual, pues 1974 no figura.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1974-753",
+        "https://treaties.un.org/Pages/showActionDetails.aspx?objid=0800000280033132"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2026-07-25-mercancias-b",
+      "number": 8,
+      "sourcePage": 203,
+      "question": "¿En qué año se adhirió España al Convenio CMR?",
+      "options": {
+        "A": "En 1956.",
+        "B": "En 1971.",
+        "C": "En 1973.",
+        "D": "En 1982."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "examFrequency": 2,
+      "topicCandidates": [
+        "contract_cmr"
+      ],
+      "group": 22,
+      "frequency": 2,
+      "round": "R32",
+      "examDate": "2026-07-25",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "note",
+      "reason": "BOE: instrumento firmado el 12-09-1973. Depositario ONU: adhesión 12-02-1974, efectiva 13-05-1974. La opción 1973 corresponde a la firma, no al depósito. Conservar provisionalmente el criterio histórico y advertir distinción; valorar exclusión tras cotejo visual, pues 1974 no figura.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1974-753",
+        "https://treaties.un.org/Pages/showActionDetails.aspx?objid=0800000280033132"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2026-07-25-mercancias-a",
+      "number": 21,
+      "sourcePage": 115,
+      "question": "¿Cuál es el número mínimo de vehículos requerido para obtener autorización de transporte privado complementario de mercancías?",
+      "options": {
+        "A": "Uno.",
+        "B": "Tres.",
+        "C": "Uno si se trata de un vehículo de hasta 3,5 toneladas de MMA y tres si se trata de vehículos pesados.",
+        "D": "Cinco."
+      },
+      "originalSheetAnswer": "A",
+      "correctAnswer": "A",
+      "bankAnswer": "A",
+      "examFrequency": 2,
+      "topicCandidates": [
+        "authorizations",
+        "lott_rott"
+      ],
+      "group": 23,
+      "frequency": 2,
+      "round": "R32",
+      "examDate": "2026-07-25",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "A",
+      "previousAppliedAnswer": "A",
+      "technicalAnswer": null,
+      "action": "pending",
+      "reason": "Un vehículo parece la regla mínima de disponibilidad, pero falta anclaje normativo específico del privado complementario (no usar sin más art. 44.2 de público).",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1990-24442",
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1987-17803"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2026-07-25-mercancias-b",
+      "number": 4,
+      "sourcePage": 202,
+      "question": "¿Cuál es el número mínimo de vehículos requerido para obtener autorización de transporte privado complementario de mercancías?",
+      "options": {
+        "A": "Uno.",
+        "B": "Tres.",
+        "C": "Uno si se trata de un vehículo de hasta 3,5 toneladas de MMA y tres si se trata de vehículos pesados.",
+        "D": "Cinco."
+      },
+      "originalSheetAnswer": "A",
+      "correctAnswer": "A",
+      "bankAnswer": "A",
+      "examFrequency": 2,
+      "topicCandidates": [
+        "authorizations",
+        "lott_rott"
+      ],
+      "group": 23,
+      "frequency": 2,
+      "round": "R32",
+      "examDate": "2026-07-25",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "A",
+      "previousAppliedAnswer": "A",
+      "technicalAnswer": null,
+      "action": "pending",
+      "reason": "Un vehículo parece la regla mínima de disponibilidad, pero falta anclaje normativo específico del privado complementario (no usar sin más art. 44.2 de público).",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1990-24442",
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1987-17803"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2026-07-25-mercancias-a",
+      "number": 23,
+      "sourcePage": 115,
+      "question": "Del documento de control administrativo del transporte se emiten dos ejemplares cuyos destinatarios son:",
+      "options": {
+        "A": "el conductor y el consignatario.",
+        "B": "el cargador y el transportista.",
+        "C": "el transportista y la inspección.",
+        "D": "el cargador y el consignatario."
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "B",
+      "bankAnswer": "B",
+      "examFrequency": 2,
+      "topicCandidates": [
+        "lott_rott",
+        "contract_cmr"
+      ],
+      "group": 24,
+      "frequency": 2,
+      "round": "R32",
+      "examDate": "2026-07-25",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "confirmed",
+      "reason": "Orden FOM/2861/2012 art. 8: dos ejemplares, cargador contractual y transportista efectivo, con este último a bordo; contrastar régimen electrónico transitorio aparte.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2013-154",
+        "https://boe.es/buscar/act.php?id=BOE-A-2013-154&p=20130105&tn=1"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2026-07-25-mercancias-b",
+      "number": 18,
+      "sourcePage": 204,
+      "question": "Del documento de control administrativo del transporte se emiten dos ejemplares cuyos destinatarios son:",
+      "options": {
+        "A": "el conductor y el consignatario.",
+        "B": "el cargador y el transportista.",
+        "C": "el transportista y la inspección.",
+        "D": "el cargador y el consignatario."
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "B",
+      "bankAnswer": "B",
+      "examFrequency": 2,
+      "topicCandidates": [
+        "lott_rott",
+        "contract_cmr"
+      ],
+      "group": 24,
+      "frequency": 2,
+      "round": "R32",
+      "examDate": "2026-07-25",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "confirmed",
+      "reason": "Orden FOM/2861/2012 art. 8: dos ejemplares, cargador contractual y transportista efectivo, con este último a bordo; contrastar régimen electrónico transitorio aparte.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2013-154",
+        "https://boe.es/buscar/act.php?id=BOE-A-2013-154&p=20130105&tn=1"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2026-07-25-mercancias-a",
+      "number": 24,
+      "sourcePage": 115,
+      "question": "¿En qué transporte público de mercancías no es obligatorio llevar a bordo del vehículo el documento de control administrativo?",
+      "options": {
+        "A": "En un transporte de mercancías perecederas.",
+        "B": "En un transporte de mudanza.",
+        "C": "En un transporte de material sanitario.",
+        "D": "En un transporte intermodal."
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "B",
+      "bankAnswer": "B",
+      "examFrequency": 2,
+      "topicCandidates": [
+        "lott_rott"
+      ],
+      "group": 25,
+      "frequency": 2,
+      "round": "R32",
+      "examDate": "2026-07-25",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "confirmed",
+      "reason": "Orden FOM/2861/2012 art. 2.1.b: mudanzas expresamente exentas.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2013-154",
+        "https://boe.es/buscar/act.php?id=BOE-A-2013-154&p=20130105&tn=1"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2026-07-25-mercancias-b",
+      "number": 21,
+      "sourcePage": 205,
+      "question": "¿En qué transporte público de mercancías no es obligatorio llevar a bordo del vehículo el documento de control administrativo?",
+      "options": {
+        "A": "En un transporte de mercancías perecederas.",
+        "B": "En un transporte de mudanza.",
+        "C": "En un transporte de material sanitario.",
+        "D": "En un transporte intermodal."
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "B",
+      "bankAnswer": "B",
+      "examFrequency": 2,
+      "topicCandidates": [
+        "lott_rott"
+      ],
+      "group": 25,
+      "frequency": 2,
+      "round": "R32",
+      "examDate": "2026-07-25",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "confirmed",
+      "reason": "Orden FOM/2861/2012 art. 2.1.b: mudanzas expresamente exentas.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2013-154",
+        "https://boe.es/buscar/act.php?id=BOE-A-2013-154&p=20130105&tn=1"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2026-05-30-mercancias-global",
+      "number": 20,
+      "sourcePage": 407,
+      "question": "¿A cuál de los siguientes transportes se aplicará el convenio CMR?",
+      "options": {
+        "A": "A los transportes privados complementarios.",
+        "B": "A los transportes nacionales de mercancías.",
+        "C": "A los transportes internacionales de mercancías.",
+        "D": "A los transportes que no salen del barrio."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "examFrequency": 6,
+      "topicCandidates": [
+        "contract_cmr"
+      ],
+      "group": 26,
+      "frequency": 6,
+      "round": "R32",
+      "examDate": "2026-05-30",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "note",
+      "reason": "CMR art. 1: internacional por carretera a título oneroso, países distintos y al menos uno contratante; no todos los transportes internacionales se incluyen.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1974-753"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2026-03-28-mercancias-global",
+      "number": 11,
+      "sourcePage": 349,
+      "question": "Están exentos de autorización administrativa los transportes públicos de mercancías realizados en vehículos de:",
+      "options": {
+        "A": "Hasta 2 toneladas de Masa Máxima Autorizada.",
+        "B": "Hasta 3,5 toneladas de Masa Máxima Autorizada.",
+        "C": "Hasta 2 toneladas de Carga útil.",
+        "D": "Hasta 2,5 toneladas de Carga útil."
+      },
+      "originalSheetAnswer": "A",
+      "correctAnswer": "A",
+      "bankAnswer": "A",
+      "examFrequency": 4,
+      "topicCandidates": [
+        "authorizations"
+      ],
+      "group": 27,
+      "frequency": 4,
+      "round": "R32",
+      "examDate": "2026-03-28",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "A",
+      "previousAppliedAnswer": "A",
+      "technicalAnswer": "A",
+      "action": "note",
+      "reason": "ROTT art. 33.2.d: umbral general nacional 2 t MMA, no carga útil. Existen excepciones específicas y distinto régimen internacional.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1990-24442",
+        "https://www.boe.es/buscar/doc.php?id=BOE-A-2019-2289",
+        "https://www.boe.es/buscar/doc.php?id=DOUE-L-2009-82158",
+        "https://www.boe.es/buscar/doc.php?id=DOUE-L-2020-81224"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2026-09-26-mercancias-a",
+      "number": 17,
+      "sourcePage": 130,
+      "question": "La actividad de arrendamiento de vehículos sin conductor para la realización de transporte público de mercancías por carretera necesitará autorización administrativa del órgano competente en materia de transporte:",
+      "options": {
+        "A": "si su actividad consiste en alquilar remolques.",
+        "B": "si su actividad consiste en el alquiler de semirremolques.",
+        "C": "si su actividad consiste en el alquiler de cabezas tractoras pesadas.",
+        "D": "No la necesitará en ningún caso."
+      },
+      "originalSheetAnswer": "D",
+      "correctAnswer": "D",
+      "bankAnswer": "D",
+      "examFrequency": 4,
+      "topicCandidates": [
+        "authorizations",
+        "lott_rott"
+      ],
+      "group": 28,
+      "frequency": 4,
+      "round": "R32",
+      "examDate": "2026-09-26",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "D",
+      "previousAppliedAnswer": "D",
+      "technicalAnswer": "D",
+      "action": "note",
+      "reason": "LOTT art. 133.1: la actividad de arrendamiento sin conductor no exige autorización de transporte propia, sin perjuicio de demás obligaciones.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1987-17803"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2023-07-29-mercancias-b",
+      "number": 24,
+      "sourcePage": 149,
+      "question": "¿Qué capacidad financiera se requiere acreditar para obtener una autorización de transporte público de mercancías?",
+      "options": {
+        "A": "5.000 euros por cada vehículo utilizado.",
+        "B": "9.000 euros por cada vehículo utilizado.",
+        "C": "S.000 euros por el primer vehículo y 9.000 más por cada vehículo adicional utilizado.",
+        "D": "9.000 euros por el primer vehículo y 5.000 más por cada vehículo adicional utilizado."
+      },
+      "originalSheetAnswer": "D",
+      "correctAnswer": "D",
+      "bankAnswer": "D",
+      "examFrequency": 3,
+      "topicCandidates": [
+        "authorizations",
+        "lott_rott"
+      ],
+      "group": 29,
+      "frequency": 3,
+      "round": "R32",
+      "examDate": "2023-07-29",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "D",
+      "previousAppliedAnswer": "D",
+      "technicalAnswer": "D",
+      "action": "note",
+      "reason": "Reglamento 1071/2009 art. 7 tras reforma 2020/1055: regla de 9.000 + 5.000 para pesados; distinguir flotas y vehículos ligeros.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1990-24442",
+        "https://www.boe.es/buscar/doc.php?id=DOUE-L-2020-81224"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2022-10-01-mercancias-global",
+      "number": 17,
+      "sourcePage": 443,
+      "question": "Cuando existe un único contrato con el cargador e intervienen de forma sucesiva varios porteadores, estamos hablando de una operación de transporte...",
+      "options": {
+        "A": "multimodal.",
+        "B": "extensivo.",
+        "C": "sucesivo.",
+        "D": "en conjunto."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "examFrequency": 2,
+      "topicCandidates": [
+        "contract_cmr"
+      ],
+      "group": 30,
+      "frequency": 2,
+      "round": "R32",
+      "examDate": "2022-10-01",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "confirmed",
+      "reason": "Ley 15/2009 art. 64: contrato único y ejecución sucesiva por distintos porteadores bajo régimen de porteadores sucesivos.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2009-18004",
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2009-18004&p=20220802"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2023-02-04-mercancias-global",
+      "number": 15,
+      "sourcePage": 241,
+      "question": "Cuando existe un único contrato con el cargador e intervienen de forma sucesiva varios porteadores, estamos hablando de una operación de transporte:",
+      "options": {
+        "A": "multimodal.",
+        "B": "extensivo.",
+        "C": "sucesivo.",
+        "D": "conjunto."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "examFrequency": 2,
+      "topicCandidates": [
+        "contract_cmr"
+      ],
+      "group": 31,
+      "frequency": 2,
+      "round": "R32",
+      "examDate": "2023-02-04",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "confirmed",
+      "reason": "Ley 15/2009 art. 64: sucesión de porteadores en contrato único; no equivale necesariamente a transporte multimodal.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2009-18004",
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2009-18004&p=20220802"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2024-04-06-mercancias-global",
+      "number": 24,
+      "sourcePage": 5,
+      "question": "¿Cuál es la marca de identificación de un vehículo frigorífico normal de la clase D?",
+      "options": {
+        "A": "FNC.",
+        "B": "FND.",
+        "C": "FRE.",
+        "D": "FNF."
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "B",
+      "bankAnswer": "B",
+      "examFrequency": 2,
+      "topicCandidates": [
+        "atp"
+      ],
+      "group": 32,
+      "frequency": 2,
+      "round": "R32",
+      "examDate": "2024-04-06",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "confirmed",
+      "reason": "ATP anejo 1 apéndice 4: FND, frigorífico normal clase D.",
+      "sources": [
+        "https://www.boe.es/buscar/doc.php?id=BOE-A-2022-9980",
+        "https://boe.es/diario_boe/txt.php?id=BOE-A-2026-20469"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2025-07-26-mercancias-b",
+      "number": 23,
+      "sourcePage": 188,
+      "question": "¿Cuál es la marca de identificación de un vehículo frigorífico normal de la clase D?",
+      "options": {
+        "A": "FRND.",
+        "B": "FND.",
+        "C": "FRD.",
+        "D": "FNFD."
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "B",
+      "bankAnswer": "B",
+      "examFrequency": 2,
+      "topicCandidates": [
+        "atp"
+      ],
+      "group": 33,
+      "frequency": 2,
+      "round": "R32",
+      "examDate": "2025-07-26",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "confirmed",
+      "reason": "ATP anejo 1 apéndice 4: entre FRND, FND, FRD y FNFD, FND identifica frigorífico normal clase D.",
+      "sources": [
+        "https://www.boe.es/diario_boe/txt.php?id=BOE-A-2024-14997",
+        "https://boe.es/diario_boe/txt.php?id=BOE-A-2026-20469"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2022-10-01-mercancias-global",
+      "number": 20,
+      "sourcePage": 443,
+      "question": "Para realizar transporte de mercancías de carácter privado complementario, ¿se necesita una autorización administrativa?",
+      "options": {
+        "A": "No.",
+        "B": "Depende de cuál sea la masa máxima autorizada del vehículo.",
+        "C": "Sí, pero sólo si se dispone de más de un vehículo.",
+        "D": "Sí, pero sólo cuando el vehículo que se utiliza es articulado."
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "B",
+      "bankAnswer": "B",
+      "examFrequency": 1,
+      "topicCandidates": [
+        "authorizations"
+      ],
+      "group": 34,
+      "frequency": 1,
+      "round": "R32",
+      "examDate": "2022-10-01",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "confirmed",
+      "reason": "ROTT art. 155.e: la MMA determina la exención general hasta 3,5 t en privado complementario.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1990-24442",
+        "https://www.boe.es/buscar/doc.php?id=BOE-A-2019-2289"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2022-10-01-mercancias-global",
+      "number": 100,
+      "sourcePage": 459,
+      "question": "¿En qué plazo dictará su laudo la Junta Arbitral del Transporte?",
+      "options": {
+        "A": "En el mismo acto de la vista.",
+        "B": "5 días.",
+        "C": "1 mes.",
+        "D": "6 meses."
+      },
+      "originalSheetAnswer": "D",
+      "correctAnswer": "D",
+      "bankAnswer": "D",
+      "examFrequency": 1,
+      "topicCandidates": [
+        "lott_rott"
+      ],
+      "group": 35,
+      "frequency": 1,
+      "round": "R32",
+      "examDate": "2022-10-01",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "D",
+      "previousAppliedAnswer": "D",
+      "technicalAnswer": "D",
+      "action": "note",
+      "reason": "Ley 60/2003 art. 37.2: seis meses como plazo supletorio desde contestación o expiración de su plazo, salvo pacto y posible prórroga motivada de hasta dos meses.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2003-23646",
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1990-24442"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2022-11-26-mercancias-global",
+      "number": 9,
+      "sourcePage": 421,
+      "question": "¿Qué son los transportes de mercancías en régimen de cabotaje?",
+      "options": {
+        "A": "Los transportes realizados íntegramente en el territorio de un Estado extranjero por transportistas que están establecidos en el mismo.",
+        "B": "Los transportes realizados íntegramente en el territorio de un Estado extranjero por transportistas que no están establecidos en el mismo.",
+        "C": "Los transportes de proximidad.",
+        "D": "Los transportes que atraviesan un Estado sin cargar ni descargar mercancías en el mismo."
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "B",
+      "bankAnswer": "B",
+      "examFrequency": 1,
+      "topicCandidates": [
+        "authorizations"
+      ],
+      "group": 36,
+      "frequency": 1,
+      "round": "R32",
+      "examDate": "2022-11-26",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "confirmed",
+      "reason": "Reglamento 1072/2009 art. 2.6: transporte nacional temporal por cuenta ajena en Estado de acogida por transportista no residente.",
+      "sources": [
+        "https://www.boe.es/buscar/doc.php?id=DOUE-L-2009-82158",
+        "https://www.boe.es/buscar/doc.php?id=DOUE-L-2020-81224"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2022-11-26-mercancias-global",
+      "number": 13,
+      "sourcePage": 422,
+      "question": "Las agencias de transporte de mercancías y los almacenistas-distribuidores, titulares de una autorización de operador de transporte, contratarán:",
+      "options": {
+        "A": "con el transportista en nombre del que haya requerido sus servicios.",
+        "B": "siempre en nombre propio.",
+        "C": "con el cargador en nombre del transportista efectivo.",
+        "D": "en nombre propio solo cuando utilicen camiones de su propiedad o de los que dispongan en leasing o renting."
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "B",
+      "bankAnswer": null,
+      "examFrequency": 1,
+      "topicCandidates": [
+        "authorizations",
+        "lott_rott"
+      ],
+      "group": 37,
+      "frequency": 1,
+      "round": "R32",
+      "examDate": "2022-11-26",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "confirmed",
+      "reason": "LOTT art. 119.3: operador contrata en nombre propio frente a demandante y transportista.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1987-17803"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2022-11-26-mercancias-global",
+      "number": 18,
+      "sourcePage": 423,
+      "question": "¿Hay obligación de contar con el documento de control de los envíos en un transporte de mudanzas?",
+      "options": {
+        "A": "No.",
+        "B": "Sí.",
+        "C": "Solo si interviene más de un vehículo.",
+        "D": "Solo si intervienen tres o más vehículos."
+      },
+      "originalSheetAnswer": "A",
+      "correctAnswer": "A",
+      "bankAnswer": "A",
+      "examFrequency": 1,
+      "topicCandidates": [
+        "lott_rott"
+      ],
+      "group": 38,
+      "frequency": 1,
+      "round": "R32",
+      "examDate": "2022-11-26",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "A",
+      "previousAppliedAnswer": "A",
+      "technicalAnswer": "A",
+      "action": "confirmed",
+      "reason": "Orden FOM/2861/2012 art. 2.1.b: exención expresa de mudanzas.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2013-154",
+        "https://boe.es/buscar/act.php?id=BOE-A-2013-154&p=20130105&tn=1"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2023-03-25-mercancias-global",
+      "number": 5,
+      "sourcePage": 312,
+      "question": "Las autorizaciones de transporte público de mercancías que solo permiten efectuar transporte con vehículos de Masa Máxima Autorizada no superior a 3,5 toneladas se identifican registralmente con la clave:",
+      "options": {
+        "A": "MDPE.",
+        "B": "MDLE.",
+        "C": "MPCE.",
+        "D": "VDE."
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "B",
+      "bankAnswer": "B",
+      "examFrequency": 1,
+      "topicCandidates": [
+        "authorizations",
+        "lott_rott"
+      ],
+      "group": 39,
+      "frequency": 1,
+      "round": "R32",
+      "examDate": "2023-03-25",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": null,
+      "action": "pending",
+      "reason": "MDLE es la clave histórica indicada; falta fuente registral oficial contemporánea específica (no reutilizar orden derogada de 2007).",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1990-24442"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2023-03-25-mercancias-global",
+      "number": 16,
+      "sourcePage": 315,
+      "question": "¿Qué es el convenio CMR?",
+      "options": {
+        "A": "Es un acuerdo internacional que estipula las condiciones de realización de los transportes internacionales de mercancías por mar.",
+        "B": "Es un acuerdo internacional que estipula las condiciones de realización de los transportes internacionales de mercancías por carretera.",
+        "C": "Es un acuerdo internacional que estipula las condiciones de realización de los transportes internacionales de mercancías por ferrocarril.",
+        "D": "Este convenio no existe."
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "B",
+      "bankAnswer": "B",
+      "examFrequency": 1,
+      "topicCandidates": [
+        "contract_cmr"
+      ],
+      "group": 40,
+      "frequency": 1,
+      "round": "R32",
+      "examDate": "2023-03-25",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "confirmed",
+      "reason": "CMR regula el contrato de transporte internacional de mercancías por carretera, art. 1.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1974-753"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2023-03-25-mercancias-global",
+      "number": 25,
+      "sourcePage": 316,
+      "question": "Un documento de identificación con fotografía por cada miembro de la tripulación, ¿es un documento obligatorio que debe llevarse a bordo del vehículo durante un transporte de mercancías peligrosas?",
+      "options": {
+        "A": "Solo en el caso de transporte de mercancías de la clase 1 o 7.",
+        "B": "Solo en el caso de transportes internacionales.",
+        "C": "Sí, debe llevarse a bordo durante el transporte.",
+        "D": "No, aunque es obligatoria su confección."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "examFrequency": 1,
+      "topicCandidates": [
+        "adr"
+      ],
+      "group": 41,
+      "frequency": 1,
+      "round": "R32",
+      "examDate": "2023-03-25",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "note",
+      "reason": "ADR 8.1.2.1.d y 1.10.1.4: identificación fotográfica por cada tripulante bajo el régimen ADR aplicable, sin perjuicio de exenciones.",
+      "sources": [
+        "https://www.boe.es/buscar/doc.php?id=BOE-A-2023-6968",
+        "https://www.boe.es/diario_boe/txt.php?id=BOE-A-2025-77"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2023-06-03-mercancias-global",
+      "number": 24,
+      "sourcePage": 295,
+      "question": "¿En qué casos es obligatorio llevar a bordo del vehículo el documento de control administrativo?",
+      "options": {
+        "A": "En todos los transportes de mercancías efectuados can vehículos pesados.",
+        "B": "En todos los transportes públicos de mercancías.",
+        "C": "En todos los transportes de mercancías de ámbito nacional.",
+        "D": "En los transportes de mercancías contratados por consumidores."
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "B",
+      "bankAnswer": null,
+      "examFrequency": 1,
+      "topicCandidates": [
+        "lott_rott"
+      ],
+      "group": 42,
+      "frequency": 1,
+      "round": "R32",
+      "examDate": "2023-06-03",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": null,
+      "action": "exclude",
+      "reason": "Orden FOM/2861/2012 arts. 1–3: la respuesta B dice TODOS los transportes públicos, pero art. 2.1 exime mudanzas, transportes sin título exigible, vehículos averiados y determinada paquetería. A, C y D tampoco expresan el ámbito correcto. Propuesta de exclusión técnica; confirmar imagen oficial antes de aplicar.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2013-154",
+        "https://boe.es/buscar/act.php?id=BOE-A-2013-154&p=20130105&tn=1"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2023-09-23-mercancias-global",
+      "number": 4,
+      "sourcePage": 460,
+      "question": "Según el acuerdo ATP, los vehículos de temperatura controlada deben ir identificados con:",
+      "options": {
+        "A": "unos números.",
+        "B": "unas letras.",
+        "C": "unos números y unas letras.",
+        "D": "unos números y unos colores."
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "B",
+      "bankAnswer": "B",
+      "examFrequency": 1,
+      "topicCandidates": [
+        "atp"
+      ],
+      "group": 43,
+      "frequency": 1,
+      "round": "R32",
+      "examDate": "2023-09-23",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "confirmed",
+      "reason": "ATP anejo 1 apéndice 4: marcas de clase en letras mayúsculas latinas; fecha de caducidad separada.",
+      "sources": [
+        "https://www.boe.es/buscar/doc.php?id=BOE-A-2022-9980",
+        "https://boe.es/diario_boe/txt.php?id=BOE-A-2026-20469"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2023-09-23-mercancias-global",
+      "number": 16,
+      "sourcePage": 463,
+      "question": "Cuando se realice un transporte privado complementario de mercancías, ¿se podrá facturar a los clientes por este concepto de modo independiente?",
+      "options": {
+        "A": "Sí.",
+        "B": "Solo si el volumen transportado supera los 1.000 kg.",
+        "C": "No.",
+        "D": "Solo cuando el recorrido sea superior a 100 km."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": null,
+      "examFrequency": 1,
+      "topicCandidates": [
+        "lott_rott"
+      ],
+      "group": 44,
+      "frequency": 1,
+      "round": "R32",
+      "examDate": "2023-09-23",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "confirmed",
+      "reason": "LOTT art. 102.2.e: no contratar ni facturar independientemente el transporte privado complementario.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1987-17803"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2023-09-23-mercancias-global",
+      "number": 20,
+      "sourcePage": 464,
+      "question": "¿Cuál es, según la reglamentación comunitaria, el plazo de validez de la licencia comunitaria para el transporte de mercancías?",
+      "options": {
+        "A": "Hasta 8 años.",
+        "B": "Hasta 10 años.",
+        "C": "Hasta 6 años.",
+        "D": "Indeterminado."
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "B",
+      "bankAnswer": "B",
+      "examFrequency": 1,
+      "topicCandidates": [
+        "authorizations"
+      ],
+      "group": 45,
+      "frequency": 1,
+      "round": "R32",
+      "examDate": "2023-09-23",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "confirmed",
+      "reason": "Reglamento 1072/2009 art. 4.2: licencia comunitaria hasta diez años, prorrogable.",
+      "sources": [
+        "https://www.boe.es/buscar/doc.php?id=DOUE-L-2009-82158",
+        "https://www.boe.es/buscar/doc.php?id=DOUE-L-2020-81224"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2023-12-02-mercancias-global",
+      "number": 4,
+      "sourcePage": 218,
+      "question": "Según el acuerdo ATP, debajo de las letras de identificación de los vehículos de temperatura controlada se indica:",
+      "options": {
+        "A": "La fecha de expiración (mes y año) de Ia vaIidez deI certificado que deben poseer estos vehícuIos.",
+        "B": "La fecha de expiración (día, mes y año) de Ia vaIidez deI certificado que deben poseer estos vehícuIos.",
+        "C": "EI año de expiración de Ia vaIidez deI certificado que deben poseer estos vehícuIos.",
+        "D": "EI año y día de expiración de Ia vaIidez deI certificado que deben poseer estos vehícuIos."
+      },
+      "originalSheetAnswer": "A",
+      "correctAnswer": "A",
+      "bankAnswer": null,
+      "examFrequency": 1,
+      "topicCandidates": [
+        "atp"
+      ],
+      "group": 46,
+      "frequency": 1,
+      "round": "R32",
+      "examDate": "2023-12-02",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "A",
+      "previousAppliedAnswer": "A",
+      "technicalAnswer": "A",
+      "action": "confirmed",
+      "reason": "ATP anejo 1 apéndices 3 y 4: fecha de expiración en mes y año.",
+      "sources": [
+        "https://www.boe.es/buscar/doc.php?id=BOE-A-2022-9980",
+        "https://boe.es/diario_boe/txt.php?id=BOE-A-2026-20469"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2023-12-02-mercancias-global",
+      "number": 5,
+      "sourcePage": 218,
+      "question": "Según el acuerdo ATP, un vehículo identificado con las letras FRF es:",
+      "options": {
+        "A": "Un vehícuIo frigorífico normaI de Ia cIase A.",
+        "B": "Un vehícuIo frigorífico reforzado de Ia cIase E.",
+        "C": "Un vehícuIo frigorífico reforzado de Ia cIase F.",
+        "D": "Un vehícuIo frigorífico normaI de Ia cIase F."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": null,
+      "examFrequency": 1,
+      "topicCandidates": [
+        "atp"
+      ],
+      "group": 47,
+      "frequency": 1,
+      "round": "R32",
+      "examDate": "2023-12-02",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "confirmed",
+      "reason": "ATP anejo 1 apéndice 4: FRF, frigorífico reforzado clase F.",
+      "sources": [
+        "https://www.boe.es/buscar/doc.php?id=BOE-A-2022-9980",
+        "https://boe.es/diario_boe/txt.php?id=BOE-A-2026-20469"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2023-12-02-mercancias-global",
+      "number": 13,
+      "sourcePage": 220,
+      "question": "En los transportes realizados en colaboración con otros transportistas, el transportista que contrata con el cargador responderá frente al transportista colaborador como:",
+      "options": {
+        "A": "cargador.",
+        "B": "operador de transportes.",
+        "C": "transportista.",
+        "D": "coIaborador."
+      },
+      "originalSheetAnswer": "A",
+      "correctAnswer": "A",
+      "bankAnswer": "A",
+      "examFrequency": 1,
+      "topicCandidates": [
+        "contract_cmr"
+      ],
+      "group": 48,
+      "frequency": 1,
+      "round": "R32",
+      "examDate": "2023-12-02",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "A",
+      "previousAppliedAnswer": "A",
+      "technicalAnswer": "A",
+      "action": "confirmed",
+      "reason": "Ley 15/2009 art. 6: porteador contractual queda obligado frente al porteador efectivo como cargador.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2009-18004",
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2009-18004&p=20220802"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2023-12-02-mercancias-global",
+      "number": 15,
+      "sourcePage": 220,
+      "question": "¿Cuántas autorizaciones administrativas de transporte público de mercancías se otorgan por empresa?",
+      "options": {
+        "A": "Una por cada vehícuIo Iigero que posea Ia empresa.",
+        "B": "Siete.",
+        "C": "Diez.",
+        "D": "Una, que habiIita para reaIizar transporte con Ios vehícuIos que se Ie hayan vincuIado."
+      },
+      "originalSheetAnswer": "D",
+      "correctAnswer": "D",
+      "bankAnswer": null,
+      "examFrequency": 1,
+      "topicCandidates": [
+        "authorizations",
+        "lott_rott"
+      ],
+      "group": 49,
+      "frequency": 1,
+      "round": "R32",
+      "examDate": "2023-12-02",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "D",
+      "previousAppliedAnswer": "D",
+      "technicalAnswer": "D",
+      "action": "confirmed",
+      "reason": "ROTT arts. 38 y 44: autorización de empresa con vehículos adscritos; se evalúan las cuatro alternativas de esta variante OCR.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1990-24442",
+        "https://www.boe.es/buscar/doc.php?id=BOE-A-2019-2289"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2024-04-06-mercancias-global",
+      "number": 14,
+      "sourcePage": 3,
+      "question": "El convenio CMR se aplicará a los transportes de mercancías efectuados:",
+      "options": {
+        "A": "en ferrocarril entre dos estados signatarios del acuerdo.",
+        "B": "por vía navegable, siempre que esta no sea marítima, y se efectúe entre dos países signatarios del acuerdo.",
+        "C": "por vehículos de carretera entre dos países y que uno de ellos, al menos, sea signatario del acuerdo.",
+        "D": "por cualquiera de los sistemas enunciados en las respuestas anteriores."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": null,
+      "examFrequency": 1,
+      "topicCandidates": [
+        "contract_cmr"
+      ],
+      "group": 50,
+      "frequency": 1,
+      "round": "R32",
+      "examDate": "2024-04-06",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "note",
+      "reason": "CMR art. 1: carretera internacional onerosa, al menos un país contratante, con exclusiones.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1974-753"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2024-04-06-mercancias-global",
+      "number": 15,
+      "sourcePage": 3,
+      "question": "Cuando el consignatario no se encuentre en el domicilio y el cargador no facilite instrucciones, ¿qué puede hacer el porteador?",
+      "options": {
+        "A": "Debe devolver la carga al cargador.",
+        "B": "Esperará a que regrese el consignatario.",
+        "C": "No puede hacer nada hasta que no reciba instrucciones del cargador.",
+        "D": "Podrá solicitar el depósito de la carga ante la Junta Arbitral del Transporte, quedando liberado de las obligaciones de entrega."
+      },
+      "originalSheetAnswer": "D",
+      "correctAnswer": "D",
+      "bankAnswer": "D",
+      "examFrequency": 1,
+      "topicCandidates": [
+        "lott_rott",
+        "contract_cmr"
+      ],
+      "group": 51,
+      "frequency": 1,
+      "round": "R32",
+      "examDate": "2024-04-06",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "D",
+      "previousAppliedAnswer": "D",
+      "technicalAnswer": "D",
+      "action": "note",
+      "reason": "Ley 15/2009 arts. 36 y 44: ante impedimento a entrega sin instrucciones, puede acudir a depósito conforme al procedimiento legal; no es devolución automática.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2009-18004",
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2009-18004&p=20220802"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2024-04-06-mercancias-global",
+      "number": 88,
+      "sourcePage": 18,
+      "question": "¿Qué ocurre si la parte reclamada no acude a la vista celebrada ante una Junta Arbitral del Transporte?",
+      "options": {
+        "A": "Impedirá la celebración de la vista.",
+        "B": "Se puede celebrar la vista, pero no se podrá dictar el laudo hasta que se haya dado audiencia al reclamante.",
+        "C": "No impedirá la celebración de la vista ni que se dicte el laudo.",
+        "D": "Se dictará directamente el laudo sin celebración de la vista."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "examFrequency": 1,
+      "topicCandidates": [
+        "lott_rott"
+      ],
+      "group": 52,
+      "frequency": 1,
+      "round": "R32",
+      "examDate": "2024-04-06",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "confirmed",
+      "reason": "ROTT art. 9.5: ausencia de parte reclamada no impide vista ni laudo.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1990-24442"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2024-04-06-mercancias-global",
+      "number": 100,
+      "sourcePage": 21,
+      "question": "Para la comparecencia ante una Junta Arbitral del Transporte:",
+      "options": {
+        "A": "no es necesaria la presencia de abogado ni la de procurador.",
+        "B": "es necesaria la presencia de abogado, pero no la de procurador.",
+        "C": "es necesaria la presencia de un procurador, pero no la presencia de abogado.",
+        "D": "es necesaria la presencia de abogado y procurador."
+      },
+      "originalSheetAnswer": "A",
+      "correctAnswer": "A",
+      "bankAnswer": "A",
+      "examFrequency": 1,
+      "topicCandidates": [
+        "lott_rott"
+      ],
+      "group": 53,
+      "frequency": 1,
+      "round": "R32",
+      "examDate": "2024-04-06",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "A",
+      "previousAppliedAnswer": "A",
+      "technicalAnswer": "A",
+      "action": "confirmed",
+      "reason": "ROTT art. 9.6: comparecencia sin abogado ni procurador obligatorios.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1990-24442"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2024-05-25-mercancias-global",
+      "number": 20,
+      "sourcePage": 387,
+      "question": "¿Está limitado el número máximo de transportes de mercancías consecutivos que se permite realizar en régimen de cabotaje en un determinado Estado de acogida?",
+      "options": {
+        "A": "Sí.",
+        "B": "No.",
+        "C": "Solo si no se entra al país de acogida efectuando un transporte internacional.",
+        "D": "Solo si no se tiene una antigüedad de cinco años en la titularidad de la licencia comunitaria."
+      },
+      "originalSheetAnswer": "A",
+      "correctAnswer": "A",
+      "bankAnswer": "A",
+      "examFrequency": 1,
+      "topicCandidates": [
+        "authorizations"
+      ],
+      "group": 54,
+      "frequency": 1,
+      "round": "R32",
+      "examDate": "2024-05-25",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "A",
+      "previousAppliedAnswer": "A",
+      "technicalAnswer": "A",
+      "action": "note",
+      "reason": "Reglamento 1072/2009 art. 8, reformado por 2020/1055: hasta tres operaciones en siete días tras entrada cargada y período de enfriamiento de cuatro días en mismo Estado con mismo vehículo.",
+      "sources": [
+        "https://www.boe.es/buscar/doc.php?id=DOUE-L-2009-82158",
+        "https://www.boe.es/buscar/doc.php?id=DOUE-L-2020-81224"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2024-05-25-mercancias-global",
+      "number": 22,
+      "sourcePage": 388,
+      "question": "¿Se requiere alguna autorización para ejercer la actividad de transitario en España?",
+      "options": {
+        "A": "La autorización de exportador/importador concedida por el Ministerio de Hacienda.",
+        "B": "La autorización de operador de transporte.",
+        "C": "La autorización como agencia internacional de transporte de mercancías.",
+        "D": "No se requiere ninguna, es una actividad liberalizada."
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "B",
+      "bankAnswer": "B",
+      "examFrequency": 1,
+      "topicCandidates": [
+        "authorizations",
+        "lott_rott"
+      ],
+      "group": 55,
+      "frequency": 1,
+      "round": "R32",
+      "examDate": "2024-05-25",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "note",
+      "reason": "LOTT arts. 119 y 121 y ROTT art. 159: intermediación del transitario bajo habilitación de operador de transporte, con excepciones previstas.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1987-17803",
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1990-24442"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2024-05-25-mercancias-global",
+      "number": 25,
+      "sourcePage": 388,
+      "question": "¿Qué es el visado de una autorización de transporte?",
+      "options": {
+        "A": "El diligenciado que realiza la Administración para permitir su utilización en determinadas categorías de transporte.",
+        "B": "La comprobación periódica que realiza la Administración del mantenimiento, por parte del transportista, de los requisitos para ser titular de la autorización de transporte.",
+        "C": "Constatación de su vigencia por parte de la Inspección de Transportes.",
+        "D": "Certificación de su existencia y vigencia por parte de la Administración a efectos de acceso a ayudas económicas públicas."
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "B",
+      "bankAnswer": "B",
+      "examFrequency": 1,
+      "topicCandidates": [
+        "authorizations"
+      ],
+      "group": 56,
+      "frequency": 1,
+      "round": "R32",
+      "examDate": "2024-05-25",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "confirmed",
+      "reason": "LOTT art. 51 y ROTT art. 42: definición del visado como comprobación periódica de requisitos.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1987-17803",
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1990-24442"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2025-02-01-mercancias-global",
+      "number": 23,
+      "sourcePage": 262,
+      "question": "¿Pueden los Estados firmantes del Convenio CMR adoptar acuerdos particulares entre ellos que resulten contrarios al mismo?",
+      "options": {
+        "A": "Como regla general, en ningún caso.",
+        "B": "Solo si los adoptan al menos tres Estados.",
+        "C": "Solo si los adoptan al menos cuatro Estados.",
+        "D": "Solo si los adoptan al menos cinco Estados."
+      },
+      "originalSheetAnswer": "A",
+      "correctAnswer": "A",
+      "bankAnswer": null,
+      "examFrequency": 1,
+      "topicCandidates": [
+        "contract_cmr"
+      ],
+      "group": 57,
+      "frequency": 1,
+      "round": "R32",
+      "examDate": "2025-02-01",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "A",
+      "previousAppliedAnswer": "A",
+      "technicalAnswer": "A",
+      "action": "note",
+      "reason": "CMR art. 1.5: regla general de no modificación por acuerdos particulares; excepciones para tráfico fronterizo y carta de porte representativa en transporte exclusivamente interno.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1974-753"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2025-02-01-mercancias-global",
+      "number": 68,
+      "sourcePage": 269,
+      "question": "¿Qué supone la inasistencia a la vista de alguno de los miembros de la Junta Arbitral del Transporte, con excepción del presidente?",
+      "options": {
+        "A": "Impide la celebración de la vista.",
+        "B": "No impide la celebración de la vista, pero sí que impide que se dicte el laudo.",
+        "C": "Es causa de nulidad del laudo si se Ilega a dictar.",
+        "D": "No impide la celebración de la vista ni que se dicte el laudo."
+      },
+      "originalSheetAnswer": "D",
+      "correctAnswer": "D",
+      "bankAnswer": "D",
+      "examFrequency": 1,
+      "topicCandidates": [
+        "lott_rott"
+      ],
+      "group": 58,
+      "frequency": 1,
+      "round": "R32",
+      "examDate": "2025-02-01",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "D",
+      "previousAppliedAnswer": "D",
+      "technicalAnswer": "D",
+      "action": "confirmed",
+      "reason": "ROTT art. 9.7: ausencia de miembro distinto del presidente no impide vista ni laudo.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1990-24442"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2025-03-29-mercancias-global",
+      "number": 14,
+      "sourcePage": 334,
+      "question": "En un contrato de transporte de mercancías por carretera se denomina expedidor a quien:",
+      "options": {
+        "A": "Hace entrega de las mercancías al transportista por cuenta del cargador en el lugar de recepción de las mercancías.",
+        "B": "Contrata en nombre propio la realización del transporte.",
+        "C": "Contrata en nombre propio o por cuenta de un tercero la realización del transporte.",
+        "D": "En los contratos de transporte de mercancías por carretera no existe la figura del expedidor sino la del cargador."
+      },
+      "originalSheetAnswer": "A",
+      "correctAnswer": "A",
+      "bankAnswer": null,
+      "examFrequency": 1,
+      "topicCandidates": [
+        "contract_cmr"
+      ],
+      "group": 59,
+      "frequency": 1,
+      "round": "R32",
+      "examDate": "2025-03-29",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "A",
+      "previousAppliedAnswer": "A",
+      "technicalAnswer": "A",
+      "action": "confirmed",
+      "reason": "Ley 15/2009 art. 4.4: expedidor entrega mercancías al porteador por cuenta del cargador en recepción.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2009-18004",
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2009-18004&p=20220802"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2025-03-29-mercancias-global",
+      "number": 22,
+      "sourcePage": 335,
+      "question": "¿Qué tipo de transporte se puede efectuar con una autorización identificada registralmente con la clave MDPE?",
+      "options": {
+        "A": "Solo interurbano en un radio de 100 kilómetros.",
+        "B": "Solo interurbano en la Comunidad Autónoma en la que se reside.",
+        "C": "Tanto urbano como interurbano, pero limitado a la Comunidad Autónoma en la que se reside.",
+        "D": "Tanto urbano como interurbano en todo el territorio nacional."
+      },
+      "originalSheetAnswer": "D",
+      "correctAnswer": "D",
+      "bankAnswer": "D",
+      "examFrequency": 1,
+      "topicCandidates": [
+        "authorizations"
+      ],
+      "group": 60,
+      "frequency": 1,
+      "round": "R32",
+      "examDate": "2025-03-29",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "D",
+      "previousAppliedAnswer": "D",
+      "technicalAnswer": null,
+      "action": "pending",
+      "reason": "Regla general de ámbito nacional de las autorizaciones; falta cotejo oficial de la clave MDPE concreta.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1987-17803",
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1990-24442"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2025-03-29-mercancias-global",
+      "number": 24,
+      "sourcePage": 335,
+      "question": "¿Qué establece el convenio CMR?",
+      "options": {
+        "A": "Las condiciones de realización de los transportes internacionales de mercancías por carretera.",
+        "B": "Las condiciones de realización de los transportes internacionales de viajeros por carretera.",
+        "C": "La regulación del transporte internacional de mercancías y de viajeros.",
+        "D": "Los sistemas de control policial en carretera."
+      },
+      "originalSheetAnswer": "A",
+      "correctAnswer": "A",
+      "bankAnswer": "A",
+      "examFrequency": 1,
+      "topicCandidates": [
+        "contract_cmr"
+      ],
+      "group": 61,
+      "frequency": 1,
+      "round": "R32",
+      "examDate": "2025-03-29",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "A",
+      "previousAppliedAnswer": "A",
+      "technicalAnswer": "A",
+      "action": "confirmed",
+      "reason": "CMR art. 1: contrato de transporte internacional de mercancías por carretera.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1974-753"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2025-03-29-mercancias-global",
+      "number": 88,
+      "sourcePage": 345,
+      "question": "Respecto de la frenada en un vehículo cisterna, es importante tener en cuenta que:",
+      "options": {
+        "A": "No deben usarse los ralentizadores.",
+        "B": "Debe minimizarse el uso de freno de servicio.",
+        "C": "Pueden producirse desplazamientos de líquidos en su interior.",
+        "D": "Debe restringirse el uso de los retardadores."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "examFrequency": 1,
+      "topicCandidates": [
+        "adr"
+      ],
+      "group": 62,
+      "frequency": 1,
+      "round": "R32",
+      "examDate": "2025-03-29",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": null,
+      "action": "pending",
+      "reason": "Dinámica de líquido al frenar; falso positivo ADR por palabra cisterna. Pendiente referencia técnica de seguridad y revisión fuera de bloque normativo.",
+      "sources": [],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2025-07-26-mercancias-a",
+      "number": 15,
+      "sourcePage": 99,
+      "question": "El convenio CMR se aplicará a los transportes efectuados:",
+      "options": {
+        "A": "enferrocarril entre dos estados signatarios del acuerdo.",
+        "B": "por vía navegable, siempre que esta no sea marítima, y se efectúe entre dos países signatarios del acuerdo.",
+        "C": "por vehículos de carretera entre dos países y que uno de ellos, al menos, sea signatario",
+        "D": "el acuerdo. d por cualquiera de los sistemas enunciados en las respuestas anteriores."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": null,
+      "examFrequency": 1,
+      "topicCandidates": [
+        "contract_cmr"
+      ],
+      "group": 63,
+      "frequency": 1,
+      "round": "R32",
+      "examDate": "2025-07-26",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": null,
+      "action": "pending",
+      "reason": "CMR art. 1 respalda sentido de C, pero se observa migración del fragmento 'el acuerdo' a D. Requiere cotejo visual y restauración literal; no propagar automáticamente desde grupo 18.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1974-753"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2025-07-26-mercancias-a",
+      "number": 20,
+      "sourcePage": 99,
+      "question": "¿Cuál es la marca de identificación de un vehículo frigorífico normal de la clase D?",
+      "options": {
+        "A": "FRND.",
+        "B": "FND.",
+        "C": "RFD.",
+        "D": "FNFD."
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "B",
+      "bankAnswer": "B",
+      "examFrequency": 1,
+      "topicCandidates": [
+        "atp"
+      ],
+      "group": 64,
+      "frequency": 1,
+      "round": "R32",
+      "examDate": "2025-07-26",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "confirmed",
+      "reason": "ATP anejo 1 apéndice 4: FND es normal clase D; las restantes siglas no corresponden.",
+      "sources": [
+        "https://www.boe.es/diario_boe/txt.php?id=BOE-A-2024-14997",
+        "https://boe.es/diario_boe/txt.php?id=BOE-A-2026-20469"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2025-09-27-mercancias-global",
+      "number": 5,
+      "sourcePage": 482,
+      "question": "Según el acuerdo ATP, las marcas de identificación de los vehículos de temperatura controlada consisten en:",
+      "options": {
+        "A": "Unos números.",
+        "B": "Unas Ietras.",
+        "C": "Unos números y unas Ietras.",
+        "D": "Unos números y unos colores."
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "B",
+      "bankAnswer": null,
+      "examFrequency": 1,
+      "topicCandidates": [
+        "atp"
+      ],
+      "group": 65,
+      "frequency": 1,
+      "round": "R32",
+      "examDate": "2025-09-27",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "confirmed",
+      "reason": "ATP anejo 1 apéndice 4: marcas de identificación en letras mayúsculas de caracteres latinos.",
+      "sources": [
+        "https://www.boe.es/diario_boe/txt.php?id=BOE-A-2024-14997",
+        "https://boe.es/diario_boe/txt.php?id=BOE-A-2026-20469"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2025-09-27-mercancias-global",
+      "number": 9,
+      "sourcePage": 483,
+      "question": "Según el acuerdo ATP, ¿a qué vehículo identifican las letras IN?",
+      "options": {
+        "A": "Isotermo normal.",
+        "B": "Isotermo reforzado.",
+        "C": "Isotermo nacional.",
+        "D": "Isotermo reforzado de clase N."
+      },
+      "originalSheetAnswer": "A",
+      "correctAnswer": "A",
+      "bankAnswer": null,
+      "examFrequency": 1,
+      "topicCandidates": [
+        "atp"
+      ],
+      "group": 66,
+      "frequency": 1,
+      "round": "R32",
+      "examDate": "2025-09-27",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "A",
+      "previousAppliedAnswer": "A",
+      "technicalAnswer": "A",
+      "action": "confirmed",
+      "reason": "ATP anejo 1 apéndice 4: IN = unidad isoterma normal.",
+      "sources": [
+        "https://www.boe.es/diario_boe/txt.php?id=BOE-A-2024-14997",
+        "https://boe.es/diario_boe/txt.php?id=BOE-A-2026-20469"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2025-09-27-mercancias-global",
+      "number": 13,
+      "sourcePage": 484,
+      "question": "En transporte internacional de mercancías, ¿qué permite la autorización bilateral de tránsito?",
+      "options": {
+        "A": "Transitar por un país y dejar mercancías.",
+        "B": "Transitar por un país y recoger mercancías.",
+        "C": "Solo permite transitar por un país.",
+        "D": "Solo permite dejar mercancías en un país."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": null,
+      "examFrequency": 1,
+      "topicCandidates": [
+        "authorizations"
+      ],
+      "group": 67,
+      "frequency": 1,
+      "round": "R32",
+      "examDate": "2025-09-27",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "confirmed",
+      "reason": "Ministerio: la modalidad bilateral de tránsito permite atravesar el país sin tomar ni dejar mercancías.",
+      "sources": [
+        "https://sede.transportes.gob.es/areas-actividad/transporte-terrestre/transporte-internacional/transporte-internacional-mercancias/autorizaciones-bilaterales"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2025-09-27-mercancias-global",
+      "number": 17,
+      "sourcePage": 484,
+      "question": "Cuando en un transporte sujeto al Convenio CMR se utilice la carta de porte electrónica, el remitente podrá comunicar de forma electrónica al transportista:",
+      "options": {
+        "A": "Cuantos documentos estime oportuno, aunque no estén previstos en el Convenio CMR.",
+        "B": "Cuantos documentos estime oportuno, salvo los necesarios para trámites aduaneros.",
+        "C": "Los documentos necesarios para trámites aduaneros, entre otros.",
+        "D": "Ninguna de las respuestas anteriores es correcta."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "examFrequency": 1,
+      "topicCandidates": [
+        "contract_cmr"
+      ],
+      "group": 68,
+      "frequency": 1,
+      "round": "R32",
+      "examDate": "2025-09-27",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "confirmed",
+      "reason": "Protocolo e-CMR arts. 2 y 6: permite transmitir electrónicamente documentación complementaria, incluidos documentos de formalidades aduaneras.",
+      "sources": [
+        "https://www.boe.es/diario_boe/txt.php?id=BOE-A-2011-10283"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2025-09-27-mercancias-global",
+      "number": 21,
+      "sourcePage": 485,
+      "question": "¿Cuántas autorizaciones administrativas de transporte público de mercancías se otorgan por empresa?",
+      "options": {
+        "A": "Una por cada vehículo que posea la empresa.",
+        "B": "Una para Ie empresa y una para cada vehículo del que acredite su vinculación a la misma.",
+        "C": "Una para efectuar transporte público con vehículos Iigeros y una para efectuar transporte púbico con vehículos pesado, si acredita su posesión.",
+        "D": "Una, que habilita para realizar transporte con los vehículos que se Ie hayan vinculado."
+      },
+      "originalSheetAnswer": "D",
+      "correctAnswer": "D",
+      "bankAnswer": null,
+      "examFrequency": 1,
+      "topicCandidates": [
+        "authorizations",
+        "lott_rott"
+      ],
+      "group": 69,
+      "frequency": 1,
+      "round": "R32",
+      "examDate": "2025-09-27",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "D",
+      "previousAppliedAnswer": "D",
+      "technicalAnswer": "D",
+      "action": "confirmed",
+      "reason": "ROTT arts. 38 y 44: autorización empresarial y adscripción registral de vehículos, no doble autorización separada.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1990-24442",
+        "https://www.boe.es/buscar/doc.php?id=BOE-A-2019-2289"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2025-09-27-mercancias-global",
+      "number": 94,
+      "sourcePage": 497,
+      "question": "Respecto de la frenada en un vehículo cisterna, es importante tener en cuenta que...",
+      "options": {
+        "A": "No deben usarse los ralentizadores.",
+        "B": "Debe minimizarse el uso de freno de servicio.",
+        "C": "Pueden producirse desplazamientos de Iíquidos en su interior.",
+        "D": "Debe restringirse el uso de los retardadores."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": null,
+      "examFrequency": 1,
+      "topicCandidates": [
+        "adr"
+      ],
+      "group": 70,
+      "frequency": 1,
+      "round": "R32",
+      "examDate": "2025-09-27",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": null,
+      "action": "pending",
+      "reason": "Falso positivo ADR: desplazamiento de líquidos durante frenada requiere referencia técnica, sin cambio de clave.",
+      "sources": [],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2026-02-07-mercancias-global",
+      "number": 2,
+      "sourcePage": 275,
+      "question": "Las autorizaciones de transporte privado complementario de mercancías se identifican registralmente con la clave:",
+      "options": {
+        "A": "MPCE.",
+        "B": "MDPE.",
+        "C": "MDLE.",
+        "D": "VPCE."
+      },
+      "originalSheetAnswer": "A",
+      "correctAnswer": "A",
+      "bankAnswer": "A",
+      "examFrequency": 1,
+      "topicCandidates": [
+        "authorizations",
+        "lott_rott"
+      ],
+      "group": 71,
+      "frequency": 1,
+      "round": "R32",
+      "examDate": "2026-02-07",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "A",
+      "previousAppliedAnswer": "A",
+      "technicalAnswer": null,
+      "action": "pending",
+      "reason": "Clave MPCE plausible; falta fuente registral pública específica vigente tras reforma ROTT.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1990-24442"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2026-02-07-mercancias-global",
+      "number": 22,
+      "sourcePage": 278,
+      "question": "El titular de una autorización de transporte público de mercancías podrá sustituir alguno de los vehículos adscritos a la autorización si:",
+      "options": {
+        "A": "Es autorizado por el órgano competente mediante una anotación registral.",
+        "B": "El vehículo sustituido tiene una antigüedad superior a cinco años.",
+        "C": "El nuevo vehículo adscrito tiene una antigüedad inferior a dos años.",
+        "D": "La antigüedad media de su flota no se ve incrementada con la sustitución."
+      },
+      "originalSheetAnswer": "A",
+      "correctAnswer": "A",
+      "bankAnswer": "A",
+      "examFrequency": 1,
+      "topicCandidates": [
+        "authorizations",
+        "lott_rott"
+      ],
+      "group": 72,
+      "frequency": 1,
+      "round": "R32",
+      "examDate": "2026-02-07",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "A",
+      "previousAppliedAnswer": "A",
+      "technicalAnswer": "A",
+      "action": "confirmed",
+      "reason": "ROTT art. 44.2: sustitución autorizada por anotación registral y cumplimiento de requisitos.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1990-24442",
+        "https://www.boe.es/buscar/doc.php?id=BOE-A-2019-2289"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2026-03-28-mercancias-global",
+      "number": 2,
+      "sourcePage": 348,
+      "question": "Según el acuerdo ATP, las marcas de identificación de los vehículos de temperatura controlada consisten en:",
+      "options": {
+        "A": "Unos números.",
+        "B": "Unas letras.",
+        "C": "Unos números y unas letras.",
+        "D": "Unos números y unos colores."
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "B",
+      "bankAnswer": "B",
+      "examFrequency": 1,
+      "topicCandidates": [
+        "atp"
+      ],
+      "group": 73,
+      "frequency": 1,
+      "round": "R32",
+      "examDate": "2026-03-28",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "confirmed",
+      "reason": "ATP anejo 1 apéndice 4: marca de identificación en letras, fecha separada.",
+      "sources": [
+        "https://www.boe.es/diario_boe/txt.php?id=BOE-A-2024-14997",
+        "https://boe.es/diario_boe/txt.php?id=BOE-A-2026-20469"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2026-03-28-mercancias-global",
+      "number": 12,
+      "sourcePage": 349,
+      "question": "¿Qué clases de autorizaciones administrativas se otorgan para realizar transporte público interior de mercancías?",
+      "options": {
+        "A": "La que habilita para efectuar transporte con vehículos de MMA superior a 3,5 toneladas y la que habilita para efectuarlo con vehículos de MMA superior a 2 toneladas.",
+        "B": "La que habilita para efectuar transporte con vehículos de MMA no superior a 2 toneladas y la que habilita para efectuarlo con vehículos de MMA superior a 2 toneladas.",
+        "C": "La que habilita para efectuar transporte con vehículos de MMA superior a 2 toneladas, pues los vehículos de hasta 2 toneladas no necesitan autorización.",
+        "D": "La autorización para empresarios individuales (autónomos) y la autorización para sociedades."
+      },
+      "originalSheetAnswer": "A",
+      "correctAnswer": "A",
+      "bankAnswer": null,
+      "examFrequency": 1,
+      "topicCandidates": [
+        "authorizations",
+        "lott_rott"
+      ],
+      "group": 74,
+      "frequency": 1,
+      "round": "R32",
+      "examDate": "2026-03-28",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "A",
+      "previousAppliedAnswer": "A",
+      "technicalAnswer": null,
+      "action": "pending",
+      "reason": "La opción A usa umbrales que se solapan (superior a 3,5 y superior a 2); verificar formulación normativa exacta y denominación de ambas habilitaciones antes de aplicar conclusión.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1990-24442",
+        "https://www.boe.es/buscar/doc.php?id=BOE-A-2019-2289"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2026-03-28-mercancias-global",
+      "number": 21,
+      "sourcePage": 351,
+      "question": "En un contrato de transporte sujeto al Convenio CMR, que es ejecutado por varios transportistas de modo sucesivo, ¿quién asume la indemnización en caso de pérdida de la mercancía?",
+      "options": {
+        "A": "Debe ser asumida siempre por todos los transportistas intervinientes en proporción a su remuneración.",
+        "B": "Debe ser asumida siempre por todos los transportistas intervinientes a partes iguales.",
+        "C": "Si no se puede determinar un responsable, debe ser asumida por todos los transportistas intervinientes en proporción a su remuneración.",
+        "D": "Si no se puede determinar un responsable, debe ser asumida por todos los transportistas intervinientes a partes iguales."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "examFrequency": 1,
+      "topicCandidates": [
+        "contract_cmr"
+      ],
+      "group": 75,
+      "frequency": 1,
+      "round": "R32",
+      "examDate": "2026-03-28",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "confirmed",
+      "reason": "CMR art. 37.c: si no se determina imputación, reparto proporcional a remuneración; el precepto regula repetición entre transportistas.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1974-753"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2026-03-28-mercancias-global",
+      "number": 23,
+      "sourcePage": 351,
+      "question": "¿En qué modalidad se otorgan las autorizaciones para efectuar transporte público de mercancías?",
+      "options": {
+        "A": "Como autorización por vehículo.",
+        "B": "Como autorización por viaje.",
+        "C": "Como autorización de empresa.",
+        "D": "Las respuestas B y C son correctas."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "examFrequency": 1,
+      "topicCandidates": [
+        "authorizations",
+        "lott_rott"
+      ],
+      "group": 76,
+      "frequency": 1,
+      "round": "R32",
+      "examDate": "2026-03-28",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "confirmed",
+      "reason": "ROTT arts. 38 y 44: autorización de empresa con vehículos adscritos, no por viaje.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1990-24442",
+        "https://www.boe.es/buscar/doc.php?id=BOE-A-2019-2289"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2026-03-28-mercancias-global",
+      "number": 100,
+      "sourcePage": 363,
+      "question": "¿Se puede pactar entre las partes que intervienen en un contrato la sumisión a una Junta Arbitral de Transporte determinada para el caso de que surja alguna controversia durante su ejecución?",
+      "options": {
+        "A": "No, la Junta competente será siempre la que lo sea en el punto de origen del transporte.",
+        "B": "No, la Junta competente será siempre la que lo sea en el punto de destino del transporte.",
+        "C": "No, la Junta competente será siempre la que lo sea en el domicilio de la empresa transportista.",
+        "D": "Sí."
+      },
+      "originalSheetAnswer": "D",
+      "correctAnswer": "D",
+      "bankAnswer": "D",
+      "examFrequency": 1,
+      "topicCandidates": [
+        "lott_rott"
+      ],
+      "group": 77,
+      "frequency": 1,
+      "round": "R32",
+      "examDate": "2026-03-28",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "D",
+      "previousAppliedAnswer": "D",
+      "technicalAnswer": "D",
+      "action": "confirmed",
+      "reason": "ROTT art. 6: competencia territorial de juntas salvo sumisión expresa de las partes a una Junta determinada.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1990-24442"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2026-05-30-mercancias-global",
+      "number": 10,
+      "sourcePage": 405,
+      "question": "Un vehículo refrigerante normal de la clase A, ¿qué marca de identificación lleva?",
+      "options": {
+        "A": "RRA.",
+        "B": "RRC.",
+        "C": "FNB.",
+        "D": "RNA."
+      },
+      "originalSheetAnswer": "D",
+      "correctAnswer": "D",
+      "bankAnswer": "D",
+      "examFrequency": 1,
+      "topicCandidates": [
+        "atp"
+      ],
+      "group": 78,
+      "frequency": 1,
+      "round": "R32",
+      "examDate": "2026-05-30",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "D",
+      "previousAppliedAnswer": "D",
+      "technicalAnswer": "D",
+      "action": "confirmed",
+      "reason": "ATP anejo 1 apéndice 4: RNA, refrigerante normal clase A.",
+      "sources": [
+        "https://www.boe.es/diario_boe/txt.php?id=BOE-A-2024-14997",
+        "https://boe.es/diario_boe/txt.php?id=BOE-A-2026-20469"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2026-05-30-mercancias-global",
+      "number": 12,
+      "sourcePage": 405,
+      "question": "¿Está limitado el tiempo durante el que se permite efectuar transporte de mercancías en régimen de cabotaje de modo consecutivo en un determinado Estado de la Unión Europea de acogida?",
+      "options": {
+        "A": "Sí.",
+        "B": "No.",
+        "C": "Solo si no se entra al país de acogida efectuando un transporte internacional.",
+        "D": "Solo si no se tiene una antigüedad de cinco años en titularidad de la licencia comunitaria."
+      },
+      "originalSheetAnswer": "A",
+      "correctAnswer": "A",
+      "bankAnswer": null,
+      "examFrequency": 1,
+      "topicCandidates": [
+        "authorizations"
+      ],
+      "group": 79,
+      "frequency": 1,
+      "round": "R32",
+      "examDate": "2026-05-30",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "A",
+      "previousAppliedAnswer": "A",
+      "technicalAnswer": "A",
+      "action": "note",
+      "reason": "Reglamento 1072/2009 art. 8 y reforma 2020/1055: plazos de cabotaje, incluido período de siete días y enfriamiento de cuatro días.",
+      "sources": [
+        "https://www.boe.es/buscar/doc.php?id=DOUE-L-2009-82158",
+        "https://www.boe.es/buscar/doc.php?id=DOUE-L-2020-81224"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2026-05-30-mercancias-global",
+      "number": 13,
+      "sourcePage": 406,
+      "question": "¿Qué tipo de transporte de mercancías se puede realizar sin necesidad de autorización específica de transporte internacional?",
+      "options": {
+        "A": "Todos, por pedir que no quede.",
+        "B": "Liberalizado.",
+        "C": "No liberalizado.",
+        "D": "Ninguno."
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "B",
+      "bankAnswer": "B",
+      "examFrequency": 1,
+      "topicCandidates": [
+        "authorizations"
+      ],
+      "group": 80,
+      "frequency": 1,
+      "round": "R32",
+      "examDate": "2026-05-30",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "confirmed",
+      "reason": "Reglamento 1072/2009 art. 1.5: existen operaciones liberalizadas exentas de autorización específica; no todas lo están.",
+      "sources": [
+        "https://www.boe.es/buscar/doc.php?id=DOUE-L-2009-82158",
+        "https://www.boe.es/buscar/doc.php?id=DOUE-L-2020-81224",
+        "https://sede.transportes.gob.es/areas-actividad/transporte-terrestre/transporte-internacional/transporte-internacional-mercancias/autorizaciones-bilaterales"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2026-05-30-mercancias-global",
+      "number": 14,
+      "sourcePage": 406,
+      "question": "En un contrato de transporte sujeto al Convenio CMR, el transportista quedará libre de responsabilidad cuando pruebe que el daño de la mercancía ha podido derivar:",
+      "options": {
+        "A": "Del empleo de vehículos cerrados o entoldados.",
+        "B": "De la inexactitud de las marcas de los bultos.",
+        "C": "De que el viaje se hizo más largo que una serie de televisión.",
+        "D": "Todas las respuestas anteriores son correctas."
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "B",
+      "bankAnswer": null,
+      "examFrequency": 1,
+      "topicCandidates": [
+        "contract_cmr"
+      ],
+      "group": 81,
+      "frequency": 1,
+      "round": "R32",
+      "examDate": "2026-05-30",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "note",
+      "reason": "CMR arts. 17.4.e y 18.2: marcas o números insuficientes/inexactos son riesgo particular; la presunción de exoneración admite prueba contraria.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1974-753"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2026-05-30-mercancias-global",
+      "number": 16,
+      "sourcePage": 406,
+      "question": "¿Qué clase de vehículos deben estar adscritos a la autorización de transporte público de mercancías para poder trabajar legalmente con ellos?",
+      "options": {
+        "A": "Los camiones.",
+        "B": "Los remolques.",
+        "C": "Los semirremolques.",
+        "D": "Todas las respuestas son correctas."
+      },
+      "originalSheetAnswer": "A",
+      "correctAnswer": "A",
+      "bankAnswer": "A",
+      "examFrequency": 1,
+      "topicCandidates": [
+        "authorizations",
+        "lott_rott"
+      ],
+      "group": 82,
+      "frequency": 1,
+      "round": "R32",
+      "examDate": "2026-05-30",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "A",
+      "previousAppliedAnswer": "A",
+      "technicalAnswer": "A",
+      "action": "confirmed",
+      "reason": "ROTT arts. 38 y 44: adscripción de vehículos de motor; remolques y semirremolques no tienen adscripción independiente.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1990-24442",
+        "https://www.boe.es/buscar/doc.php?id=BOE-A-2019-2289"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2026-05-30-mercancias-global",
+      "number": 17,
+      "sourcePage": 406,
+      "question": "¿En qué condiciones podrá el titular de una autorización de transporte público de mercancías con vehículos pesados sustituir alguno de los vehículos adscritos a la autorización?",
+      "options": {
+        "A": "Si la capacidad financiera de la empresa es suficiente en relación con el número de vehículos resultante de la nueva adquisición.",
+        "B": "Si la antigüedad media de la flota, tomando en cuenta el nuevo vehículo y descontando el que se desea sustituir, no supera los seis años.",
+        "C": "Siempre que solicite una nueva autorización y anule previamente la que tenía hasta ese momento.",
+        "D": "Las respuestas A y B son correctas."
+      },
+      "originalSheetAnswer": "A",
+      "correctAnswer": "A",
+      "bankAnswer": "A",
+      "examFrequency": 1,
+      "topicCandidates": [
+        "authorizations",
+        "lott_rott"
+      ],
+      "group": 83,
+      "frequency": 1,
+      "round": "R32",
+      "examDate": "2026-05-30",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "A",
+      "previousAppliedAnswer": "A",
+      "technicalAnswer": "A",
+      "action": "confirmed",
+      "reason": "ROTT art. 44.2: capacidad financiera suficiente y condiciones art. 38; no regla general de antigüedad media de seis años ni nueva autorización empresarial.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1990-24442",
+        "https://www.boe.es/buscar/doc.php?id=BOE-A-2019-2289"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2026-05-30-mercancias-global",
+      "number": 22,
+      "sourcePage": 407,
+      "question": "Están exentos de autorización administrativa los transportes de mercancías de carácter privado complementario realizados en vehículos de:",
+      "options": {
+        "A": "Hasta 8 toneladas de MMA.",
+        "B": "Hasta 4,5 toneladas de MMA.",
+        "C": "Hasta 3,5 toneladas de MMA.",
+        "D": "Hasta 2 toneladas de Carga útil."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": null,
+      "examFrequency": 1,
+      "topicCandidates": [
+        "authorizations"
+      ],
+      "group": 84,
+      "frequency": 1,
+      "round": "R32",
+      "examDate": "2026-05-30",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "confirmed",
+      "reason": "ROTT art. 155.e: hasta 3,5 t de MMA, no carga útil.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1990-24442",
+        "https://www.boe.es/buscar/doc.php?id=BOE-A-2019-2289"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2026-05-30-mercancias-global",
+      "number": 23,
+      "sourcePage": 407,
+      "question": "¿En qué casos es necesaria una autorización administrativa, como actividad auxiliar del transporte, para ejercer la actividad de arrendamiento de vehículos sin conductor?",
+      "options": {
+        "A": "Cuando la actividad incluya vehículos pesados.",
+        "B": "Cuando los vehículos vayan a ser destinados a transporte público.",
+        "C": "Cuando el arrendatario sea titular de una autorización de transporte.",
+        "D": "En ningún caso."
+      },
+      "originalSheetAnswer": "D",
+      "correctAnswer": "D",
+      "bankAnswer": "D",
+      "examFrequency": 1,
+      "topicCandidates": [
+        "authorizations",
+        "lott_rott"
+      ],
+      "group": 85,
+      "frequency": 1,
+      "round": "R32",
+      "examDate": "2026-05-30",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "D",
+      "previousAppliedAnswer": "D",
+      "technicalAnswer": "D",
+      "action": "note",
+      "reason": "LOTT art. 133.1: arrendamiento sin conductor libre respecto a habilitación de transporte propia, sin eliminar obligaciones generales.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1987-17803"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2026-05-30-mercancias-global",
+      "number": 25,
+      "sourcePage": 407,
+      "question": "Para efectuar la actividad de transitario, ¿es necesario contar con autorización administrativa?",
+      "options": {
+        "A": "No, en ningún caso.",
+        "B": "Solo aquellos que intermedien en transportes intermodales.",
+        "C": "Sí, la de agente de transporte internacional.",
+        "D": "Sí, la de operador de transporte."
+      },
+      "originalSheetAnswer": "D",
+      "correctAnswer": "D",
+      "bankAnswer": "D",
+      "examFrequency": 1,
+      "topicCandidates": [
+        "authorizations",
+        "lott_rott"
+      ],
+      "group": 86,
+      "frequency": 1,
+      "round": "R32",
+      "examDate": "2026-05-30",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "D",
+      "previousAppliedAnswer": "D",
+      "technicalAnswer": "D",
+      "action": "note",
+      "reason": "LOTT arts. 119 y 121: operador de transporte para intermediación de transitario, salvo supuestos legalmente exceptuados.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1987-17803",
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1990-24442"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2026-09-26-mercancias-a",
+      "number": 10,
+      "sourcePage": 129,
+      "question": "¿Cómo se denomina una cisterna isoterma que, con ayuda de una fuente de frío distinto de un equipo mecánico o de absorción, permite bajar la temperatura en el interior de la cisterna y mantenerla?",
+      "options": {
+        "A": "Refrigerante.",
+        "B": "Frigorífica.",
+        "C": "Isoterma.",
+        "D": "Calorífica."
+      },
+      "originalSheetAnswer": "A",
+      "correctAnswer": "A",
+      "bankAnswer": "A",
+      "examFrequency": 1,
+      "topicCandidates": [
+        "adr",
+        "atp"
+      ],
+      "group": 87,
+      "frequency": 1,
+      "round": "R32",
+      "examDate": "2026-09-26",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "A",
+      "previousAppliedAnswer": "A",
+      "technicalAnswer": "A",
+      "action": "confirmed",
+      "reason": "ATP anejo 1: fuente de frío diferente de equipo mecánico o de absorción define unidad refrigerante.",
+      "sources": [
+        "https://boe.es/diario_boe/txt.php?id=BOE-A-2026-20469"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2026-09-26-mercancias-a",
+      "number": 12,
+      "sourcePage": 129,
+      "question": "Las autorizaciones identificadas registralmente con la clave OT habilitan para:",
+      "options": {
+        "A": "el ejercicio de la actividad de transporte de mercancías por carretera.",
+        "B": "el ejercicio de actividades de intermediación en el transporte.",
+        "C": "el alquiler de vehículos sin conductor.",
+        "D": "establecer una estación de autobuses."
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "B",
+      "bankAnswer": "B",
+      "examFrequency": 1,
+      "topicCandidates": [
+        "authorizations"
+      ],
+      "group": 88,
+      "frequency": 1,
+      "round": "R32",
+      "examDate": "2026-09-26",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "note",
+      "reason": "LOTT art. 119.3 y ROTT art. 159: habilitación de operador para intermediar en contratación interior e internacional; clave OT conforme al enunciado.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1987-17803",
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1990-24442"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2026-09-26-mercancias-a",
+      "number": 15,
+      "sourcePage": 130,
+      "question": "Cuando se realice un transporte privado complementario de mercancías, ¿se podrá facturar a los clientes dicho transporte de modo independiente?",
+      "options": {
+        "A": "Sí.",
+        "B": "Solo si el volumen transportado supera los 1.000 kg.",
+        "C": "No.",
+        "D": "Solo cuando el recorrido sea superior a 100 km."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "examFrequency": 1,
+      "topicCandidates": [
+        "lott_rott"
+      ],
+      "group": 89,
+      "frequency": 1,
+      "round": "R32",
+      "examDate": "2026-09-26",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "confirmed",
+      "reason": "LOTT art. 102.2.e: privado complementario no facturable independientemente.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1987-17803"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2026-09-26-mercancias-a",
+      "number": 16,
+      "sourcePage": 130,
+      "question": "¿Para qué sirve la autorización de la CEMT?",
+      "options": {
+        "A": "Habilita a realizar transporte internacional de mercancías liberalizado entre países miembros de la organización y a transitar por su territorio.",
+        "B": "Habilita a realizar transporte internacional de mercancías no liberalizado por todo el mundo.",
+        "C": "Habilita a realizar transporte internacional de mercancías no liberalizado entre países miembros de la organización y a transitar por su territorio.",
+        "D": "Habilita a realizar servicios de cabotaje."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "examFrequency": 1,
+      "topicCandidates": [
+        "authorizations"
+      ],
+      "group": 90,
+      "frequency": 1,
+      "round": "R32",
+      "examDate": "2026-09-26",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "note",
+      "reason": "Ministerio: autorización multilateral CEMT para transporte internacional y tránsito en Estados miembros, no cabotaje; puede tener restricciones territoriales y desde 2026 es digital.",
+      "sources": [
+        "https://sede.transportes.gob.es/areas-actividad/transporte-terrestre/transporte-internacional/transporte-internacional-mercancias/autorizaciones-contingente-multilateral-cemt"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2026-09-26-mercancias-a",
+      "number": 20,
+      "sourcePage": 131,
+      "question": "¿Qué capacidad financiera se requiere acreditar para obtener una autorización de transporte privado complementario de mercancías?",
+      "options": {
+        "A": "5.000 euros por cada vehículo utilizado.",
+        "B": "9.000 euros por el primer vehículo y 5.000 más por cada vehículo adicional utilizado.",
+        "C": "5.000 euros para cada vehículo ligero y 9.000 por cada uno de los pesados.",
+        "D": "Para esta clase de transporte no se requiere acreditar la capacidad financiera."
+      },
+      "originalSheetAnswer": "D",
+      "correctAnswer": "D",
+      "bankAnswer": "D",
+      "examFrequency": 1,
+      "topicCandidates": [
+        "authorizations",
+        "lott_rott"
+      ],
+      "group": 91,
+      "frequency": 1,
+      "round": "R32",
+      "examDate": "2026-09-26",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "D",
+      "previousAppliedAnswer": "D",
+      "technicalAnswer": "D",
+      "action": "confirmed",
+      "reason": "LOTT arts. 43 y 103–104 y ROTT arts. 156–158: exigencia de capacidad financiera propia del régimen profesional público, no exigencia general de privado complementario.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1987-17803",
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1990-24442"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    },
+    {
+      "examId": "2026-09-26-mercancias-a",
+      "number": 24,
+      "sourcePage": 131,
+      "question": "¿A quién corresponde la edición del modelo oficial de documento de control administrativo de un transporte público de mercancías?",
+      "options": {
+        "A": "Al Comité Nacional del Transporte por Carretera.",
+        "B": "Al Ministerio de Transportes.",
+        "C": "Al Ministerio de Hacienda.",
+        "D": "Es de libre edición."
+      },
+      "originalSheetAnswer": "D",
+      "correctAnswer": "D",
+      "bankAnswer": "D",
+      "examFrequency": 1,
+      "topicCandidates": [
+        "lott_rott"
+      ],
+      "group": 92,
+      "frequency": 1,
+      "round": "R32",
+      "examDate": "2026-09-26",
+      "legalReviewDate": "2026-11-16",
+      "historicalAnswer": "D",
+      "previousAppliedAnswer": "D",
+      "technicalAnswer": "D",
+      "action": "confirmed",
+      "reason": "Orden FOM/2861/2012 art. 5: documento de control de libre edición.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2013-154",
+        "https://boe.es/buscar/act.php?id=BOE-A-2013-154&p=20130105&tn=1"
+      ],
+      "applicationStatus": "staged_not_applied",
+      "visualStatus": "not_individually_verified"
+    }
+  ]
+}

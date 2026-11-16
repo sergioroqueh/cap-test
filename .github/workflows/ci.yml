@@ -30,6 +30,20 @@ jobs:
       - name: Validate CAP overlay isolation and answer provenance
         run: python3 scripts/test_exam_data.py
 
+      - name: Verify R27 technical decisions and unchanged historical data
+        run: |
+          python3 scripts/test_technical_review_r27.py
+          python3 scripts/test_technical_review_r28.py
+          python3 scripts/test_technical_review_r29.py
+          python3 scripts/test_technical_review_r30.py
+          python3 scripts/test_technical_review_r31.py
+
+      - name: Extract R32 transport law candidate queue (read-only)
+        run: python3 scripts/select_technical_review_r32.py
+
+      - name: Verify staged R32 evidence (no scoring changes)
+        run: python3 scripts/test_technical_review_r32.py
+
       - name: Audit remaining source PDFs without changing scored keys
         run: python3 scripts/audit_visual_batch_candidates.py
 
@@ -101,4 +115,22 @@ jobs:
             public/data/exams/alignment_2023_a_review.csv
             public/data/exams/ocr_2025_a_review.csv
             public/data/exams/index.json
+            public/data/exams/technical_review_r27.json
+            public/data/exams/technical_review_r27.csv
+            public/data/exams/technical_review_r27_cross_model.json
+            public/data/exams/technical_review_r28.json
+            public/data/exams/technical_review_r28.csv
+            public/data/exams/technical_review_r28_queue.json
+            public/data/exams/technical_review_r29.json
+            public/data/exams/technical_review_r29.csv
+            public/data/exams/technical_review_r30_candidates.json
+            public/data/exams/technical_review_r30.json
+            public/data/exams/technical_review_r30.csv
+            public/data/exams/technical_review_r31_candidates.json
+            public/data/exams/technical_review_r31.json
+            public/data/exams/technical_review_r31.csv
+            public/data/exams/technical_review_r32_candidates.json
+            public/data/exams/technical_review_r32.json
+            public/data/exams/technical_review_r32.csv
+            artifacts/cap-r27-ranking.json
           retention-days: 14

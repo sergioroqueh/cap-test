@@ -1,0 +1,23 @@
+name: R31 thematic selection
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/select_technical_review_r31.py'
+      - '.github/workflows/r31-thematic-selection.yml'
+permissions:
+  contents: read
+jobs:
+  select:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm run prepare:data
+      - run: python3 scripts/select_technical_review_r31.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: r31-thematic-candidates
+          path: public/data/exams/technical_review_r31_candidates.json
