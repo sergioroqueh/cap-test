@@ -94,7 +94,7 @@ try{
     }
     return ids.size
   }
-  return {stats:index.technicalR29Stats,metas,manualCount:countUnique(rows),manualScorable:countUnique(rows.filter(q=>q.scoringEligible && q.technicalDecision?.action!=='exclude'))}
+  return {stats:index.technicalR31Stats,metas,manualCount:countUnique(rows),manualScorable:countUnique(rows.filter(q=>q.scoringEligible && q.technicalDecision?.action!=='exclude'))}
  })
  assert.equal(available.stats.templateExamModels,24)
  assert.equal(available.stats.originalAppearances,2400)
@@ -331,6 +331,34 @@ try{
   await submit(page)
   const result=await readResult(page)
   assert.equal(result.record.correct,2)
+  assert.equal(result.record.incorrect,0)
+  checks++
+  await ctx.close()
+ }
+
+ // R31: source-text repair must display both options correctly and preserve C.
+ {
+  const ctx=await browser.newContext({viewport:{width:390,height:844},isMobile:true})
+  const page=await openHome(ctx)
+  await page.getByRole('button',{name:'Estudio',exact:true}).click()
+  await page.locator('.focus-practice-grid button').filter({hasText:'Por convocatoria'}).click()
+  await page.locator('#cap-historicos .list button').filter({hasText:'218–237'}).click()
+  await page.locator('.focus-question').waitFor({timeout:30000})
+  await page.locator('.focus-index summary').click()
+  const target=page.locator('.focus-question-grid button').nth(56)
+  await target.evaluate(el=>el.scrollIntoView({block:'center',inline:'nearest',behavior:'instant'}))
+  await target.click()
+  assert.match(await page.locator('.answers button').nth(1).innerText(),/Solo desde un taller\./)
+  assert.match(await page.locator('.answers button').nth(2).innerText(),/Desde el tacógrafo o a través de un lector de tarjetas/)
+  await page.locator('.answers button').nth(2).click()
+  assert.match(await page.locator('.feedback').innerText(),/Correcta/)
+  assert.match(await page.locator('.focus-question .cap-r25-final').innerText(),/R31/)
+  const [download]=await Promise.all([page.waitForEvent('download'),page.locator('.focus-study-pdf-button').click()])
+  const commands=pdfPageCommands(await readFile(await download.path()))
+  assert.ok(commands.includes('Pregunta 57 | Original: C | Tecnica: C'))
+  await submit(page)
+  const result=await readResult(page)
+  assert.equal(result.record.correct,1)
   assert.equal(result.record.incorrect,0)
   checks++
   await ctx.close()

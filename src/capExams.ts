@@ -33,6 +33,7 @@ export interface CapExamIndex {
     scorableAppearances: number
     uniqueScorableQuestions: number
   }
+  technicalR31Stats?: CapExamIndex['mercanciasTemplateStats']
   technicalR30Stats?: CapExamIndex['mercanciasTemplateStats']
   technicalR29Stats?: CapExamIndex['mercanciasTemplateStats']
   technicalR28Stats?: CapExamIndex['mercanciasTemplateStats']
@@ -65,8 +66,8 @@ export async function loadCapIndex(): Promise<CapExamIndex> {
   const res = await fetch(BASE + 'data/exams/index.json')
   if (!res.ok) throw new Error('No se ha podido cargar el catálogo de exámenes CAP.')
   const raw = await res.json() as CapExamIndex
-  if (!raw.technicalR30Stats) throw new Error('Falta la revisión técnica R30; actualiza la aplicación.')
-  cachedIndex = {...raw, mercanciasTemplateStats:raw.technicalR30Stats, exams:raw.exams.map(e=>({...e, readyCount:e.technicalReadyCount??e.readyCount, scoringEligibleCount:e.technicalReadyCount??e.scoringEligibleCount, disputedCount:e.hasOriginalAnswerSheet?e.count-(e.technicalReadyCount??e.readyCount):e.disputedCount}))}
+  if (!raw.technicalR31Stats) throw new Error('Falta la revisión técnica R31; actualiza la aplicación.')
+  cachedIndex = {...raw, mercanciasTemplateStats:raw.technicalR31Stats, exams:raw.exams.map(e=>({...e, readyCount:e.technicalReadyCount??e.readyCount, scoringEligibleCount:e.technicalReadyCount??e.scoringEligibleCount, disputedCount:e.hasOriginalAnswerSheet?e.count-(e.technicalReadyCount??e.readyCount):e.disputedCount}))}
   return cachedIndex
 }
 
@@ -83,6 +84,7 @@ export async function loadCapQuestions(meta: CapExamMeta): Promise<CapQuestion[]
     : !!q.correctAnswer
   ).map(q => ({
     ...q,
+    options: q.technicalDecision?.restoredOptions ?? q.options,
     correctAnswer: (q.technicalDecision?.technicalAnswer || q.correctAnswer || q.originalSheetAnswer) as AnswerKey,
     scoringEligible: q.correctAnswer !== null && q.technicalDecision?.action !== 'exclude',
     id: 'cap:' + meta.id + ':' + q.number,
@@ -131,7 +133,7 @@ export async function loadCapSheetReview(meta: CapExamMeta): Promise<CapSheetRev
   if (rows.length !== 100 || sourceFlags.size !== 100)
     throw new Error('Auditoría incompleta: esta convocatoria necesita 100 preguntas.')
   return rows.map(q => ({
-    number: q.number, question: q.question, options: q.options,
+    number: q.number, question: q.question, options: q.technicalDecision?.restoredOptions ?? q.options,
     sourcePage: q.sourcePage, answerStatus: q.answerStatus,
     correctAnswer: q.technicalDecision ? q.technicalDecision.technicalAnswer : q.correctAnswer,
     technicalDecision:q.technicalDecision,
