@@ -307,3 +307,56 @@
 /* C6 RutaCAP wordmark: continuous name, no pill or visual separator. */
 .pro-brand b{display:inline;background:none;color:inherit;border-radius:0;padding:0;font-size:1em;letter-spacing:inherit}
 .pro-account-intro .pro-account-tag{margin-top:0}
+
+/* C16 visual refinement: adaptive road mark and compact, accessible archive. */
+.pro-brand-mark{color:var(--text)}
+:root[data-theme="light"] .pro-brand-mark{color:#263e58}
+.pro-route-card .pro-archive-note{margin-top:11px;font-size:10px;line-height:1.45}
+.pro-region-dialog{color:var(--text);background:var(--surface);border:1px solid var(--line);border-radius:22px;width:min(760px,calc(100% - 32px));max-width:none;max-height:min(82dvh,740px);padding:20px;margin:auto;overflow:auto;overscroll-behavior:contain;box-shadow:0 24px 80px #0006}
+.pro-region-dialog::backdrop{background:#0009;backdrop-filter:blur(4px)}
+html:has(.pro-region-dialog[open]){overflow:hidden}
+.pro-region-dialog-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px}
+.pro-region-dialog-head small{font-size:10px;letter-spacing:.12em;font-weight:800;color:var(--primary)}
+.pro-region-dialog-head h2{font-size:clamp(20px,5vw,25px);margin:4px 0 0}
+.pro-modal-close{flex:0 0 44px;width:44px;height:44px;border:1px solid var(--line);border-radius:12px;background:var(--soft);color:var(--text);font-size:24px;line-height:1}
+.pro-region-dialog>p{font-size:13px;margin:0 0 16px;line-height:1.45}
+.pro-region-dialog .pro-region-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.pro-region-dialog .pro-region-row>span:nth-child(2){min-width:0;flex:1}
+.pro-region-dialog .pro-region-row{position:relative}
+.pro-region-tick{color:var(--primary);font-weight:900;font-size:14px;flex:none}
+.pro-region-dialog .pro-region-row b{overflow-wrap:anywhere}
+.pro-region-dialog .pro-region-row small{font-size:10px}
+.pro-convocation-archive{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:clamp(12px,3vw,24px);min-width:0}
+.pro-convocation-archive .focus-convocation-heading{margin:0 0 14px;align-items:center}
+.pro-convocation-archive .focus-convocation-heading h2{font-size:23px}
+.pro-archive-filter{display:grid;grid-template-columns:1fr 1fr;padding:4px;border-radius:12px;background:var(--soft);gap:4px;max-width:430px}
+.pro-archive-filter button{min-height:42px;border:0;border-radius:9px;color:var(--muted);background:transparent;font-weight:750;font-size:13px}
+.pro-archive-filter button.on{background:var(--surface);color:var(--primary);box-shadow:0 2px 7px #0001}
+.pro-archive-disclaimer{font-size:11px;line-height:1.5;margin:10px 0 18px}
+.pro-archive-year+.pro-archive-year{margin-top:20px}
+.pro-year-heading{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+.pro-year-heading h3{font-size:18px;font-weight:850;margin:0}
+.pro-year-heading span{font-size:11px;color:var(--muted)}
+.pro-year-heading:after{content:"";height:1px;background:var(--line);flex:1}
+.focus-home #cap-historicos .list{gap:8px}
+.focus-home #cap-historicos .pro-exam-row{position:relative;display:grid;grid-template-columns:48px minmax(0,1fr) 14px;gap:11px;min-height:68px;padding:9px 12px;border-radius:13px;background:var(--bg);border-color:var(--line);width:100%;text-align:left}
+.focus-home #cap-historicos .pro-exam-row:hover:not(:disabled){border-color:var(--primary)}
+.pro-exam-date{display:grid;place-content:center;justify-items:center;min-height:47px;border-radius:9px;background:var(--soft);color:var(--primary);font-variant-numeric:tabular-nums}
+.focus-home #cap-historicos .pro-exam-date b{font-size:21px;line-height:1;font-weight:850}
+.focus-home #cap-historicos .pro-exam-date small{font-size:10px;margin-top:3px;text-transform:uppercase;font-weight:800;color:var(--primary)}
+.focus-home #cap-historicos .pro-exam-info b{font-size:14px;line-height:1.3}
+.focus-home #cap-historicos .pro-exam-info small{font-size:11px;line-height:1.4;margin-top:4px}
+.pro-exam-chevron{font-size:20px;color:var(--muted)}
+/* inherited controls: comfortable widths, smaller desktop gaps, no clipped long labels */
+.app .page .panel,.app .page .cards,.app .page .list{min-width:0;max-width:100%}
+.app .page .panel select{max-width:100%;min-width:0;min-height:44px}
+.app .page .panel .segments{display:flex;flex-wrap:wrap;gap:5px}
+.app .page .panel .segments button{min-height:43px;flex:1 1 60px;min-width:0;white-space:normal;padding:7px 9px}
+.app .page .panel .actions{display:flex;flex-wrap:wrap;gap:8px}
+.app .page .panel .actions>*{flex:1 1 120px;min-width:0;text-align:center}
+.app .page .panel a.btn,.app .page .panel button.btn{white-space:normal;overflow-wrap:anywhere;max-width:100%}
+.focus-dialog{max-height:calc(100dvh - 36px);overflow:auto;overscroll-behavior:contain}
+.focus-options-inner .segments button{min-height:42px}
+@media(min-width:700px){.pro-region-dialog .pro-region-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:600px){.pro-region-dialog{width:100%;max-height:86dvh;margin:auto 0 0;border-radius:23px 23px 0 0;padding:16px 14px max(18px,env(safe-area-inset-bottom));border-bottom:0}.pro-region-dialog .pro-region-grid{grid-template-columns:1fr 1fr}.pro-convocation-archive .focus-convocation-heading h2{font-size:20px}.focus-home #cap-historicos .list{grid-template-columns:1fr}}
+@media(max-width:340px){.pro-region-dialog .pro-region-grid{grid-template-columns:1fr}.pro-region-dialog .pro-region-row{min-height:54px}.focus-home #cap-historicos .pro-exam-row{grid-template-columns:42px minmax(0,1fr) 12px;gap:8px;padding:8px}.pro-convocation-archive .focus-convocation-heading h2{font-size:18px}}

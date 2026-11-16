@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 export type ProIconName='road'|'file'|'bank'|'warning'|'star'|'repeat'|'flag'|'home'|'chart'|'person'
 export function ProIcon({name}:{name:ProIconName}){
  const paths:Record<ProIconName,string>={
@@ -49,9 +49,13 @@ function starPath(cx:number,cy:number,r:number){
 export function RegionMark({region}:{region:Region}){
  return <span className="pro-region-mark" data-region={region[0]} style={{backgroundColor:region[2]}}><svg viewBox="0 0 48 48" fill="currentColor" aria-hidden="true" focusable="false">{region[0]==='md'?<>{[[9,17],[19,17],[29,17],[39,17],[14,30],[24,30],[34,30]].map(([x,y])=><path key={x+':'+y} d={starPath(x,y,5)}/>)}</>:<path fillRule="evenodd" d={region[3]}/>}</svg></span>
 }
-type Props={regionCode:RegionCode;onRegionChange:(code:RegionCode)=>void;bankCount:number;seenCount:number;hasArchive:boolean;archiveCount:number;onArchive:()=>void;onBank:()=>void;onErrors:()=>void;onFavorites:()=>void;onTop:()=>void;onExam:()=>void;onStats:()=>void;working:boolean}
+type Props={regionCode:RegionCode;onRegionChange:(code:RegionCode)=>void;bankCount:number;seenCount:number;hasArchive:boolean;archiveCount:number;onBank:()=>void;onErrors:()=>void;onFavorites:()=>void;onTop:()=>void;onExam:()=>void;onStats:()=>void;working:boolean}
 export default function CommercialHome(p:Props){
  const [regions,setRegions]=useState(false)
+ const regionDialog=useRef<HTMLDialogElement>(null)
+ const regionTrigger=useRef<HTMLButtonElement>(null)
+ useEffect(()=>{const d=regionDialog.current;if(regions&&d&&!d.open)d.showModal()},[regions])
+ function closeRegions(){regionDialog.current?.close();setRegions(false);regionTrigger.current?.focus()}
  const selectedRegion=regionByCode(p.regionCode)
  const seen=Math.min(p.bankCount,p.seenCount),coverage=p.bankCount?Math.round(seen/p.bankCount*100):0
  const actions:[ProIconName,string,string,()=>void,string][]=[
@@ -65,12 +69,16 @@ export default function CommercialHome(p:Props){
   </div>
   <div className="pro-main-grid">
    <article className="pro-route-card"><div className="pro-card-title"><ProIcon name="file"/><h2>Exámenes oficiales</h2></div><p>Practica con convocatorias reales.</p>
-    <button className="pro-region-feature" aria-expanded={regions} aria-controls={regions?'pro-region-list':undefined} onClick={()=>setRegions(!regions)}><RegionMark region={selectedRegion}/><span><b>{selectedRegion[1]}</b><small>{p.regionCode==='clm'?'Comunidad prioritaria':'Tu comunidad'}</small></span><span aria-hidden="true">{regions?'⌃':'›'}</span></button>
-    <button className="pro-archive-link" disabled={!p.hasArchive} onClick={p.onArchive}>Consultar archivo histórico <span>›</span></button><small className="pro-archive-note">{p.archiveCount} modelos con plantilla · región por verificar</small>
+    <button ref={regionTrigger} className="pro-region-feature" aria-haspopup="dialog" aria-expanded={regions} aria-controls={regions?'pro-region-list':undefined} onClick={()=>setRegions(true)}><RegionMark region={selectedRegion}/><span><b>{selectedRegion[1]}</b><small>Cambiar comunidad</small></span><span aria-hidden="true">›</span></button>
+    <small className="pro-archive-note">{p.archiveCount} modelos con plantilla en el archivo general · región por verificar</small>
    </article>
    <button className="pro-route-card pro-bank" onClick={p.onBank}><div className="pro-card-title"><ProIcon name="bank"/><h2>Banco de preguntas</h2></div><strong>{formatCount(p.bankCount)}</strong><p>preguntas disponibles</p><span className="pro-bank-link">Entrar al banco <span>›</span></span></button>
   </div>
-  {regions&&<section className="pro-regions" id="pro-region-list"><h2>Elige tu comunidad</h2><p>Guarda dónde te presentas. Tu preferencia no filtra todavía el archivo histórico: la procedencia se está verificando.</p><div className="pro-region-grid">{REGIONS.map(r=><button type="button" className={'pro-region-row '+(r[0]===p.regionCode?'selected':'')} key={r[0]} aria-pressed={r[0]===p.regionCode} onClick={()=>{p.onRegionChange(r[0]);setRegions(false)}}><RegionMark region={r}/><span><b>{r[1]}</b><small>{r[0]===p.regionCode?'Seleccionada':r[0]==='clm'?'Prioritaria · en catalogación':'En preparación'}</small></span></button>)}</div></section>}
+  {regions&&<dialog ref={regionDialog} className="pro-region-dialog" id="pro-region-list" aria-labelledby="pro-region-title" aria-describedby="pro-region-description" onCancel={e=>{e.preventDefault();closeRegions()}} onClick={e=>{if(e.target===e.currentTarget){const r=e.currentTarget.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)closeRegions()}}}>
+    <div className="pro-region-dialog-head"><div><small>EXÁMENES OFICIALES</small><h2 id="pro-region-title">Elige tu comunidad</h2></div><button type="button" className="pro-modal-close" aria-label="Cerrar selector de comunidad" onClick={closeRegions}>×</button></div>
+    <p id="pro-region-description">Selecciona dónde te presentarás. El archivo general todavía no se filtra por comunidad.</p>
+    <div className="pro-region-grid">{REGIONS.map(r=><button type="button" className={'pro-region-row '+(r[0]===p.regionCode?'selected':'')} key={r[0]} aria-pressed={r[0]===p.regionCode} onClick={()=>{p.onRegionChange(r[0]);closeRegions()}}><RegionMark region={r}/><span><b>{r[1]}</b><small>{r[0]===p.regionCode?'Seleccionada':r[0]==='clm'?'En catalogación':'En preparación'}</small></span>{r[0]===p.regionCode&&<span className="pro-region-tick" aria-hidden="true">✓</span>}</button>)}</div>
+   </dialog>}
   <div className="pro-quick-grid">{actions.map(([icon,title,desc,action,color])=><button key={title} className={'pro-quick '+color} onClick={action} disabled={p.working||!p.hasArchive}><ProIcon name={icon}/><span><b>{title}</b><small>{desc}</small></span><span aria-hidden="true">›</span></button>)}</div>
   <p className="pro-independent">Preparación independiente · No es una aplicación oficial.</p>
  </section>
