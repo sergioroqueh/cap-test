@@ -57,6 +57,20 @@ jobs:
       - name: Install Chromium for real-browser CAP tests
         run: npx playwright install --with-deps chromium
 
+      - name: Verify no private catalog in production or preview bundle
+        run: |
+          if grep -R -l 'RUTACAP_PRIVATE_CATALOG_C14' dist; then exit 1; fi
+          if npx vite build --mode catalog-local; then echo 'Local build should have failed'; exit 1; fi
+      - name: Test isolated private catalog with synthetic records only
+        run: |
+          npm run dev:catalog > /tmp/rutacap-catalog.log 2>&1 &
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:4188/ > /dev/null; then break; fi
+            sleep 1
+          done
+          curl -fsS http://127.0.0.1:4188/ > /dev/null
+          node --experimental-strip-types scripts/test_private_catalog_c14.mjs
+
       - name: Test Focus UI in mobile and desktop browsers
         run: |
           npm run preview -- --mode cap-preview --host 127.0.0.1 --port 4173 --strictPort > /tmp/cap-preview.log 2>&1 &
