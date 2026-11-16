@@ -1,6 +1,6 @@
 {
-  "name": "CAP Test Pro",
-  "short_name": "CAP Test",
+  "name": "RutaCAP",
+  "short_name": "RutaCAP",
   "description": "Preparación independiente para el CAP",
   "start_url": "./#/",
   "scope": "./",

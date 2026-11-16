@@ -14,7 +14,7 @@ export function ProIcon({name}:{name:ProIconName}){
  person:'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM4 21v-2a8 6 0 0 1 16 0v2z'}
  return <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d={paths[name]}/></svg>
 }
-export function ProBrand(){return <span className="pro-brand"><span className="pro-brand-mark"><svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#ef4054" d="M3 39C5 13 24 5 45 9 23 9 12 20 3 39Z"/><path fill="currentColor" d="M6 42C13 25 28 13 45 11 27 17 19 30 16 42ZM33 42C24 25 33 16 45 11 35 20 37 32 45 42Z"/><path stroke="currentColor" strokeWidth="2.8" d="m23 38 2-6m3-6 3-5m4-4 4-3"/></svg></span><span>CAP Test <b>Pro</b><small>PREPARACIÓN CAP</small></span></span>}
+export function ProBrand(){return <span className="pro-brand"><span className="pro-brand-mark"><svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#ef4054" d="M3 39C5 13 24 5 45 9 23 9 12 20 3 39Z"/><path fill="currentColor" d="M6 42C13 25 28 13 45 11 27 17 19 30 16 42ZM33 42C24 25 33 16 45 11 35 20 37 32 45 42Z"/><path stroke="currentColor" strokeWidth="2.8" d="m23 38 2-6m3-6 3-5m4-4 4-3"/></svg></span><span>Ruta<b>CAP</b><small>PREPARACIÓN CAP</small></span></span>}
 // Original, solid regional emblems. Inspired by local symbols, not official heraldry.
 // All share a 48-unit canvas and use negative space instead of thin outline strokes.
 export const REGIONS=[
@@ -57,7 +57,7 @@ export default function CommercialHome(p:Props){
  const actions:[ProIconName,string,string,()=>void,string][]=[
  ['warning','Errores','Repasa tus fallos',p.onErrors,'red'],['star','Favoritos','Preguntas guardadas',p.onFavorites,'yellow'],
  ['repeat','Más repetidas','Frecuencia real',p.onTop,'yellow'],['flag','Simulacro','100 preguntas · 2 h',p.onExam,'blue']]
- return <section className="pro-dashboard" aria-label="Inicio CAP Test Pro">
+ return <section className="pro-dashboard" aria-label="Inicio RutaCAP">
   <div className="pro-welcome"><span className="pro-kicker">TU RUTA CAP <i aria-hidden="true">//</i></span><h1>Seguimos en ruta.</h1><p>Prepara tu próximo examen CAP.</p></div>
   <div className="pro-destination">
    <div className="pro-sign"><div><small>Tu próximo destino:</small><strong>aprobar<span>.</span></strong></div><ProIcon name="road"/></div>

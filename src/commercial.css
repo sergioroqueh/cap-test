@@ -303,3 +303,7 @@
 .pro-profile-region select{width:100%;max-width:100%;min-height:47px;color:var(--text);background:var(--bg);border:1px solid var(--line);border-radius:9px;padding:8px}
 .pro-profile-region p{font-size:12px;margin-top:10px}
 @media(max-width:380px){.pro-account-preview{padding:14px}.pro-account-intro{padding:15px}.focus-quiz .focus-mark-help{line-height:1.3}.pro-region-grid .pro-region-row{padding:7px;gap:6px}}
+
+/* C6 RutaCAP wordmark: continuous name, no pill or visual separator. */
+.pro-brand b{display:inline;background:none;color:inherit;border-radius:0;padding:0;font-size:1em;letter-spacing:inherit}
+.pro-account-intro .pro-account-tag{margin-top:0}

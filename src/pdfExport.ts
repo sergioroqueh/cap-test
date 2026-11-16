@@ -42,7 +42,7 @@ function pdfText(value: string): string {
 function fileName(label: string, withSolutions: boolean): string {
   const slug = label.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
     .toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 78)
-  return 'cap-test-' + (slug || 'examen') + (withSolutions ? '-soluciones' : '') + '.pdf'
+  return 'rutacap-' + (slug || 'examen') + (withSolutions ? '-soluciones' : '') + '.pdf'
 }
 
 /** Download the exact questions and letter order stored in the active/completed session. */
@@ -56,7 +56,7 @@ export function exportExamPdf({ label, questions, withSolutions = false }: ExamP
     doc.setTextColor(26, 39, 49)
     doc.setFont('helvetica', 'bold')
     doc.setFontSize(10)
-    doc.text('CAP TEST', LEFT, 10.5)
+    doc.text('RutaCAP', LEFT, 10.5)
     doc.setFont('helvetica', 'normal')
     doc.setFontSize(8)
     doc.text('DOCUMENTO DE ESTUDIO - NO OFICIAL', PAGE_WIDTH-RIGHT, 10.5, { align:'right' })
@@ -207,7 +207,7 @@ export function exportExamPdf({ label, questions, withSolutions = false }: ExamP
     doc.setTextColor(102, 113, 122)
     doc.setFont('helvetica','normal')
     doc.setFontSize(8)
-    doc.text('CAP Test | Material de preparacion. No sustituye las fuentes oficiales.', LEFT, 287.5)
+    doc.text('RutaCAP | Material de preparacion. No sustituye las fuentes oficiales.', LEFT, 287.5)
     doc.text(p + ' / ' + totalPages, PAGE_WIDTH-RIGHT, 287.5, {align:'right'})
   }
   doc.save(fileName(label, withSolutions))
