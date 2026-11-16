@@ -184,3 +184,6 @@ nav button{min-height:58px}
 .focus-study-pdf-arrow{display:grid;place-items:center;flex:0 0 28px;height:28px;border-radius:50%;background:var(--soft);color:var(--primary);font-size:19px;font-weight:800}
 @media(max-width:390px){.focus-study-pdf-button{gap:10px;padding:12px}.focus-study-pdf-symbol{flex-basis:42px;height:42px}.focus-study-pdf-copy strong{font-size:14px}.focus-study-pdf-arrow{flex-basis:24px;height:24px}}
 @media(prefers-reduced-motion:reduce){.focus-study-pdf-button{transition:none}}
+
+/* R30: keep index targets clear of fixed header and sticky exam actions. */
+.focus-question-grid button{scroll-margin-block:100px 120px}
