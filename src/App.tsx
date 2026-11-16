@@ -69,7 +69,7 @@ function CapApp({userEmail,onSignOut}:{userEmail:string;onSignOut:()=>Promise<vo
  const bankSeen=rows.filter(x=>x.attempts>0&&generalKeys.has(x.questionnaireId)).length
  return <div className="app">
   <header><button className="logo" aria-label="Inicio CAP Test Pro" onClick={()=>go('home')}><ProBrand/></button><div className="pro-current-page">{page==='home'?'':({general:'Banco general',study:'Estudio',questionnaires:'Cuestionarios',exam:'Test general',quiz:'Test en curso',results:'Resultado',stats:'Progreso',settings:'Perfil'} as Record<string,string>)[page]}{!online&&<small>Sin conexión</small>}</div><button className="gear" aria-label="Perfil y ajustes" onClick={()=>go('settings')}><ProIcon name="person"/></button></header>
-  {PREVIEW&&<div className="cap-preview-banner" role="status">VERSIÓN DE PRUEBAS · Datos locales · No sincroniza con tu cuenta</div>}
+  {PREVIEW&&<div className="cap-preview-banner" role="status"><strong>PREVIEW</strong><span>Datos locales · Sin sincronización</span></div>}
   <main>{load!==null&&<div className="overlay"><Loading text={'Preparando preguntas… '+load+'%'}/></div>}{page==='home'&&<CapHome pm={pm} bankCount={bank.totalQuestions} seenCount={bankSeen}/>} {page==='general'&&<Home {...props}/>} {page==='study'&&<Study {...props}/>}  {page==='questionnaires'&&<Questionnaires {...props}/>} {page==='exam'&&<Exam {...props}/>} {page==='quiz'&&<Quiz pm={pm} refresh={refresh}/>} {page==='results'&&<Results/>} {page==='stats'&&<Stats {...props}/>} {page==='settings'&&<Settings theme={theme} setTheme={setTheme} bank={bank} refresh={refresh} userEmail={userEmail} onSignOut={onSignOut}/>}</main>
   {!['quiz','results','settings','questionnaires'].includes(page)&&<nav aria-label="Navegación principal"><button className={page==='home'?'on':''} onClick={()=>go('home')}><ProIcon name="home"/><span>Inicio</span></button><button className={page==='general'||page==='study'?'on':''} onClick={()=>go('general')}><ProIcon name="bank"/><span>Banco</span></button><button className={page==='exam'?'on':''} onClick={()=>go('exam')}><ProIcon name="flag"/><span>Test general</span></button><button className={page==='stats'?'on':''} onClick={()=>go('stats')}><ProIcon name="chart"/><span>Progreso</span></button></nav>}
  </div>
@@ -365,6 +365,9 @@ function Results(){
  const unreviewed=r.answers.filter(a=>a.scoringEligible!==false&&!a.selected)
  const unscored=r.answers.filter(a=>a.scoringEligible===false)
  const visible=showAll?r.answers:fails
+ const elapsed=Number.isFinite(r.elapsedSeconds)?Math.max(0,Math.floor(r.elapsedSeconds!)):null
+ const elapsedLabel=elapsed===null?'—':Math.floor(elapsed/60).toString().padStart(2,'0')+':'+(elapsed%60).toString().padStart(2,'0')
+ const precision=r.correct+r.incorrect?percent(r.correct,r.correct+r.incorrect):null
  async function downloadPdf(){
   if(!data||pdfBusy||qs.length!==data.questionIds.length)return
   setPdfBusy(true);setPdfError('')
@@ -381,12 +384,12 @@ function Results(){
   localStorage.setItem(ACTIVE,JSON.stringify(session))
   go('quiz')
  }
- return <div className="page">
+ return <div className="page pro-results">
   <button className="back" onClick={()=>go('home')}>‹ Inicio</button>
+  <h1 className="pro-results-heading">{r.type==='exam'?'Resultado del simulacro':'Resultado del estudio'}</h1>
   <section className={'result '+resultClass}>
    <em>{capStudy?'ESTUDIO CAP · PUNTOS Y PRECISIÓN':capExam?(comparable?'SIMULACRO CAP · 100 PREGUNTAS VÁLIDAS':'CAP · CALIFICACIÓN ORIENTATIVA'):'RESULTADO'}</em>
-   <strong>{capResult?netLabel+' puntos':r.score+'%'}</strong>
-   <h1>{resultTitle}</h1>
+   <div className="pro-result-score"><ProIcon name="flag"/><div><strong>{capResult?netLabel+' puntos':r.score+'%'}</strong><h2 className="pro-result-status">{resultTitle}</h2></div></div>
    <p>{r.label}</p>
    {capResult&&<p className="focus-result-explain"><b>{r.correct} aciertos × 1 − {r.incorrect} fallos × 0,5 = {netLabel} puntos netos.</b> Las preguntas en blanco valen 0.</p>}
    {capStudy&&<p className="focus-result-explain">Precisión entre las {r.correct+r.incorrect} respuestas puntuables contestadas: {r.score.toLocaleString('es-ES',{maximumFractionDigits:2})} %. Los puntos netos no equivalen al porcentaje de aciertos.</p>}
@@ -394,14 +397,15 @@ function Results(){
    {capExam&&comparable&&<p className="focus-result-explain">El umbral del simulacro es de 50 puntos netos sobre 100 preguntas válidas.</p>}
    {r.finishedReason==='timeout'&&<p className="focus-result-explain">Tiempo agotado · entrega automática.</p>}
   </section>
-  <div className="metrics">
-   <article><b>{r.correct}</b><span>Correctas</span></article>
-   <article><b>{r.incorrect}</b><span>Fallos</span></article>
-   <article><b>{unreviewed.length}</b><span>Sin responder</span></article>{unscored.length>0&&<article><b>{unscored.length}</b><span>Sin puntuar · no penalizan</span></article>}
+  <div className="metrics pro-result-metrics">
+   <article className="pro-metric-good"><span>Aciertos</span><b>{r.correct}</b></article>
+   <article className="pro-metric-bad"><span>Fallos</span><b>{r.incorrect}</b></article>
+   <article><span>Sin responder</span><b>{unreviewed.length}</b></article>{unscored.length>0&&<article><span>Sin puntuar</span><b>{unscored.length}</b></article>}
+   <article><span>Tiempo (min:seg)</span><b>{elapsedLabel}</b></article><article><span>Precisión contestadas</span><b>{precision===null?'—':precision+' %'}</b></article>
   </div>
+  <section className="pro-next-steps"><h2>Tus próximos pasos</h2><div className="pro-next-grid">{fails.length>0&&<button className="pro-quick red" onClick={()=>void review()}><ProIcon name="warning"/><span><b>Repasar {fails.length} fallos</b><small>Aprende de tus errores</small></span><span aria-hidden="true">›</span></button>}<button className="pro-quick blue" onClick={()=>go('home')}><ProIcon name="flag"/><span><b>Otra práctica</b><small>Continúa tu preparación</small></span><span aria-hidden="true">›</span></button></div></section>
   <StudyPdfButton busy={pdfBusy} disabled={qs.length!==data.questionIds.length} onClick={()=>void downloadPdf()}/>
   {pdfError&&<p role="alert" className="focus-muted">{pdfError}</p>}
-  {fails.length>0&&<Btn onClick={()=>void review()}>Repasar {fails.length} fallos</Btn>}
   <h2>Corrección de respuestas</h2>
   <p className="note">En examen puedes comprobar aciertos, fallos y preguntas sin responder. Las preguntas sin responder valen 0 puntos y no se registran como fallos en tu progreso.{unscored.length>0?' Las '+unscored.length+' preguntas con respuestas contradictorias se excluyeron del cálculo y del historial de fallos.':''}</p>
   <Btn kind="light" onClick={()=>setShowAll(v=>!v)}>{showAll?'Ver solo fallos':'Ver todas las respuestas ('+r.answers.length+')'}</Btn>
