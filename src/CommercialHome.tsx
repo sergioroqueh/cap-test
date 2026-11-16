@@ -33,7 +33,7 @@ export const REGIONS=[
  ['md','Comunidad de Madrid','#b82f42','M12 3l2 4 5 .7-3.5 3.5.8 4.8-4.3-2.3-4.3 2.3.8-4.8L5 7.7 10 7zM3 21h18'],
  ['mc','Región de Murcia','#a84448','M3 21h18M5 10l3 3 4-8 4 8 3-3-1 7H6z'],
  ['nc','Navarra','#b02f43','M3 3h18v18H3zM3 3l18 18M21 3 3 21M12 3v18M3 12h18'],
- ['pv','País Vasco','#39856c','M3 3h18v18H3zM3 3l18 18M21 3 3 21M12 3v18M3 12h18'],
+ ['pv','País Vasco','#39856c','M12 12C4 13 3 4 9 4c4 0 5 5 3 8Zm0 0c-1-8 8-9 8-3 0 4-5 5-8 3Zm0 0c8-1 9 8 3 8-4 0-5-5-3-8Zm0 0c1 8-8 9-8 3 0-4 5-5 8-3Z'],
  ['ce','Ceuta','#476879','M3 20h18M5 20V8h14v12M8 8V3h8v5M10 20v-5h4v5'],
  ['ml','Melilla','#4d76aa','M3 20h18M5 20v-9h4V7h6v4h4v9M12 7V3l5 2-5 2']
 ] as const
