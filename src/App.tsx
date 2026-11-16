@@ -254,7 +254,7 @@ function CapHome({pm}:{pm:Map<string,QuestionProgress>}){
   <details className="focus-editorial"><summary>Auditoría editorial · consulta avanzada</summary><div className="focus-editorial-inner">
   <section className="panel cap-pending-panel">
    <h2>Auditoría editorial · 26 convocatorias</h2>
-   <p>Revisa las 100 preguntas de cada examen con sus marcas: conflicto de respuestas, texto sospechoso, desfase de numeración o falta de cotejo. P0 significa prioridad máxima, no una respuesta declarada errónea. Las letras impresas y el banco original no se alteran; R27/R28/R29 distinguen la clave histórica de la técnica.</p>
+   <p>Revisa las 100 preguntas de cada examen con sus marcas: conflicto de respuestas, texto sospechoso, desfase de numeración o falta de cotejo. P0 significa prioridad máxima, no una respuesta declarada errónea. Las letras impresas y el banco original no se alteran; R27/R28/R29/R30 distinguen la clave histórica de la técnica.</p>
    <select aria-label="Examen a revisar con plantilla" value={sheetReviewId} onChange={e=>{setSheetReviewId(e.target.value);setSheetReviewShown(false);setSheetReviewRows([])}}>
     <option value="">Seleccionar convocatoria</option>
     {exams.map(e=><option key={e.id} value={e.id}>{pretty(e)} · {e.hasOriginalAnswerSheet?'con plantilla':'sin plantilla'}</option>)}
@@ -269,6 +269,7 @@ function CapHome({pm}:{pm:Map<string,QuestionProgress>}){
    <p><a className="btn light" href={import.meta.env.BASE_URL+'data/exams/technical_review_r27_cross_model.json'} download="CAP_R27_cotejo_modelos.json">Cotejo de las 21 incidencias con otros modelos (JSON)</a></p>
    <p><a className="btn light" href={import.meta.env.BASE_URL+'data/exams/technical_review_r28.csv'} download="CAP_R28_coherencia_25.csv">Exportar 25 decisiones de coherencia R28 (CSV)</a></p>
    <p><a className="btn light" href={import.meta.env.BASE_URL+'data/exams/technical_review_r28_queue.json'} download="CAP_R28_candidatos.json">Cola histórica R28 (resuelta en R29, JSON)</a></p>
+   <p><a className="btn light" href={import.meta.env.BASE_URL+'data/exams/technical_review_r30.csv'} download="CAP_R30_revision_87.csv">Exportar revisión R30 de 87 apariciones (CSV)</a></p>
    <p><a className="btn light" href={import.meta.env.BASE_URL+'data/exams/technical_review_r29.csv'} download="CAP_R29_revision_62.csv">Exportar las 62 revisiones R29 (CSV)</a></p>
    <p><a className="btn light" href={import.meta.env.BASE_URL+'data/exams/technical_review_r27.csv'} download="CAP_R27_revision_tecnica_21.csv">Exportar 21 decisiones técnicas R27 (CSV)</a></p>
    <p><a className="btn light" href={import.meta.env.BASE_URL+'data/exams/sheet_audit_2400.csv'} download="CAP_2400_respuestas_plantillas_revision.csv">CSV de las 2.400 respuestas impresas</a></p>

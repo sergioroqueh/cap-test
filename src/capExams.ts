@@ -33,6 +33,7 @@ export interface CapExamIndex {
     scorableAppearances: number
     uniqueScorableQuestions: number
   }
+  technicalR30Stats?: CapExamIndex['mercanciasTemplateStats']
   technicalR29Stats?: CapExamIndex['mercanciasTemplateStats']
   technicalR28Stats?: CapExamIndex['mercanciasTemplateStats']
   technicalR27Stats?: CapExamIndex['mercanciasTemplateStats']
@@ -64,8 +65,8 @@ export async function loadCapIndex(): Promise<CapExamIndex> {
   const res = await fetch(BASE + 'data/exams/index.json')
   if (!res.ok) throw new Error('No se ha podido cargar el catálogo de exámenes CAP.')
   const raw = await res.json() as CapExamIndex
-  if (!raw.technicalR29Stats) throw new Error('Falta la revisión técnica R29; actualiza la aplicación.')
-  cachedIndex = {...raw, mercanciasTemplateStats:raw.technicalR29Stats, exams:raw.exams.map(e=>({...e, readyCount:e.technicalReadyCount??e.readyCount, scoringEligibleCount:e.technicalReadyCount??e.scoringEligibleCount, disputedCount:e.hasOriginalAnswerSheet?e.count-(e.technicalReadyCount??e.readyCount):e.disputedCount}))}
+  if (!raw.technicalR30Stats) throw new Error('Falta la revisión técnica R30; actualiza la aplicación.')
+  cachedIndex = {...raw, mercanciasTemplateStats:raw.technicalR30Stats, exams:raw.exams.map(e=>({...e, readyCount:e.technicalReadyCount??e.readyCount, scoringEligibleCount:e.technicalReadyCount??e.scoringEligibleCount, disputedCount:e.hasOriginalAnswerSheet?e.count-(e.technicalReadyCount??e.readyCount):e.disputedCount}))}
   return cachedIndex
 }
 

@@ -35,6 +35,7 @@ jobs:
           python3 scripts/test_technical_review_r27.py
           python3 scripts/test_technical_review_r28.py
           python3 scripts/test_technical_review_r29.py
+          python3 scripts/test_technical_review_r30.py
 
       - name: Audit remaining source PDFs without changing scored keys
         run: python3 scripts/audit_visual_batch_candidates.py
@@ -115,5 +116,8 @@ jobs:
             public/data/exams/technical_review_r28_queue.json
             public/data/exams/technical_review_r29.json
             public/data/exams/technical_review_r29.csv
+            public/data/exams/technical_review_r30_candidates.json
+            public/data/exams/technical_review_r30.json
+            public/data/exams/technical_review_r30.csv
             artifacts/cap-r27-ranking.json
           retention-days: 14
