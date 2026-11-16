@@ -121,7 +121,7 @@ function CapHome({pm,bankCount,seenCount,regionCode,onRegionChange}:{pm:Map<stri
   }).catch(e=>{if(live)setError(e instanceof Error?e.message:String(e))})
   return()=>{live=false}
  },[topDialogOpen,category])
- function openConvocations(){setShowConvocations(true);requestAnimationFrame(()=>document.getElementById('cap-historicos')?.scrollIntoView({behavior:'smooth',block:'start'}))}
+ function openConvocations(){setShowConvocations(true);requestAnimationFrame(()=>document.getElementById('cap-historicos')?.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'start'}))}
  function closeConvocations(){setShowConvocations(false);requestAnimationFrame(()=>{const trigger=document.getElementById('focus-convocation-trigger');trigger?.focus({preventScroll:true});trigger?.scrollIntoView({behavior:'smooth',block:'center'})})}
  const exams=(index?.exams||[]).filter(x=>x.category===category).sort((a,b)=>b.date.localeCompare(a.date)||a.model.localeCompare(b.model))
  const available=exams.filter(x=>x.hasOriginalAnswerSheet)

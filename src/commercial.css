@@ -360,3 +360,10 @@ html:has(.pro-region-dialog[open]){overflow:hidden}
 @media(min-width:700px){.pro-region-dialog .pro-region-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:600px){.pro-region-dialog{width:100%;max-height:86dvh;margin:auto 0 0;border-radius:23px 23px 0 0;padding:16px 14px max(18px,env(safe-area-inset-bottom));border-bottom:0}.pro-region-dialog .pro-region-grid{grid-template-columns:1fr 1fr}.pro-convocation-archive .focus-convocation-heading h2{font-size:20px}.focus-home #cap-historicos .list{grid-template-columns:1fr}}
 @media(max-width:340px){.pro-region-dialog .pro-region-grid{grid-template-columns:1fr}.pro-region-dialog .pro-region-row{min-height:54px}.focus-home #cap-historicos .pro-exam-row{grid-template-columns:42px minmax(0,1fr) 12px;gap:8px;padding:8px}.pro-convocation-archive .focus-convocation-heading h2{font-size:18px}}
+
+/* C17: keep archive dismissal on one line and the territory close control reachable. */
+.pro-convocation-archive .focus-convocation-heading>div{min-width:0;flex:1}
+.pro-convocation-archive .focus-convocation-close{display:inline-flex;flex:0 0 auto;align-items:center;justify-content:center;gap:5px;white-space:nowrap;min-width:0;padding:0 12px;font-size:13px;line-height:1}
+.pro-convocation-archive .focus-convocation-close span{margin:0;line-height:1;font-size:18px}
+.pro-region-dialog-head{position:sticky;top:-20px;z-index:2;background:var(--surface);padding:8px 0}
+@media(max-width:600px){.pro-region-dialog-head{top:-16px}.pro-convocation-archive .focus-convocation-heading p{font-size:12px;line-height:1.4}.pro-convocation-archive .focus-convocation-close{padding:0 9px}}

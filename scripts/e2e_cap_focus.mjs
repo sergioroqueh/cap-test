@@ -46,6 +46,15 @@ async function assertViewportFit(page,label){
  const actual=await page.evaluate(()=>document.documentElement.scrollWidth)
  assert.ok(width&&actual<=width+1,label+': document '+actual+'px exceeds viewport '+width+'px')
 }
+async function captureArchive(page,name){
+ const archive=page.locator('#cap-historicos')
+ await archive.waitFor()
+ await archive.evaluate(el=>el.scrollIntoView({behavior:'instant',block:'start'}))
+ await page.waitForFunction(()=>{const el=document.getElementById('cap-historicos');const row=el?.querySelector('.pro-exam-row');if(!el||!row)return false;const top=el.getBoundingClientRect().top;return top>=65&&top<150&&row.getBoundingClientRect().bottom<innerHeight-70})
+ const close=archive.locator('.focus-convocation-close')
+ assert.equal(await close.evaluate(e=>getComputedStyle(e).whiteSpace),'nowrap')
+ await page.screenshot({path:artifacts+'/'+name,fullPage:false})
+}
 async function captureViewport(page,name){
  await page.evaluate(()=>window.scrollTo({top:0,behavior:'instant'}))
  await page.screenshot({path:artifacts+'/'+name,fullPage:false})
@@ -484,8 +493,7 @@ try{
  assert.equal(await h.locator('.pro-archive-year h3').first().innerText(),'2026')
  assert.equal(await h.locator('.pro-archive-link').count(),0)
  assert.equal(await h.locator('#cap-historicos .pro-exam-row').first().innerText().then(x=>/págs\./.test(x)),false)
- await h.locator('#cap-historicos').scrollIntoViewIfNeeded()
- await h.screenshot({path:artifacts+'/c16-mobile-convocations.png',fullPage:false})
+ await captureArchive(h,'c17-mobile-convocations.png')
  await h.getByRole('button',{name:'Viajeros',exact:true}).click()
  assert.equal(await h.locator('#cap-historicos .list button').count(),1)
  await h.getByRole('button',{name:'Mercancías',exact:true}).click()
@@ -531,6 +539,7 @@ try{
  await n.getByRole('button',{name:'Cerrar selector de comunidad'}).click()
  await n.locator('.focus-practice-grid button').filter({hasText:'Por convocatoria'}).click()
  await assertViewportFit(n,'320px archive')
+ assert.equal(await n.locator('.focus-convocation-close').evaluate(e=>getComputedStyle(e).whiteSpace),'nowrap')
  await n.locator('.focus-convocation-close').click()
  await n.locator('.focus-primary').click()
  await n.locator('.focus-question').waitFor({timeout:30000})
@@ -544,7 +553,7 @@ try{
  await d.locator('.focus-practice-grid button').filter({hasText:'Por convocatoria'}).click()
  await d.locator('#cap-historicos').waitFor()
  await assertViewportFit(d,'desktop archive')
- await d.screenshot({path:artifacts+'/c16-desktop-convocations.png',fullPage:false})
+ await captureArchive(d,'c17-desktop-convocations.png')
  await d.locator('.focus-convocation-close').click()
  assert.equal(await d.locator('#cap-historicos').count(),0,'desktop list closes without leaving the page')
  const overflow=await d.evaluate(()=>document.documentElement.scrollWidth>window.innerWidth)
