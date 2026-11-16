@@ -15,9 +15,19 @@ jobs:
     timeout-minutes: 8
     steps:
       - uses: actions/checkout@v4
+      with:
+        persist-credentials: false
       - name: Verify parser regression
         run: python3 scripts/audit_clm_sources_c7.py --self-test
-      - name: Retrieve source metadata and compare without importing
+      - name: Install PDF tools when missing
+      run: |
+        if ! command -v pdftotext >/dev/null || ! command -v pdfinfo >/dev/null; then
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends poppler-utils
+        fi
+        pdftotext -v
+        pdfinfo -v
+    - name: Retrieve source metadata and compare without importing
         run: |
           command -v pdftotext
           command -v pdfinfo

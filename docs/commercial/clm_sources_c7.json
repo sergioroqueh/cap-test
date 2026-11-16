@@ -128,6 +128,30 @@
       "prueba": 5,
       "status": "portal_index_only",
       "url": null
+    },
+    {
+      "id": "2025-05-key",
+      "kind": "answer_key",
+      "date": "2025-05-24",
+      "url": "https://www.castillalamancha.es/sites/default/files/documentos/pdf/20250526/cap_2025_3a_plantillas_correctoras.pdf",
+      "status": "indexed_initial_key_tribunal_approved_2025-05-26_pending_rectifications",
+      "historicalCandidates": []
+    },
+    {
+      "id": "2024-09-questions",
+      "kind": "questionnaire",
+      "date": "2024-09-28",
+      "url": "https://www.castillalamancha.es/sites/default/files/documentos/pdf/20240930/cuestionarios_5a_prueba_cap_2024.pdf",
+      "status": "indexed_text_viajeros_global_model_inventory_pending",
+      "historicalCandidates": []
+    },
+    {
+      "id": "2024-11-questions",
+      "kind": "questionnaire",
+      "date": "2024-11-30",
+      "url": "https://www.castillalamancha.es/sites/default/files/documentos/pdf/20241202/cap_2024_6a_cuestionarios.pdf",
+      "status": "indexed_text_viajeros_global_model_inventory_pending",
+      "historicalCandidates": []
     }
   ]
 }

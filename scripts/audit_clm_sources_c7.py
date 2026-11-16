@@ -8,10 +8,12 @@ import json
 from pathlib import Path
 import re
 import subprocess
+import shutil
 import tempfile
 from difflib import SequenceMatcher
 from urllib.parse import urljoin, urlsplit, unquote
-from urllib.request import Request, urlopen, build_opener, HTTPRedirectHandler
+from urllib.request import Request, build_opener, HTTPRedirectHandler
+from urllib.error import HTTPError, URLError
 from build_exam_data import parse_page, norm
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -116,7 +118,10 @@ def inspect(doc, local):
                 record['mayAudit']=[compare(b,old) for b in blocks]
                 if not blocks: record['status']='pdf_retrieved_no_matching_text_block_manual_review'
     except Exception as exc:
-        record['errorType']=type(exc).__name__;record['status']='retrieval_or_parse_incomplete'
+        record['errorType']=type(exc).__name__
+        if isinstance(exc, HTTPError): record['httpStatus']=exc.code
+        if isinstance(exc, URLError): record['reasonType']=type(exc.reason).__name__
+        record['status']='retrieval_or_parse_incomplete'
     return record
 
 def selftest():
@@ -139,6 +144,8 @@ def main():
     args=parser.parse_args()
     selftest()
     if args.self_test:return
+    for tool in ('pdftotext','pdfinfo'):
+        if not shutil.which(tool): raise SystemExit('Missing dependency: '+tool+' (install poppler-utils)')
     inv=json.loads(INV.read_text())
     docs=[d for d in inv['documents'] if d['url'] and d['kind'] in ('questionnaire','answer_key')]
     result={'schemaVersion':1,'generatedUtc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'releaseAllowed':False,'portal':{'status':'not_attempted'},'documents':[]}
@@ -148,13 +155,15 @@ def main():
         try:
             html,final=fetch(inv['portal'])
             links=discover(html.decode('utf-8',errors='replace'),final)
-            result['portal']={'status':'retrieved','links':links}
+            result['portal']={'status':'retrieved','links':links,'retrievalLimit':24}
             known={d['url'] for d in docs}
-            for i,link in enumerate(links):
+            for i,link in enumerate(links[:24]):
                 if link['url'] not in known:
                     docs.append(dict(link,id='portal-discovered-'+str(i+1),date=None))
         except Exception as exc:
             result['portal']={'status':'retrieval_failed','errorType':type(exc).__name__}
+            if isinstance(exc, HTTPError): result['portal']['httpStatus']=exc.code
+            if isinstance(exc, URLError): result['portal']['reasonType']=type(exc.reason).__name__
     with concurrent.futures.ThreadPoolExecutor(max_workers=3) as ex:
         result['documents']=list(ex.map(lambda doc:inspect(doc,args.local_may),docs))
     args.output.parent.mkdir(parents=True,exist_ok=True)
