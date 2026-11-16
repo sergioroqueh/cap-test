@@ -1,4 +1,4 @@
-const CACHE = 'cap-test-2026-11-16-r27-technical-v1'
+const CACHE = 'cap-test-2026-11-16-r28-technical-v1'
 const BASE = '/cap-test/'
 const CORE = [
   BASE,

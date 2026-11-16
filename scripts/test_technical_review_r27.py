@@ -15,7 +15,7 @@ for e in index['exams']:
         if d:=q.get('technicalDecision'):
             assert (d['examId'],d['number'])==(e['id'],q['number'])
             assert q['originalSheetAnswer']==q['correctAnswer']==keys[e['id']]['correctAnswers'][q['number']-1]==d['historicalAnswer']
-            seen[(e['id'],q['number'])]=d
+            if d.get('round')!='R28':seen[(e['id'],q['number'])]=d
     assert e['technicalReadyCount']==e['readyCount']-sum(q.get('technicalDecision',{}).get('action')=='exclude' for q in rows)
 assert len(seen)==21 and list(seen.values()) and Counter(c['action'] for c in seen.values())=={'correct':2,'exclude':6,'note':13}
 assert seen=={(c['examId'],c['number']):c for c in proof['cases']}

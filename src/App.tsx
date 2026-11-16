@@ -254,7 +254,7 @@ function CapHome({pm}:{pm:Map<string,QuestionProgress>}){
   <details className="focus-editorial"><summary>Auditoría editorial · consulta avanzada</summary><div className="focus-editorial-inner">
   <section className="panel cap-pending-panel">
    <h2>Auditoría editorial · 26 convocatorias</h2>
-   <p>Revisa las 100 preguntas de cada examen con sus marcas: conflicto de respuestas, texto sospechoso, desfase de numeración o falta de cotejo. P0 significa prioridad máxima, no una respuesta declarada errónea. Las letras impresas y el banco original no se alteran; R27 distingue la clave histórica de la técnica.</p>
+   <p>Revisa las 100 preguntas de cada examen con sus marcas: conflicto de respuestas, texto sospechoso, desfase de numeración o falta de cotejo. P0 significa prioridad máxima, no una respuesta declarada errónea. Las letras impresas y el banco original no se alteran; R27/R28 distinguen la clave histórica de la técnica.</p>
    <select aria-label="Examen a revisar con plantilla" value={sheetReviewId} onChange={e=>{setSheetReviewId(e.target.value);setSheetReviewShown(false);setSheetReviewRows([])}}>
     <option value="">Seleccionar convocatoria</option>
     {exams.map(e=><option key={e.id} value={e.id}>{pretty(e)} · {e.hasOriginalAnswerSheet?'con plantilla':'sin plantilla'}</option>)}
@@ -267,6 +267,8 @@ function CapHome({pm}:{pm:Map<string,QuestionProgress>}){
    <p className="note">Fase final aplazada: Viajeros y modelos sin plantilla. El CSV R24 solo incluye Mercancías con respuestas originales.</p>
    <p><a className="btn light" href={import.meta.env.BASE_URL+'data/exams/editorial_decisions_r25_three.csv'} download="CAP_cierre_3_conflictos_editoriales.csv">Exportar cierre editorial de las 3 contradicciones (CSV)</a></p>
    <p><a className="btn light" href={import.meta.env.BASE_URL+'data/exams/technical_review_r27_cross_model.json'} download="CAP_R27_cotejo_modelos.json">Cotejo de las 21 incidencias con otros modelos (JSON)</a></p>
+   <p><a className="btn light" href={import.meta.env.BASE_URL+'data/exams/technical_review_r28.csv'} download="CAP_R28_coherencia_25.csv">Exportar 25 decisiones de coherencia R28 (CSV)</a></p>
+   <p><a className="btn light" href={import.meta.env.BASE_URL+'data/exams/technical_review_r28_queue.json'} download="CAP_R28_candidatos.json">Cola de revisión técnica (sin aplicar, JSON)</a></p>
    <p><a className="btn light" href={import.meta.env.BASE_URL+'data/exams/technical_review_r27.csv'} download="CAP_R27_revision_tecnica_21.csv">Exportar 21 decisiones técnicas R27 (CSV)</a></p>
    <p><a className="btn light" href={import.meta.env.BASE_URL+'data/exams/sheet_audit_2400.csv'} download="CAP_2400_respuestas_plantillas_revision.csv">CSV de las 2.400 respuestas impresas</a></p>
    {sheetReviewShown&&<div className="cap-pending-results">
@@ -278,7 +280,7 @@ function CapHome({pm}:{pm:Map<string,QuestionProgress>}){
      <summary>Pregunta {q.number} · página {q.sourcePage} · {q.r24Case?.priority==='P0'?'R24 PRIORIDAD ALTA ·':q.r24Case?.status==='GRAFIA_RESTAURADA_REVERSIBLE'?'R24 TEXTO CORREGIDO ·':q.r23Case?.priority==='P0'?'R23 PRIORIDAD ALTA ·':q.r23Case?.status==='LECTURA_EXTERNA_NO_VERIFICADA_DISCREPA'?'R23 LECTURAS DIVERGENTES ·':q.r22Case?.status==='DUDOSA_TECNICA_FRENTE_DGT'?'DUDOSA ·':q.r22Case?.status==='TEXTO_CONTRASTADO_FUENTE_PUBLICA'?'TEXTO CONTRASTADO ·':''} {q.editorialDecision?'INCIDENCIA DOCUMENTADA':q.reviewPriority!=='P4'?q.reviewPriority+' · COTEJAR':'sin alertas automáticas'} · plantilla: {q.originalSheetAnswer||'—'}{!q.scoringEligible?' · SIN PUNTUAR':''}{q.originalSheetAnswer&&q.mappedSheetQuestionNumber!==q.originalSheetQuestionNumber?' · ajuste de numeración':''}</summary>
      <p>{q.question}</p>
      <ol type="A">{keys.map(k=><li key={k}>{q.options[k]}</li>)}</ol>
-     {q.technicalDecision&&<div className="cap-r25-final"><b>R27 · {q.technicalDecision.action==='correct'?'CORRECCIÓN TÉCNICA':q.technicalDecision.action==='exclude'?'NO PUNTÚA':'MATIZ'}</b><p>Plantilla original: {q.technicalDecision.historicalAnswer} · Técnica: {q.technicalDecision.technicalAnswer||'Sin opción única'}</p><p>{q.technicalDecision.reason}</p>{q.technicalDecision.sources.map(url=><p key={url}><a href={url} target="_blank" rel="noreferrer">Fuente documental</a></p>)}<small>No constituye fe de erratas oficial.</small></div>}
+     {q.technicalDecision&&<div className="cap-r25-final"><b>{q.technicalDecision.round||'R27'} · {q.technicalDecision.action==='correct'?'CORRECCIÓN TÉCNICA':q.technicalDecision.action==='exclude'?'NO PUNTÚA':'MATIZ'}</b><p>Plantilla original: {q.technicalDecision.historicalAnswer} · Técnica: {q.technicalDecision.technicalAnswer||'Sin opción única'}</p><p>{q.technicalDecision.reason}</p>{q.technicalDecision.sources.map(url=><p key={url}><a href={url} target="_blank" rel="noreferrer">Fuente documental</a></p>)}<small>No constituye fe de erratas oficial.</small></div>}
      {q.editorialDecision&&<div className="cap-r25-final"><b>DECISIÓN EDITORIAL CERRADA · NO PUNTÚA</b><p>{q.editorialDecision.decision}</p><p><strong>Plantilla original:</strong> {q.editorialDecision.originalSheetAnswer} · <strong>Banco:</strong> {q.editorialDecision.bankAnswer} · <strong>Orientación técnica:</strong> {q.editorialDecision.editorialAnswer||'Pregunta inválida; sin solución'}</p><small>No se ha confirmado una fe de erratas oficial. La pregunta se muestra para estudiar y no suma ni resta puntos.</small></div>}
      {q.reviewFlags.length>0&&<div className="cap-editorial-flags"><b>Marcas de revisión (no corrigen claves):</b>{q.reviewFlags.map(f=><p key={f.code}><strong>{f.priority} · {f.code.replaceAll('_',' ')}</strong> — {f.description}. <small>{f.evidence}</small></p>)}</div>}
      {q.textReviewRequired&&<small>La transcripción del texto sigue pendiente de cotejo editorial con la imagen fuente.</small>}
@@ -308,7 +310,7 @@ function CapHome({pm}:{pm:Map<string,QuestionProgress>}){
      <summary>Pregunta {q.number} · página {q.sourcePage}{q.answerStatus.startsWith('conflicto')?' · Fuentes contradictorias':''}</summary>
      <p>{q.question}</p>
      <ol type="A">{keys.map(k=><li key={k}>{q.options[k]}</li>)}</ol>
-     {q.technicalDecision?<div className="cap-r25-final"><b>R27 · No puntúa</b><p>Plantilla original: {q.technicalDecision.historicalAnswer}</p><p>{q.technicalDecision.reason}</p></div>:q.editorialDecision?<div className="cap-r25-final"><b>Decisión editorial cerrada · sin puntuación</b><p>{q.editorialDecision.decision}</p><small>Orientación técnica: {q.editorialDecision.editorialAnswer||'pregunta invalidada'} · Sin rectificación oficial acreditada.</small></div>:<small>Solución pendiente de revisión. No se califica esta pregunta.</small>}
+     {q.technicalDecision?<div className="cap-r25-final"><b>{q.technicalDecision.round||'R27'} · No puntúa</b><p>Plantilla original: {q.technicalDecision.historicalAnswer}</p><p>{q.technicalDecision.reason}</p></div>:q.editorialDecision?<div className="cap-r25-final"><b>Decisión editorial cerrada · sin puntuación</b><p>{q.editorialDecision.decision}</p><small>Orientación técnica: {q.editorialDecision.editorialAnswer||'pregunta invalidada'} · Sin rectificación oficial acreditada.</small></div>:<small>Solución pendiente de revisión. No se califica esta pregunta.</small>}
     </details>)}
    </div>}
   </section>
@@ -409,7 +411,7 @@ function Results(){
      {answer.scoringEligible===false
        ?<><p>Plantilla original: <b>{q.originalSheetAnswer||'—'}</b> · Banco: <b>{q.bankAnswer||'—'}</b></p>{decision?<><p><strong>{decision.editorialAnswer?'Respuesta técnica orientativa: '+decision.editorialAnswer:'Pregunta inválida; sin respuesta técnica'}</strong></p><small>{decision.decision} No puntúa y no se presenta como fe de erratas del tribunal.</small></>:<small>No hay solución aprobada todavía. Esta pregunta no se ha calificado.</small>}</>
        :<><p className="green">Solución aplicada en esa sesión: {answer.correctAnswer} · {q.options[answer.correctAnswer]}</p>{q.reviewRequired&&<small>Solución procedente del cotejo; algunas transcripciones requieren revisión editorial.</small>}</>}
-    {q.technicalDecision&&<div className="cap-r25-final"><b>R27 · Plantilla {q.technicalDecision.historicalAnswer} · Técnica {q.technicalDecision.technicalAnswer||'sin opción única'}</b><p>{q.technicalDecision.reason}</p><small>Decisión editorial; no rectificación oficial.</small></div>}
+    {q.technicalDecision&&<div className="cap-r25-final"><b>{q.technicalDecision.round||'R27'} · Plantilla {q.technicalDecision.historicalAnswer} · Técnica {q.technicalDecision.technicalAnswer||'sin opción única'}</b><p>{q.technicalDecision.reason}</p><small>Decisión editorial; no rectificación oficial.</small></div>}
     </article>
    })}
   </div>

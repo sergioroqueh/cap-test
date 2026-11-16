@@ -94,11 +94,11 @@ try{
     }
     return ids.size
   }
-  return {stats:index.technicalR27Stats,metas,manualCount:countUnique(rows),manualScorable:countUnique(rows.filter(q=>q.scoringEligible && q.technicalDecision?.action!=='exclude'))}
+  return {stats:index.technicalR28Stats,metas,manualCount:countUnique(rows),manualScorable:countUnique(rows.filter(q=>q.scoringEligible && q.technicalDecision?.action!=='exclude'))}
  })
  assert.equal(available.stats.templateExamModels,24)
  assert.equal(available.stats.originalAppearances,2400)
- assert.equal(available.stats.scorableAppearances,2391)
+ assert.equal(available.stats.scorableAppearances,2388)
  assert.equal(available.metas.length,24)
  assert.equal(available.stats.uniqueQuestions,available.manualCount)
  assert.equal(available.stats.uniqueScorableQuestions,available.manualScorable)

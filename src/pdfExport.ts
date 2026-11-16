@@ -188,7 +188,7 @@ export function exportExamPdf({ label, questions, withSolutions = false }: ExamP
   if(withSolutions && technical.length){
     nextPage()
     doc.setTextColor(26,39,49)
-    writeLines(['NOTAS DE REVISION TECNICA R27'],13,7,LEFT,'bold')
+    writeLines(['NOTAS DE REVISION TECNICA R27/R28'],13,7,LEFT,'bold')
     writeLines(split('Las casillas reflejan la solucion de estudio. Se conserva la letra historica; estas decisiones no son una rectificacion oficial.',CONTENT_WIDTH,9),9,5)
     y+=3
     technical.forEach(({q,i})=>{
