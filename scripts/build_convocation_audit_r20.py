@@ -22,7 +22,7 @@ def main() -> None:
     index = json.loads((OUT / "index.json").read_text(encoding="utf-8"))
     audit = json.loads((OUT / "sheet_audit_index.json").read_text(encoding="utf-8"))
     by_exam = defaultdict(list)
-    with (OUT / "sheet_audit_2200.csv").open(encoding="utf-8-sig", newline="") as stream:
+    with (OUT / "sheet_audit_2400.csv").open(encoding="utf-8-sig", newline="") as stream:
         for item in csv.DictReader(stream):
             by_exam[item["examId"]].append(item)
 
@@ -132,12 +132,12 @@ def main() -> None:
             })
 
     assert len(report) == 26
-    assert sum(bool(r["plantilla"]) for r in report) == 22
-    assert total_source_letters == 2200
-    assert total_scored == 2417 and total_disputed == 3
+    assert sum(bool(r["plantilla"]) for r in report) == 24
+    assert total_source_letters == 2400
+    assert total_scored == 2508 and total_disputed == 3
     assert total_offsets == 57 and total_editorial == 13
-    assert sum(r["sin_puntuacion"] for r in report) == 183
-    assert sum(r["sin_puntuacion"] for r in report if not r["plantilla"]) == 180
+    assert sum(r["sin_puntuacion"] for r in report) == 92
+    assert sum(r["sin_puntuacion"] for r in report if not r["plantilla"]) == 89
     assert len(anomalies) == 1 and len(by_exam) == 26
     # El orden de revisión no cambia el orden del JSON de exámenes ni de preguntas.
     report.sort(key=lambda e: (e["prioridad"], e["fecha"], e["modelo"]))
@@ -146,10 +146,10 @@ def main() -> None:
         "round": "R20",
         "principio": "Priorización editorial; ninguna coincidencia automática valida una respuesta",
         "base": {
-            "examenes": 26, "preguntas": 2600, "plantillas": 22,
-            "letras_originales": 2200, "puntuables": 2417,
-            "sin_puntuacion": 183, "conflictos": 3,
-            "sin_plantilla_aplazadas": 180, "desfases": 57,
+            "examenes": 26, "preguntas": 2600, "plantillas": 24,
+            "letras_originales": 2400, "puntuables": 2508,
+            "sin_puntuacion": 92, "conflictos": 3,
+            "sin_plantilla_aplazadas": 89, "desfases": 57,
             "alineaciones_editoriales": 13,
         },
         "hallazgos_fuente": anomalies,
@@ -164,7 +164,7 @@ def main() -> None:
         writer = csv.DictWriter(stream, fieldnames=COLUMNS)
         writer.writeheader()
         writer.writerows(report)
-    print("PASS R20: 26 convocatorias, 22 plantillas, 2200 letras, 2417 puntuables; q43 marzo 2026 sin puntuar")
+    print("PASS R20: 26 convocatorias, 24 plantillas, 2400 letras, 2508 puntuables; q43 marzo 2026 sin puntuar")
 
 
 if __name__ == "__main__":

@@ -92,38 +92,38 @@ def main():
               else "revisar_texto_preguntas" if has_sheet
               else "aplazado_sin_plantilla",
         })
-    if len(summary)!=26 or len(entries)!=2200:
-        raise AssertionError("No están las 22 plantillas originales completas")
+    if len(summary)!=26 or len(entries)!=2400:
+        raise AssertionError("No están las 24 plantillas originales completas")
     if sum(s["disputed"] for s in summary)!=3:
         raise AssertionError("Han cambiado los 3 conflictos documentados")
     if sum(s["numberAlignments"] for s in summary)!=57:
         raise AssertionError("El desfase parcial de julio 2023 A no está aislado")
     if sum(s["editoriallyVerified"] for s in summary)!=13:
         raise AssertionError("No están las 13 decisiones editoriales de julio 2023 A")
-    if sum(s["printedAnswers"] for s in summary)!=2200:
+    if sum(s["printedAnswers"] for s in summary)!=2400:
         raise AssertionError("Se han perdido letras impresas de plantillas")
-    if sum(s["scoredAnswers"] for s in summary)!=2417:
+    if sum(s["scoredAnswers"] for s in summary)!=2508:
         raise AssertionError("El banco autocorregible se ha alterado")
     review_order={"revisar_contradicciones":0,"revisar_numeracion":1,"revisar_texto_preguntas":2,"aplazado_sin_plantilla":3}
     summary.sort(key=lambda e:(review_order[e["nextReview"]], e["date"], e["model"]))
     payload={
         "schemaVersion":1,
-        "source":"PDF originales de Respuestas(1).zip",
+        "source":"PDF de Respuestas(1).zip y plantillas recuperadas R26",
         "note":"La letra impresa NO implica respuesta técnicamente correcta; correcciones y bloqueos se guardan separadamente.",
         "modelCount":26,
-        "withOriginalSheetCount":22,
+        "withOriginalSheetCount":24,
         "originalSheetAnswerCount":len(entries),
         "unscoredConflictsWithSheet":3,
-        "withoutOriginalSheetCount":4,
-        "deferredWithoutSheet":180,
-        "scoredTotal":2417,
+        "withoutOriginalSheetCount":2,
+        "deferredWithoutSheet":89,
+        "scoredTotal":2508,
         "exams":summary
     }
     (DATA/"sheet_audit_index.json").write_text(json.dumps(payload,ensure_ascii=False,indent=2),encoding="utf-8")
-    with (DATA/"sheet_audit_2200.csv").open("w",encoding="utf-8-sig",newline="") as file:
+    with (DATA/"sheet_audit_2400.csv").open("w",encoding="utf-8-sig",newline="") as file:
         writer=csv.DictWriter(file,fieldnames=FIELDS)
         writer.writeheader()
         writer.writerows(entries)
-    print("PASS CAP R19: 22 plantillas / 2200 respuestas impresas, 3 conflictos, 57 ajustes, 13 correcciones editoriales")
+    print("PASS CAP R19: 24 plantillas / 2400 respuestas impresas, 3 conflictos, 57 ajustes, 13 correcciones editoriales")
 if __name__=="__main__":
     main()

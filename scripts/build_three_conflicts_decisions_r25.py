@@ -80,16 +80,16 @@ def main():
     assert seen==set(expected)
     assert sum(bool(r["editorialTechnicalLetter"]) for r in export)==2
     assert index["totalExamModels"]==26 and index["totalImportedQuestions"]==2600
-    assert sum(m["readyCount"] for m in index["exams"])==2417
-    assert sum(m["originalSheetAnswersCount"] for m in index["exams"])==2200
+    assert sum(m["readyCount"] for m in index["exams"])==2508
+    assert sum(m["originalSheetAnswersCount"] for m in index["exams"])==2400
     report={
         "schemaVersion":1,"round":"R25-3",
         "scope":"Tres conflictos originales. La duda tecnica noviembre 2022 q6 es separada",
         "caseCount":3,"reviewCompletedCount":3,
         "editorialTechnicalAnswers":2,"editoriallyInvalidatedCount":1,
         "scoringChanges":0,"officialErrataConfirmed":False,
-        "printedOriginalLettersPreserved":2200,
-        "scoringEligibleAllExams":2417,"originalDisputesStillUnscored":3,
+        "printedOriginalLettersPreserved":2400,
+        "scoringEligibleAllExams":2508,"originalDisputesStillUnscored":3,
         "cases":[{**case,"sourcePage":next(x["sourcePage"] for x in export
                                        if x["examId"]==case["examId"] and x["number"]==case["number"])}
                  for case in proof["cases"]],
