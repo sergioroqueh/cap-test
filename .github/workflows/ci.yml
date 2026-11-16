@@ -76,10 +76,16 @@ jobs:
           if-no-files-found: ignore
           retention-days: 14
 
+      - name: Prepare independent commercial preview (local only)
+        run: |
+          printf '%s\n' 'CAP TEST PRO — preview comercial local' 'No usa la cuenta real, no sincroniza ni registra service worker.' 'Descomprime todo el ZIP en una carpeta nueva.' 'Windows: ejecuta INICIAR-PREVIEW.cmd (requiere Python 3).' 'Alternativa: python -m http.server 4178 --bind 127.0.0.1' 'Abre http://127.0.0.1:4178/ — no abras index.html directamente.' 'Versión de pruebas, no publicar ni redistribuir.' > dist/LEEME-PREVIEW.txt
+          printf '%s\r\n' '@echo off' 'cd /d "%~dp0"' 'echo Abre http://127.0.0.1:4178/ en el navegador. Ctrl+C para cerrar.' 'py -3 -m http.server 4178 --bind 127.0.0.1' 'pause' > dist/INICIAR-PREVIEW.cmd
+          node -e "const fs=require('node:fs');fs.writeFileSync('dist/preview-build.json',JSON.stringify({mode:'cap-preview',commit:process.env.GITHUB_SHA,ref:process.env.GITHUB_REF,cloudSync:false,deployed:false},null,2))"
+
       - name: Package beta preview files (not deployed)
         uses: actions/upload-artifact@v4
         with:
-          name: cap-test-r25-three-preview-build
+          name: cap-test-pro-commercial-preview
           path: dist/
           retention-days: 14
 
