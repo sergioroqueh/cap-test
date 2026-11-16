@@ -98,7 +98,8 @@
       "sourcePageEnd": 201,
       "documentKind": "examen_principal",
       "sourcePdf": "Examenes TOTALES.pdf",
-      "templateFile": null
+      "templateFile": "Plantilla B Julio 2025.pdf",
+      "templateSourceAuthority": "documento aportado, sin identificación visible del organismo; autenticidad oficial no comprobada"
     },
     {
       "id": "2026-07-25-mercancias-b",
@@ -120,7 +121,8 @@
       "sourcePageEnd": 237,
       "documentKind": "examen_principal",
       "sourcePdf": "Examenes TOTALES.pdf",
-      "templateFile": null
+      "templateFile": "Plantilla Diciembre 2023.pdf",
+      "templateSourceAuthority": "plantilla correctora del tribunal de Castilla-La Mancha, documento fechado 04/12/2023; firma visible, no verificada criptográficamente"
     },
     {
       "id": "2023-02-04-mercancias-global",

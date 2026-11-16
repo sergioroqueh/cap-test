@@ -139,6 +139,58 @@
       "approval": "lectura_visual_plantilla_original_verificada",
       "notes": "Cabecera MERCANCÍAS GLOBAL / FEBRERO DE 2026 confirmada. 100 respuestas leídas visualmente. 86 coincidencias con banco, 13 claves PDF sin equivalente, q61 bloqueada por conflicto real.",
       "expectedPreviouslyUnscoredConflicts": 1
+    },
+    "2025-07-26-mercancias-b": {
+      "sourceFile": "Plantilla B Julio 2025.pdf",
+      "sourcePage": 1,
+      "category": "mercancias",
+      "model": "B",
+      "sourcePdfSha256": "3ea899730b817f56e1d09d21303da289019db3ed24aa0b72c65fdd82a1a37c1e",
+      "correctAnswers": "CDCAACACAACBDCDDDCBBBBBBABDBBBDCAACBDACCBBDCBAADDABCDBDCCACACBBACDACBABAABBADBCCCCBACBBCBAABCCCDDDAD",
+      "keyDigestSha256": "c51873a51571daaf68e0cc9c0455bd98e2193825e00e2475e256cd17b759d71a",
+      "printedNumberCorrections": {
+        "55": 56,
+        "56": 56,
+        "74": 75,
+        "75": 76,
+        "76": 76
+      },
+      "sourceAuthority": "documento aportado, sin identificación visible del organismo; autenticidad oficial no comprobada",
+      "notes": "Lectura visual por posición, cinco columnas. Correcciones de numeración 55D 56C 74B 75B 76A, contrastadas con el enunciado; no se modifica ninguna letra.",
+      "verifiedOn": "2026-11-16",
+      "expectedBankConcordances": 85,
+      "expectedBankConflicts": 0,
+      "expectedPreviouslyScoredExternal": 0,
+      "sourceZip": null,
+      "visualMethod": "lectura_visual_por_posicion_y_preflight_independiente_R26",
+      "readDirection": "Cinco columnas consecutivas de 20 filas",
+      "approval": "lectura_visual_y_cotejo_banco_R26",
+      "officialAuthorityConfirmed": false
+    },
+    "2023-12-02-mercancias-global": {
+      "sourceFile": "Plantilla Diciembre 2023.pdf",
+      "sourcePage": 1,
+      "category": "mercancias",
+      "model": "GLOBAL",
+      "sourcePdfSha256": "074175ab60ba24a078d2e301e2a3f6ae9920e28cbf5f3f81a86fdae22a899e58",
+      "correctAnswers": "ABBACCBBBDABACDCBAAADBCBCDDBBADDBABADBABBBBDABBCBDDCBADDCBACAABADCDACDDCBCCCCADBCDACACDDCCDBBAADABCA",
+      "keyDigestSha256": "f7e180d19e3d1eb47ea5cd8439480b9ee81e3c30afa713bf6b7a7bd41a5f1506",
+      "sourceAuthority": "plantilla correctora del tribunal de Castilla-La Mancha, documento fechado 04/12/2023; firma visible, no verificada criptográficamente",
+      "reserveAnswers": {
+        "101": "C",
+        "102": "C",
+        "103": "A"
+      },
+      "notes": "Página 1 mercancías global; no importar promoción, viajeros ni reservas.",
+      "verifiedOn": "2026-11-16",
+      "expectedBankConcordances": 24,
+      "expectedBankConflicts": 0,
+      "expectedPreviouslyScoredExternal": 0,
+      "sourceZip": null,
+      "visualMethod": "lectura_visual_por_posicion_y_preflight_independiente_R26",
+      "readDirection": "Cinco columnas consecutivas de 20 filas",
+      "approval": "lectura_visual_y_cotejo_banco_R26",
+      "officialAuthorityConfirmed": true
     }
   }
 }

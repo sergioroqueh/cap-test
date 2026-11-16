@@ -537,7 +537,7 @@ def generate():
                 template_number=original_number
                 align_status='sin_ajuste'
                 visual_status='plantilla_pdf_original_verificada'
-                status='conflicto_pdf_original_banco_pendiente_cotejo_enunciado' if disagreement else 'plantilla_pdf_oficial_verificada'
+                status='conflicto_pdf_original_banco_pendiente_cotejo_enunciado' if disagreement else ('plantilla_pdf_aportada_verificada' if template_verified.get('officialAuthorityConfirmed') is False else 'plantilla_pdf_oficial_verificada')
                 answer=None if disagreement else visual_letter
                 verified_pdf=True
                 verified_pdf_applied[exam_id]+=1
@@ -639,7 +639,9 @@ def generate():
               'answerEditorialEvidence':editorial['verificationMethod'] if editorial else '',
               'answerEvidenceUrl':evidence_url,
               'answerEvidenceSource':evidence_source,
-              'answerTemplateOfficiallyVerified':True if verified_pdf else (False if public_evidence else None),
+              'answerTemplateOfficiallyVerified':(template_verified.get('officialAuthorityConfirmed',True) if verified_pdf else (False if public_evidence else None)),
+              'answerTemplateSourceAuthority':template_verified.get('sourceAuthority') if template_verified else None,
+              'printedSheetLabel':template_verified.get('printedNumberCorrections',{}).get(str(original_number),original_number) if template_verified else None,
               'answerTemplateSourceSha256':template_verified['sourcePdfSha256'] if verified_pdf else ''})
         exams.append((meta,local))
         all_rows.extend(local)
@@ -971,7 +973,7 @@ def generate():
     print('AUDIT cross-model pending:',pending_total,'unscored,',
           len(cross_model_queue),'exact repetitions,',cross_summary)
 
-    # Exactly the 22 score-keyed historical Mercancías models available in the CAP UI.
+    # Exactly the 24 score-keyed historical Mercancías models available in the CAP UI.
     # The general question bank is consulted for provenance, NEVER as a source of these counts.
     template_exam_ids={entry['id'] for entry in index if
                        entry['category']=='mercancias' and entry['hasOriginalAnswerSheet']}
@@ -997,11 +999,11 @@ def generate():
       'scorableAppearances':sum(q['correctAnswer'] in 'ABCD' if q['correctAnswer'] else False for q in template_rows),
       'uniqueScorableQuestions':count_unique_cap([q for q in template_rows if q['correctAnswer'] in ('A','B','C','D')])
     }
-    if cap_stats['templateExamModels'] != 22 or cap_stats['originalAppearances'] != 2200 or cap_stats['scorableAppearances'] != 2197:
+    if cap_stats['templateExamModels'] != 24 or cap_stats['originalAppearances'] != 2400 or cap_stats['scorableAppearances'] != 2397:
         raise RuntimeError(f'Modelos CAP con plantilla inesperados: {cap_stats}')
     print('AUDIT Mercancías template-only unique count:',cap_stats)
     (OUT/'index.json').write_text(json.dumps({
-      'version':'2026-11-04-auditoria','totalExamModels':len(index),'totalImportedQuestions':len(all_rows),
+      'version':'2026-11-16-r26','totalExamModels':len(index),'totalImportedQuestions':len(all_rows),
       'categoryCounts':dict(denomination),'exams':index,'mercanciasTemplateStats':cap_stats,'answerStatuses':dict(statuses),'warnings':warnings,
       'frequencyExplanation':'Apariciones por modelo de examen transcrito, nunca una predicción de la siguiente prueba.'
     },ensure_ascii=False,indent=2),encoding='utf-8')
