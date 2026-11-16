@@ -67,7 +67,7 @@ function CapApp({userEmail,onSignOut}:{userEmail:string;onSignOut:()=>Promise<vo
  const props={bank,rows,pm,stats,sessions,start}
  const generalKeys=new Set(bank.questionnaires.map(q=>q.section+':'+q.questionnaireId))
  const bankSeen=rows.filter(x=>x.attempts>0&&generalKeys.has(x.questionnaireId)).length
- return <div className="app">
+ return <div className={page==='quiz'?'app pro-quiz-page':'app'}>
   <header><button className="logo" aria-label="Inicio CAP Test Pro" onClick={()=>go('home')}><ProBrand/></button><div className="pro-current-page">{page==='home'?'':({general:'Banco general',study:'Estudio',questionnaires:'Cuestionarios',exam:'Test general',quiz:'Test en curso',results:'Resultado',stats:'Progreso',settings:'Perfil'} as Record<string,string>)[page]}{!online&&<small>Sin conexión</small>}</div><button className="gear" aria-label="Perfil y ajustes" onClick={()=>go('settings')}><ProIcon name="person"/></button></header>
   {PREVIEW&&<div className="cap-preview-banner" role="status"><strong>PREVIEW</strong><span>Datos locales · Sin sincronización</span></div>}
   <main>{load!==null&&<div className="overlay"><Loading text={'Preparando preguntas… '+load+'%'}/></div>}{page==='home'&&<CapHome pm={pm} bankCount={bank.totalQuestions} seenCount={bankSeen}/>} {page==='general'&&<Home {...props}/>} {page==='study'&&<Study {...props}/>}  {page==='questionnaires'&&<Questionnaires {...props}/>} {page==='exam'&&<Exam {...props}/>} {page==='quiz'&&<Quiz pm={pm} refresh={refresh}/>} {page==='results'&&<Results/>} {page==='stats'&&<Stats {...props}/>} {page==='settings'&&<Settings theme={theme} setTheme={setTheme} bank={bank} refresh={refresh} userEmail={userEmail} onSignOut={onSignOut}/>}</main>
