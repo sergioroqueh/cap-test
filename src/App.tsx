@@ -41,7 +41,7 @@ function App(){
  async function loginDone(next:Session){setSyncing(true);try{await synchronizeAccount();setSession(next)}finally{setSyncing(false);setAuthReady(true)}}
  async function logout(){try{await signOut()}finally{await clearLocalCache();localStorage.removeItem(ACTIVE);localStorage.removeItem(LAST);sessionStorage.removeItem(ACTIVE);sessionStorage.removeItem(LAST);setSession(null)}}
  if(PREVIEW)return <CapApp userEmail="Modo pruebas · solo este navegador" onSignOut={async()=>{}}/>
- if(!cloudConfigured)return <div className="authshell"><section className="authcard"><ProBrand/><h1>Sincronización pendiente</h1><p>La aplicación está preparada para acceso privado, pero falta conectar el proyecto de Supabase.</p></section></div>
+ if(!cloudConfigured)return <div className="authshell"><section className="authcard"><ProBrand/><h1>Acceso comercial en preparación</h1><p>Esta compilación no está conectada a ningún proyecto. Utiliza la preview local para probar la aplicación. La futura cuenta comercial requerirá una infraestructura independiente.</p></section></div>
  if(!authReady||syncing)return <Loading text={syncing?'Sincronizando tu progreso…':'Comprobando sesión…'}/>
  if(!session)return <Login onSuccess={loginDone}/>
  return <CapApp userEmail={session.user.email||'Usuario'} onSignOut={logout}/>
