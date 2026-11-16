@@ -1,9 +1,12 @@
 import { createClient, type Session } from '@supabase/supabase-js'
 
-const url = import.meta.env.VITE_SUPABASE_URL?.trim()
-const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY?.trim()
+// Commercial branch must never reuse the private CAP Test project's environment.
+// C5 deliberately fails closed until a separately approved isolated data/auth implementation.
+const url = import.meta.env.VITE_CAP_PRO_SUPABASE_URL?.trim()
+const anonKey = import.meta.env.VITE_CAP_PRO_SUPABASE_PUBLISHABLE_KEY?.trim()
+function commercialCloudReleaseReady(): boolean { return false }
 
-export const cloudConfigured = import.meta.env.VITE_CAP_PREVIEW !== 'true' && Boolean(url && anonKey)
+export const cloudConfigured = import.meta.env.VITE_CAP_PREVIEW !== 'true' && commercialCloudReleaseReady() && Boolean(url && anonKey)
 
 export const supabase = cloudConfigured
   ? createClient(url!, anonKey!, {
