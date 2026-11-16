@@ -39,8 +39,7 @@ export const REGIONS=[
  ['ml','Melilla','#426a9e','M4 39H44V35H40V22H35V16H30V22H27V14H30V9H25V4L35 8L25 12V14H21V22H18V16H13V22H8V35H4ZM20 39V32Q24 27 28 32V39ZM12 26H16V30H12ZM32 26H36V30H32Z']
 ] as const
 type Region=typeof REGIONS[number]
-const groupedInteger=new Intl.NumberFormat('es-ES',{useGrouping:'always',maximumFractionDigits:0})
-function formatCount(n:number){return groupedInteger.format(n)}
+function formatCount(n:number){return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g,'.')}
 function starPath(cx:number,cy:number,r:number){
  return Array.from({length:10},(_,i)=>{const a=-Math.PI/2+i*Math.PI/5;const v=i%2?r*.43:r;return (i?'L':'M')+(cx+Math.cos(a)*v).toFixed(2)+' '+(cy+Math.sin(a)*v).toFixed(2)}).join('')+'Z'
 }
