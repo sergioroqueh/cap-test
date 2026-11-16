@@ -407,7 +407,7 @@ function Results(){
      <p><strong>{status}</strong> · Tu respuesta: {answer.selected?answer.selected+' · '+q.options[answer.selected]:'—'}</p>
      {answer.scoringEligible===false
        ?<><p>Plantilla original: <b>{q.originalSheetAnswer||'—'}</b> · Banco: <b>{q.bankAnswer||'—'}</b></p>{decision?<><p><strong>{decision.editorialAnswer?'Respuesta técnica orientativa: '+decision.editorialAnswer:'Pregunta inválida; sin respuesta técnica'}</strong></p><small>{decision.decision} No puntúa y no se presenta como fe de erratas del tribunal.</small></>:<small>No hay solución aprobada todavía. Esta pregunta no se ha calificado.</small>}</>
-       :<><p className="green">Solución aplicada: {q.correctAnswer} · {q.options[q.correctAnswer]}</p>{q.reviewRequired&&<small>Solución procedente del cotejo; algunas transcripciones requieren revisión editorial.</small>}</>}
+       :<><p className="green">Solución aplicada en esa sesión: {answer.correctAnswer} · {q.options[answer.correctAnswer]}</p>{q.reviewRequired&&<small>Solución procedente del cotejo; algunas transcripciones requieren revisión editorial.</small>}</>}
     {q.technicalDecision&&<div className="cap-r25-final"><b>R27 · Plantilla {q.technicalDecision.historicalAnswer} · Técnica {q.technicalDecision.technicalAnswer||'sin opción única'}</b><p>{q.technicalDecision.reason}</p><small>Decisión editorial; no rectificación oficial.</small></div>}
     </article>
    })}
