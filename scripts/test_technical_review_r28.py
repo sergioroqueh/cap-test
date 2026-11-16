@@ -6,6 +6,9 @@ out=root/'public/data/exams'
 ix=json.loads((out/'index.json').read_text())
 cases=json.loads((root/'data-src/cap-exams/technical_review_r28.json').read_text())['cases']
 keys=json.loads((root/'data-src/cap-exams/answer_keys_visually_verified.json').read_text())['exams']
+batch=json.loads((root/'data-src/cap-exams/visual_batch_candidates_2026_11_05.json').read_text())['exams']
+assert not set(keys)&set(batch)
+keys.update(batch)
 seen={}
 for e in ix['exams']:
     rows=json.loads((out/'questions'/f"{e['id']}.json").read_text())
