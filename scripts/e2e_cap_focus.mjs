@@ -6,7 +6,7 @@ import { chromium } from 'playwright'
 const BASE=process.env.CAP_PREVIEW_URL||'http://127.0.0.1:4173/'
 const artifacts='artifacts/cap-focus-e2e'
 await mkdir(artifacts,{recursive:true})
-const rank=JSON.parse(await readFile('artifacts/cap-r26-ranking.json','utf8'))
+const rank=JSON.parse(await readFile('artifacts/cap-r27-ranking.json','utf8'))
 const browser=await chromium.launch({headless:true,args:['--no-sandbox']})
 const readSession=page=>page.evaluate(()=>JSON.parse(localStorage.getItem('cap-test-beta-active-v1')||'null'))
 const readResult=page=>page.evaluate(()=>JSON.parse(localStorage.getItem('cap-test-beta-last-v1')||'null'))
@@ -94,11 +94,11 @@ try{
     }
     return ids.size
   }
-  return {stats:index.mercanciasTemplateStats,metas,manualCount:countUnique(rows),manualScorable:countUnique(rows.filter(q=>q.scoringEligible))}
+  return {stats:index.technicalR28Stats,metas,manualCount:countUnique(rows),manualScorable:countUnique(rows.filter(q=>q.scoringEligible && q.technicalDecision?.action!=='exclude'))}
  })
  assert.equal(available.stats.templateExamModels,24)
  assert.equal(available.stats.originalAppearances,2400)
- assert.equal(available.stats.scorableAppearances,2397)
+ assert.equal(available.stats.scorableAppearances,2388)
  assert.equal(available.metas.length,24)
  assert.equal(available.stats.uniqueQuestions,available.manualCount)
  assert.equal(available.stats.uniqueScorableQuestions,available.manualScorable)
@@ -171,7 +171,7 @@ try{
   const metas=index.exams.filter(e=>e.category==='mercancias'&&e.hasOriginalAnswerSheet)
   const all=(await Promise.all(metas.map(e=>fetch('./'+e.path).then(r=>r.json())))).flat()
   const rows=new Map(all.map(q=>['cap:'+q.examId+':'+q.number,q]))
-  return ids.map(id=>rows.get(id)).map(q=>({found:!!q,valid:q?.scoringEligible===true,frequency:q?.examFrequency||0}))
+  return ids.map(id=>rows.get(id)).map(q=>({found:!!q,valid:q?.scoringEligible===true&&q?.technicalDecision?.action!=='exclude',frequency:q?.examFrequency||0}))
  },topSession.questionIds)
  assert.ok(topAudit.every(q=>q.found&&q.valid&&q.frequency>0),'Top 100 includes only gradeable questions')
  await topPage.screenshot({path:artifacts+'/mobile-top-100.png',fullPage:true})
@@ -216,13 +216,69 @@ try{
   const option=page.locator('#cap-historicos .list button').filter({hasText:pages})
   assert.equal(await option.count(),1)
   assert.ok(await option.isEnabled())
-  assert.match(await option.innerText(),/100 puntuables/)
+  assert.match(await option.innerText(),/97 puntuables/)
   await option.click()
   await page.locator('.focus-question').waitFor({timeout:30000})
   const session=await readSession(page)
   assert.equal(session.questionIds.length,100)
   assert.ok(session.questionIds.every(id=>id.startsWith('cap:'+eid+':')))
   await assertPdfDownload(page,page.locator('.focus-study-pdf-button'),true)
+  checks++
+  await ctx.close()
+ }
+
+ // R27: known historical error must grade C, not B, and exclusions must not penalize.
+ {
+  const ctx=await browser.newContext({viewport:{width:390,height:844},isMobile:true})
+  const page=await openHome(ctx)
+  await page.getByRole('button',{name:'Estudio',exact:true}).click()
+  await page.locator('.focus-practice-grid button').filter({hasText:'Por convocatoria'}).click()
+  await page.locator('#cap-historicos .list button').filter({hasText:'218–237'}).click()
+  await page.locator('.focus-question').waitFor()
+  await page.locator('.focus-index summary').click()
+  await page.locator('.focus-question-grid button').nth(1).click()
+  await page.locator('.answers button').nth(2).click()
+  assert.match(await page.locator('.feedback').innerText(),/Correcta/)
+  assert.match(await page.locator('.focus-question .cap-r25-final').innerText(),/Plantilla original: B · Solución técnica: C/)
+  await page.locator('.focus-question-grid button').nth(2).click()
+  await page.locator('.answers button').nth(2).click()
+  assert.match(await page.locator('.feedback').innerText(),/Correcta/)
+  assert.match(await page.locator('.focus-question .cap-r25-final').innerText(),/Plantilla original: B · Solución técnica: C/)
+  await page.locator('.focus-question-grid button').nth(44).click()
+  await page.locator('.answers button').nth(0).click()
+  assert.match(await page.locator('.feedback').innerText(),/No puntúa/)
+  assert.match(await page.locator('.focus-question .cap-r25-final').innerText(),/Sin respuesta única válida/)
+  const [download]=await Promise.all([page.waitForEvent('download'),page.locator('.focus-study-pdf-button').click()])
+  const commands=pdfPageCommands(await readFile(await download.path()))
+  assert.ok(commands.includes('NOTAS DE REVISION TECNICA R27'))
+  assert.ok(commands.includes('Pregunta 2 | Original: B | Tecnica: C'))
+  assert.ok(commands.includes('NP - sin puntuar'))
+  await submit(page)
+  const result=await readResult(page)
+  assert.equal(result.record.correct,2)
+  assert.equal(result.record.incorrect,0)
+  assert.equal(result.record.excluded,3)
+  checks++
+  await ctx.close()
+ }
+
+ // R28: copied ambiguity and new semantic variant must both stay unscored.
+ for(const [pages,n,letter] of [['97–111',26,1],['275–290',42,0],['482–499',76,1]]){
+  const ctx=await browser.newContext({viewport:{width:390,height:844},isMobile:true})
+  const page=await openHome(ctx)
+  await page.getByRole('button',{name:'Estudio',exact:true}).click()
+  await page.locator('.focus-practice-grid button').filter({hasText:'Por convocatoria'}).click()
+  await page.locator('#cap-historicos .list button').filter({hasText:pages}).click()
+  await page.locator('.focus-question').waitFor({timeout:30000})
+  await page.locator('.focus-index summary').click()
+  await page.locator('.focus-question-grid button').nth(n-1).click()
+  await page.locator('.answers button').nth(letter).click()
+  assert.match(await page.locator('.feedback').innerText(),/No puntúa/)
+  assert.match(await page.locator('.focus-question .cap-r25-final').innerText(),/R28/)
+  await submit(page)
+  const result=await readResult(page)
+  assert.equal(result.record.correct,0)
+  assert.equal(result.record.incorrect,0)
   checks++
   await ctx.close()
  }
@@ -269,7 +325,7 @@ try{
  await h.locator('.focus-practice-grid button').filter({hasText:'Por convocatoria'}).click()
  await h.locator('#cap-historicos').waitFor({timeout:10000})
  assert.equal(await h.locator('#cap-historicos .list button').count(),25)
- const disputed=h.locator('#cap-historicos .list button').filter({hasText:'conflictos sin puntuar'}).first()
+ const disputed=h.locator('#cap-historicos .list button').filter({hasText:'incidencias sin puntuar'}).first()
  assert.ok(await disputed.count()>0,'at least one historic model has a disputed question')
  await disputed.click()
  await h.locator('.focus-question').waitFor({timeout:30000})
@@ -321,8 +377,8 @@ try{
   const index=await fetch('./data/exams/index.json').then(r=>r.json())
   return fetch('./'+index.exams.find(x=>x.id===examId).path).then(r=>r.json())
  })
- const right=sourceQuestions[0].correctAnswer
- const wrong=['A','B','C','D'].find(x=>x!==sourceQuestions[1].correctAnswer)
+ const right=sourceQuestions[0].technicalDecision?.technicalAnswer||sourceQuestions[0].correctAnswer
+ const wrong=['A','B','C','D'].find(x=>x!==(sourceQuestions[1].technicalDecision?.technicalAnswer||sourceQuestions[1].correctAnswer))
  assert.ok(right&&wrong)
  await d.locator('.answers button').nth(['A','B','C','D'].indexOf(right)).click()
  await d.locator('.feedback').waitFor()

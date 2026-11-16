@@ -184,6 +184,21 @@ export function exportExamPdf({ label, questions, withSolutions = false }: ExamP
     })
   }
 
+  const technical=questions.map((q,i)=>({q,i})).filter(({q})=>!!q.technicalDecision)
+  if(withSolutions && technical.length){
+    nextPage()
+    doc.setTextColor(26,39,49)
+    writeLines(['NOTAS DE REVISION TECNICA R27/R28'],13,7,LEFT,'bold')
+    writeLines(split('Las casillas reflejan la solucion de estudio. Se conserva la letra historica; estas decisiones no son una rectificacion oficial.',CONTENT_WIDTH,9),9,5)
+    y+=3
+    technical.forEach(({q,i})=>{
+      const d=q.technicalDecision!
+      ensure(17)
+      writeLines(split('Pregunta '+(i+1)+' | Original: '+d.historicalAnswer+' | Tecnica: '+(d.technicalAnswer||'NP'),CONTENT_WIDTH,9,'bold'),9,5,LEFT,'bold')
+      writeLines(split(d.reason,CONTENT_WIDTH,8.5),8.5,4.5)
+      y+=3
+    })
+  }
   const totalPages = doc.getNumberOfPages()
   for (let p=1;p<=totalPages;p++) {
     doc.setPage(p)
