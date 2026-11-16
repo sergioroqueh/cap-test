@@ -266,7 +266,7 @@ function CapHome({pm}:{pm:Map<string,QuestionProgress>}){
    <p><a className="btn light" href={import.meta.env.BASE_URL+'data/exams/editorial_casebook_r24.csv'} download="CAP_R24_mercancias_2022_2024_con_plantilla.csv">Exportar R24: 10 modelos de Mercancías 2022–2024 · 1.000 preguntas (CSV)</a></p>
    <p className="note">Fase final aplazada: Viajeros y modelos sin plantilla. El CSV R24 solo incluye Mercancías con respuestas originales.</p>
    <p><a className="btn light" href={import.meta.env.BASE_URL+'data/exams/editorial_decisions_r25_three.csv'} download="CAP_cierre_3_conflictos_editoriales.csv">Exportar cierre editorial de las 3 contradicciones (CSV)</a></p>
-   <p><a className="btn light" href={import.meta.env.BASE_URL+'data/exams/sheet_audit_2200.csv'} download="CAP_2200_respuestas_plantillas_revision.csv">CSV de las 2.200 respuestas impresas</a></p>
+   <p><a className="btn light" href={import.meta.env.BASE_URL+'data/exams/sheet_audit_2400.csv'} download="CAP_2400_respuestas_plantillas_revision.csv">CSV de las 2.400 respuestas impresas</a></p>
    {sheetReviewShown&&<div className="cap-pending-results">
     <strong>{sheetReviewRows.length} preguntas · {sheetReviewRows.filter(q=>!q.scoringEligible).length} sin puntuación · {sheetReviewRows.filter(q=>q.reviewPriority!=='P4'||!!q.r22Case||!!q.r23Case||!!q.r24Case).length} con alguna marca o decisión editorial</strong>
     {selectedTriage&&<p className="cap-triage-summary"><b>Prioridad:</b> P0 {selectedTriage.P0} · P1 {selectedTriage.P1} · P2 {selectedTriage.P2} · P3 {selectedTriage.P3} · sin alertas P4 {selectedTriage.P4}. Texto con revisión pendiente: {selectedTriage.pendingVisualTranscription}.</p>}
@@ -311,7 +311,7 @@ function CapHome({pm}:{pm:Map<string,QuestionProgress>}){
   </section>
   </div></details>
   <button className="btn light" onClick={()=>go('general')}>Abrir banco general · 8.655 preguntas</button>
-  <p className="note">Los 22 modelos con plantilla mantienen sus 100 preguntas y las letras originales; las contradicciones documentadas no puntúan. No se duplican ampliaciones en el cómputo de frecuencia.</p>
+  <p className="note">Los 24 modelos con plantilla mantienen sus 100 preguntas y las letras originales; las contradicciones documentadas no puntúan. No se duplican ampliaciones en el cómputo de frecuencia. La plantilla B de julio 2025 fue aportada y contrastada; su procedencia oficial no está acreditada.</p>
  </div>
 }
 

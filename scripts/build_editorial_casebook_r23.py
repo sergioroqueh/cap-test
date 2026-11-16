@@ -183,7 +183,7 @@ def main():
     assert len(seen) == len(by_case) == 17
     assert len(all_rows) == 1000 and len(stats) == 10
     assert original_letters == 1000
-    assert scoring == 1082 and unscored == 18
+    assert scoring == 997 and unscored == 3
     assert conflicts == 3
     assert sum(x["withoutScoring"] for x in stats if x["templateFile"] is None) == 0
     assert all(x["questions"] == 100 and not x["visualReviewCompletedAllQuestions"] for x in stats)

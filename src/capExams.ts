@@ -24,7 +24,7 @@ export interface CapExamIndex {
   totalExamModels: number
   totalImportedQuestions: number
   categoryCounts: Partial<Record<CapCategory, number>>
-  /** Counted solely from the 22 keyed Mercancías historical exam JSON files. */
+  /** Counted solely from the 24 keyed Mercancías historical exam JSON files. */
   mercanciasTemplateStats: {
     templateExamModels: number
     originalAppearances: number
@@ -265,7 +265,7 @@ export async function loadCapEditorialTriage(): Promise<CapEditorialTriage> {
   const res = await fetch(BASE + 'data/exams/editorial_triage_r21.json')
   if (!res.ok) throw new Error('No se ha podido cargar la revisión editorial por convocatoria.')
   const payload = await res.json() as CapEditorialTriage
-  if (payload.totalExams !== 26 || payload.totalQuestions !== 2600 || payload.scoredBeforeAfter !== 2417)
+  if (payload.totalExams !== 26 || payload.totalQuestions !== 2600 || payload.scoredBeforeAfter !== 2508)
     throw new Error('La auditoría editorial no coincide con la versión de las preguntas.')
   editorialTriageCache = payload
   return payload
