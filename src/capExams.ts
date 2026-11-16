@@ -1,4 +1,4 @@
-import type { AnswerKey, Question } from './types'
+import type { AnswerKey, Question, CapTechnicalDecision } from './types'
 
 export type CapCategory = 'mercancias' | 'viajeros'
 export interface CapExamMeta {
@@ -12,6 +12,7 @@ export interface CapExamMeta {
   status: string
   count: number
   expectedCount: number
+  technicalReadyCount?: number
   readyCount: number
   originalSheetAnswersCount?: number
   scoringEligibleCount?: number
@@ -32,6 +33,7 @@ export interface CapExamIndex {
     scorableAppearances: number
     uniqueScorableQuestions: number
   }
+  technicalR27Stats?: CapExamIndex['mercanciasTemplateStats']
   exams: CapExamMeta[]
 }
 export interface CapQuestion extends Question {
@@ -59,7 +61,9 @@ export async function loadCapIndex(): Promise<CapExamIndex> {
   if (cachedIndex) return cachedIndex
   const res = await fetch(BASE + 'data/exams/index.json')
   if (!res.ok) throw new Error('No se ha podido cargar el catálogo de exámenes CAP.')
-  cachedIndex = await res.json() as CapExamIndex
+  const raw = await res.json() as CapExamIndex
+  if (!raw.technicalR27Stats) throw new Error('Falta la revisión técnica R27; actualiza la aplicación.')
+  cachedIndex = {...raw, mercanciasTemplateStats:raw.technicalR27Stats, exams:raw.exams.map(e=>({...e, readyCount:e.technicalReadyCount??e.readyCount, scoringEligibleCount:e.technicalReadyCount??e.scoringEligibleCount, disputedCount:e.hasOriginalAnswerSheet?e.count-(e.technicalReadyCount??e.readyCount):e.disputedCount}))}
   return cachedIndex
 }
 
@@ -76,8 +80,8 @@ export async function loadCapQuestions(meta: CapExamMeta): Promise<CapQuestion[]
     : !!q.correctAnswer
   ).map(q => ({
     ...q,
-    correctAnswer: (q.correctAnswer || q.originalSheetAnswer) as AnswerKey,
-    scoringEligible: q.correctAnswer !== null,
+    correctAnswer: (q.technicalDecision?.technicalAnswer || q.correctAnswer || q.originalSheetAnswer) as AnswerKey,
+    scoringEligible: q.correctAnswer !== null && q.technicalDecision?.action !== 'exclude',
     id: 'cap:' + meta.id + ':' + q.number,
     progressId: q.canonicalQuestionId || q.id,
     examId: meta.id
@@ -87,6 +91,7 @@ export async function loadCapQuestions(meta: CapExamMeta): Promise<CapQuestion[]
 }
 
 export interface CapSheetReviewQuestion {
+  technicalDecision?: CapTechnicalDecision
   number: number
   question: string
   options: Record<AnswerKey, string>
@@ -125,7 +130,8 @@ export async function loadCapSheetReview(meta: CapExamMeta): Promise<CapSheetRev
   return rows.map(q => ({
     number: q.number, question: q.question, options: q.options,
     sourcePage: q.sourcePage, answerStatus: q.answerStatus,
-    correctAnswer: q.correctAnswer,
+    correctAnswer: q.technicalDecision ? q.technicalDecision.technicalAnswer : q.correctAnswer,
+    technicalDecision:q.technicalDecision,
     bankAnswer: q.bankAnswer || null,
     originalSheetAnswer: q.originalSheetAnswer || null,
     originalSheetQuestionNumber: q.originalSheetQuestionNumber || null,
@@ -133,7 +139,7 @@ export async function loadCapSheetReview(meta: CapExamMeta): Promise<CapSheetRev
     mappedSheetAnswer: q.mappedSheetAnswer || null,
     mappedSheetQuestionNumber: q.mappedSheetQuestionNumber || null,
     answerDispute: q.answerDispute || null,
-    scoringEligible: q.correctAnswer !== null,
+    scoringEligible: q.correctAnswer !== null && q.technicalDecision?.action !== 'exclude',
     reviewFlags: sourceFlags.get(q.number)?.flags || [],
     reviewPriority: sourceFlags.get(q.number)?.priority || 'P4',
     textReviewRequired: sourceFlags.get(q.number)?.textReviewRequired || false,
@@ -272,6 +278,7 @@ export async function loadCapEditorialTriage(): Promise<CapEditorialTriage> {
 }
 
 export interface CapPendingQuestion {
+  technicalDecision?: CapTechnicalDecision
   number: number
   question: string
   options: Record<AnswerKey, string>
@@ -284,7 +291,8 @@ export async function loadCapPendingQuestions(meta: CapExamMeta): Promise<CapPen
   const res = await fetch(BASE + meta.path)
   if (!res.ok) throw new Error('No se pudieron cargar las preguntas pendientes.')
   const rows: CapRawQuestion[] = await res.json()
-  return rows.filter(q => q.correctAnswer === null).map(q => ({
+  return rows.filter(q => q.correctAnswer === null || q.technicalDecision?.action === 'exclude').map(q => ({
+    technicalDecision:q.technicalDecision,
     number:q.number,question:q.question,options:q.options,
     sourcePage:q.sourcePage,answerStatus:q.answerStatus,
     editorialDecision:q.editorialDecision || null
