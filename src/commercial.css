@@ -205,3 +205,73 @@
  .focus-quiz .focus-quiz-actions .btn{font-size:12px}
 }
 @media(min-width:600px){.focus-quiz .focus-question-grid{grid-template-columns:repeat(10,minmax(0,1fr))}}
+
+/* C4 — prioritize the real phone viewport and the road-sign result. */
+.cap-preview-banner{display:flex;justify-content:center;align-items:center;gap:8px;padding:5px 9px;background:#30291c;color:#f8df95;border-bottom:1px solid #6a5428;letter-spacing:0;font-size:10px;line-height:1.3;min-height:28px}
+.cap-preview-banner strong{font-size:9px;letter-spacing:.1em;border:1px solid #a7833b;padding:2px 5px;border-radius:4px}
+.pro-bank:after{right:-120px;bottom:-109px;border:10px solid #ffcc37;box-shadow:0 0 0 8px #212b36,0 0 0 11px #e5bd5044}
+.pro-destination{box-shadow:0 8px 24px #0002}
+.pro-sign{background:linear-gradient(145deg,#146fc4 0%,#0757a7 45%,#073766 100%)}
+.pro-sign>svg{box-shadow:0 2px 5px #0003}
+.pro-region-feature{box-shadow:inset 0 1px 0 #ffffff0c,0 3px 9px #0002}
+.pro-quick{box-shadow:inset 0 1px 0 #ffffff0a,0 3px 9px #0002}
+.pro-quick:active:not(:disabled){transform:translateY(1px)}
+.app>nav button.on:before{width:40px}
+.pro-results{max-width:860px;margin-inline:auto}
+.pro-results-heading{font-size:clamp(25px,6vw,36px);letter-spacing:-.04em;margin:12px 0}
+.pro-results .result{background:linear-gradient(145deg,#0c66b8,#063f76);border:2px solid #97c8f8;border-radius:18px;padding:clamp(17px,4vw,28px);position:relative;overflow:hidden}
+.pro-results .result em{color:#e4f1ff;font-size:10px;line-height:1.4}
+.pro-result-score{display:flex;align-items:center;gap:15px;margin:12px 0}
+.pro-result-score>svg{flex:0 0 47px;width:47px;height:47px;padding:9px;border:1px solid #d8ebff90;border-radius:10px;color:#fff}
+.pro-result-score>div{min-width:0}
+.pro-results .result strong{font-size:clamp(33px,9vw,60px);margin:0 0 10px;line-height:1;overflow-wrap:anywhere}
+.pro-result-status{display:inline-block;margin:0;padding:5px 9px;border-radius:6px;font-size:clamp(14px,4vw,19px);line-height:1.25;letter-spacing:-.02em;color:#15202b;background:#ffd15c}
+.result.good .pro-result-status{background:#75df97;color:#073b26}
+.result.bad .pro-result-status{background:#ff9ca6;color:#551421}
+.pro-results .result .focus-result-explain{color:#edf5ff;font-size:12px;line-height:1.5}
+.pro-result-metrics{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.pro-result-metrics article{min-width:0;box-shadow:none;padding:12px 10px}
+.pro-result-metrics article b{font-size:clamp(20px,5vw,27px);font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.pro-result-metrics article span{font-size:11px;line-height:1.3}
+.pro-result-metrics .pro-metric-good b{color:var(--success)}
+.pro-result-metrics .pro-metric-bad b{color:var(--danger)}
+.pro-next-steps h2{margin:0 0 12px;font-size:21px}
+.pro-next-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.pro-next-grid .pro-quick{width:100%}
+.pro-results .review article>b{font-size:14px}.pro-results .review article p{font-size:12px}
+.pro-results .review article small{font-size:11px}
+.pro-results .note{text-align:left}
+.focus-quiz .focus-quiz-head .bar{height:5px;margin-top:5px}
+.focus-quiz .focus-quiz-actions button:last-child:not(:disabled){background:var(--soft)!important;color:var(--text)!important;border:1px solid var(--line)}
+.focus-quiz .focus-quiz-actions button{scroll-margin-bottom:85px}
+.focus-quiz .answers button{scroll-margin-bottom:95px}
+@media(max-width:600px){
+ .app>header{min-height:60px;padding-block:7px}
+ .pro-welcome{min-height:86px;padding:7px 0 9px}
+ .pro-progress{padding:9px 12px 7px}
+ .pro-dashboard{gap:10px}
+ .pro-route-card{padding:11px 10px}
+ .pro-route-card p{margin:7px 0}
+ .pro-archive-link{min-height:44px;font-size:11px}
+ .pro-quick{min-height:67px}
+ .app.pro-quiz-page main{padding:12px 12px 70px}
+ .app.pro-quiz-page>header{min-height:54px;padding-block:5px}
+ .app.pro-quiz-page>header .pro-brand-mark,.app.pro-quiz-page>header .pro-brand-mark svg{width:35px;height:35px}
+ .focus-quiz .focus-quiz-head{margin-bottom:7px}
+ .focus-quiz .focus-exam-status{margin:6px 0;gap:7px}
+ .focus-quiz .focus-clock,.focus-quiz .focus-exam-count,.focus-quiz .focus-mark{min-height:49px;padding:7px 8px}
+ .focus-quiz .focus-mark-help{font-size:10px;margin:0 0 7px}
+ .focus-quiz .focus-index{margin-bottom:8px;border-radius:10px}
+ .focus-quiz .focus-index>summary{min-height:44px;padding:12px;font-size:12px}
+ .focus-quiz .focus-question{padding:12px;border-radius:13px}
+ .focus-quiz .focus-question h2{font-size:clamp(18px,4.6vw,22px);margin:7px 0 10px;padding:11px 12px}
+ .focus-quiz .focus-frequency{padding:8px 10px;margin:0 0 9px!important;font-size:11px}
+ .focus-quiz .answers{gap:7px}
+ .focus-quiz .answers button{min-height:53px;padding:9px 10px}
+ .focus-quiz .focus-quiz-actions{padding:7px;gap:7px;bottom:max(4px,env(safe-area-inset-bottom))}
+ .focus-quiz .focus-quiz-actions .btn{min-height:47px}
+ .pro-results{padding-bottom:12px}
+}
+@media(max-width:340px){.pro-next-grid{grid-template-columns:1fr}.pro-result-score{gap:8px}.pro-result-score>svg{width:36px;height:36px;flex-basis:36px;padding:6px}.pro-result-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(min-width:900px){.pro-results .pro-result-metrics{grid-template-columns:repeat(5,minmax(0,1fr))}.pro-results .pro-next-grid{max-width:570px}}
+@media(prefers-reduced-motion:reduce){.pro-quick:active:not(:disabled){transform:none}}
