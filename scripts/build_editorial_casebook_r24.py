@@ -246,7 +246,7 @@ def main():
         deferred.append({
             "examId": eid, "category": m["category"], "date": m["date"],
             "questionsNotAuditedThisRound": 100,
-            "scoringEligibleFromBank": sum(q.get("bankAnswer") in ("A","B","C","D") for q in rows),
+            "scoringEligibleFromBank": sum(q.get("bankAnswer") in ("A","B","C","D") for q in rows) if m["hasOriginalAnswerSheet"] else m["readyCount"],
             "unscoredDueToNoSheet": sum(q.get("correctAnswer") is None for q in rows),
             "whyDeferred": "Cotejo editorial de enunciados pendiente; plantilla recuperada R26" if m["hasOriginalAnswerSheet"] else "Fase final: plantilla original no disponible o Viajeros",
             "hasOriginalAnswerSheet": m["hasOriginalAnswerSheet"],

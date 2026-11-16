@@ -160,7 +160,7 @@ def main() -> None:
                 for item, _ in group
             )
             for item, _ in group:
-                mark(item, "diferencia_plantillas_modelos_repetidos", "P0",
+                mark(item, "diferencia_plantillas_modelos_repetidos", "P0" if item["scoredAnswer"] is None or len({t for q,t in group if q["scoredAnswer"] in LETTERS})>1 else "P2",
                      "Mismo enunciado y cuatro opciones con solucion distinta en otras hojas",
                      evidence)
 
