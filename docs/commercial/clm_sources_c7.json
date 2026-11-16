@@ -1,0 +1,133 @@
+{
+  "schemaVersion": 1,
+  "region": "clm",
+  "asOf": "2026-11-16",
+  "releaseAllowed": false,
+  "portal": "https://transporte.castillalamancha.es/actuaciones/certificado-de-aptitud-profesional-de-conductores-de-transporte-cap",
+  "documents": [
+    {
+      "id": "2025-02-confirmation",
+      "kind": "decision_reference_only",
+      "date": "2025-02-01",
+      "url": "https://www.castillalamancha.es/sites/default/files/documentos/pdf/20250212/cap_2025_1a_provisional_resultado_apto_0.pdf",
+      "status": "indexed_decision_do_not_download_personal_lists",
+      "historicalCandidates": [
+        "2025-02-01-mercancias-global"
+      ]
+    },
+    {
+      "id": "2025-03-questions",
+      "kind": "questionnaire",
+      "date": "2025-03-29",
+      "url": "https://www.castillalamancha.es/sites/default/files/documentos/pdf/20250331/2a_prueba_cap_2025_-_cuestionarios.pdf",
+      "status": "indexed_text",
+      "historicalCandidates": [
+        "2025-03-29-mercancias-global"
+      ]
+    },
+    {
+      "id": "2025-03-key",
+      "kind": "answer_key",
+      "date": "2025-03-29",
+      "url": "https://www.castillalamancha.es/sites/default/files/documentos/pdf/20250331/2a_prueba_cap_2025_-_plantillas_correctoras.pdf",
+      "status": "indexed_text_initial_key"
+    },
+    {
+      "id": "2025-05-questions",
+      "kind": "questionnaire",
+      "date": "2025-05-24",
+      "url": "https://www.castillalamancha.es/sites/default/files/documentos/pdf/20250526/3a_prueba_2025_-_cuestionarios.pdf",
+      "status": "indexed_text_new_date_candidate",
+      "historicalCandidates": []
+    },
+    {
+      "id": "2025-07-key",
+      "kind": "answer_key",
+      "date": "2025-07-26",
+      "url": "https://www.castillalamancha.es/sites/default/files/documentos/pdf/20250728/2025_4a_prueba_cap_-_plantillas_correctoras.pdf",
+      "status": "indexed_text_initial_key",
+      "historicalCandidates": [
+        "2025-07-26-mercancias-a",
+        "2025-07-26-mercancias-b"
+      ]
+    },
+    {
+      "id": "2025-09-questions",
+      "kind": "questionnaire",
+      "date": "2025-09-27",
+      "url": "https://www.castillalamancha.es/sites/default/files/documentos/pdf/20250929/cap_2025_5a_cuestionarios.pdf",
+      "status": "previously_referenced_R22",
+      "historicalCandidates": [
+        "2025-09-27-mercancias-global"
+      ]
+    },
+    {
+      "id": "2025-09-confirmation",
+      "kind": "decision_reference_only",
+      "date": "2025-09-27",
+      "url": "https://www.castillalamancha.es/sites/default/files/documentos/pdf/20251006/cap_2025_5a_provisional_resultado_apto.pdf",
+      "status": "indexed_decision_do_not_download_personal_lists"
+    },
+    {
+      "id": "2024-07-confirmation",
+      "kind": "decision_reference_only",
+      "date": "2024-07-20",
+      "url": "https://www.castillalamancha.es/sites/default/files/documentos/pdf/20240731/cap_2024_4a_provisional_resultado_apto.pdf",
+      "status": "indexed_decision_do_not_download_personal_lists",
+      "historicalCandidates": [
+        "2024-07-20-mercancias-a",
+        "2024-07-20-mercancias-b"
+      ]
+    },
+    {
+      "id": "2026-05-questions",
+      "kind": "questionnaire",
+      "date": "2026-05-30",
+      "url": "https://transporte.castillalamancha.es/sites/default/files/2026-06/Cuestionarios%203%C2%AA%20prueba%20CAP%202026.pdf",
+      "status": "indexed_text",
+      "historicalCandidates": [
+        "2026-05-30-mercancias-global"
+      ]
+    },
+    {
+      "id": "2026-05-30-answer_key",
+      "kind": "answer_key",
+      "date": "2026-05-30",
+      "prueba": 3,
+      "status": "portal_index_only",
+      "url": null
+    },
+    {
+      "id": "2026-07-25-questionnaire",
+      "kind": "questionnaire",
+      "date": "2026-07-25",
+      "prueba": 4,
+      "status": "portal_index_only",
+      "url": null
+    },
+    {
+      "id": "2026-07-25-answer_key",
+      "kind": "answer_key",
+      "date": "2026-07-25",
+      "prueba": 4,
+      "status": "portal_index_only",
+      "url": null
+    },
+    {
+      "id": "2026-09-26-questionnaire",
+      "kind": "questionnaire",
+      "date": "2026-09-26",
+      "prueba": 5,
+      "status": "portal_index_only",
+      "url": null
+    },
+    {
+      "id": "2026-09-26-answer_key",
+      "kind": "answer_key",
+      "date": "2026-09-26",
+      "prueba": 5,
+      "status": "portal_index_only",
+      "url": null
+    }
+  ]
+}

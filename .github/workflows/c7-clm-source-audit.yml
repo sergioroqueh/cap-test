@@ -1,0 +1,28 @@
+name: C7 CLM official source audit
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/audit_clm_sources_c7.py'
+      - 'docs/commercial/clm_sources_c7.json'
+      - '.github/workflows/c7-clm-source-audit.yml'
+permissions:
+  contents: read
+jobs:
+  audit:
+    if: github.head_ref == 'feat/cap-commercial'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify parser regression
+        run: python3 scripts/audit_clm_sources_c7.py --self-test
+      - name: Retrieve source metadata and compare without importing
+        run: |
+          command -v pdftotext
+          command -v pdfinfo
+          python3 scripts/audit_clm_sources_c7.py --output c7-report/clm-audit-c7.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: rutacap-clm-c7-audit
+          path: c7-report/clm-audit-c7.json
