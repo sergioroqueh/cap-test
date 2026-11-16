@@ -14,7 +14,7 @@ export function ProIcon({name}:{name:ProIconName}){
  person:'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM4 21v-2a8 6 0 0 1 16 0v2z'}
  return <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d={paths[name]}/></svg>
 }
-export function ProBrand(){return <span className="pro-brand"><span className="pro-brand-mark"><ProIcon name="road"/></span><span>CAP Test <b>Pro</b><small>PREPARACIÓN CAP</small></span></span>}
+export function ProBrand(){return <span className="pro-brand"><span className="pro-brand-mark"><svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#ef4054" d="M3 39C5 13 24 5 45 9 23 9 12 20 3 39Z"/><path fill="currentColor" d="M6 42C13 25 28 13 45 11 27 17 19 30 16 42ZM33 42C24 25 33 16 45 11 35 20 37 32 45 42Z"/><path stroke="currentColor" strokeWidth="2.8" d="m23 38 2-6m3-6 3-5m4-4 4-3"/></svg></span><span>CAP Test <b>Pro</b><small>PREPARACIÓN CAP</small></span></span>}
 // Original, solid regional emblems. Inspired by local symbols, not official heraldry.
 // All share a 48-unit canvas and use negative space instead of thin outline strokes.
 export const REGIONS=[
@@ -54,15 +54,15 @@ export default function CommercialHome(p:Props){
  ['warning','Errores','Repasa tus fallos',p.onErrors,'red'],['star','Favoritos','Preguntas guardadas',p.onFavorites,'yellow'],
  ['repeat','Más repetidas','Frecuencia real',p.onTop,'yellow'],['flag','Simulacro','100 preguntas · 2 h',p.onExam,'blue']]
  return <section className="pro-dashboard" aria-label="Inicio CAP Test Pro">
-  <div className="pro-welcome"><span className="pro-kicker">TU RUTA CAP <i aria-hidden="true">//</i></span><h1>Seguimos en ruta.</h1><p>Elige cómo quieres preparar tu próximo examen.</p></div>
+  <div className="pro-welcome"><span className="pro-kicker">TU RUTA CAP <i aria-hidden="true">//</i></span><h1>Seguimos en ruta.</h1><p>Prepara tu próximo examen CAP.</p></div>
   <div className="pro-destination">
-   <div className="pro-sign"><div><small>TU PRÓXIMO DESTINO</small><strong>aprobar<span>.</span></strong></div><ProIcon name="road"/></div>
+   <div className="pro-sign"><div><small>Tu próximo destino:</small><strong>aprobar<span>.</span></strong></div><ProIcon name="road"/></div>
    <div className="pro-progress"><div><b>Banco explorado</b><strong>{coverage} %</strong></div><div className="pro-track" role="progressbar" aria-label="Banco general explorado" aria-valuenow={coverage} aria-valuemin={0} aria-valuemax={100}><i style={{width:coverage+'%'}}/></div><button onClick={p.onStats}>{formatCount(seen)} de {formatCount(p.bankCount)} preguntas vistas <span>›</span></button></div>
   </div>
   <div className="pro-main-grid">
-   <article className="pro-route-card"><div className="pro-card-title"><ProIcon name="file"/><h2>Exámenes oficiales</h2></div><p>Convocatorias reales, con plantilla y trazabilidad.</p>
-    <button className="pro-region-feature" aria-expanded={regions} aria-controls="pro-region-list" onClick={()=>setRegions(!regions)}><RegionMark region={REGIONS[0]}/><span><b>Castilla-La Mancha</b><small>Comunidad prioritaria</small></span><span aria-hidden="true">{regions?'⌃':'›'}</span></button>
-    <button className="pro-archive-link" disabled={!p.hasArchive} onClick={p.onArchive}>Consultar archivo histórico <span>›</span></button><small className="pro-archive-note">{p.archiveCount} modelos con plantilla · procedencia regional en catalogación</small>
+   <article className="pro-route-card"><div className="pro-card-title"><ProIcon name="file"/><h2>Exámenes oficiales</h2></div><p>Practica con convocatorias reales.</p>
+    <button className="pro-region-feature" aria-expanded={regions} aria-controls={regions?'pro-region-list':undefined} onClick={()=>setRegions(!regions)}><RegionMark region={REGIONS[0]}/><span><b>Castilla-La Mancha</b><small>Comunidad prioritaria</small></span><span aria-hidden="true">{regions?'⌃':'›'}</span></button>
+    <button className="pro-archive-link" disabled={!p.hasArchive} onClick={p.onArchive}>Consultar archivo histórico <span>›</span></button><small className="pro-archive-note">{p.archiveCount} modelos con plantilla · región por verificar</small>
    </article>
    <button className="pro-route-card pro-bank" onClick={p.onBank}><div className="pro-card-title"><ProIcon name="bank"/><h2>Banco de preguntas</h2></div><strong>{formatCount(p.bankCount)}</strong><p>preguntas disponibles</p><span className="pro-bank-link">Entrar al banco <span>›</span></span></button>
   </div>
