@@ -227,8 +227,6 @@ function QuizSession({initial,questions,frequency,pm,refresh}:{
       <button className={'focus-mark '+((s.markedIds||[]).includes(q.id)?'on':'')} onClick={toggleMarked} aria-pressed={(s.markedIds||[]).includes(q.id)}>⚑ { (s.markedIds||[]).includes(q.id)?'Marcada':'Revisar luego'}</button>
     </div>
     <p className="focus-mark-help">⚑ Revisar: solo durante este test. <span>★ Favorita: se guarda para otros repasos.</span></p>
-    <StudyPdfButton busy={pdfBusy} onClick={()=>void downloadPdf()}/>
-    {pdfError&&<p className="focus-muted" role="alert">{pdfError}</p>}
     <details className="focus-index">
       <summary>Índice de preguntas · {markedCount} marcadas para revisar</summary>
       <div className="focus-question-grid">{questions.map((x,index)=><button key={x.id}
@@ -261,6 +259,8 @@ function QuizSession({initial,questions,frequency,pm,refresh}:{
       <button className="btn light" disabled={s.currentIndex===questions.length-1||finishing} onClick={()=>navigate(s.currentIndex+1)}>Siguiente</button>
       <button className="btn primary" disabled={finishing} onClick={()=>void finish()}>{finishing?'Guardando…':'Entregar'}</button>
     </footer>
+    <StudyPdfButton busy={pdfBusy} onClick={()=>void downloadPdf()}/>
+    {pdfError&&<p className="focus-muted" role="alert">{pdfError}</p>}
     {confirmSubmit&&<ConfirmDialog
       title="¿Entregar el examen?"
       message={'Quedan '+(questions.length-answeredCount)+' preguntas en blanco. Valdrán 0 puntos y no se registrarán como fallos. Puedes seguir respondiendo si lo prefieres.'}
