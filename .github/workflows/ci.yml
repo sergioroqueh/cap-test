@@ -38,6 +38,9 @@ jobs:
           python3 scripts/test_technical_review_r30.py
           python3 scripts/test_technical_review_r31.py
 
+      - name: Extract R32 transport law candidate queue (read-only)
+        run: python3 scripts/select_technical_review_r32.py
+
       - name: Audit remaining source PDFs without changing scored keys
         run: python3 scripts/audit_visual_batch_candidates.py
 
@@ -123,5 +126,6 @@ jobs:
             public/data/exams/technical_review_r31_candidates.json
             public/data/exams/technical_review_r31.json
             public/data/exams/technical_review_r31.csv
+            public/data/exams/technical_review_r32_candidates.json
             artifacts/cap-r27-ranking.json
           retention-days: 14
