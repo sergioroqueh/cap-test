@@ -262,6 +262,27 @@ try{
   await ctx.close()
  }
 
+ // R28: copied ambiguity and new semantic variant must both stay unscored.
+ for(const [pages,n,letter] of [['97–111',26,1],['275–290',42,0],['482–499',76,1]]){
+  const ctx=await browser.newContext({viewport:{width:390,height:844},isMobile:true})
+  const page=await openHome(ctx)
+  await page.getByRole('button',{name:'Estudio',exact:true}).click()
+  await page.locator('.focus-practice-grid button').filter({hasText:'Por convocatoria'}).click()
+  await page.locator('#cap-historicos .list button').filter({hasText:pages}).click()
+  await page.locator('.focus-question').waitFor({timeout:30000})
+  await page.locator('.focus-index summary').click()
+  await page.locator('.focus-question-grid button').nth(n-1).click()
+  await page.locator('.answers button').nth(letter).click()
+  assert.match(await page.locator('.feedback').innerText(),/No puntúa/)
+  assert.match(await page.locator('.focus-question .cap-r25-final').innerText(),/R28/)
+  await submit(page)
+  const result=await readResult(page)
+  assert.equal(result.record.correct,0)
+  assert.equal(result.record.incorrect,0)
+  checks++
+  await ctx.close()
+ }
+
  // The general question bank must also export a generated exam PDF.
  const generalContext=await browser.newContext({viewport:{width:390,height:844},isMobile:true})
  const general=await openHome(generalContext)
