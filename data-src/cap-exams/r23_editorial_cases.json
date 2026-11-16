@@ -177,13 +177,13 @@
     {
       "examId": "2025-07-26-mercancias-b",
       "number": 83,
-      "status": "MISMA_PREGUNTA_SIN_PLANTILLA_INDEPENDIENTE",
+      "status": "MISMA_PREGUNTA_PLANTILLA_B_RECUPERADA_R26",
       "priority": "P2",
-      "reason": "El examen B contiene el mismo orden de motores y alternativas que A q43, pero carecemos de plantilla B; la repetición NO acredita ninguna letra correcta. Si hay respuesta del banco conservar su procedencia.",
+      "reason": "R23: el modelo B repetía el orden de motores de A q43, entonces sin plantilla. R26: la plantilla B aportada marca B, concordante con el banco. A q43 conserva su letra impresa A y su bloqueo. No se transfiere ninguna respuesta entre modelos ni se acredita una fe de erratas oficial.",
       "sourceUrl": "https://www.castillalamancha.es/sites/default/files/documentos/pdf/20250728/2025_cap_4a_prueba_cuestionarios.pdf",
       "expectedQuestionFragment": "mayor a menor consumo específico",
-      "evidenceType": "PREGUNTA_REPETIDA_SIN_PLANTILLA",
-      "expectedPrintedAnswer": null,
+      "evidenceType": "PLANTILLA_B_APORTADA_R26_Y_COTEJO_BANCO",
+      "expectedPrintedAnswer": "B",
       "changesAnswer": false,
       "reviewCompleted": false
     },

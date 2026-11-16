@@ -228,7 +228,7 @@ for exam in exams:
             key=q['examId']+':'+str(q['number'])
             proof=evidence[key]
             assert q['sourcePage']==proof['sourcePage']
-            assert q['reviewRequired'] is (bool(q.get('transcriptionReview')) or q['answerStatus']!='plantilla_pdf_oficial_verificada','plantilla_pdf_aportada_verificada')
+            assert q['reviewRequired'] is (bool(q.get('transcriptionReview')) or q['answerStatus']!='plantilla_pdf_oficial_verificada')
             assert q['answerEvidenceUrl']==proof['sourceUrl']
             assert q['answerTemplateOfficiallyVerified'] is (q['answerStatus']=='plantilla_pdf_oficial_verificada')
             assert q['correctAnswer'] in 'ABCD'
@@ -517,7 +517,7 @@ assert triage['flagCounts']['conflicto_clave_bloqueada']==3
 assert triage['flagCounts']['desfase_numeracion_plantilla']==57
 assert triage['flagCounts']['sin_clave_plantilla_ausente']==89
 assert triage['flagCounts']['opcion_reconstruida_extractor_pdf']==6
-assert triage['repeatedSheetAnswerConflictGroups']>=0
+assert triage['repeatedSheetAnswerConflictGroups']==1
 assert any(f['code']=='enunciado_fuente_incoherente' for f in
            triage['questions']['2026-03-28-mercancias-global'][42]['flags'])
 assert any(f['code']=='cotejo_visual_glifos_septiembre_2025' for f in
@@ -607,7 +607,7 @@ assert all(x['unverifiedTextExtractionLetter'] != x['visuallyVerifiedOriginalShe
            and x['appliedAnswer'] == x['originalSheetAnswer']
            for x in march_r23)
 assert all(c['changesAnswer'] is False and c['reviewCompleted'] is False for c in r23['cases'])
-assert any(c['status'] == 'MISMA_PREGUNTA_SIN_PLANTILLA_INDEPENDIENTE'
+assert any(c['status'] == 'MISMA_PREGUNTA_PLANTILLA_B_RECUPERADA_R26'
            and c['number'] == 83 for c in r23['cases'])
 assert any(c['status'] == 'EXPLICACION_DGT_EXTERNA_COTEJADA'
            and 'dgt.es' in c['sourceUrl'] for c in r23['cases'])

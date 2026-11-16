@@ -112,7 +112,7 @@ def main():
                     assert q["correctAnswer"] is None and q.get("answerDispute"), identity
                 if case["status"] == "OPCION_RECONSTRUIDA_AUN_SIN_IMAGEN":
                     assert q.get("transcriptionReview") is True
-                if case["status"] == "MISMA_PREGUNTA_SIN_PLANTILLA_INDEPENDIENTE":
+                if case["status"] == "MISMA_PREGUNTA_PLANTILLA_B_RECUPERADA_R26":
                     assert q["originalSheetAnswer"] == "B" and eid == "2025-07-26-mercancias-b"
                 review_items += 1
 
@@ -189,8 +189,8 @@ def main():
     assert all(x["questions"] == 100 and not x["visualReviewCompletedAllQuestions"] for x in stats)
     assert sum(x["originalPrintedLetters"] for x in stats) == original_letters
 
-    # Same official 2025-07 A/B question and answer alternatives, but no
-    # independent answer sheet for model B. No answer is transferred from A.
+    # R26: separate B answer sheet recovered. A q43 remains excluded; B q83
+    # agrees with the bank. No answer is transferred between models.
     a = next(q for q in all_rows if q["examId"] == "2025-07-26-mercancias-a"
              and q["questionNumber"] == 43)
     b = next(q for q in all_rows if q["examId"] == "2025-07-26-mercancias-b"
