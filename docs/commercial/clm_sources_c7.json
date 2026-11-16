@@ -37,8 +37,12 @@
       "kind": "questionnaire",
       "date": "2025-05-24",
       "url": "https://www.castillalamancha.es/sites/default/files/documentos/pdf/20250526/3a_prueba_2025_-_cuestionarios.pdf",
-      "status": "indexed_text_new_date_candidate",
-      "historicalCandidates": []
+      "status": "official_text_opened_visual_pending",
+      "historicalCandidates": [],
+      "modalities": [
+        "mercancias_global",
+        "viajeros_ampliacion"
+      ]
     },
     {
       "id": "2025-07-key",
@@ -134,24 +138,56 @@
       "kind": "answer_key",
       "date": "2025-05-24",
       "url": "https://www.castillalamancha.es/sites/default/files/documentos/pdf/20250526/cap_2025_3a_plantillas_correctoras.pdf",
-      "status": "indexed_initial_key_tribunal_approved_2025-05-26_pending_rectifications",
-      "historicalCandidates": []
+      "status": "official_text_opened_initial_key_visual_pending",
+      "historicalCandidates": [],
+      "modalities": [
+        "mercancias_global",
+        "mercancias_promocion",
+        "viajeros_global",
+        "viajeros_promocion"
+      ]
     },
     {
       "id": "2024-09-questions",
       "kind": "questionnaire",
       "date": "2024-09-28",
       "url": "https://www.castillalamancha.es/sites/default/files/documentos/pdf/20240930/cuestionarios_5a_prueba_cap_2024.pdf",
-      "status": "indexed_text_viajeros_global_model_inventory_pending",
-      "historicalCandidates": []
+      "status": "official_text_opened_visual_pending",
+      "historicalCandidates": [],
+      "modalities": [
+        "mercancias_global",
+        "viajeros_global"
+      ]
     },
     {
       "id": "2024-11-questions",
       "kind": "questionnaire",
       "date": "2024-11-30",
       "url": "https://www.castillalamancha.es/sites/default/files/documentos/pdf/20241202/cap_2024_6a_cuestionarios.pdf",
-      "status": "indexed_text_viajeros_global_model_inventory_pending",
+      "status": "official_text_opened_visual_pending",
+      "historicalCandidates": [],
+      "modalities": [
+        "mercancias_global",
+        "viajeros_global"
+      ]
+    },
+    {
+      "id": "2025-11-key-mercancias",
+      "kind": "answer_key",
+      "date": "2025-11-29",
+      "url": "https://www.castillalamancha.es/sites/default/files/documentos/pdf/20251201/cap_2025_6a_plantilla_mercancias.firmado.pdf",
+      "status": "indexed_initial_key_tribunal_2025-12-01_csv_not_verified",
       "historicalCandidates": []
+    },
+    {
+      "id": "2026-03-key",
+      "kind": "answer_key",
+      "date": "2026-03-28",
+      "url": "https://transporte.castillalamancha.es/sites/default/files/2026-03/CAP%202026_2%C2%AA%20-%20Plantillas%20Correctoras.pdf",
+      "status": "indexed_initial_key_tribunal_2026-03-30_csv_not_verified",
+      "historicalCandidates": [
+        "2026-03-28-mercancias-global"
+      ]
     }
   ]
 }
