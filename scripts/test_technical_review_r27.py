@@ -15,7 +15,7 @@ for e in index['exams']:
     rows=json.loads((out/'questions'/f"{e['id']}.json").read_text())
     assert len(rows)==100
     for q in rows:
-        if d:=q.get('technicalDecision'):
+        if (d:=q.get('technicalDecision')) and d.get('round') in (None,'R27','R28'):
             assert (d['examId'],d['number'])==(e['id'],q['number'])
             assert q['originalSheetAnswer']==q['correctAnswer']==keys[e['id']]['correctAnswers'][q['number']-1]==d['historicalAnswer']
             if d.get('round')!='R28':seen[(e['id'],q['number'])]=d

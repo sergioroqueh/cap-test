@@ -1,11 +1,12 @@
 export type AnswerKey = 'A' | 'B' | 'C' | 'D'
 
 export interface CapTechnicalDecision {
-  round?: 'R27' | 'R28'
+  round?: 'R27' | 'R28' | 'R29'
   examId: string
   number: number
   sourcePage: number
   historicalAnswer: AnswerKey
+  previousAppliedAnswer?: AnswerKey
   technicalAnswer: AnswerKey | null
   action: 'correct' | 'exclude' | 'note'
   reason: string
