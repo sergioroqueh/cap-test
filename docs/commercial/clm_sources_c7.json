@@ -119,7 +119,14 @@
       ],
       "sha256": "a99e67b195eb245e1ae150e692a5cfafb2f6958c5b1401f4bf69344b8c159d64",
       "pages": 40,
-      "evidenceRun": 43967155007
+      "evidenceRun": 43967155007,
+      "localEvidenceC10": {
+        "sha256": "a99e67b195eb245e1ae150e692a5cfafb2f6958c5b1401f4bf69344b8c159d64",
+        "pages": 40,
+        "hashMatchesPrior": true,
+        "origin": "user_supplied_pdf",
+        "status": "readable_local_copy_initial_editorial_review"
+      }
     },
     {
       "id": "2026-05-30-answer_key",
@@ -130,7 +137,15 @@
       "url": "https://transporte.castillalamancha.es/sites/default/files/2026-06/3%C2%AA%20prueba%20CAP%202026.%20Plantillas%20correctoras.pdf",
       "sha256": "fa7a6916324df8c423e1b7f26eea8ef37393a4475860b60cfcd4e578bae60bb6",
       "pages": 5,
-      "evidenceRun": 43967155007
+      "evidenceRun": 43967155007,
+      "localEvidenceC10": {
+        "sha256": "fa7a6916324df8c423e1b7f26eea8ef37393a4475860b60cfcd4e578bae60bb6",
+        "pages": 5,
+        "hashMatchesPrior": true,
+        "origin": "user_supplied_pdf",
+        "status": "readable_local_copy_initial_editorial_review",
+        "keyStatus": "initial_appeal_period_finality_unverified"
+      }
     },
     {
       "id": "2026-07-25-questionnaire",
@@ -141,7 +156,14 @@
       "url": "https://transporte.castillalamancha.es/sites/default/files/2026-07/CAP%202026_4%C2%AA_cuestionarios.pdf",
       "sha256": "d1220c44c21d784487c3b6792eb45bce130088b5b9bf038d13712a03d4df9244",
       "pages": 67,
-      "evidenceRun": 43967155007
+      "evidenceRun": 43967155007,
+      "localEvidenceC10": {
+        "sha256": "d1220c44c21d784487c3b6792eb45bce130088b5b9bf038d13712a03d4df9244",
+        "pages": 67,
+        "hashMatchesPrior": true,
+        "origin": "user_supplied_pdf",
+        "status": "readable_local_copy_initial_editorial_review"
+      }
     },
     {
       "id": "2026-07-25-answer_key",
@@ -152,7 +174,15 @@
       "url": "https://transporte.castillalamancha.es/sites/default/files/2026-07/CAP%202026_4%C2%AA_plantillas%20correctoras.pdf",
       "sha256": "04a031d7bd008187140a66fa65563fce5da862e86968187b611af84a5ff4e680",
       "pages": 7,
-      "evidenceRun": 43967155007
+      "evidenceRun": 43967155007,
+      "localEvidenceC10": {
+        "sha256": "04a031d7bd008187140a66fa65563fce5da862e86968187b611af84a5ff4e680",
+        "pages": 7,
+        "hashMatchesPrior": true,
+        "origin": "user_supplied_pdf",
+        "status": "readable_local_copy_initial_editorial_review",
+        "keyStatus": "initial_appeal_period_finality_unverified"
+      }
     },
     {
       "id": "2026-09-26-questionnaire",
@@ -163,7 +193,14 @@
       "url": "https://transporte.castillalamancha.es/sites/default/files/2026-09/CAP%202026%20-%20Cuestionarios%205%C2%AA%20prueba.pdf",
       "sha256": "fa4bf7d38f9569c7ad47c8e5f69b82c30a9a33a4e8f481a9b87c1055cb8e38af",
       "pages": null,
-      "evidenceRun": 43967155007
+      "evidenceRun": 43967155007,
+      "localEvidenceC10": {
+        "sha256": "daf0d2646c93c1c73734e6437f234d96052998c12557c6003008e1eed3ef6f70",
+        "pages": 45,
+        "hashMatchesPrior": false,
+        "origin": "user_supplied_pdf",
+        "status": "readable_local_copy_initial_editorial_review"
+      }
     },
     {
       "id": "2026-09-26-answer_key",
@@ -174,7 +211,15 @@
       "url": "https://transporte.castillalamancha.es/sites/default/files/2026-09/CAP%202026%20-%20Plantillas%20correctoras%205%C2%AA%20prueba_0.pdf",
       "sha256": "1bf6a46650cd4854face47e35b8a5872d6d00d186bcdb4ae0d2026e4fe44c2bd",
       "pages": 5,
-      "evidenceRun": 43967155007
+      "evidenceRun": 43967155007,
+      "localEvidenceC10": {
+        "sha256": "1bf6a46650cd4854face47e35b8a5872d6d00d186bcdb4ae0d2026e4fe44c2bd",
+        "pages": 5,
+        "hashMatchesPrior": true,
+        "origin": "user_supplied_pdf",
+        "status": "readable_local_copy_initial_editorial_review",
+        "keyStatus": "initial_appeal_period_finality_unverified"
+      }
     },
     {
       "id": "2025-05-key",
