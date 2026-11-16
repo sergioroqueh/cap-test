@@ -79,6 +79,8 @@ async function submit(page){
 try{
  // Mobile: all 100 mixed questions, persisted answers, index, review marker, real scoring.
  const mobile=await browser.newContext({viewport:{width:390,height:844},isMobile:true,deviceScaleFactor:1})
+ const externalRequests=[]
+ mobile.on('request',request=>{const url=new URL(request.url());if(['http:','https:'].includes(url.protocol)&&url.origin!==new URL(BASE).origin)externalRequests.push(url.origin)})
  const p=await openHome(mobile)
  await p.locator('.pro-dashboard').waitFor()
  await assertViewportFit(p,'390px commercial home')
@@ -118,6 +120,7 @@ try{
  await p.locator('.pro-dashboard').waitFor()
  assert.match(await p.locator('.pro-region-feature').innerText(),/Castilla-La Mancha/)
  assert.equal(await p.evaluate(()=>localStorage.getItem('cap-test-pro-preview-region-v1')),'clm')
+ assert.deepEqual(externalRequests,[],'local account and region preview must make no third-party requests')
  await p.locator('.pro-bank').click()
  await p.locator('.hero').waitFor()
  await p.locator('nav button').filter({hasText:'Inicio'}).click()
@@ -194,7 +197,7 @@ try{
  const result=await readResult(p)
  assert.equal(result.record.total,100)
  assert.equal(result.record.answered,2)
- assert.match(await p.locator('.result strong').innerText(),/puntos/i)
+ assert.match(await p.locator('.result strong').innerText(),/puntos?/i)
  assert.equal(result.record.timed,true)
  assert.equal(result.record.finishedReason,'manual')
  assert.equal(await readSession(p),null,'completed test must clear active data')
@@ -505,6 +508,7 @@ try{
  const desktopContext=await browser.newContext({viewport:{width:1440,height:900},deviceScaleFactor:1})
  const narrow=await browser.newContext({viewport:{width:320,height:740},isMobile:true,deviceScaleFactor:1})
  const n=await openHome(narrow)
+ assert.match(await n.locator('.pro-region-feature').innerText(),/Castilla-La Mancha/,'independent browser starts with pilot default')
  await assertViewportFit(n,'320px commercial home')
  await n.locator('.pro-region-feature').click()
  await assertViewportFit(n,'320px regional catalog')
@@ -558,6 +562,9 @@ try{
  assert.match(await d.locator('.result').innerText(),/Precisión entre las 2 respuestas[^\n]*50/i)
  await d.screenshot({path:artifacts+'/desktop-study-result.png',fullPage:true})
  await d.locator('header .gear').click()
+ await d.locator('.pro-account-preview').waitFor()
+ await assertViewportFit(d,'desktop profile')
+ await captureViewport(d,'c5-desktop-account.png')
  await d.locator('.panel').filter({hasText:'Tema'}).getByRole('button',{name:/Claro/}).click()
  await d.reload()
  await d.locator('html[data-theme="light"]').waitFor()
