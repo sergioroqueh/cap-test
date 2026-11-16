@@ -299,6 +299,39 @@
       "sha256": "395dee86a428262363bfa9dcd5ad126ff8e8e8e45c847946b0f3288c15b4005f",
       "pages": 5,
       "evidenceRun": 43967155007
+    },
+    {
+      "id": "2025-02-questions",
+      "kind": "questionnaire",
+      "date": "2025-02-01",
+      "url": "https://www.castillalamancha.es/sites/default/files/documentos/pdf/20250203/cap_2025_1a_cuestionarios.pdf",
+      "status": "indexed_official_source_binary_and_visual_pending",
+      "historicalCandidates": [
+        "2025-02-01-mercancias-global"
+      ],
+      "note": "Separate tribunal decision of 12 February 2025 confirms initial answers from 3 February across modalities; indexed decision only, no candidate lists downloaded."
+    },
+    {
+      "id": "2025-02-key-mercancias",
+      "kind": "answer_key",
+      "date": "2025-02-01",
+      "url": "https://www.castillalamancha.es/sites/default/files/documentos/pdf/20250203/cap_2025_1a_plantilla_mercancias.pdf",
+      "status": "indexed_official_source_binary_and_visual_pending",
+      "historicalCandidates": [
+        "2025-02-01-mercancias-global"
+      ],
+      "note": "Separate tribunal decision of 12 February 2025 confirms initial answers from 3 February across modalities; indexed decision only, no candidate lists downloaded."
+    },
+    {
+      "id": "2025-02-key-viajeros",
+      "kind": "answer_key",
+      "date": "2025-02-01",
+      "url": "https://www.castillalamancha.es/sites/default/files/documentos/pdf/20250203/cap_2025_1a_plantilla_viajeros.pdf",
+      "status": "indexed_official_source_binary_and_visual_pending",
+      "historicalCandidates": [
+        "2025-02-01-mercancias-global"
+      ],
+      "note": "Separate tribunal decision of 12 February 2025 confirms initial answers from 3 February across modalities; indexed decision only, no candidate lists downloaded."
     }
   ]
 }
