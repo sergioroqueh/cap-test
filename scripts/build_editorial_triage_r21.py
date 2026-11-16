@@ -160,7 +160,7 @@ def main() -> None:
                 for item, _ in group
             )
             for item, _ in group:
-                mark(item, "diferencia_plantillas_modelos_repetidos", "P0",
+                mark(item, "diferencia_plantillas_modelos_repetidos", "P0" if item["scoredAnswer"] is None or len({t for q,t in group if q["scoredAnswer"] in LETTERS})>1 else "P2",
                      "Mismo enunciado y cuatro opciones con solucion distinta en otras hojas",
                      evidence)
 
@@ -270,11 +270,11 @@ def main() -> None:
     assert len(all_rows) == 2600 and len(exams_out) == 26
     assert sum(x["questionCount"] for x in exams_out) == 2600
     assert sum(counts[f"P{i}"] for i in range(5)) == 2600
-    assert sum(x["printedAnswer"] in LETTERS for x in all_rows) == 2200
-    assert sum(x["scoredAnswer"] in LETTERS for x in all_rows) == 2417
+    assert sum(x["printedAnswer"] in LETTERS for x in all_rows) == 2400
+    assert sum(x["scoredAnswer"] in LETTERS for x in all_rows) == 2508
     assert counts["conflicto_clave_bloqueada"] == 3
     assert counts["desfase_numeracion_plantilla"] == 57
-    assert counts["sin_clave_plantilla_ausente"] == 180
+    assert counts["sin_clave_plantilla_ausente"] == 89
     payload = {
         "schemaVersion": 1,
         "round": "R21",
@@ -285,8 +285,8 @@ def main() -> None:
             "P3": "Sin plantilla original y sin clave, aplazado",
             "P4": "Sin alertas de este cribado automatico; NO supone revision visual de 100 preguntas",
         },
-        "totalExams": 26, "totalQuestions": 2600, "printedAnswers": 2200,
-        "scoredBeforeAfter": 2417, "sourceKeyChanges": 0,
+        "totalExams": 26, "totalQuestions": 2600, "printedAnswers": 2400,
+        "scoredBeforeAfter": 2508, "sourceKeyChanges": 0,
         "repeatedSheetAnswerConflictGroups": groups_discordant,
         "flagCounts": dict(sorted(counts.items())),
         "exams": exams_out,

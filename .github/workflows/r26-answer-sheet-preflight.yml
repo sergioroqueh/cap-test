@@ -1,0 +1,27 @@
+name: R26 answer-sheet preflight
+on:
+  pull_request:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          ref: 9746eb532f8725b6c95bc867987d84eb14f72e2d
+          path: baseline
+      - name: Audit candidate answer sheets against existing bank
+        working-directory: baseline
+        run: |
+          cp ../scripts/audit_r26_candidate_sheets.py scripts/
+          cp ../data-src/cap-exams/r26_candidate_sheets_2026_11_16.json data-src/cap-exams/
+          python3 scripts/build_data.py
+          python3 scripts/build_exam_data.py
+          python3 scripts/audit_r26_candidate_sheets.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cap-r26-candidate-audit
+          path: baseline/public/data/exams/r26_candidate_audit.json

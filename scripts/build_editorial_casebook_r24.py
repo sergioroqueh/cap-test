@@ -93,9 +93,9 @@ def main():
     metas = {m["id"]: m for m in index["exams"]}
     assert all(metas[eid]["hasOriginalAnswerSheet"] and
                metas[eid]["category"] == "mercancias" for eid in TARGETS)
-    assert all(not metas[eid]["hasOriginalAnswerSheet"] for eid in DEFERRED)
+    assert all(metas[eid]["hasOriginalAnswerSheet"] == (eid=="2023-12-02-mercancias-global") for eid in DEFERRED)
     assert metas["2024-04-06-viajeros-global"]["category"] == "viajeros"
-    assert metas["2025-07-26-mercancias-b"]["hasOriginalAnswerSheet"] is False
+    assert metas["2025-07-26-mercancias-b"]["hasOriginalAnswerSheet"] is True
 
     source_r24 = {
         key: value for key, value in official.items()
@@ -233,39 +233,40 @@ def main():
     assert {m["examId"] for m in r23["exams"]} == R23
     assert r22["totalRows"] == 306 and r23["totalQuestionRows"] == 1000
     assert r22["preservedSourceLetters"] == 300
-    assert r23["originalSheetLetters"] == 900
-    assert r23["scoringEligibleBeforeAfter"] == 982
-    assert r23["withoutScoring"] == 18 and r23["blockedTemplateConflicts"] == 3
+    assert r23["originalSheetLetters"] == 1000
+    assert r23["scoringEligibleBeforeAfter"] == 997
+    assert r23["withoutScoring"] == 3 and r23["blockedTemplateConflicts"] == 3
 
     deferred = []
     for eid in DEFERRED:
         m = metas[eid]
         rows = json.loads((OUT / "questions" / f"{eid}.json").read_text(encoding="utf-8"))
         assert len(rows) == 100
-        assert all(not q.get("originalSheetAnswer") for q in rows)
+        assert all(bool(q.get("originalSheetAnswer")) == m["hasOriginalAnswerSheet"] for q in rows)
         deferred.append({
             "examId": eid, "category": m["category"], "date": m["date"],
             "questionsNotAuditedThisRound": 100,
-            "scoringEligibleFromBank": sum(q.get("correctAnswer") in "ABCD"
-                                           for q in rows if q.get("correctAnswer")),
+            "scoringEligibleFromBank": sum(q.get("bankAnswer") in ("A","B","C","D") for q in rows) if m["hasOriginalAnswerSheet"] else m["readyCount"],
             "unscoredDueToNoSheet": sum(q.get("correctAnswer") is None for q in rows),
-            "whyDeferred": "Fase final: plantilla original no disponible o Viajeros",
+            "whyDeferred": "Cotejo editorial de enunciados pendiente; plantilla recuperada R26" if m["hasOriginalAnswerSheet"] else "Fase final: plantilla original no disponible o Viajeros",
+            "hasOriginalAnswerSheet": m["hasOriginalAnswerSheet"],
+            "scoringEligible": m["readyCount"],
         })
-    assert sum(x["unscoredDueToNoSheet"] for x in deferred) == 165
+    assert sum(x["unscoredDueToNoSheet"] for x in deferred) == 89
     assert sum(x["scoringEligibleFromBank"] for x in deferred) == 135
     remaining_2025b = metas["2025-07-26-mercancias-b"]
-    assert remaining_2025b["hasOriginalAnswerSheet"] is False
-    assert remaining_2025b["count"] - remaining_2025b["readyCount"] == 15
+    assert remaining_2025b["hasOriginalAnswerSheet"] is True
+    assert remaining_2025b["count"] - remaining_2025b["readyCount"] == 0
 
     full_scored = (sum(x["scoringEligible"] for x in r23["exams"]) +
                    sum(x["scoredAnswers"] for x in r22["targetExams"]) +
-                   total_scored + sum(x["scoringEligibleFromBank"] for x in deferred))
+                   total_scored + sum(x["scoringEligible"] for x in deferred))
     full_original = (r22["preservedSourceLetters"] +
-                     r23["originalSheetLetters"] + total_original)
-    assert full_scored == 2417 and full_original == 2200
+                     r23["originalSheetLetters"] + total_original + 100)
+    assert full_scored == 2508 and full_original == 2400
     assert 23 * 100 + len(DEFERRED) * 100 == 2600
-    assert 18 + 165 == 183  # 3 conflictos and 180 missing-template questions
-    assert 165 + 15 == 180
+    assert 3 + 89 == 92  # 3 conflictos y 89 sin plantilla
+    assert 89 + 0 == 89
 
     all_cases = []
     for case in source["cases"]:
@@ -299,11 +300,11 @@ def main():
             "modelsDeferredToFinal": 3, "questionsDeferredToFinal": 300,
             "printedSheetLetters": full_original,
             "scoringEligibleAllModels": full_scored,
-            "totalUnscored": 183,
-            "unscoredFromMissingTemplate": 180,
+            "totalUnscored": 92,
+            "unscoredFromMissingTemplate": 89,
             "unscoredFromDocumentedDisputes": 3,
-            "deferredMissingTemplateInThreeUnreviewedExams": 165,
-            "deferredMissingTemplateIn2025BAlreadyIndexed": 15,
+            "deferredMissingTemplateInThreeUnreviewedExams": 89,
+            "deferredMissingTemplateIn2025BAlreadyIndexed": 0,
             "bankOriginalQuestionCount": 8655,
             "bankOriginalQuestionnaires": 33,
             "noAnswerKeyChangesInR24": True,
@@ -322,7 +323,7 @@ def main():
     print("PASS R24: 10 examenes Mercancias 2022-24 con plantilla, "
           "1000 preguntas, 1000 letras, 18 incidencias, 7 correcciones, 0 claves cambiadas")
     print("PASS R24 GLOBAL: 23 modelos/2300 indexadas, "
-          "3 modelos/300 aplazadas, 2200 hojas, 2417 puntuables, 183 sin puntuacion")
+          "3 modelos/300 aplazadas, 2400 hojas, 2508 puntuables, 92 sin puntuacion")
 
 
 if __name__ == "__main__":

@@ -82,7 +82,7 @@ jobs:
             public/data/exams/without_template_deferred.csv
             public/data/exams/template_review_summary.json
             public/data/exams/sheet_audit_index.json
-            public/data/exams/sheet_audit_2200.csv
+            public/data/exams/sheet_audit_2400.csv
             public/data/exams/convocatorias_auditoria_r20.csv
             public/data/exams/convocatorias_auditoria_r20.json
             public/data/exams/editorial_triage_r21.json

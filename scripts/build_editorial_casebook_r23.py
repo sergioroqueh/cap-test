@@ -78,7 +78,7 @@ def main():
     meta_by_id = {e["id"]: e for e in index["exams"]}
     assert len(meta_by_id) == 26
     assert all(meta_by_id[e]["category"] == "mercancias" for e in TARGETS)
-    assert sum(meta_by_id[e]["hasOriginalAnswerSheet"] for e in TARGETS) == 9
+    assert sum(meta_by_id[e]["hasOriginalAnswerSheet"] for e in TARGETS) == 10
 
     all_rows = []
     stats = []
@@ -112,8 +112,8 @@ def main():
                     assert q["correctAnswer"] is None and q.get("answerDispute"), identity
                 if case["status"] == "OPCION_RECONSTRUIDA_AUN_SIN_IMAGEN":
                     assert q.get("transcriptionReview") is True
-                if case["status"] == "MISMA_PREGUNTA_SIN_PLANTILLA_INDEPENDIENTE":
-                    assert q["originalSheetAnswer"] is None and eid == "2025-07-26-mercancias-b"
+                if case["status"] == "MISMA_PREGUNTA_PLANTILLA_B_RECUPERADA_R26":
+                    assert q["originalSheetAnswer"] == "B" and eid == "2025-07-26-mercancias-b"
                 review_items += 1
 
             scored = q["correctAnswer"] in "ABCD" if q["correctAnswer"] else False
@@ -182,15 +182,15 @@ def main():
 
     assert len(seen) == len(by_case) == 17
     assert len(all_rows) == 1000 and len(stats) == 10
-    assert original_letters == 900
-    assert scoring == 982 and unscored == 18
+    assert original_letters == 1000
+    assert scoring == 997 and unscored == 3
     assert conflicts == 3
-    assert sum(x["withoutScoring"] for x in stats if x["templateFile"] is None) == 15
+    assert sum(x["withoutScoring"] for x in stats if x["templateFile"] is None) == 0
     assert all(x["questions"] == 100 and not x["visualReviewCompletedAllQuestions"] for x in stats)
     assert sum(x["originalPrintedLetters"] for x in stats) == original_letters
 
-    # Same official 2025-07 A/B question and answer alternatives, but no
-    # independent answer sheet for model B. No answer is transferred from A.
+    # R26: separate B answer sheet recovered. A q43 remains excluded; B q83
+    # agrees with the bank. No answer is transferred between models.
     a = next(q for q in all_rows if q["examId"] == "2025-07-26-mercancias-a"
              and q["questionNumber"] == 43)
     b = next(q for q in all_rows if q["examId"] == "2025-07-26-mercancias-b"
@@ -198,7 +198,7 @@ def main():
     assert norm(a["question"]) == norm(b["question"])
     assert {norm(a[f"option{k}"]) for k in "ABCD"} == {
         norm(b[f"option{k}"]) for k in "ABCD"}
-    assert a["pdfOriginalLetter"] == "A" and not b["pdfOriginalLetter"]
+    assert a["pdfOriginalLetter"] == "A" and b["pdfOriginalLetter"] == "B"
     assert a["scoredLetter"] == ""
 
     enriched_cases = []
@@ -239,8 +239,8 @@ def main():
         writer = csv.DictWriter(fh, fieldnames=FIELDS)
         writer.writeheader()
         writer.writerows(all_rows)
-    print("PASS R23: 10 modelos, 1000 filas, 17 casos, 900 letras, "
-          "982 puntuables, 18 sin puntuacion, 3 conflictos, 9 diferencias provisionales, "
+    print("PASS R23: 10 modelos, 1000 filas, 17 casos, 1000 letras, "
+          "997 puntuables, 3 sin puntuacion, 3 conflictos, 9 diferencias provisionales, "
           "0 cambios de clave")
 
 

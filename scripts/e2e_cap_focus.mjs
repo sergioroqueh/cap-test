@@ -6,6 +6,7 @@ import { chromium } from 'playwright'
 const BASE=process.env.CAP_PREVIEW_URL||'http://127.0.0.1:4173/'
 const artifacts='artifacts/cap-focus-e2e'
 await mkdir(artifacts,{recursive:true})
+const rank=JSON.parse(await readFile('artifacts/cap-r26-ranking.json','utf8'))
 const browser=await chromium.launch({headless:true,args:['--no-sandbox']})
 const readSession=page=>page.evaluate(()=>JSON.parse(localStorage.getItem('cap-test-beta-active-v1')||'null'))
 const readResult=page=>page.evaluate(()=>JSON.parse(localStorage.getItem('cap-test-beta-last-v1')||'null'))
@@ -95,16 +96,16 @@ try{
   }
   return {stats:index.mercanciasTemplateStats,metas,manualCount:countUnique(rows),manualScorable:countUnique(rows.filter(q=>q.scoringEligible))}
  })
- assert.equal(available.stats.templateExamModels,22)
- assert.equal(available.stats.originalAppearances,2200)
- assert.equal(available.stats.scorableAppearances,2197)
- assert.equal(available.metas.length,22)
+ assert.equal(available.stats.templateExamModels,24)
+ assert.equal(available.stats.originalAppearances,2400)
+ assert.equal(available.stats.scorableAppearances,2397)
+ assert.equal(available.metas.length,24)
  assert.equal(available.stats.uniqueQuestions,available.manualCount)
  assert.equal(available.stats.uniqueScorableQuestions,available.manualScorable)
  assert.equal(Number(displayedUnique.match(/[0-9.]+/)?.[0].replaceAll('.','')),available.stats.uniqueQuestions)
  assert.ok(available.stats.uniqueScorableQuestions >= 100)
  assert.ok(available.stats.uniqueQuestions>=available.stats.uniqueScorableQuestions)
- assert.ok(available.stats.uniqueQuestions<=2200)
+ assert.ok(available.stats.uniqueQuestions<=2400)
  assert.equal(new Set(original.questionIds).size,100,'mixed exam must not duplicate ids')
  assert.equal(original.timed,true,'real exam needs a running clock')
  assert.equal(original.durationMinutes,120)
@@ -152,8 +153,8 @@ try{
  const topPage=await openHome(topContext)
  await topPage.locator('.focus-practice-grid button').filter({hasText:'Top más repetidas'}).click()
  await topPage.getByRole('dialog',{name:'Top más repetidas'}).waitFor()
- await topPage.getByRole('dialog',{name:'Top más repetidas'}).getByText('157 preguntas').waitFor({timeout:30000})
- await topPage.getByRole('dialog',{name:'Top más repetidas'}).getByText('68 preguntas').waitFor({timeout:30000})
+ await topPage.getByRole('dialog',{name:'Top más repetidas'}).getByText(`${rank.threePlus} preguntas`).waitFor({timeout:30000})
+ await topPage.getByRole('dialog',{name:'Top más repetidas'}).getByText(`${rank.fourPlus} preguntas`).waitFor({timeout:30000})
  await topPage.getByRole('dialog',{name:'Top más repetidas'}).getByRole('button',{name:/Top 100/}).click()
  await topPage.locator('.focus-question').waitFor({timeout:30000})
  const topSession=await readSession(topPage)
@@ -178,8 +179,8 @@ try{
  await topContext.close()
 
  // Exact frequency minimums must keep every eligible distinct question together.
- for(const preset of [{label:'Desde 3 repeticiones',source:'cap-top3',length:157,min:3},
-                      {label:'Desde 4 repeticiones',source:'cap-top4',length:68,min:4}]) {
+ for(const preset of [{label:'Desde 3 repeticiones',source:'cap-top3',length:rank.threePlus,min:3},
+                      {label:'Desde 4 repeticiones',source:'cap-top4',length:rank.fourPlus,min:4}]) {
   const context=await browser.newContext({viewport:{width:390,height:844},isMobile:true})
   const page=await openHome(context)
   await page.locator('.focus-practice-grid button').filter({hasText:'Top más repetidas'}).click()
@@ -205,6 +206,25 @@ try{
   await assertPdfDownload(page,page.locator('.focus-study-pdf-button'),true)
   checks++
   await context.close()
+ }
+
+ // R26: both new models must be selectable and export their complete solved PDFs.
+ for(const [eid,pages] of [['2025-07-26-mercancias-b','185–201'],['2023-12-02-mercancias-global','218–237']]){
+  const ctx=await browser.newContext({viewport:{width:390,height:844},isMobile:true})
+  const page=await openHome(ctx)
+  await page.locator('.focus-practice-grid button').filter({hasText:'Por convocatoria'}).click()
+  const option=page.locator('#cap-historicos .list button').filter({hasText:pages})
+  assert.equal(await option.count(),1)
+  assert.ok(await option.isEnabled())
+  assert.match(await option.innerText(),/100 puntuables/)
+  await option.click()
+  await page.locator('.focus-question').waitFor({timeout:30000})
+  const session=await readSession(page)
+  assert.equal(session.questionIds.length,100)
+  assert.ok(session.questionIds.every(id=>id.startsWith('cap:'+eid+':')))
+  await assertPdfDownload(page,page.locator('.focus-study-pdf-button'),true)
+  checks++
+  await ctx.close()
  }
 
  // The general question bank must also export a generated exam PDF.

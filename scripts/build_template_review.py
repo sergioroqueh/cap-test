@@ -78,7 +78,7 @@ def main():
     dump_csv("without_template_deferred.csv", without_template)
     if len(with_template) + len(without_template) != 678 - newly_certified_count:
         raise AssertionError("La cola debería contener 678 preguntas pendientes")
-    if len(with_template) != 498 - newly_certified_count or len(without_template) != 180:
+    if len(with_template) != 589 - newly_certified_count or len(without_template) != 89:
         raise AssertionError("Desfase de cola prioritaria y aplazada")
 
     # Una lectura textual de la plantilla oficial no basta para corregirla:
