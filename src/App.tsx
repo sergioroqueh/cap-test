@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import Quiz from './Quiz'
+import CommercialHome, { ProBrand, ProIcon } from './CommercialHome'
 import ConfirmDialog from './ConfirmDialog'
 import StudyPdfButton from './StudyPdfButton'
 import TopFrequencyDialog from './TopFrequencyDialog'
@@ -28,7 +29,7 @@ function Loading({text='Cargando…'}:{text?:string}){return <div className="cen
 function Login({onSuccess}:{onSuccess:(session:Session)=>Promise<void>}){
  const [email,setEmail]=useState(''),[password,setPassword]=useState(''),[error,setError]=useState(''),[sending,setSending]=useState(false)
  async function submit(e:React.FormEvent){e.preventDefault();setError('');setSending(true);try{const session=await signIn(email.trim(),password);if(!session)throw new Error('No se pudo iniciar sesión.');await onSuccess(session)}catch(err:any){console.error(err);setError('Email o contraseña no válidos.')}finally{setSending(false)}}
- return <div className="authshell"><section className="authcard"><div className="authlogo">CT</div><em>CAP TEST 2026</em><h1>Tu progreso, siempre contigo.</h1><p>Inicia sesión para conservar resultados, errores y estadísticas en todos tus dispositivos.</p><form onSubmit={submit}><label>Email<input type="email" autoComplete="email" value={email} onChange={e=>setEmail(e.target.value)} required/></label><label>Contraseña<input type="password" autoComplete="current-password" value={password} onChange={e=>setPassword(e.target.value)} required/></label>{error&&<div className="autherror">{error}</div>}<button className="btn primary" disabled={sending}>{sending?'Entrando…':'Entrar'}</button></form><small>Acceso privado. No hay registro público desde esta página.</small></section></div>
+ return <div className="authshell"><section className="authcard"><ProBrand/><em>ACCESO A TU CUENTA</em><h1>Tu progreso, siempre contigo.</h1><p>Inicia sesión para conservar resultados, errores y estadísticas en todos tus dispositivos.</p><form onSubmit={submit}><label>Email<input type="email" autoComplete="email" value={email} onChange={e=>setEmail(e.target.value)} required/></label><label>Contraseña<input type="password" autoComplete="current-password" value={password} onChange={e=>setPassword(e.target.value)} required/></label>{error&&<div className="autherror">{error}</div>}<button className="btn primary" disabled={sending}>{sending?'Entrando…':'Entrar'}</button></form><small>Acceso privado. No hay registro público desde esta página.</small></section></div>
 }
 
 function App(){
@@ -37,7 +38,7 @@ function App(){
  async function loginDone(next:Session){setSyncing(true);try{await synchronizeAccount();setSession(next)}finally{setSyncing(false);setAuthReady(true)}}
  async function logout(){try{await signOut()}finally{await clearLocalCache();localStorage.removeItem(ACTIVE);localStorage.removeItem(LAST);sessionStorage.removeItem(ACTIVE);sessionStorage.removeItem(LAST);setSession(null)}}
  if(PREVIEW)return <CapApp userEmail="Modo pruebas · solo este navegador" onSignOut={async()=>{}}/>
- if(!cloudConfigured)return <div className="authshell"><section className="authcard"><div className="authlogo">CT</div><h1>Sincronización pendiente</h1><p>La aplicación está preparada para acceso privado, pero falta conectar el proyecto de Supabase.</p></section></div>
+ if(!cloudConfigured)return <div className="authshell"><section className="authcard"><ProBrand/><h1>Sincronización pendiente</h1><p>La aplicación está preparada para acceso privado, pero falta conectar el proyecto de Supabase.</p></section></div>
  if(!authReady||syncing)return <Loading text={syncing?'Sincronizando tu progreso…':'Comprobando sesión…'}/>
  if(!session)return <Login onSuccess={loginDone}/>
  return <CapApp userEmail={session.user.email||'Usuario'} onSignOut={logout}/>
@@ -64,11 +65,13 @@ function CapApp({userEmail,onSignOut}:{userEmail:string;onSignOut:()=>Promise<vo
  }
  if(busy||!bank)return <Loading text="Preparando CAP Test…"/>
  const props={bank,rows,pm,stats,sessions,start}
+ const generalKeys=new Set(bank.questionnaires.map(q=>q.section+':'+q.questionnaireId))
+ const bankSeen=rows.filter(x=>x.attempts>0&&generalKeys.has(x.questionnaireId)).length
  return <div className="app">
-  <header><button className="logo" onClick={()=>go('home')}>CT</button><div><b>{page==='home'?'CAP Test 2026':({general:'Banco general',study:'Modo estudio',questionnaires:'Cuestionarios',exam:'Simulacro general',quiz:'Test en curso',results:'Resultado',stats:'Progreso',settings:'Ajustes'} as any)[page]}</b>{!online&&<small>Sin conexión</small>}</div><button className="gear" onClick={()=>go('settings')}>⚙</button></header>
+  <header><button className="logo" aria-label="Inicio CAP Test Pro" onClick={()=>go('home')}><ProBrand/></button><div className="pro-current-page">{page==='home'?'':({general:'Banco general',study:'Estudio',questionnaires:'Cuestionarios',exam:'Test general',quiz:'Test en curso',results:'Resultado',stats:'Progreso',settings:'Perfil'} as Record<string,string>)[page]}{!online&&<small>Sin conexión</small>}</div><button className="gear" aria-label="Perfil y ajustes" onClick={()=>go('settings')}><ProIcon name="person"/></button></header>
   {PREVIEW&&<div className="cap-preview-banner" role="status">VERSIÓN DE PRUEBAS · Datos locales · No sincroniza con tu cuenta</div>}
-  <main>{load!==null&&<div className="overlay"><Loading text={'Preparando preguntas… '+load+'%'}/></div>}{page==='home'&&<CapHome pm={pm}/>} {page==='general'&&<Home {...props}/>} {page==='study'&&<Study {...props}/>}  {page==='questionnaires'&&<Questionnaires {...props}/>} {page==='exam'&&<Exam {...props}/>} {page==='quiz'&&<Quiz pm={pm} refresh={refresh}/>} {page==='results'&&<Results/>} {page==='stats'&&<Stats {...props}/>} {page==='settings'&&<Settings theme={theme} setTheme={setTheme} bank={bank} refresh={refresh} userEmail={userEmail} onSignOut={onSignOut}/>}</main>
-  {!['quiz','results','settings','questionnaires'].includes(page)&&<nav><button className={page==='home'?'on':''} onClick={()=>go('home')}>⌂<span>Exámenes</span></button><button className={page==='general'||page==='study'?'on':''} onClick={()=>go('general')}>▤<span>Banco</span></button><button className={page==='exam'?'on':''} onClick={()=>go('exam')}>✓<span>Test general</span></button><button className={page==='stats'?'on':''} onClick={()=>go('stats')}>◫<span>Progreso</span></button></nav>}
+  <main>{load!==null&&<div className="overlay"><Loading text={'Preparando preguntas… '+load+'%'}/></div>}{page==='home'&&<CapHome pm={pm} bankCount={bank.totalQuestions} seenCount={bankSeen}/>} {page==='general'&&<Home {...props}/>} {page==='study'&&<Study {...props}/>}  {page==='questionnaires'&&<Questionnaires {...props}/>} {page==='exam'&&<Exam {...props}/>} {page==='quiz'&&<Quiz pm={pm} refresh={refresh}/>} {page==='results'&&<Results/>} {page==='stats'&&<Stats {...props}/>} {page==='settings'&&<Settings theme={theme} setTheme={setTheme} bank={bank} refresh={refresh} userEmail={userEmail} onSignOut={onSignOut}/>}</main>
+  {!['quiz','results','settings','questionnaires'].includes(page)&&<nav aria-label="Navegación principal"><button className={page==='home'?'on':''} onClick={()=>go('home')}><ProIcon name="home"/><span>Inicio</span></button><button className={page==='general'||page==='study'?'on':''} onClick={()=>go('general')}><ProIcon name="bank"/><span>Banco</span></button><button className={page==='exam'?'on':''} onClick={()=>go('exam')}><ProIcon name="flag"/><span>Test general</span></button><button className={page==='stats'?'on':''} onClick={()=>go('stats')}><ProIcon name="chart"/><span>Progreso</span></button></nav>}
  </div>
 }
 
@@ -78,7 +81,7 @@ type P={bank:BankIndex;rows:QuestionProgress[];pm:Map<string,QuestionProgress>;s
 const capDecision = (q:Question):CapEditorialDecision|null =>
  (q as Question & {editorialDecision?:CapEditorialDecision}).editorialDecision || null
 
-function CapHome({pm}:{pm:Map<string,QuestionProgress>}){
+function CapHome({pm,bankCount,seenCount}:{pm:Map<string,QuestionProgress>;bankCount:number;seenCount:number}){
  const [index,setIndex]=useState<CapExamIndex|null>(null)
  const [editorialTriage,setEditorialTriage]=useState<CapEditorialTriage|null>(null)
  const [category,setCategory]=useState<CapCategory>('mercancias')
@@ -188,9 +191,10 @@ function CapHome({pm}:{pm:Map<string,QuestionProgress>}){
  if(!index&&!error)return <Loading text="Preparando exámenes CAP…"/>
  const savedSession=(()=>{try{return JSON.parse(localStorage.getItem(ACTIVE)||sessionStorage.getItem(ACTIVE)||'null') as ActiveSession|null}catch{return null}})()
  return <div className="page cap-page focus-home">
-  <section className="focus-hero" aria-labelledby="focus-title">
+  <CommercialHome bankCount={bankCount} seenCount={seenCount} hasArchive={available.length>0&&category==='mercancias'} archiveCount={available.length} working={working} onArchive={openConvocations} onBank={()=>go('general')} onErrors={()=>void begin('cap-errors')} onFavorites={()=>void begin('cap-favorites')} onTop={()=>{setTopCounts(null);setTopDialogOpen(true)}} onExam={()=>{setMode('exam');setTimed(true);document.getElementById('pro-exam-setup')?.scrollIntoView({behavior:'smooth',block:'start'})}} onStats={()=>go('stats')}/>
+  <section id="pro-exam-setup" className="focus-hero" aria-labelledby="focus-title">
    <div className="focus-eyebrow"><span className="focus-status-dot"/> CAP TEST · MERCANCÍAS</div>
-   <h1 id="focus-title">Practica para aprobar.</h1>
+   <h1 id="focus-title">Configura tu práctica.</h1>
    <p>Exámenes reales, sin distracciones. Empieza con una convocatoria completa o estudia a tu ritmo.</p>
    <div className="focus-facts"><span>100 preguntas</span><span>120 minutos</span><span>+1 / −0,5 / 0</span></div>
    <div className="focus-choice" role="group" aria-label="Modo de corrección">
