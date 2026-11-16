@@ -191,6 +191,10 @@ function CapHome({pm,bankCount,seenCount}:{pm:Map<string,QuestionProgress>;bankC
  if(!index&&!error)return <Loading text="Preparando exámenes CAP…"/>
  const savedSession=(()=>{try{return JSON.parse(localStorage.getItem(ACTIVE)||sessionStorage.getItem(ACTIVE)||'null') as ActiveSession|null}catch{return null}})()
  return <div className="page cap-page focus-home">
+  {savedSession&&<section className="focus-resume" role="status">
+   <div><strong>Test sin terminar</strong><p>{savedSession.label} · {Object.keys(savedSession.selectedAnswers).length} respuestas guardadas</p></div>
+   <button className="btn light" onClick={()=>go('quiz')}>Continuar</button>
+  </section>}
   <CommercialHome bankCount={bankCount} seenCount={seenCount} hasArchive={available.length>0&&category==='mercancias'} archiveCount={available.length} working={working} onArchive={openConvocations} onBank={()=>go('general')} onErrors={()=>void begin('cap-errors')} onFavorites={()=>void begin('cap-favorites')} onTop={()=>{setTopCounts(null);setTopDialogOpen(true)}} onExam={()=>{setMode('exam');setTimed(true);document.getElementById('pro-exam-setup')?.scrollIntoView({behavior:'smooth',block:'start'})}} onStats={()=>go('stats')}/>
   <section id="pro-exam-setup" className="focus-hero" aria-labelledby="focus-title">
    <div className="focus-eyebrow"><span className="focus-status-dot"/> CAP TEST · MERCANCÍAS</div>
@@ -214,10 +218,6 @@ function CapHome({pm,bankCount,seenCount}:{pm:Map<string,QuestionProgress>;bankC
     <span>en {index.mercanciasTemplateStats.templateExamModels} exámenes con plantilla ({index.mercanciasTemplateStats.originalAppearances.toLocaleString('es-ES')} apariciones). {index.mercanciasTemplateStats.uniqueScorableQuestions.toLocaleString('es-ES')} distintas aptas para tests mezclados.</span>
    </p>}
   </section>
-  {savedSession&&<section className="focus-resume" role="status">
-   <div><strong>Test sin terminar</strong><p>{savedSession.label} · {Object.keys(savedSession.selectedAnswers).length} respuestas guardadas</p></div>
-   <button className="btn light" onClick={()=>go('quiz')}>Continuar</button>
-  </section>}
   {error&&<div className="focus-notice" role="alert"><span aria-hidden="true">ⓘ</span><span>{error}</span><button type="button" aria-label="Cerrar aviso" onClick={()=>setError('')}>×</button></div>}
   {topDialogOpen&&<TopFrequencyDialog counts={topCounts} onCancel={()=>setTopDialogOpen(false)}
    onSelect={source=>{setTopDialogOpen(false);void begin(source)}}/>}
