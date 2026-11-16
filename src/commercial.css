@@ -275,3 +275,31 @@
 @media(max-width:340px){.pro-next-grid{grid-template-columns:1fr}.pro-result-score{gap:8px}.pro-result-score>svg{width:36px;height:36px;flex-basis:36px;padding:6px}.pro-result-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(min-width:900px){.pro-results .pro-result-metrics{grid-template-columns:repeat(5,minmax(0,1fr))}.pro-results .pro-next-grid{max-width:570px}}
 @media(prefers-reduced-motion:reduce){.pro-quick:active:not(:disabled){transform:none}}
+
+/* C5 — local student profile and honest account preview. */
+.pro-region-grid .pro-region-row{width:100%;text-align:left;color:var(--text);font:inherit;min-height:62px;cursor:pointer}
+.pro-region-grid .pro-region-row.selected{border-color:var(--primary);background:var(--soft);box-shadow:inset 0 0 0 1px var(--primary)}
+.pro-region-grid .pro-region-row.selected small{color:var(--primary);font-weight:750}
+.pro-region-grid .pro-region-row:focus-visible,.pro-google-button:focus-visible,.pro-guest-button:focus-visible{outline:2px solid var(--primary);outline-offset:3px}
+.pro-account-preview{max-width:580px;margin-inline:auto;border:1px solid var(--line);border-radius:18px;padding:20px;background:var(--surface);box-shadow:var(--shadow)}
+.pro-account-intro{background:linear-gradient(125deg,#10151c,#133457);padding:19px;border:1px solid #365c83;border-radius:15px;color:#f5f7fa}
+.pro-account-intro .pro-brand{color:#f5f7fa;margin-bottom:20px}
+.pro-account-intro .pro-brand small{color:#bfccdb}
+.pro-account-tag{display:block;color:#ffcf54;font-size:10px;font-weight:800;letter-spacing:.12em}
+.pro-account-intro h2{font-size:clamp(24px,6vw,33px);margin:8px 0 10px;line-height:1.13}
+.pro-account-intro p{font-size:13px;color:#e3ebf3}
+.pro-google-button,.pro-guest-button{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;min-height:50px;border-radius:10px;font-weight:750;font-size:15px;padding:10px 12px}
+.pro-google-button{margin-top:18px;background:#fff;color:#283142;border:1px solid #c7cbd0}
+.pro-google-button:disabled{opacity:.8;cursor:not-allowed}
+.pro-account-status{font-size:12px;color:var(--muted);line-height:1.5;margin:8px 0 14px}
+.pro-guest-button{background:var(--cta);color:#fff;border:1px solid var(--cta);justify-content:space-between}
+.pro-account-benefits{display:grid;gap:9px;margin-top:18px;color:var(--muted)}
+.pro-account-benefits span{display:flex;align-items:center;gap:10px;font-size:12px}
+.pro-account-benefits svg{width:18px;height:18px;color:var(--primary)}
+.pro-profile-region{max-width:580px;margin-inline:auto}
+.pro-profile-region>small{font-size:11px;letter-spacing:.12em;color:var(--muted)}
+.pro-profile-region-title{display:flex;align-items:center;gap:12px;margin:12px 0 16px}
+.pro-profile-region-title h2{margin:0}
+.pro-profile-region select{width:100%;max-width:100%;min-height:47px;color:var(--text);background:var(--bg);border:1px solid var(--line);border-radius:9px;padding:8px}
+.pro-profile-region p{font-size:12px;margin-top:10px}
+@media(max-width:380px){.pro-account-preview{padding:14px}.pro-account-intro{padding:15px}.focus-quiz .focus-mark-help{line-height:1.3}.pro-region-grid .pro-region-row{padding:7px;gap:6px}}
