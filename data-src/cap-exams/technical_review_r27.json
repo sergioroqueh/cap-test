@@ -1,0 +1,300 @@
+{
+  "schemaVersion": 1,
+  "round": "R27",
+  "reviewDate": "2026-11-16",
+  "officialErrataConfirmed": false,
+  "scope": "21 incidencias R27; juicio editorial independiente y reversible. No es certificación de las otras 179 preguntas ni verificación visual del PDF original de Castilla-La Mancha.",
+  "cases": [
+    {
+      "examId": "2023-12-02-mercancias-global",
+      "number": 2,
+      "sourcePage": 218,
+      "historicalAnswer": "B",
+      "technicalAnswer": "C",
+      "action": "correct",
+      "questionFragment": "pendiente ascendente",
+      "reason": "Inercia y gravedad longitudinal favorecen el desplazamiento relativo hacia atrás; la Generalitat 12/07/2024 A pregunta 1 marca C con las mismas alternativas. No consta rectificación de Castilla-La Mancha.",
+      "sources": [
+        "https://openstax.org/books/f%C3%ADsica-universitaria-volumen-1/pages/5-2-primera-ley-de-newton",
+        "https://territori.gencat.cat/web/.content/home/03_infraestructures_i_mobilitat/03_activitats_i_professionals_del_transport/competencia_professional_i_formacio/certificat-aptitud-conductors-professionals-CAP/models-questionaris/proves-20240712/20240712-questionari-CAP-mercaderies-model-A-castella.pdf",
+        "https://territori.gencat.cat/web/.content/home/03_infraestructures_i_mobilitat/03_activitats_i_professionals_del_transport/competencia_professional_i_formacio/certificat-aptitud-conductors-professionals-CAP/models-questionaris/proves-20240712/20240712-plantilla-correccio-CAP-mercaderies-model-A.pdf"
+      ]
+    },
+    {
+      "examId": "2023-12-02-mercancias-global",
+      "number": 3,
+      "sourcePage": 218,
+      "historicalAnswer": "B",
+      "technicalAnswer": "C",
+      "action": "correct",
+      "questionFragment": "régimen jurídico",
+      "reason": "La clasificación por objeto y régimen jurídico es ordinarios y especiales (LOTT art. 66); interior/internacional corresponde al ámbito (art. 65). El modelo B de julio 2025 pregunta 11 también marca C.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1987-17803#a66",
+        "https://github.com/sergioroqueh/cap-test/blob/d979ecac504f2099b885a2d2a371c070ef4fb808/data-src/cap-exams/raw/2025-07-26-mercancias-b.json",
+        "https://github.com/sergioroqueh/cap-test/blob/d979ecac504f2099b885a2d2a371c070ef4fb808/data-src/cap-exams/answer_keys_visually_verified.json"
+      ]
+    },
+    {
+      "examId": "2023-12-02-mercancias-global",
+      "number": 8,
+      "sourcePage": 219,
+      "historicalAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "note",
+      "questionFragment": "grado de rozamiento",
+      "reason": "En el modelo elemental F rozamiento depende de la fuerza normal y del coeficiente; el peso modifica la normal, no necesariamente el coeficiente. B es la mejor opción ofrecida.",
+      "sources": [
+        "https://openstax.org/books/f%C3%ADsica-universitaria-volumen-1/pages/6-2-friccion"
+      ]
+    },
+    {
+      "examId": "2023-12-02-mercancias-global",
+      "number": 23,
+      "sourcePage": 222,
+      "historicalAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "note",
+      "questionFragment": "resistencias al avance",
+      "reason": "La pendiente es resistencia externa al avance en subida. Los rodamientos generan pérdidas mecánicas internas; C encaja con la clasificación de fuerzas en carretera del IDAE.",
+      "sources": [
+        "https://sede.idae.gob.es/sites/default/files/2024-01/08.Guia_Conduccion_eficiente_veh_industriales.pdf"
+      ]
+    },
+    {
+      "examId": "2023-12-02-mercancias-global",
+      "number": 36,
+      "sourcePage": 225,
+      "historicalAnswer": "A",
+      "technicalAnswer": "A",
+      "action": "note",
+      "questionFragment": "enfermedades profesionales",
+      "reason": "A es la mejor opción, pero legalmente no toda enfermedad causada por el trabajo es profesional: deben concurrir actividad y agente del cuadro aplicable (LGSS art. 157).",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2015-11724#a157",
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2006-22169#a3"
+      ]
+    },
+    {
+      "examId": "2023-12-02-mercancias-global",
+      "number": 44,
+      "sourcePage": 226,
+      "historicalAnswer": "D",
+      "technicalAnswer": "D",
+      "action": "note",
+      "questionFragment": "sangran por la boca",
+      "reason": "D corresponde a la posición lateral de seguridad en el supuesto de víctima inconsciente que respira y presenta riesgo de aspiración. En trauma no mover innecesariamente; llamar al 112 y seguir sus indicaciones. DGT tema 4.",
+      "sources": [
+        "https://sede.dgt.gob.es/export/sites/dgt/.galleries/permisos-de-conducir/certificacion-aptitud-profesores-formacion-vial/2024/Manual-IX-Primeros-Auxilios_2024.pdf"
+      ]
+    },
+    {
+      "examId": "2023-12-02-mercancias-global",
+      "number": 45,
+      "sourcePage": 226,
+      "historicalAnswer": "A",
+      "technicalAnswer": null,
+      "action": "exclude",
+      "questionFragment": "consumo específico",
+      "reason": "El consumo específico de motor se expresa en g/kWh (o unidades equivalentes energía), no L/100 km. Las cuatro alternativas usan distancia, velocidad o autonomía; ninguna es correcta en el sentido técnico.",
+      "sources": [
+        "https://sede.idae.gob.es/sites/default/files/2024-01/08.Guia_Conduccion_eficiente_veh_industriales.pdf"
+      ]
+    },
+    {
+      "examId": "2023-12-02-mercancias-global",
+      "number": 53,
+      "sourcePage": 228,
+      "historicalAnswer": "B",
+      "technicalAnswer": null,
+      "action": "exclude",
+      "questionFragment": "considerada enfermedad profesional",
+      "reason": "La calificación corresponde a la entidad gestora de la Seguridad Social (RD 1299/2006 art. 3), sin perjuicio de tramitación por colaboradoras; el reconocimiento en el cuadro no sustituye la calificación individual. Ninguna opción lo expresa adecuadamente. Cataluña 15/11/2023 modelo A pregunta 33 confirma el criterio histórico de reconocimiento sanitario (A), con distractores diferentes. No equivale a calificación jurídica individual.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2006-22169#a3",
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2015-11724#a157",
+        "https://territori.gencat.cat/web/.content/home/03_infraestructures_i_mobilitat/03_activitats_i_professionals_del_transport/competencia_professional_i_formacio/certificat-aptitud-conductors-professionals-CAP/models-questionaris/proves-20231115/20231115-questionari-CAP-mercaderies-model-A-castella.pdf",
+        "https://territori.gencat.cat/web/.content/home/03_infraestructures_i_mobilitat/03_activitats_i_professionals_del_transport/competencia_professional_i_formacio/certificat-aptitud-conductors-professionals-CAP/models-questionaris/proves-20231115/20231115-plantilla-correccio-CAP-mercaderies-model-A.pdf"
+      ]
+    },
+    {
+      "examId": "2023-12-02-mercancias-global",
+      "number": 68,
+      "sourcePage": 231,
+      "historicalAnswer": "A",
+      "technicalAnswer": "A",
+      "action": "note",
+      "questionFragment": "resistencias intervienen",
+      "reason": "A recoge las resistencias externas típicas de avance a velocidad constante; la transmisión tiene pérdidas internas y la aceleración también exige fuerza. D sería una lectura de pérdidas totales; se conserva el criterio usual de carretera.",
+      "sources": [
+        "https://sede.idae.gob.es/sites/default/files/2024-01/08.Guia_Conduccion_eficiente_veh_industriales.pdf"
+      ]
+    },
+    {
+      "examId": "2023-12-02-mercancias-global",
+      "number": 81,
+      "sourcePage": 234,
+      "historicalAnswer": "C",
+      "technicalAnswer": null,
+      "action": "exclude",
+      "questionFragment": "humos negros",
+      "reason": "B y C son defendibles: sobreinyección puede causar combustión incompleta, que produce humo negro. EPA de Nueva Gales del Sur distingue causa y mecanismo. No hay una alternativa exclusivamente válida.",
+      "sources": [
+        "https://www.epa.nsw.gov.au/Your-environment/Air/reducing-motor-vehicle-emissions/causes-smoky-vehicles"
+      ]
+    },
+    {
+      "examId": "2023-12-02-mercancias-global",
+      "number": 88,
+      "sourcePage": 235,
+      "historicalAnswer": "D",
+      "technicalAnswer": "D",
+      "action": "note",
+      "questionFragment": "consumo de carburante es mayor",
+      "reason": "D se conserva como criterio histórico para cajas automáticas convencionales, no regla universal; las manuales automatizadas modernas pueden resultar eficientes. La fuente Volvo describe su tecnología, no prueba una comparación universal.",
+      "sources": [
+        "https://sede.idae.gob.es/sites/default/files/2024-01/08.Guia_Conduccion_eficiente_veh_industriales.pdf",
+        "https://www.volvotrucks.com/en-en/news-stories/press-releases/2021/mar/volvo-trucks-i-shift-transmission-technology.html"
+      ]
+    },
+    {
+      "examId": "2025-07-26-mercancias-b",
+      "number": 2,
+      "sourcePage": 185,
+      "historicalAnswer": "D",
+      "technicalAnswer": "D",
+      "action": "note",
+      "questionFragment": "capital inicial",
+      "reason": "Capital social suscrito mínimo 60.000 EUR (LSC art. 4); art. 79 permite desembolsar al menos 25% de cada acción. Se puede desembolsar 30.000 EUR si el capital suscrito cumple el mínimo; D solo en el sentido de capital social.",
+      "sources": [
+        "https://www.boe.es/eli/es/rdlg/2010/07/02/1/con/20250103"
+      ]
+    },
+    {
+      "examId": "2025-07-26-mercancias-b",
+      "number": 3,
+      "sourcePage": 185,
+      "historicalAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "note",
+      "questionFragment": "grado de rozamiento",
+      "reason": "C afecta la fuerza normal y el límite de adherencia neumático-calzada. Si se hablara de fricción zapata-tambor, A sería pertinente; el contexto de dinámica del camión justifica C, no un cambio de coeficiente por peso.",
+      "sources": [
+        "https://openstax.org/books/f%C3%ADsica-universitaria-volumen-1/pages/6-2-friccion"
+      ]
+    },
+    {
+      "examId": "2025-07-26-mercancias-b",
+      "number": 7,
+      "sourcePage": 186,
+      "historicalAnswer": "A",
+      "technicalAnswer": null,
+      "action": "exclude",
+      "questionFragment": "distinta de cero",
+      "reason": "La fuerza neta no nula implica aceleración del centro de masas, no velocidad necesariamente distinta de cero en ese instante. Los pares afectan a la rotación y no se suman directamente a fuerzas. Ninguna alternativa refleja la relación general.",
+      "sources": [
+        "https://openstax.org/books/f%C3%ADsica-universitaria-volumen-1/pages/5-2-primera-ley-de-newton",
+        "https://openstax.org/books/f%C3%ADsica-universitaria-volumen-1/pages/5-3-segunda-ley-de-newton"
+      ]
+    },
+    {
+      "examId": "2025-07-26-mercancias-b",
+      "number": 21,
+      "sourcePage": 188,
+      "historicalAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "note",
+      "questionFragment": "cooperativas de transportistas",
+      "reason": "La inscripción que constituye la personalidad jurídica es en el registro de cooperativas (Ley 27/1999 arts. 7 y 109). La inscripción administrativa de transporte puede ser exigible por actividad, pero no sustituye la societaria.",
+      "sources": [
+        "https://www.boe.es/eli/es/l/1999/07/16/27/con",
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1987-17803#a66"
+      ]
+    },
+    {
+      "examId": "2025-07-26-mercancias-b",
+      "number": 22,
+      "sourcePage": 188,
+      "historicalAnswer": "B",
+      "technicalAnswer": null,
+      "action": "exclude",
+      "questionFragment": "igual a cero",
+      "reason": "Fuerza resultante cero implica velocidad constante, incluido el reposo. A puede describir una trayectoria en movimiento y B solo un caso. No hay respuesta inequívoca y fuerza y par no son magnitudes sumables.",
+      "sources": [
+        "https://openstax.org/books/f%C3%ADsica-universitaria-volumen-1/pages/5-2-primera-ley-de-newton",
+        "https://openstax.org/books/f%C3%ADsica-universitaria-volumen-1/pages/5-3-segunda-ley-de-newton"
+      ]
+    },
+    {
+      "examId": "2025-07-26-mercancias-b",
+      "number": 44,
+      "sourcePage": 192,
+      "historicalAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "note",
+      "questionFragment": "bajada prolongada",
+      "reason": "C es la mejor actuación entre las opciones para reducir velocidad; en descenso prolongado se anticipa y se usa marcha adecuada, freno motor/ralentizador normal para evitar fatiga del freno de servicio. No es recomendación de mantenerlo pisado continuamente.",
+      "sources": [
+        "https://sede.idae.gob.es/sites/default/files/2024-01/08.Guia_Conduccion_eficiente_veh_industriales.pdf"
+      ]
+    },
+    {
+      "examId": "2025-07-26-mercancias-b",
+      "number": 72,
+      "sourcePage": 196,
+      "historicalAnswer": "A",
+      "technicalAnswer": "A",
+      "action": "note",
+      "questionFragment": "futuras revisiones",
+      "reason": "Tacógrafo: inspección al menos bienal (UE 165/2014 art. 23). El limitador también se comprueba por avería, precintos e ITV, pero no equivale a esa revisión periódica específica.",
+      "sources": [
+        "https://eur-lex.europa.eu/eli/reg/2014/165/oj/spa",
+        "https://boe.es/buscar/act.php?id=BOE-A-2005-19990"
+      ]
+    },
+    {
+      "examId": "2025-07-26-mercancias-b",
+      "number": 78,
+      "sourcePage": 197,
+      "historicalAnswer": "B",
+      "technicalAnswer": null,
+      "action": "exclude",
+      "questionFragment": "ahorrar más carburante",
+      "reason": "No existe un tipo de caja que garantice menor consumo sin especificar vehículo, tecnología y utilización. Manual automatizada moderna puede optimizar relaciones; B es la clave histórica, no una respuesta técnica universal. Fuente fabricante, no ensayo comparativo. Cataluña 15/11/2023 modelo A pregunta 26 también da B. Se conserva esa evidencia histórica sin universalizarla.",
+      "sources": [
+        "https://sede.idae.gob.es/sites/default/files/2024-01/08.Guia_Conduccion_eficiente_veh_industriales.pdf",
+        "https://www.volvotrucks.com/en-en/news-stories/press-releases/2021/mar/volvo-trucks-i-shift-transmission-technology.html",
+        "https://territori.gencat.cat/web/.content/home/03_infraestructures_i_mobilitat/03_activitats_i_professionals_del_transport/competencia_professional_i_formacio/certificat-aptitud-conductors-professionals-CAP/models-questionaris/proves-20231115/20231115-questionari-CAP-mercaderies-model-A-castella.pdf",
+        "https://territori.gencat.cat/web/.content/home/03_infraestructures_i_mobilitat/03_activitats_i_professionals_del_transport/competencia_professional_i_formacio/certificat-aptitud-conductors-professionals-CAP/models-questionaris/proves-20231115/20231115-plantilla-correccio-CAP-mercaderies-model-A.pdf"
+      ]
+    },
+    {
+      "examId": "2025-07-26-mercancias-b",
+      "number": 79,
+      "sourcePage": 197,
+      "historicalAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "note",
+      "questionFragment": "considerada enfermedad profesional",
+      "reason": "C alude al cuadro oficial, aprobado normativamente. También han de concurrir actividad y agente causal previstos, y la entidad gestora califica el caso. Se conserva la mejor alternativa.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2015-11724#a157",
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2006-22169#a3"
+      ]
+    },
+    {
+      "examId": "2025-07-26-mercancias-b",
+      "number": 84,
+      "sourcePage": 198,
+      "historicalAnswer": "A",
+      "technicalAnswer": "A",
+      "action": "note",
+      "questionFragment": "quitarles la ropa",
+      "reason": "No retirar ropa adherida a una quemadura; sí retirar ropa no adherida si es seguro y enfriar con agua corriente, evitar hipotermia y pedir ayuda. En quemaduras químicas el protocolo puede diferir. A se conserva como respuesta histórica contextualizada.",
+      "sources": [
+        "https://www.who.int/es/news-room/fact-sheets/detail/burns",
+        "https://sede.dgt.gob.es/export/sites/dgt/.galleries/permisos-de-conducir/certificacion-aptitud-profesores-formacion-vial/2024/Manual-IX-Primeros-Auxilios_2024.pdf"
+      ]
+    }
+  ]
+}
