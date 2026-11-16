@@ -38,7 +38,10 @@ export const REGIONS=[
  ['ce','Ceuta','#53667b','M5 40H43V36H39V25H32V13H35V8H29V11H25V8H19V13H22V25H16V19H10V36H5ZM21 40V33Q24 29 27 33V40ZM25 17H29V22H25Z'],
  ['ml','Melilla','#426a9e','M4 39H44V35H40V22H35V16H30V22H27V14H30V9H25V4L35 8L25 12V14H21V22H18V16H13V22H8V35H4ZM20 39V32Q24 27 28 32V39ZM12 26H16V30H12ZM32 26H36V30H32Z']
 ] as const
-type Region=typeof REGIONS[number]
+export type Region=typeof REGIONS[number]
+export type RegionCode=Region[0]
+export const regionByCode=(code:RegionCode)=>REGIONS.find(r=>r[0]===code)??REGIONS[0]
+export function isRegionCode(value:unknown):value is RegionCode{return typeof value==='string'&&REGIONS.some(r=>r[0]===value)}
 function formatCount(n:number){return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g,'.')}
 function starPath(cx:number,cy:number,r:number){
  return Array.from({length:10},(_,i)=>{const a=-Math.PI/2+i*Math.PI/5;const v=i%2?r*.43:r;return (i?'L':'M')+(cx+Math.cos(a)*v).toFixed(2)+' '+(cy+Math.sin(a)*v).toFixed(2)}).join('')+'Z'
@@ -46,9 +49,10 @@ function starPath(cx:number,cy:number,r:number){
 export function RegionMark({region}:{region:Region}){
  return <span className="pro-region-mark" data-region={region[0]} style={{backgroundColor:region[2]}}><svg viewBox="0 0 48 48" fill="currentColor" aria-hidden="true" focusable="false">{region[0]==='md'?<>{[[9,17],[19,17],[29,17],[39,17],[14,30],[24,30],[34,30]].map(([x,y])=><path key={x+':'+y} d={starPath(x,y,5)}/>)}</>:<path fillRule="evenodd" d={region[3]}/>}</svg></span>
 }
-type Props={bankCount:number;seenCount:number;hasArchive:boolean;archiveCount:number;onArchive:()=>void;onBank:()=>void;onErrors:()=>void;onFavorites:()=>void;onTop:()=>void;onExam:()=>void;onStats:()=>void;working:boolean}
+type Props={regionCode:RegionCode;onRegionChange:(code:RegionCode)=>void;bankCount:number;seenCount:number;hasArchive:boolean;archiveCount:number;onArchive:()=>void;onBank:()=>void;onErrors:()=>void;onFavorites:()=>void;onTop:()=>void;onExam:()=>void;onStats:()=>void;working:boolean}
 export default function CommercialHome(p:Props){
  const [regions,setRegions]=useState(false)
+ const selectedRegion=regionByCode(p.regionCode)
  const seen=Math.min(p.bankCount,p.seenCount),coverage=p.bankCount?Math.round(seen/p.bankCount*100):0
  const actions:[ProIconName,string,string,()=>void,string][]=[
  ['warning','Errores','Repasa tus fallos',p.onErrors,'red'],['star','Favoritos','Preguntas guardadas',p.onFavorites,'yellow'],
@@ -61,12 +65,12 @@ export default function CommercialHome(p:Props){
   </div>
   <div className="pro-main-grid">
    <article className="pro-route-card"><div className="pro-card-title"><ProIcon name="file"/><h2>Exámenes oficiales</h2></div><p>Practica con convocatorias reales.</p>
-    <button className="pro-region-feature" aria-expanded={regions} aria-controls={regions?'pro-region-list':undefined} onClick={()=>setRegions(!regions)}><RegionMark region={REGIONS[0]}/><span><b>Castilla-La Mancha</b><small>Comunidad prioritaria</small></span><span aria-hidden="true">{regions?'⌃':'›'}</span></button>
+    <button className="pro-region-feature" aria-expanded={regions} aria-controls={regions?'pro-region-list':undefined} onClick={()=>setRegions(!regions)}><RegionMark region={selectedRegion}/><span><b>{selectedRegion[1]}</b><small>{p.regionCode==='clm'?'Comunidad prioritaria':'Tu comunidad'}</small></span><span aria-hidden="true">{regions?'⌃':'›'}</span></button>
     <button className="pro-archive-link" disabled={!p.hasArchive} onClick={p.onArchive}>Consultar archivo histórico <span>›</span></button><small className="pro-archive-note">{p.archiveCount} modelos con plantilla · región por verificar</small>
    </article>
    <button className="pro-route-card pro-bank" onClick={p.onBank}><div className="pro-card-title"><ProIcon name="bank"/><h2>Banco de preguntas</h2></div><strong>{formatCount(p.bankCount)}</strong><p>preguntas disponibles</p><span className="pro-bank-link">Entrar al banco <span>›</span></span></button>
   </div>
-  {regions&&<section className="pro-regions" id="pro-region-list"><h2>Comunidades autónomas</h2><p>El archivo regional se incorporará conforme se verifiquen las fuentes.</p><div className="pro-region-grid">{REGIONS.map(r=><div className="pro-region-row" key={r[0]}><RegionMark region={r}/><span><b>{r[1]}</b><small>{r[0]==='clm'?'Prioritaria · en catalogación':'En preparación'}</small></span></div>)}</div></section>}
+  {regions&&<section className="pro-regions" id="pro-region-list"><h2>Elige tu comunidad</h2><p>Guarda dónde te presentas. Tu preferencia no filtra todavía el archivo histórico: la procedencia se está verificando.</p><div className="pro-region-grid">{REGIONS.map(r=><button type="button" className={'pro-region-row '+(r[0]===p.regionCode?'selected':'')} key={r[0]} aria-pressed={r[0]===p.regionCode} onClick={()=>{p.onRegionChange(r[0]);setRegions(false)}}><RegionMark region={r}/><span><b>{r[1]}</b><small>{r[0]===p.regionCode?'Seleccionada':r[0]==='clm'?'Prioritaria · en catalogación':'En preparación'}</small></span></button>)}</div></section>}
   <div className="pro-quick-grid">{actions.map(([icon,title,desc,action,color])=><button key={title} className={'pro-quick '+color} onClick={action} disabled={p.working||!p.hasArchive}><ProIcon name={icon}/><span><b>{title}</b><small>{desc}</small></span><span aria-hidden="true">›</span></button>)}</div>
   <p className="pro-independent">Preparación independiente · No es una aplicación oficial.</p>
  </section>
