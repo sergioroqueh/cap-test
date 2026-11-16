@@ -266,6 +266,7 @@ function CapHome({pm}:{pm:Map<string,QuestionProgress>}){
    <p><a className="btn light" href={import.meta.env.BASE_URL+'data/exams/editorial_casebook_r24.csv'} download="CAP_R24_mercancias_2022_2024_con_plantilla.csv">Exportar R24: 10 modelos de Mercancías 2022–2024 · 1.000 preguntas (CSV)</a></p>
    <p className="note">Fase final aplazada: Viajeros y modelos sin plantilla. El CSV R24 solo incluye Mercancías con respuestas originales.</p>
    <p><a className="btn light" href={import.meta.env.BASE_URL+'data/exams/editorial_decisions_r25_three.csv'} download="CAP_cierre_3_conflictos_editoriales.csv">Exportar cierre editorial de las 3 contradicciones (CSV)</a></p>
+   <p><a className="btn light" href={import.meta.env.BASE_URL+'data/exams/technical_review_r27_cross_model.json'} download="CAP_R27_cotejo_modelos.json">Cotejo de las 21 incidencias con otros modelos (JSON)</a></p>
    <p><a className="btn light" href={import.meta.env.BASE_URL+'data/exams/technical_review_r27.csv'} download="CAP_R27_revision_tecnica_21.csv">Exportar 21 decisiones técnicas R27 (CSV)</a></p>
    <p><a className="btn light" href={import.meta.env.BASE_URL+'data/exams/sheet_audit_2400.csv'} download="CAP_2400_respuestas_plantillas_revision.csv">CSV de las 2.400 respuestas impresas</a></p>
    {sheetReviewShown&&<div className="cap-pending-results">

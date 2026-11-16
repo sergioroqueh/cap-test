@@ -50,4 +50,29 @@ index['version']='2026-11-16-r27'
 with (OUT/'technical_review_r27.csv').open('w',encoding='utf-8-sig',newline='') as f:
     w=csv.DictWriter(f,fieldnames=list(src['cases'][0]));w.writeheader()
     for c in src['cases']:w.writerow({**c,'sources':' | '.join(c['sources'])})
+# Compare all 21 cases to other keyed models. Normalized exact question and
+# all four option texts (order independent); OCR i/l collapse only for candidates.
+# No matches are promoted to corrections automatically.
+def keytext(s,ocr=False):
+    t=norm(s)
+    return t.replace('l','i') if ocr else t
+def signature(q,ocr=False):
+    return keytext(q['question'],ocr),tuple(sorted(keytext(x,ocr) for x in q['options'].values()))
+cross=[]
+for c in src['cases']:
+    target=next(q for q in all_rows if (q['examId'],q['number'])==(c['examId'],c['number']))
+    matches=[]
+    for other in all_rows:
+        if target['examId']==other['examId'] or not other.get('mappedSheetAnswer') or not other.get('correctAnswer'):
+            continue
+        exact=signature(target)==signature(other)
+        approx=signature(target,True)==signature(other,True)
+        if not (exact or approx):continue
+        answer=other['mappedSheetAnswer']
+        opts=[a for a,t in target['options'].items() if keytext(t,not exact)==keytext(other['options'][answer],not exact)]
+        if len(opts)!=1:continue
+        matches.append({'examId':other['examId'],'number':other['number'],'sourcePage':other['sourcePage'],'printed':other.get('originalSheetAnswer'),'mapped':answer,'answerInTarget':opts[0],'match':'exact' if exact else 'OCR_candidate'})
+    cross.append({'examId':c['examId'],'number':c['number'],'historicalAnswer':c['historicalAnswer'],'technicalAnswer':c['technicalAnswer'],'matches':matches})
+(OUT/'technical_review_r27_cross_model.json').write_text(json.dumps(cross,ensure_ascii=False,indent=2))
+print('R27 cross-model: '+json.dumps([{'id':x['examId'],'n':x['number'],'matches':x['matches']} for x in cross],ensure_ascii=False))
 print('R27 PASS: 21 decisions, 2 corrected, 6 excluded, 13 notes; historical keys untouched; technical stats',index['technicalR27Stats'])

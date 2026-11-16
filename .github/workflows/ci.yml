@@ -106,5 +106,6 @@ jobs:
             public/data/exams/index.json
             public/data/exams/technical_review_r27.json
             public/data/exams/technical_review_r27.csv
+            public/data/exams/technical_review_r27_cross_model.json
             artifacts/cap-r27-ranking.json
           retention-days: 14

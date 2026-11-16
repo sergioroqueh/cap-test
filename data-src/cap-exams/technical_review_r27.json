@@ -31,7 +31,8 @@
       "reason": "La clasificación por objeto y régimen jurídico es ordinarios y especiales (LOTT art. 66); interior/internacional corresponde al ámbito (art. 65). El modelo B de julio 2025 pregunta 11 también marca C.",
       "sources": [
         "https://www.boe.es/buscar/act.php?id=BOE-A-1987-17803#a66",
-        "https://github.com/sergioroqueh/cap-test/blob/d979ecac504f2099b885a2d2a371c070ef4fb808/data-src/cap-exams/raw/2025-07-26-mercancias-b.json"
+        "https://github.com/sergioroqueh/cap-test/blob/d979ecac504f2099b885a2d2a371c070ef4fb808/data-src/cap-exams/raw/2025-07-26-mercancias-b.json",
+        "https://github.com/sergioroqueh/cap-test/blob/d979ecac504f2099b885a2d2a371c070ef4fb808/data-src/cap-exams/answer_keys_visually_verified.json"
       ]
     },
     {
@@ -108,10 +109,12 @@
       "technicalAnswer": null,
       "action": "exclude",
       "questionFragment": "considerada enfermedad profesional",
-      "reason": "La calificación corresponde a la entidad gestora de la Seguridad Social (RD 1299/2006 art. 3), sin perjuicio de tramitación por colaboradoras; el reconocimiento en el cuadro no sustituye la calificación individual. Ninguna opción lo expresa adecuadamente.",
+      "reason": "La calificación corresponde a la entidad gestora de la Seguridad Social (RD 1299/2006 art. 3), sin perjuicio de tramitación por colaboradoras; el reconocimiento en el cuadro no sustituye la calificación individual. Ninguna opción lo expresa adecuadamente. Cataluña 15/11/2023 modelo A pregunta 33 confirma el criterio histórico de reconocimiento sanitario (A), con distractores diferentes. No equivale a calificación jurídica individual.",
       "sources": [
         "https://www.boe.es/buscar/act.php?id=BOE-A-2006-22169#a3",
-        "https://www.boe.es/buscar/act.php?id=BOE-A-2015-11724#a157"
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2015-11724#a157",
+        "https://territori.gencat.cat/web/.content/home/03_infraestructures_i_mobilitat/03_activitats_i_professionals_del_transport/competencia_professional_i_formacio/certificat-aptitud-conductors-professionals-CAP/models-questionaris/proves-20231115/20231115-questionari-CAP-mercaderies-model-A-castella.pdf",
+        "https://territori.gencat.cat/web/.content/home/03_infraestructures_i_mobilitat/03_activitats_i_professionals_del_transport/competencia_professional_i_formacio/certificat-aptitud-conductors-professionals-CAP/models-questionaris/proves-20231115/20231115-plantilla-correccio-CAP-mercaderies-model-A.pdf"
       ]
     },
     {
@@ -257,10 +260,12 @@
       "technicalAnswer": null,
       "action": "exclude",
       "questionFragment": "ahorrar más carburante",
-      "reason": "No existe un tipo de caja que garantice menor consumo sin especificar vehículo, tecnología y utilización. Manual automatizada moderna puede optimizar relaciones; B es la clave histórica, no una respuesta técnica universal. Fuente fabricante, no ensayo comparativo.",
+      "reason": "No existe un tipo de caja que garantice menor consumo sin especificar vehículo, tecnología y utilización. Manual automatizada moderna puede optimizar relaciones; B es la clave histórica, no una respuesta técnica universal. Fuente fabricante, no ensayo comparativo. Cataluña 15/11/2023 modelo A pregunta 26 también da B. Se conserva esa evidencia histórica sin universalizarla.",
       "sources": [
         "https://sede.idae.gob.es/sites/default/files/2024-01/08.Guia_Conduccion_eficiente_veh_industriales.pdf",
-        "https://www.volvotrucks.com/en-en/news-stories/press-releases/2021/mar/volvo-trucks-i-shift-transmission-technology.html"
+        "https://www.volvotrucks.com/en-en/news-stories/press-releases/2021/mar/volvo-trucks-i-shift-transmission-technology.html",
+        "https://territori.gencat.cat/web/.content/home/03_infraestructures_i_mobilitat/03_activitats_i_professionals_del_transport/competencia_professional_i_formacio/certificat-aptitud-conductors-professionals-CAP/models-questionaris/proves-20231115/20231115-questionari-CAP-mercaderies-model-A-castella.pdf",
+        "https://territori.gencat.cat/web/.content/home/03_infraestructures_i_mobilitat/03_activitats_i_professionals_del_transport/competencia_professional_i_formacio/certificat-aptitud-conductors-professionals-CAP/models-questionaris/proves-20231115/20231115-plantilla-correccio-CAP-mercaderies-model-A.pdf"
       ]
     },
     {
