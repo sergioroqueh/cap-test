@@ -61,7 +61,7 @@ try{
  const file=mobile.locator('.backup-file-input')
  await file.setInputFiles(toFile('copias.json',original))
  await mobile.getByRole('heading',{name:'Antes de restaurar'}).waitFor()
- assert.match(await mobile.locator('.backup-preview').innerText(),/1 preguntas|1 pregunta/)
+ assert.match(await mobile.locator('.backup-preview').innerText(),/1\s+preguntas/)
  await mobile.getByRole('button',{name:'Cancelar'}).click()
  assert.equal(await mobile.evaluate(async()=>(await import('/src/db.ts')).getAllProgress().then(x=>x.length)),0)
  await file.setInputFiles(toFile('rutacap.json',original))
