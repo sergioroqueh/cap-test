@@ -19,7 +19,7 @@ try {
     window.c30={scope,db,journal,core}
   })
   await context.setOffline(true)
-  const offline=await page.evaluate(async(A,B)=>{
+  const offline=await page.evaluate(async([A,B])=>{
     const {scope,db,journal,core}=window.c30
     scope.setLocalOwner(A)
     await db.clearAllData()
@@ -37,7 +37,7 @@ try {
     if((await db.getAllProgress()).length)throw Error('Account isolation broken')
     scope.setLocalOwner(A)
     return {events:events.length,attempts:p.attempts}
-  },A,B)
+  },[A,B])
   assert.deepEqual(offline,{events:3,attempts:2})
   await context.setOffline(false)
   await page.reload()
