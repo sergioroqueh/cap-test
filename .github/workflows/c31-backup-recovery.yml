@@ -1,0 +1,47 @@
+name: C31 complete local backup recovery (cloud off)
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'src/backupRecovery.ts'
+      - 'src/localScope.ts'
+      - 'src/db.ts'
+      - 'src/App.tsx'
+      - 'src/syncCore.d.mts'
+      - 'scripts/e2e_backup_recovery_c31.mjs'
+      - '.github/workflows/c31-backup-recovery.yml'
+permissions:
+  contents: read
+jobs:
+  local-recovery:
+    if: github.head_ref == 'feat/cap-commercial'
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install dependencies
+        run: npm install --no-fund --no-audit
+      - name: Check TypeScript and bundle
+        run: npm run build
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Run Vite localhost, cloud disabled
+        run: |
+          npx vite --host 127.0.0.1 --port 5173 --strictPort > /tmp/c31-vite.log 2>&1 &
+          for i in $(seq 1 40); do
+            if curl -fsS http://127.0.0.1:5173/ > /dev/null; then break; fi
+            sleep 1
+          done
+          curl -fsS http://127.0.0.1:5173/ > /dev/null
+      - name: Verify full local recovery with synthetic A/B and browser concurrency
+        run: node scripts/e2e_backup_recovery_c31.mjs
+      - name: Cloud and production gate
+        run: |
+          grep -F 'export const cloudConfigured = false' src/supabase.ts
+          ! grep -n 'supabase' src/backupRecovery.ts
+          ! grep -R -n 'synchronizeAccount(' src/App.tsx src/backupRecovery.ts
