@@ -31,6 +31,10 @@ for e in ix['exams']:
         if c['action']=='note':
             q['technicalDecision']={key:c[key] for key in ('examId','number','sourcePage','round','historicalAnswer','previousAppliedAnswer','technicalAnswer','action','reason','sources')}
             affected=True
+        else:
+            assert c['action']=='confirmed'
+            q['answerSourceReview']={'round':c['round'],'status':'confirmed','reason':c['reason'],'sources':c['sources']}
+            affected=True
         seen.add(k)
     if affected:write(path,rows);changed+=1
     assert e['technicalReadyCount']==sum(q['correctAnswer'] is not None and q.get('technicalDecision',{}).get('action')!='exclude' for q in rows)
