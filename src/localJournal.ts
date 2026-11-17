@@ -137,9 +137,10 @@ export async function completeExam(
 ): Promise<StudySessionRecord> {
   if (!record.clientId || !Array.isArray(record.answers))
     throw Error('La entrega necesita un identificador estable y respuestas completas')
+  const stableClientId = record.clientId
   return transaction([P,J,M,S], async (tx, counter) => {
     const store = tx.objectStore(S)
-    const saved = await requestAsPromise(store.index('clientId').get(record.clientId)) as StudySessionRecord | undefined
+    const saved = await requestAsPromise(store.index('clientId').get(stableClientId)) as StudySessionRecord | undefined
     if (saved) {
       if (saved.type !== 'exam' || saved.startedAt !== record.startedAt ||
           JSON.stringify(saved.answers) !== JSON.stringify(record.answers))
