@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import ConfirmDialog from './ConfirmDialog'
+import AnswerProvenance from './AnswerProvenance'
 import StudyPdfButton from './StudyPdfButton'
 import type { ActiveSession, AnswerKey, Question, QuestionProgress, SessionAnswer, StudySessionRecord } from './types'
 import { addSession, putManyProgress, putProgress } from './db'
@@ -64,7 +65,6 @@ function QuizSession({initial,questions,frequency,pm,refresh}:{
 }){
   const [s,setS]=useState(initial)
   const [now,setNow]=useState(Date.now)
-  const [refShown,setRefShown]=useState(false)
   const [finishing,setFinishing]=useState(false)
   const [confirmSubmit,setConfirmSubmit]=useState(false)
   const [saveError,setSaveError]=useState('')
@@ -93,7 +93,6 @@ function QuizSession({initial,questions,frequency,pm,refresh}:{
     sessionStorage.removeItem(ACTIVE)
   }
   const navigate=(index:number)=>{
-    setRefShown(false)
     save({...s,currentIndex:index})
     window.scrollTo({top:0,behavior:'instant'})
   }
@@ -104,7 +103,6 @@ function QuizSession({initial,questions,frequency,pm,refresh}:{
       // stay in place: delivery is always manual unless the real timer expires.
       save({...s,selectedAnswers:{...s.selectedAnswers,[q.id]:k},
         currentIndex:Math.min(s.currentIndex+1,questions.length-1)})
-      setRefShown(false)
       window.scrollTo({top:0,behavior:'instant'})
       return
     }
@@ -250,7 +248,8 @@ function QuizSession({initial,questions,frequency,pm,refresh}:{
       })}</div>
       {renderFeedback&&(q.scoringEligible===false
         ?<div className="feedback" role="status"><b>No puntúa · incidencia editorial</b><p>Tu respuesta no cuenta como acierto ni como error.</p>{decision&&<p>{decision.decision}</p>}{decision?.editorialAnswer&&<p>Orientación técnica: {decision.editorialAnswer}</p>}</div>
-        :<div className={'feedback '+(isCorrect?'ok':'bad')} role="status"><b>{isCorrect?'✓ Correcta':'× Incorrecta · respuesta '+q.correctAnswer}</b><button onClick={()=>setRefShown(v=>!v)}>{refShown?'Ocultar':'Ver fundamento'}</button>{refShown&&<div><p><strong>Norma:</strong> {q.norm||'Sin referencia normativa adicional'}</p><p><strong>Referencia:</strong> {q.reference||'Consultar enunciado original'}</p></div>}</div>)}
+        :<div className={'feedback '+(isCorrect?'ok':'bad')} role="status"><b>{isCorrect?'✓ Correcta':'× Incorrecta · respuesta '+q.correctAnswer}</b></div>)}
+      {renderFeedback&&<AnswerProvenance question={q}/>}
       {renderFeedback&&q.technicalDecision&&<div className="cap-r25-final" role="note"><b>{q.technicalDecision.action==='correct'?(q.technicalDecision.round||'R27')+' · Corrección técnica':q.technicalDecision.action==='exclude'?(q.technicalDecision.round||'R27')+' · Pregunta sin puntuación':(q.technicalDecision.round||'R27')+' · Matiz técnico'}</b><p>Plantilla original: {q.technicalDecision.historicalAnswer} · Solución técnica: {q.technicalDecision.technicalAnswer||'Sin respuesta única válida'}</p><p>{q.technicalDecision.reason}</p><small>Decisión editorial de estudio, no rectificación oficial.</small></div>}
     </article>
     {saveError&&<div className="focus-notice" role="alert"><span aria-hidden="true">ⓘ</span><span>{saveError}</span><button onClick={()=>setSaveError('')} aria-label="Cerrar aviso">×</button></div>}
