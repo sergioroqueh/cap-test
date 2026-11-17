@@ -127,8 +127,12 @@ export default function BackupPanel({ refresh }: { refresh: () => Promise<void> 
       const filename = 'rutacap-copia-local-' + new Date().toISOString().slice(0,10) + '.json'
       const file = new File([blob], filename, {type:'application/json'})
       shareFile.current = {file, generation}
-      setCanShare(typeof navigator.canShare === 'function' &&
-        typeof navigator.share === 'function' && navigator.canShare({files:[file]}))
+      let shareSupported = false
+      try {
+        shareSupported = typeof navigator.canShare === 'function' &&
+          typeof navigator.share === 'function' && navigator.canShare({files:[file]})
+      } catch { /* Older Safari Web Share implementations may reject file probes. */ }
+      setCanShare(shareSupported)
       const url = URL.createObjectURL(blob)
       const anchor = document.createElement('a')
       anchor.href = url
