@@ -1,0 +1,29 @@
+name: C29 offline-first sync (synthetic, cloud off)
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'src/syncCore.mjs'
+      - 'scripts/test_sync_c29.mjs'
+      - 'docs/commercial/C29_OFFLINE_SYNC_DESIGN.md'
+      - '.github/workflows/c29-offline-sync-draft.yml'
+permissions:
+  contents: read
+jobs:
+  synthetic-sync:
+    if: github.head_ref == 'feat/cap-commercial'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Test C29 offline-first draft, idempotency, A/B and conflicts
+        run: node --test scripts/test_sync_c29.mjs
+      - name: Verify remote sync remains disconnected from UI
+        run: |
+          ! grep -R -n 'syncOfflineFirst\|syncCore' src/App.tsx src/Quiz.tsx src/db.ts
+          grep -F 'export const cloudConfigured = false' src/supabase.ts

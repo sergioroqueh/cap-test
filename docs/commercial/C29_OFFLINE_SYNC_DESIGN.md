@@ -1,0 +1,24 @@
+# C29 — Offline-first sync engine, NOT ACTIVE (17/11/2026)
+
+**Repo/branch:** sergioroqueh/cap-test, feat/cap-commercial, PR #21 DRAFT.
+**Scope:** pure, isolated logic in src/syncCore.mjs; synthetic multi-device tests. No imports from the UI, no network adapter, no Supabase schema writes, no changes to scoring, no merge/deploy/payment activity. cloudConfigured remains literal false.
+
+## Why an event ledger is necessary
+The existing C28 JSONB question snapshot is full-fidelity for *one device*, but merging concurrent offline snapshots by max(), last-write-wins or addition is incorrect: max loses independently answered questions; addition double-counts retries and shared history; LWW overwrites a device. An append-only event per answer/favorite change with globally unique eventId is required before bi-directional sync can be correct. The C29_event_ledger_draft.sql is only a proposed companion to the C28 full-fidelity schema. C28 rc_question_progress can eventually serve as a derived read model, not the authority for concurrent totals.
+
+## Draft protocol
+1. **Gate:** independently verify Supabase user session, deny JWT is_anonymous and guest, require explicit user consent; cloudEnabled defaults false in the engine. No user_id from browser payload authorizes ownership.
+2. **Durability:** local adapter ensureSessionIds() MUST run an IndexedDB readwrite transaction to set/persist a random UUID clientId for every pre-existing completed session without one, preserving IndexedDB numeric id; only after completion can it upload. Already-completed new sessions get a UUID in db.addSession(). Repeated attempts reuse the same clientId.
+3. **Events:** persist each answer/favorite operation atomically in an append-only local outbox *together* with the visible QuestionProgress mutation. Each has eventId UUID, persistent deviceId, Lamport clock, canonical questionId, questionnaireId, occurredAt, kind and value; no event must be fabricated by reverse engineering existing aggregate counters. Recompute counters from deduplicated events; a conflicting eventId/payload is a hard conflict.
+4. **Legacy progress:** a one-time legacy-baseline event captures all QuestionProgress fields, with a stable unique ID. Later events explicitly reference this baselineId. Independently originated baselines of the same question or unknown overlaps are blocked for manual recovery, not auto-added.
+5. **Merge:** pull a complete owner-scoped remote snapshot, validate key/payload and baseline provenance, union by immutable ID, save remote additions locally *without clearing* current data, insert missing events and immutable sessions to remote, pull once more for racing uploads. Partial failures are retryable. Replaying the same set yields identical totals.
+6. **Ordering:** the Lamport clock plus deviceId and eventId is a deterministic order for last answer/favorite and streak. It is NOT a verifiable real-world chronology of offline behavior; timestamp only informs display. Cross-device streak may differ from subjective order; document and potentially revisit UI language.
+7. **Security:** event history is learning input only, never entitlement/certification/scoring authority. API future implementation must use authenticated insert-only/RLS and owner UUID from verified auth, reject UPDATE/DELETE, paginate without incomplete snapshots, validate event schema and payload bounds. Colliding IDs with differing payload must be detected even with INSERT ON CONFLICT DO NOTHING.
+8. **A/B and logout:** local storage namespace remains tied to verified UUID; guest data never joins an account automatically. A sign-out interrupts future network activity; real adapter needs a per-request auth check and abort/cancellation. On identity switch, never apply an in-flight response to the next user's local storage.
+
+## Current implementation limits / blocking gates
+- The new engine is a **draft executable core**, not connected to IndexedDB, Quiz callbacks or PostgREST. Synthetic adapter tests cannot prove production atomicity or server-side authorization.
+- There is deliberately NO migration that reconstructs old answer operations from aggregate counters; this is impossible without provenance. C29 needs a controlled, transparent one-time baseline import before release.
+- Future work: implement transactional IndexedDB event outbox/legacy-key backfill; a PostgREST adapter with verified JWT, page completeness and cancellation; schema approval and real per-user RLS test; concurrency and browser/E2E restoration tests. Do not turn on cloud until all are completed.
+- C28 schema and PostgreSQL disposable RLS CI remain unchanged. The C29 supplemental SQL is neither executed nor referenced by this PR's CI; it is review material only.
+- Known unrelated R32 frequency discrepancy **2/2/1 vs 3/3/3 remains unresolved**; do not alter scoring.
