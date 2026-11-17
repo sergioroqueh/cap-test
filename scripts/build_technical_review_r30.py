@@ -13,7 +13,7 @@ cases=proof['cases']
 targets={(q['examId'],q['number']):(g,q) for g in queue['selected'] for q in g['rows']}
 assert len(targets)==len(cases)==87 and len(queue['selected'])==16
 assert Counter(c['action'] for c in cases)=={'note':64,'confirmed':23}
-seen=set(); changed=0
+seen=set(); changed=0; models_with_notes=set()
 for e in ix['exams']:
     path=OUT/'questions'/f"{e['id']}.json"
     rows=read(path)
@@ -31,6 +31,7 @@ for e in ix['exams']:
         if c['action']=='note':
             q['technicalDecision']={key:c[key] for key in ('examId','number','sourcePage','round','historicalAnswer','previousAppliedAnswer','technicalAnswer','action','reason','sources')}
             affected=True
+            models_with_notes.add(e['id'])
         else:
             assert c['action']=='confirmed'
             q['answerSourceReview']={'round':c['round'],'status':'confirmed','reason':c['reason'],'sources':c['sources']}
@@ -47,4 +48,4 @@ with (OUT/'technical_review_r30.csv').open('w',encoding='utf-8-sig',newline='') 
     fields=['group','frequency','examId','number','sourcePage','question','options','historicalAnswer','previousAppliedAnswer','technicalAnswer','action','reason','sources']
     w=csv.DictWriter(f,fieldnames=fields,extrasaction='ignore');w.writeheader()
     for c in cases:w.writerow({**c,'options':json.dumps(c['options'],ensure_ascii=False),'sources':' | '.join(c['sources'])})
-print('R30 PASS '+json.dumps({'groups':16,'cases':len(cases),'actions':dict(Counter(c['action'] for c in cases)),'modelsWithNotes':changed,'stats':ix['technicalR30Stats']},ensure_ascii=False))
+print('R30 PASS '+json.dumps({'groups':16,'cases':len(cases),'actions':dict(Counter(c['action'] for c in cases)),'modelsWithNotes':len(models_with_notes),'stats':ix['technicalR30Stats']},ensure_ascii=False))
