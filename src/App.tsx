@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import Quiz from './Quiz'
+import AnswerProvenance from './AnswerProvenance'
 import CommercialHome, { ProBrand, ProIcon, isRegionCode, regionByCode, RegionMark, REGIONS, type RegionCode } from './CommercialHome'
 import { CommercialAccountPreview } from './CommercialAccountPreview'
 import ConfirmDialog from './ConfirmDialog'
@@ -430,6 +431,7 @@ function Results(){
        ?<><p>Plantilla original: <b>{q.originalSheetAnswer||'—'}</b> · Banco: <b>{q.bankAnswer||'—'}</b></p>{decision?<><p><strong>{decision.editorialAnswer?'Respuesta técnica orientativa: '+decision.editorialAnswer:'Pregunta inválida; sin respuesta técnica'}</strong></p><small>{decision.decision} No puntúa y no se presenta como fe de erratas del tribunal.</small></>:<small>No hay solución aprobada todavía. Esta pregunta no se ha calificado.</small>}</>
        :<><p className="green">Solución aplicada en esa sesión: {answer.correctAnswer} · {q.options[answer.correctAnswer]}</p>{q.reviewRequired&&<small>Solución procedente del cotejo; algunas transcripciones requieren revisión editorial.</small>}</>}
     {q.technicalDecision&&<div className="cap-r25-final"><b>{q.technicalDecision.round||'R27'} · Plantilla {q.technicalDecision.historicalAnswer} · Técnica {q.technicalDecision.technicalAnswer||'sin opción única'}</b><p>{q.technicalDecision.reason}</p><small>Decisión editorial; no rectificación oficial.</small></div>}
+    <AnswerProvenance question={q}/>
     </article>
    })}
   </div>
