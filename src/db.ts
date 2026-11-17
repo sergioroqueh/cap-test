@@ -293,20 +293,10 @@ export async function getRecentSessions(limit = 20): Promise<StudySessionRecord[
   return localSessions(limit)
 }
 
-async function getJournalSnapshotForBackup(): Promise<unknown[]> {
-  const db = await openDb()
-  try { return await requestAsPromise(db.transaction(JOURNAL, 'readonly').objectStore(JOURNAL).getAll()) }
-  finally { db.close() }
-}
-
+// Keep the established exportDatabase API used by Settings and C30 tests.
+// C31 reads all stores in a single consistent snapshot, then stamps scope and SHA.
 export async function exportDatabase() {
-  return {
-    version: 3,
-    journal: await getJournalSnapshotForBackup(),
-    exportedAt: new Date().toISOString(),
-    progress: await localProgress(),
-    sessions: await localSessions(Number.MAX_SAFE_INTEGER)
-  }
+  return (await import('./backupRecovery')).exportFullBackup()
 }
 
 export async function importProgress(rows: QuestionProgress[]) {
