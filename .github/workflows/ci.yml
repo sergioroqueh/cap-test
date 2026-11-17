@@ -187,6 +187,9 @@ jobs:
             artifacts/cap-answer-provenance-coverage.json
           retention-days: 14
 
+      - name: C23 diagnostic — investigate R32 frequency drift (read-only)
+        run: python3 scripts/diagnose_r32_frequency_c23.py
+
       # Run legacy frozen R32 checks last: never hide a discrepancy, but allow
       # independent C22 visual/guest checks and screenshots to complete first.
       - name: Verify staged R32 evidence (no scoring changes)
