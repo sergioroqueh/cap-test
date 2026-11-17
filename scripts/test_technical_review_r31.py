@@ -15,8 +15,15 @@ for e in ix['exams']:
         c=byid[k];d=q.get('technicalDecision')
         assert q['originalSheetAnswer']==c['historicalAnswer']
         assert q['correctAnswer']==c['technicalAnswer']==c['previousAppliedAnswer']
-        if c['action']=='confirmed':assert d is None
-        else:assert d['round']=='R31' and d['technicalAnswer']==q['correctAnswer']
+        if c['action']=='confirmed':
+            assert d is None
+            assert q.get('answerSourceReview') == {
+                'round': c['round'], 'status': 'confirmed',
+                'reason': c['reason'], 'sources': c['sources']
+            }
+        else:
+            assert q.get('answerSourceReview') is None
+            assert d['round']=='R31' and d['technicalAnswer']==q['correctAnswer']
         if c.get('restoredOptions'):
             assert k==('2023-12-02-mercancias-global',57)
             assert d['restoredOptions']==c['restoredOptions'] and q['options']==c['options'] and d['technicalAnswer']=='C'
