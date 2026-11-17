@@ -26,7 +26,13 @@ export function openDb(): Promise<IDBDatabase> {
       if (!db.objectStoreNames.contains(JOURNAL)) db.createObjectStore(JOURNAL, { keyPath: 'eventId' })
       if (!db.objectStoreNames.contains(META)) db.createObjectStore(META, { keyPath: 'key' })
     }
-    request.onsuccess = () => resolve(request.result)
+    request.onsuccess = () => {
+      const handle = request.result
+      // A newer tab may upgrade the schema. Release this connection promptly.
+      handle.onversionchange = () => handle.close()
+      resolve(handle)
+    }
+    request.onblocked = () => reject(new Error('Cierra las pestañas antiguas de RutaCAP y vuelve a abrirla para actualizar el almacenamiento.'))
     request.onerror = () => reject(request.error)
   })
 }

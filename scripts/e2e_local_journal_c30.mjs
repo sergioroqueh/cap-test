@@ -127,6 +127,34 @@ try {
     return {first:first.id,again:again.id,events:before}
   },A)
   assert.equal(exam.first,exam.again)
+  // Two tabs share one account's IndexedDB. Readwrite transactions must
+  // serialize the competing events, rather than apply stale in-memory totals.
+  const tab2=await context.newPage()
+  try{
+    await tab2.goto('http://127.0.0.1:5173/')
+    // page.evaluate cannot serialize a higher-order closure; pass each ID explicitly.
+    await Promise.all([
+      page.evaluate(async(A)=>{
+        (await import('/src/localScope.ts')).setLocalOwner(A)
+        await (await import('/src/localJournal.ts')).recordStudyAnswer({
+          eventId:'tab-one',questionId:'same-tab-question',questionnaireId:'concurrency',
+          answer:'A',correct:true})
+      },A),
+      tab2.evaluate(async(A)=>{
+        (await import('/src/localScope.ts')).setLocalOwner(A)
+        await (await import('/src/localJournal.ts')).recordStudyAnswer({
+          eventId:'tab-two',questionId:'same-tab-question',questionnaireId:'concurrency',
+          answer:'B',correct:false})
+      },A)
+    ])
+    const attempts=await page.evaluate(async(A)=>{
+      (await import('/src/localScope.ts')).setLocalOwner(A)
+      return (await (await import('/src/db.ts')).getAllProgress())
+        .find(x=>x.questionId==='same-tab-question')?.attempts
+    },A)
+    assert.equal(attempts,2,'Concurrent tabs lost an attempt')
+    console.log('C30 PASS: two-tab transactional concurrency')
+  } finally {await tab2.close()}
   const independent=await browser.newContext()
   try{
     const p=await independent.newPage()
