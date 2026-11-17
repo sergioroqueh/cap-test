@@ -36,3 +36,14 @@
   .backup-counts strong{font-size:15px}
 }
 @media(prefers-reduced-motion:reduce){.backup-panel *{scroll-behavior:auto}}
+
+/* C34 keyboard and mobile-WebKit polish. Keep backup options secondary. */
+.backup-preview h3:focus{outline:none}
+.backup-preview h3:focus-visible{outline:2px solid var(--primary);outline-offset:4px}
+.backup-phase{margin-top:12px!important;color:var(--muted);font-size:12px}
+.backup-share{margin-top:11px;padding:12px;border:1px solid var(--line);
+  border-radius:12px;background:var(--soft);display:flex;align-items:center;gap:12px;
+  justify-content:space-between;flex-wrap:wrap}
+.backup-share p{flex:1 1 185px;font-size:11px;line-height:1.45}
+.backup-share .btn{flex:0 0 auto;min-height:48px;max-width:100%;white-space:normal}
+@media(max-width:420px){.backup-share .btn{flex:1 1 100%}}
