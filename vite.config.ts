@@ -15,7 +15,7 @@ export default defineConfig(({ mode,command }) => {
   if(local&&command==='build')throw Error('El catálogo editorial local no admite compilación.')
   if(command==='build')rejectPrivatePublicFiles('public')
   const configured = loadEnv(mode, '.', 'CAP_PUBLIC_BASE').CAP_PUBLIC_BASE || '/cap-test/'
-  const base = local||mode === 'cap-preview' ? '/' : configured
+  const base = local||mode === 'cap-preview'||command === 'serve' ? '/' : configured
   if (!/^\/(?:[A-Za-z0-9_-]+\/)*$/.test(base)) throw new Error('CAP_PUBLIC_BASE debe ser una ruta absoluta con barra final, por ejemplo / o /cap-test/.')
   return { plugins: [react(),...(local?[{
     name:'rutacap-local-catalog-entry',

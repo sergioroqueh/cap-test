@@ -10,8 +10,6 @@ import { loadBankExamFrequency, type CapCategory, type CapEditorialDecision } fr
 import { percent } from './utils'
 import { CAP_DURATION_MINUTES, deadlineAt, formatRemaining, gradeSession, remainingMs } from './examEngine.mjs'
 
-const PREVIEW = import.meta.env.VITE_CAP_PREVIEW === 'true'
-
 const keys: AnswerKey[] = ['A','B','C','D']
 const go = (page: string) => { location.hash = '#/' + page }
 const progressId = (q: Question) => q.progressId || q.id

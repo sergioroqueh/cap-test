@@ -29,6 +29,9 @@ jobs:
       - name: Audit answer provenance coverage (aggregate only)
         run: python3 scripts/audit_answer_provenance.py
 
+      - name: Validate C22 auth gates and local isolation
+        run: node --test scripts/test_commercial_auth_c22.mjs
+
       - name: Verify real CAP scoring and persisted wall clock
         run: node --test scripts/test_exam_engine.mjs
 
@@ -79,6 +82,20 @@ jobs:
           curl -fsS http://127.0.0.1:4188/ > /dev/null
           node --experimental-strip-types scripts/test_private_catalog_c14.mjs
 
+      - name: C22 smoke test of local auth entry and guest on real mobile and desktop
+        env:
+          VITE_RUTACAP_AUTH_DEV: 'true'
+          VITE_CAP_PRO_SUPABASE_URL: 'https://rutacap-dev-mock.supabase.co'
+          VITE_CAP_PRO_SUPABASE_PUBLISHABLE_KEY: 'sb_publishable_ci_mock_only_not_real'
+        run: |
+          npx vite --host 127.0.0.1 --port 5173 --strictPort > /tmp/rutacap-dev-auth.log 2>&1 &
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:5173/ > /dev/null; then break; fi
+            sleep 1
+          done
+          curl -fsS http://127.0.0.1:5173/ > /dev/null
+          node scripts/e2e_commercial_auth_c22.mjs
+
       - name: Test Focus UI in mobile and desktop browsers
         run: |
           npm run preview -- --mode cap-preview --host 127.0.0.1 --port 4173 --strictPort > /tmp/cap-preview.log 2>&1 &
@@ -88,6 +105,15 @@ jobs:
           done
           curl -fsS http://127.0.0.1:4173/ > /dev/null
           node scripts/e2e_cap_focus.mjs
+
+      - name: Upload C22 auth and guest screenshots (mocked local client)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cap-c22-auth-guest-screenshots
+          path: artifacts/cap-auth-c22/
+          if-no-files-found: ignore
+          retention-days: 14
 
       - name: Upload Focus browser screenshots
         if: always()

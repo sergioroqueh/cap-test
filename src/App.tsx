@@ -43,8 +43,7 @@ function App(){
     if(!live)return
     setLocalOwner(verified?.user.id??null)
     setSession(verified)
-    if(verified)setGuest(false)
-    setAuthError('')
+    if(verified){setGuest(false);setAuthError('')}
    } catch {
     if(!live)return
     setLocalOwner(null)
