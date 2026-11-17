@@ -39,6 +39,10 @@ for old,c in zip(queue,cases):
     if c['action']!='confirmed':
         q['technicalDecision']={key:c[key] for key in ('examId','number','sourcePage','round','historicalAnswer','previousAppliedAnswer','technicalAnswer','action','reason','sources')}
         changed.add(c['examId'])
+    else:
+        # Read-only citation: no change to letter, grading or editorial decision.
+        q['answerSourceReview']={'round':c['round'],'status':'confirmed','reason':c['reason'],'sources':c['sources']}
+        changed.add(c['examId'])
     seen.add(k)
 all_rows=[]
 for e in ix['exams']:
