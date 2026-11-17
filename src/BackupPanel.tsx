@@ -124,8 +124,9 @@ export default function BackupPanel({ refresh }: { refresh: () => Promise<void> 
       if (!mounted.current || ticket !== sequence.current) return
       update('idle', {
         kind:'success',
-        message:'Copia restaurada: ' + result.questions + ' preguntas, ' +
-          result.sessions + ' sesiones y ' + result.events + ' operaciones.'
+        message:'Copia restaurada: ' + result.questions + (result.questions === 1 ? ' pregunta, ' : ' preguntas, ') +
+          result.sessions + (result.sessions === 1 ? ' sesión y ' : ' sesiones y ') +
+          result.events + (result.events === 1 ? ' operación.' : ' operaciones.')
       })
     } catch (error) {
       if (!mounted.current || ticket !== sequence.current) return
@@ -159,9 +160,9 @@ export default function BackupPanel({ refresh }: { refresh: () => Promise<void> 
       <h3 id="backup-preview-title">Antes de restaurar</h3>
       <p className="backup-file-name" title={preview.filename}>{preview.filename}</p>
       <div className="backup-counts" aria-label="Contenido verificado">
-        <span><strong>{preview.details.questions.toLocaleString('es-ES')}</strong> preguntas</span>
-        <span><strong>{preview.details.sessions.toLocaleString('es-ES')}</strong> sesiones</span>
-        <span><strong>{preview.details.events.toLocaleString('es-ES')}</strong> operaciones</span>
+        <span><strong>{preview.details.questions.toLocaleString('es-ES')}</strong> {preview.details.questions === 1 ? 'pregunta' : 'preguntas'}</span>
+        <span><strong>{preview.details.sessions.toLocaleString('es-ES')}</strong> {preview.details.sessions === 1 ? 'sesión' : 'sesiones'}</span>
+        <span><strong>{preview.details.events.toLocaleString('es-ES')}</strong> {preview.details.events === 1 ? 'operación' : 'operaciones'}</span>
       </div>
       {preview.details.legacy && <p className="backup-warning">Copia antigua sin propietario: solo puede restaurarse en un perfil invitado vacío.</p>}
       <p>Los registros compatibles se añadirán sin borrar los existentes. Los conflictos se rechazan; no se suman contadores antiguos desconocidos.</p>
