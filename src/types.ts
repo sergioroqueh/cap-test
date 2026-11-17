@@ -38,6 +38,12 @@ export interface Question {
   originalSheetQuestionNumber?: number | null
   originalSheetSourceFile?: string | null
   originalSheetSha256?: string | null
+  /** Public, individually checked evidence. Not automatically a final tribunal key. */
+  answerEvidenceUrl?: string
+  answerEvidenceSource?: string
+  /** True only when source authority is explicitly verified in the source audit. */
+  answerTemplateOfficiallyVerified?: boolean | null
+  answerTemplateSourceAuthority?: string | null
   /** PDF letter after an explicitly recorded numbering alignment. */
   mappedSheetAnswer?: AnswerKey | null
   mappedSheetQuestionNumber?: number | null
