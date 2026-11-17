@@ -25,6 +25,10 @@ def safe_https(value):
     return url.scheme == "https" and bool(url.netloc)
 
 
+def missing_citation(value):
+    return str(value or '').strip().lower() in {'', 'sin referencia', 'sin referencias', 'sin referencias doctrinales', 'no consta', 'ningun', 'ninguna', 'n/a', 'na'}
+
+
 def report():
     bank = read_json(DATA / "index.json")
     exams = read_json(DATA / "exams" / "index.json")
@@ -41,6 +45,9 @@ def report():
             bank_counts["reference_field"] += reference
             bank_counts["any_legacy_reference"] += bool(norm or reference)
             bank_counts["no_legacy_reference"] += not (norm or reference)
+            bank_counts["placeholder_norm_field"] += missing_citation(row.get("norm"))
+            bank_counts["placeholder_reference_field"] += missing_citation(row.get("reference"))
+            bank_counts["both_placeholder_fields"] += missing_citation(row.get("norm")) and missing_citation(row.get("reference"))
     if bank_counts["total"] != bank["totalQuestions"]:
         raise AssertionError("General bank count mismatch")
 
@@ -75,8 +82,8 @@ def report():
                 if row.get("technicalDecision"):
                     raise AssertionError("Confirmed source metadata must not overwrite an editorial decision")
                 historic["confirmed_editorial_sources"] += 1
-            historic["legacy_norm_or_reference"] += bool((row.get("norm") or "").strip() or (row.get("reference") or "").strip())
-            if not (has_doc or safe_https(url) or sources or confirmed_sources or row.get("norm") or row.get("reference")):
+            historic["legacy_norm_or_reference"] += not (missing_citation(row.get("norm")) and missing_citation(row.get("reference")))
+            if not (has_doc or safe_https(url) or sources or confirmed_sources or not missing_citation(row.get("norm")) or not missing_citation(row.get("reference"))):
                 historic["no_individual_evidence_metadata"] += 1
     if historic["total_appearances"] != exams["totalImportedQuestions"]:
         raise AssertionError("Historical appearance count mismatch")
