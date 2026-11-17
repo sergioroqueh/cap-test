@@ -90,8 +90,10 @@ try{
  await file.setInputFiles(toFile('cuenta-invitado.json',original))
  await mobile.getByRole('heading',{name:'Antes de restaurar'}).waitFor()
  await mobile.evaluate(A=>(import('/src/localScope.ts').then(scope=>scope.setLocalOwner(A))),A)
- await mobile.getByRole('button',{name:'Confirmar restauración'}).click()
- await mobile.getByRole('alert').filter({hasText:/cambiado de perfil/i}).waitFor()
+ // C34 proactively discards the preview and its selected file on owner change:
+ // there must no longer be a "Confirmar" button to click.
+ await mobile.locator('.backup-preview').waitFor({state:'detached'})
+ assert.equal(await mobile.getByRole('button',{name:'Confirmar restauración'}).count(),0)
  await mobile.evaluate(()=>import('/src/localScope.ts').then(scope=>scope.setLocalOwner(null)))
  console.log('C33 MOBILE PASS tampered/invalid files and account switch during preview')
 
