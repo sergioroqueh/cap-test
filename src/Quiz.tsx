@@ -65,6 +65,7 @@ function QuizSession({initial,questions,frequency,pm,refresh}:{
   const [pdfBusy,setPdfBusy]=useState(false)
   const [pdfError,setPdfError]=useState('')
   const lock=useRef(false)
+  const clientIdRef=useRef(initial.clientId || '')
   const selecting=useRef(false)
   const favoriting=useRef(false)
   const timed=s.type==='exam'&&s.timed===true
@@ -181,7 +182,8 @@ function QuizSession({initial,questions,frequency,pm,refresh}:{
       }))
       const grade=gradeSession(answers,isCap)
       // Persist stable key before IndexedDB commit. An interrupted retry reuses it.
-      const clientId=s.clientId || crypto.randomUUID()
+      const clientId=clientIdRef.current || s.clientId || crypto.randomUUID()
+      clientIdRef.current=clientId
       if(!s.clientId)save({...s,clientId})
       const completedAt=Date.now()
       const record:StudySessionRecord={
