@@ -18,6 +18,9 @@ jobs:
           node-version: 22
       - name: Install dependencies
         run: npm install
+      - name: Verify portable Windows and Linux Python data runner
+        run: node --test scripts/test_prepare_data_cross_platform.mjs
+
       - name: Validate question bank and build
         run: |
           npm run build
