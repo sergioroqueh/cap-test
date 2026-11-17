@@ -173,9 +173,10 @@ async function prepareBackup(input:unknown, currentOwner:BackupOwner):Promise<{
   const version=row.version
   const owned=row.owner!==undefined||row.checksum!==undefined
   if(owned){
-    if(version!==3||!ownerValid(row.owner)||typeof row.checksum!=='string'||
-       !/^[0-9a-f]{64}$/.test(row.checksum))
-      fail('Metadatos de propietario/integridad incompletos.')
+    if(version!==3)fail('Las copias identificadas deben usar el formato v3.')
+    if(!ownerValid(row.owner))fail('El propietario de la copia es inválido.')
+    if(typeof row.checksum!=='string'||!/^[0-9a-f]{64}$/.test(row.checksum))
+      fail('La huella SHA-256 de la copia no es válida.')
     if(!ownerMatches(row.owner as BackupOwner,currentOwner))
       fail('Esta copia pertenece a otro perfil. No se pueden mezclar cuentas.')
     if(await digest(unsigned(row))!==row.checksum)
