@@ -17,8 +17,15 @@ for e in ix['exams']:
         c=cases[k]; d=q.get('technicalDecision')
         assert q['originalSheetAnswer']==c['historicalAnswer'] and q['correctAnswer']==c['previousAppliedAnswer']
         assert q['question']==c['question'] and q['options']==c['options']
-        if c['action']=='confirmed':assert d is None
-        else:assert d['round']=='R29' and d['technicalAnswer']==c['technicalAnswer']
+        if c['action']=='confirmed':
+            assert d is None
+            assert q.get('answerSourceReview') == {
+                'round': c['round'], 'status': 'confirmed',
+                'reason': c['reason'], 'sources': c['sources']
+            }
+        else:
+            assert q.get('answerSourceReview') is None
+            assert d['round']=='R29' and d['technicalAnswer']==c['technicalAnswer']
         seen[k]=c
     assert e['technicalReadyCount']==e['readyCount']-sum(q.get('technicalDecision',{}).get('action')=='exclude' for q in rows)
 assert len(seen)==62 and Counter(c['action'] for c in seen.values())=={'exclude':6,'note':20,'confirmed':36}
