@@ -27,12 +27,13 @@ function ownerValid(x:unknown):x is BackupOwner {
     (x.kind==='user' && typeof x.userId==='string' && uuid.test(x.userId)))
 }
 function assertProfile(rows:unknown):asserts rows is QuestionProgress[] {
-  if(!Array.isArray(rows)||rows.length>200000)fail('Lista de progreso ausente o demasiado grande.')
+  if(!Array.isArray(rows)) throw Error('Lista de progreso ausente.')
+  if(rows.length>200000) throw Error('Lista de progreso demasiado grande.')
   const seen=new Set<string>()
   for(const row of rows){
     if(!obj(row)||!str(row.questionId)||!str(row.questionnaireId)||
         !nat(row.attempts)||!nat(row.correct)||!nat(row.incorrect)||!nat(row.streak)||
-        row.correct+Number(row.incorrect)!==row.attempts ||
+        Number(row.correct)+Number(row.incorrect)!==Number(row.attempts) ||
         !nat(row.lastAnsweredAt)||typeof row.favorite!=='boolean'||
         (row.updatedAt!==undefined&&!nat(row.updatedAt))||
         (row.lastAnswer!==undefined&&!letter(row.lastAnswer))||
@@ -44,7 +45,8 @@ function assertProfile(rows:unknown):asserts rows is QuestionProgress[] {
   }
 }
 function assertSessions(rows:unknown):asserts rows is StudySessionRecord[] {
-  if(!Array.isArray(rows)||rows.length>100000)fail('Historial de sesiones ausente o demasiado grande.')
+  if(!Array.isArray(rows)) throw Error('Historial de sesiones ausente.')
+  if(rows.length>100000) throw Error('Historial de sesiones demasiado grande.')
   for(const row of rows){
     if(!obj(row)||!['study','exam'].includes(row.type as string)||!str(row.label)||
        !nat(row.startedAt)||!nat(row.completedAt)||!nat(row.total)||!nat(row.answered)||
@@ -174,10 +176,10 @@ async function prepareBackup(input:unknown, currentOwner:BackupOwner):Promise<{
     if(version!==3||!ownerValid(row.owner)||typeof row.checksum!=='string'||
        !/^[0-9a-f]{64}$/.test(row.checksum))
       fail('Metadatos de propietario/integridad incompletos.')
-    if(!ownerMatches(row.owner,currentOwner))
+    if(!ownerMatches(row.owner as BackupOwner,currentOwner))
       fail('Esta copia pertenece a otro perfil. No se pueden mezclar cuentas.')
     if(await digest(unsigned(row))!==row.checksum)
-      fail('La firma de integridad local de la copia no coincide (archivo alterado o dañado).')
+      fail('La huella de integridad de la copia no coincide (archivo alterado o dañado).')
   }else if(currentOwner.kind==='user'){
     fail('La copia antigua no identifica propietario: solo se admite en un perfil invitado vacío.')
   }
