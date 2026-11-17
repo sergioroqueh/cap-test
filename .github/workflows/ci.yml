@@ -38,6 +38,9 @@ jobs:
       - name: Audit actual Top 100 frequency distribution
         run: node scripts/audit_top100_frequency.mjs
 
+      - name: C23 deterministic frequency match proof (no answer changes)
+        run: python3 scripts/test_frequency_group_determinism_c23.py
+
       - name: Validate CAP overlay isolation and answer provenance
         run: python3 scripts/test_exam_data.py
 
