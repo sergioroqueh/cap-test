@@ -185,12 +185,16 @@ export default function BackupPanel({ refresh }: { refresh: () => Promise<void> 
       setPreview(null)
       await refresh()
       if (!mounted.current || ticket !== sequence.current) return
-      selectButton.current?.focus({preventScroll:true})
       update('idle', {
         kind:'success',
         message:'Copia restaurada: ' + result.questions + (result.questions === 1 ? ' pregunta, ' : ' preguntas, ') +
           result.sessions + (result.sessions === 1 ? ' sesión y ' : ' sesiones y ') +
           result.events + (result.events === 1 ? ' operación.' : ' operaciones.')
+      })
+      // A disabled button cannot receive focus. React must first render idle.
+      requestAnimationFrame(() => {
+        if (mounted.current && ticket === sequence.current)
+          selectButton.current?.focus({preventScroll:true})
       })
     } catch (error) {
       if (!mounted.current || ticket !== sequence.current) return
