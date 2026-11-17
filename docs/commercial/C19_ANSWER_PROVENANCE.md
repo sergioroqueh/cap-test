@@ -22,6 +22,9 @@ Los expedientes R29, R30 y R31 contienen **36 + 23 + 117 = 176** decisiones de t
 ## Pruebas añadidas
 `scripts/e2e_cap_focus.mjs`: el modo Examen no deja ver la procedencia antes de entregar; el desglose posterior ofrece ficha en todas las respuestas; el modo Estudio muestra la ficha tras responder, con enlaces HTTPS para casos técnicos documentados; las excluidas permanecen sin puntuación. Mantener comprobaciones de móvil, puntuación y no-regresión.
 
+## Hallazgo documental del banco general — marcadores vacíos
+Auditoría local del preview comercial generado por CI: aunque las 8.655 preguntas tienen cadenas no vacías en `norm` y `reference`, **4.428** registros llevan `Sin referencias doctrinales` y **78** llevan `Sin referencia` en el campo `norm`; son **78** posiciones con ambos campos marcadores. Sólo **12** filas incluyen alguna URL cruda en esos dos campos. Estas cifras miden forma, no validez. La ficha C19 ya filtra marcadores como vacíos y, si no existe fuente adicional, presenta «Fuente pendiente». El auditor C19 los separa ahora de los campos nominalmente rellenados. No tratar manuales citados sin sección/página como una validación individual de la respuesta.
+
 ## Barreras que siguen cerradas
 - Ningún cambio en las **fuentes originales** `data-src/`, letras, opciones, IDs, frecuencia, scoring ni progreso. Las preguntas **generadas** incluyen únicamente nuevos metadatos de citas `answerSourceReview` para confirmaciones R29–R31.
 - El lote privado CLM C13 no se ha incorporado a la app ni a CI; los seis holds siguen excluidos y los textos no se publican.
