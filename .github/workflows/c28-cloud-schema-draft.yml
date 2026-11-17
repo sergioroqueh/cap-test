@@ -1,0 +1,37 @@
+name: C28 full-fidelity cloud schema draft (disposable PostgreSQL)
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'docs/commercial/sql/C28_*'
+      - 'docs/commercial/sql/C15_auth_fixture.sql'
+      - '.github/workflows/c28-cloud-schema-draft.yml'
+permissions:
+  contents: read
+jobs:
+  draft-proof:
+    if: github.head_ref == 'feat/cap-commercial'
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_PASSWORD: synthetic-ci-only
+          POSTGRES_DB: rutacap_c28_draft
+        options: >-
+          --health-cmd "pg_isready -U postgres -d rutacap_c28_draft"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Validate C28 lossless payload & RLS A/B on disposable PostgreSQL
+        env:
+          PG_CONTAINER: ${{ job.services.postgres.id }}
+        run: |
+          for f in docs/commercial/sql/C15_auth_fixture.sql docs/commercial/sql/C28_full_fidelity_schema_draft.sql docs/commercial/sql/C28_full_fidelity_rls_test.sql; do
+            docker exec -i "$PG_CONTAINER" psql -X -v ON_ERROR_STOP=1 -U postgres -d rutacap_c28_draft < "$f"
+          done
