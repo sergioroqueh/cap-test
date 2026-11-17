@@ -195,6 +195,9 @@ function mergeExisting(local:Snapshot, incoming:Snapshot):Snapshot{
   const current=validateSnapshot(local), source=validateSnapshot(incoming)
   const localReplay=progressReplayed(current.progress,current.journal)
   const remoteReplay=progressReplayed(source.progress,source.journal)
+  // O(1) provenance checks: O(n^2) Array.some became prohibitive for large backups.
+  const localIds=new Set(current.progress.map(row=>row.questionId))
+  const incomingIds=new Set(source.progress.map(row=>row.questionId))
   const union=unionRecords(
     {events:current.journal,sessions:current.sessions},
     {events:source.journal,sessions:source.sessions})
@@ -205,8 +208,8 @@ function mergeExisting(local:Snapshot, incoming:Snapshot):Snapshot{
   for(const row of [...current.progress,...source.progress]){
     const prior=merged.get(row.questionId)
     if(replay.has(row.questionId)){
-      if((current.progress.some(x=>x.questionId===row.questionId)&&!localReplay.has(row.questionId))||
-         (source.progress.some(x=>x.questionId===row.questionId)&&!remoteReplay.has(row.questionId)))
+      if((localIds.has(row.questionId)&&!localReplay.has(row.questionId))||
+         (incomingIds.has(row.questionId)&&!remoteReplay.has(row.questionId)))
         fail('Conflicto con progreso histórico sin operaciones verificables: '+row.questionId)
       merged.set(row.questionId,replay.get(row.questionId)!)
     }else{
@@ -259,7 +262,12 @@ export async function restoreFullBackup(input:unknown):Promise<{
     // Never copy the source device ID; restored events keep their original
     // immutable deviceId, but subsequent operations belong to this browser.
     const previousClock=await requestAsPromise(metaStore.get('clock')) as {value?:number}|undefined
-    const maxClock=Math.max(previousClock?.value||0,...merged.journal.map(e=>e.clock),0)
+    // Avoid Math.max(...largeArray): spreading >100k events can overflow the stack.
+    let maxClock=previousClock?.value||0
+    for(const event of merged.journal){
+      if(!nat(event.clock)) fail('Reloj lógico de evento inválido.')
+      if(event.clock>maxClock) maxClock=event.clock
+    }
     if(!nat(maxClock)||maxClock>=Number.MAX_SAFE_INTEGER)
       fail('Reloj lógico fuera de rango.')
     metaStore.put({key:'clock',value:maxClock})
