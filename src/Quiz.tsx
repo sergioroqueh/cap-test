@@ -1,3 +1,4 @@
+import { activeKey, lastKey } from './localScope'
 import { useEffect, useRef, useState } from 'react'
 import ConfirmDialog from './ConfirmDialog'
 import AnswerProvenance from './AnswerProvenance'
@@ -10,8 +11,7 @@ import { percent } from './utils'
 import { CAP_DURATION_MINUTES, deadlineAt, formatRemaining, gradeSession, remainingMs } from './examEngine.mjs'
 
 const PREVIEW = import.meta.env.VITE_CAP_PREVIEW === 'true'
-const ACTIVE = PREVIEW ? 'cap-test-beta-active-v1' : 'cap-test-active-v1'
-const LAST = PREVIEW ? 'cap-test-beta-last-v1' : 'cap-test-last-v1'
+
 const keys: AnswerKey[] = ['A','B','C','D']
 const go = (page: string) => { location.hash = '#/' + page }
 const progressId = (q: Question) => q.progressId || q.id
@@ -24,7 +24,7 @@ const capDecision = (q: Question) =>
   (q as Question & { editorialDecision?: CapEditorialDecision }).editorialDecision || null
 
 function readActive(): ActiveSession | null {
-  try { return JSON.parse(localStorage.getItem(ACTIVE) || sessionStorage.getItem(ACTIVE) || 'null') as ActiveSession | null }
+  try { return JSON.parse(localStorage.getItem(activeKey()) || sessionStorage.getItem(activeKey()) || 'null') as ActiveSession | null }
   catch { return null }
 }
 function Bar({value}:{value:number}) {
@@ -89,8 +89,8 @@ function QuizSession({initial,questions,frequency,pm,refresh}:{
     :frequency[progressId(q)]
   const save=(next:ActiveSession)=>{
     setS(next)
-    localStorage.setItem(ACTIVE,JSON.stringify(next))
-    sessionStorage.removeItem(ACTIVE)
+    localStorage.setItem(activeKey(),JSON.stringify(next))
+    sessionStorage.removeItem(activeKey())
   }
   const navigate=(index:number)=>{
     save({...s,currentIndex:index})
@@ -170,9 +170,9 @@ function QuizSession({initial,questions,frequency,pm,refresh}:{
         elapsedSeconds:Math.round((completedAt-s.startedAt)/1000)
       }
       await addSession(record)
-      localStorage.setItem(LAST,JSON.stringify({record,questionIds:s.questionIds}))
-      localStorage.removeItem(ACTIVE)
-      sessionStorage.removeItem(ACTIVE)
+      localStorage.setItem(lastKey(),JSON.stringify({record,questionIds:s.questionIds}))
+      localStorage.removeItem(activeKey())
+      sessionStorage.removeItem(activeKey())
       await refresh()
       go('results')
     }catch(err){

@@ -11,7 +11,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   </React.StrictMode>
 )
 
-if (import.meta.env.VITE_CAP_PREVIEW !== 'true' && 'serviceWorker' in navigator) {
+if (import.meta.env.PROD && import.meta.env.VITE_CAP_PREVIEW !== 'true' && 'serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register(`${import.meta.env.BASE_URL}sw.js`).catch(() => undefined)
   })

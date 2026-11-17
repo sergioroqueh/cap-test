@@ -1,14 +1,14 @@
 import type { QuestionProgress, StudySessionRecord } from './types'
 import { cloudConfigured, supabase } from './supabase'
+import { localDbName } from './localScope'
 
-const DB_NAME = import.meta.env.VITE_CAP_PREVIEW === 'true' ? 'cap-test-preview-local-2026' : 'cap-test-2026'
 const DB_VERSION = 1
 const PROGRESS = 'progress'
 const SESSIONS = 'sessions'
 
 function openDb(): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {
-    const request = indexedDB.open(DB_NAME, DB_VERSION)
+    const request = indexedDB.open(localDbName(), DB_VERSION)
     request.onupgradeneeded = () => {
       const db = request.result
       if (!db.objectStoreNames.contains(PROGRESS)) {
@@ -140,7 +140,7 @@ async function upsertCloudSessions(rows: StudySessionRecord[]) {
 }
 
 export async function synchronizeAccount(): Promise<'cloud' | 'migrated' | 'empty'> {
-  if (!supabase) return 'empty'
+  if (!cloudConfigured || !supabase) return 'empty'
   const userId = await currentUserId()
   if (!userId) return 'empty'
 
@@ -246,7 +246,7 @@ export async function clearLocalCache() {
 
 export async function clearAllData(): Promise<void> {
   await clearLocalData()
-  if (!supabase) return
+  if (!cloudConfigured || !supabase) return
   const userId = await currentUserId()
   if (!userId) return
   const [{ error: p }, { error: s }] = await Promise.all([

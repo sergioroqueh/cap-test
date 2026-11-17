@@ -8,19 +8,17 @@ import StudyPdfButton from './StudyPdfButton'
 import TopFrequencyDialog from './TopFrequencyDialog'
 import { CAP_DURATION_MINUTES, gradeSession, frequentExamQuestionsAtOrAbove, mostFrequentExamQuestions, uniqueExamQuestions } from './examEngine.mjs'
 import type { ActiveSession, AnswerKey, BankIndex, Question, QuestionProgress, QuestionnaireMeta, StudySessionRecord, StudySource } from './types'
-import { addSession, clearAllData, clearLocalCache, exportDatabase, getAllProgress, getRecentSessions, importProgress, pushLocalSnapshotToCloud, putProgress, synchronizeAccount } from './db'
-import { cloudConfigured, getSession, signIn, signOut, supabase } from './supabase'
+import { addSession, clearAllData, exportDatabase, getAllProgress, getRecentSessions, importProgress, pushLocalSnapshotToCloud, putProgress } from './db'
+import { authConfigured, getSession, signInWithEmail, signInWithGoogle, signOut, supabase } from './supabase'
+import { activeKey, lastKey, regionKey, setLocalOwner } from './localScope'
 import type { Session } from '@supabase/supabase-js'
 import { loadAllQuestions, loadBankIndex, loadQuestionnaire, resolveQuestions } from './data'
 import { chooseSmartQuestions, getStatus, needsReview, percent, shuffle, smartScore } from './utils'
 import { loadCapIndex, loadCapQuestions, loadAllCapQuestions, loadCapPendingQuestions, loadCapSheetReview, loadCapEditorialTriage, type CapEditorialTriage, type CapSheetReviewQuestion, type CapPendingQuestion, type CapCategory, type CapExamMeta, type CapExamIndex, type CapEditorialDecision } from './capExams'
 
 const PREVIEW=import.meta.env.VITE_CAP_PREVIEW === 'true'
-const REGION_KEY='cap-test-pro-preview-region-v1'
-function readRegion():RegionCode{try{const value=localStorage.getItem(REGION_KEY);return isRegionCode(value)?value:'clm'}catch{return 'clm'}}
-const ACTIVE=PREVIEW?'cap-test-beta-active-v1':'cap-test-active-v1',
-      LAST=PREVIEW?'cap-test-beta-last-v1':'cap-test-last-v1',
-      THEME=PREVIEW?'cap-test-beta-theme':'cap-test-theme'
+function readRegion():RegionCode{try{const value=localStorage.getItem(regionKey());return isRegionCode(value)?value:'clm'}catch{return 'clm'}}
+const THEME=PREVIEW?'cap-test-beta-theme':'rutacap-dev-theme'
 type Route='home'|'general'|'study'|'questionnaires'|'exam'|'quiz'|'results'|'stats'|'settings'
 const route=():Route=>{const r=location.hash.replace(/^#\/?/,'').split('?')[0] as Route;return ['home','general','study','questionnaires','exam','quiz','results','stats','settings'].includes(r)?r:'home'}
 const go=(r:Route)=>location.hash='#/'+r
@@ -30,28 +28,72 @@ function Bar({v}:{v:number}){return <div className="bar"><i style={{width:Math.m
 function Btn({children,onClick,kind='primary',disabled=false}:{children:any,onClick?:()=>void,kind?:string,disabled?:boolean}){return <button className={'btn '+kind} onClick={onClick} disabled={disabled}>{children}</button>}
 function Loading({text='Cargando…'}:{text?:string}){return <div className="center"><span className="spinner"/><b>{text}</b></div>}
 
-function Login({onSuccess}:{onSuccess:(session:Session)=>Promise<void>}){
- const [email,setEmail]=useState(''),[password,setPassword]=useState(''),[error,setError]=useState(''),[sending,setSending]=useState(false)
- async function submit(e:React.FormEvent){e.preventDefault();setError('');setSending(true);try{const session=await signIn(email.trim(),password);if(!session)throw new Error('No se pudo iniciar sesión.');await onSuccess(session)}catch(err:any){console.error(err);setError('Email o contraseña no válidos.')}finally{setSending(false)}}
- return <div className="authshell"><section className="authcard"><ProBrand/><em>ACCESO A TU CUENTA</em><h1>Tu progreso, siempre contigo.</h1><p>Inicia sesión para conservar resultados, errores y estadísticas en todos tus dispositivos.</p><form onSubmit={submit}><label>Email<input type="email" autoComplete="email" value={email} onChange={e=>setEmail(e.target.value)} required/></label><label>Contraseña<input type="password" autoComplete="current-password" value={password} onChange={e=>setPassword(e.target.value)} required/></label>{error&&<div className="autherror">{error}</div>}<button className="btn primary" disabled={sending}>{sending?'Entrando…':'Entrar'}</button></form><small>Acceso privado. No hay registro público desde esta página.</small></section></div>
-}
-
 function App(){
- const [session,setSession]=useState<Session|null>(null),[authReady,setAuthReady]=useState(false),[syncing,setSyncing]=useState(false)
- useEffect(()=>{let live=true;if(!cloudConfigured||!supabase){setAuthReady(true);return}getSession().then(async current=>{if(!live)return;if(current){setSyncing(true);try{await synchronizeAccount()}finally{if(live)setSyncing(false)}}if(live)setSession(current)}).catch(console.error).finally(()=>{if(live)setAuthReady(true)});return()=>{live=false}},[])
- async function loginDone(next:Session){setSyncing(true);try{await synchronizeAccount();setSession(next)}finally{setSyncing(false);setAuthReady(true)}}
- async function logout(){try{await signOut()}finally{await clearLocalCache();localStorage.removeItem(ACTIVE);localStorage.removeItem(LAST);sessionStorage.removeItem(ACTIVE);sessionStorage.removeItem(LAST);setSession(null)}}
+ const [session,setSession]=useState<Session|null>(null)
+ const [guest,setGuest]=useState(false)
+ const [authReady,setAuthReady]=useState(!authConfigured)
+ const [authError,setAuthError]=useState('')
+ useEffect(()=>{
+  if(PREVIEW||!authConfigured||!supabase)return
+  let live=true
+  const client=supabase
+  async function refreshIdentity(){
+   try {
+    const verified=await getSession()
+    if(!live)return
+    setLocalOwner(verified?.user.id??null)
+    setSession(verified)
+    if(verified)setGuest(false)
+    setAuthError('')
+   } catch {
+    if(!live)return
+    setLocalOwner(null)
+    setSession(null)
+    setAuthError('No se ha podido verificar tu acceso. Prueba de nuevo.')
+   } finally {
+    if(live){
+     setAuthReady(true)
+     if(window.location.pathname==='/auth/callback'){
+      const parameters=new URLSearchParams(window.location.search)
+      const callbackError=parameters.get('error')
+      window.history.replaceState(null,'','/#/home')
+      if(callbackError)setAuthError('El proveedor ha cancelado o rechazado el acceso.')
+     }
+    }
+   }
+  }
+  // Auth state callback does not await or call auth methods inside its lock.
+  const {data:{subscription}}=client.auth.onAuthStateChange(event=>{
+   if(!live)return
+   if(event==='SIGNED_OUT'){setLocalOwner(null);setSession(null)}
+   else if(event==='SIGNED_IN'||event==='INITIAL_SESSION'||event==='TOKEN_REFRESHED')
+    queueMicrotask(()=>{if(live)void refreshIdentity()})
+  })
+  void refreshIdentity()
+  return()=>{live=false;subscription.unsubscribe()}
+ },[])
+ async function logout(){
+  try{
+   if(session)await signOut()
+   setLocalOwner(null);setSession(null);setGuest(false);setAuthError('')
+   go('home')
+  }catch{setAuthError('No se pudo cerrar la sesión. Vuelve a intentarlo.')}
+ }
  if(PREVIEW)return <CapApp userEmail="Modo pruebas · solo este navegador" onSignOut={async()=>{}}/>
- if(!cloudConfigured)return <div className="authshell"><section className="authcard"><ProBrand/><h1>Acceso comercial en preparación</h1><p>Esta compilación no está conectada a ningún proyecto. Utiliza la preview local para probar la aplicación. La futura cuenta comercial requerirá una infraestructura independiente.</p></section></div>
- if(!authReady||syncing)return <Loading text={syncing?'Sincronizando tu progreso…':'Comprobando sesión…'}/>
- if(!session)return <Login onSuccess={loginDone}/>
- return <CapApp userEmail={session.user.email||'Usuario'} onSignOut={logout}/>
+ if(!authReady)return <Loading text="Comprobando tu acceso…"/>
+ if(session)return <CapApp key={'account-'+session.user.id} userEmail={session.user.email||'Cuenta de pruebas'} onSignOut={logout}/>
+ if(guest)return <CapApp key="guest" userEmail="Modo invitado · solo este navegador" onSignOut={logout}/>
+ return <div className="pro-auth-entry"><CommercialAccountPreview
+  onContinue={()=>{setLocalOwner(null);setGuest(true);setAuthError('')}}
+  authEnabled={authConfigured} notice={authError}
+  onGoogle={signInWithGoogle} onEmail={signInWithEmail}
+ /></div>
 }
 
 function CapApp({userEmail,onSignOut}:{userEmail:string;onSignOut:()=>Promise<void>}){
  const [page,setPage]=useState<Route>(route()),[bank,setBank]=useState<BankIndex|null>(null),[rows,setRows]=useState<QuestionProgress[]>([]),[sessions,setSessions]=useState<StudySessionRecord[]>([]),[busy,setBusy]=useState(true),[load,setLoad]=useState<number|null>(null),[online,setOnline]=useState(navigator.onLine),[theme,setTheme]=useState(localStorage.getItem(THEME)||'dark')
- const [regionCode,setRegionCode]=useState<RegionCode>(()=>PREVIEW?readRegion():'clm')
- function changeRegion(code:RegionCode){setRegionCode(code);if(PREVIEW)try{localStorage.setItem(REGION_KEY,code)}catch{/* in-memory preference remains */}}
+ const [regionCode,setRegionCode]=useState<RegionCode>(readRegion)
+ function changeRegion(code:RegionCode){setRegionCode(code);try{localStorage.setItem(regionKey(),code)}catch{/* in-memory preference remains */}}
  useEffect(()=>{const h=()=>setPage(route()),o=()=>{const isOnline=navigator.onLine;setOnline(isOnline);if(isOnline)pushLocalSnapshotToCloud().catch(console.error)};addEventListener('hashchange',h);addEventListener('online',o);addEventListener('offline',o);if(!location.hash)go('home');return()=>{removeEventListener('hashchange',h);removeEventListener('online',o);removeEventListener('offline',o)}},[])
  useEffect(()=>{document.documentElement.dataset.theme=theme;localStorage.setItem(THEME,theme);document.querySelector('meta[name="theme-color"]')?.setAttribute('content',theme==='light'?'#f5f8f8':'#0b1115')},[theme])
  const refresh=async()=>{setRows(await getAllProgress());setSessions(await getRecentSessions(30))}
@@ -67,7 +109,7 @@ function CapApp({userEmail,onSignOut}:{userEmail:string;onSignOut:()=>Promise<vo
   else if(source==='questionnaire')pool=[...pool].sort((a,b)=>{const score={review:0,unseen:1,learning:2,mastered:3};return score[getStatus(pm.get(a.id))]-score[getStatus(pm.get(b.id))]||Math.random()-.5}).slice(0,count)
   else pool=shuffle(pool).slice(0,count)
   if(!pool.length){alert(source==='errors'?'No tienes errores pendientes.':source==='favorites'?'No tienes favoritas todavía.':'No hay preguntas con ese filtro.');return}
-  const s:ActiveSession={type,source,label,questionIds:pool.map(q=>q.id),questionnaireId:meta?.id,currentIndex:0,selectedAnswers:{},checkedIds:[],startedAt:Date.now()};localStorage.setItem(ACTIVE,JSON.stringify(s));go('quiz')
+  const s:ActiveSession={type,source,label,questionIds:pool.map(q=>q.id),questionnaireId:meta?.id,currentIndex:0,selectedAnswers:{},checkedIds:[],startedAt:Date.now()};localStorage.setItem(activeKey(),JSON.stringify(s));go('quiz')
  }
  if(busy||!bank)return <Loading text="Preparando RutaCAP…"/>
  const props={bank,rows,pm,stats,sessions,start}
@@ -147,7 +189,7 @@ function CapHome({pm,bankCount,seenCount,regionCode,onRegionChange}:{pm:Map<stri
  const selectedTriage=editorialTriage?.exams.find(e=>e.examId===sheetReviewId)
  async function begin(source:'cap-original'|'cap-random'|'cap-mixed'|'cap-top100'|'cap-top3'|'cap-top4'|'cap-errors'|'cap-favorites'|'cap-review',chosen?:CapExamMeta,replaceConfirmed=false){
   setError('')
-  const existing=localStorage.getItem(ACTIVE)||sessionStorage.getItem(ACTIVE)
+  const existing=localStorage.getItem(activeKey())||sessionStorage.getItem(activeKey())
   if(existing&&!replaceConfirmed){setReplaceRequest({source,chosen});return}
   setWorking(true)
   try{
@@ -189,13 +231,13 @@ function CapHome({pm,bankCount,seenCount,regionCode,onRegionChange}:{pm:Map<stri
    const session:ActiveSession={type:runMode,source,label,questionIds:questions.map(q=>q.id),
     currentIndex:0,selectedAnswers:{},checkedIds:[],startedAt:Date.now(),
     timed:real,durationMinutes:real?CAP_DURATION_MINUTES:undefined,markedIds:[]}
-   localStorage.setItem(ACTIVE,JSON.stringify(session))
-   sessionStorage.removeItem(ACTIVE)
+   localStorage.setItem(activeKey(),JSON.stringify(session))
+   sessionStorage.removeItem(activeKey())
    go('quiz')
   }catch(e){setError(e instanceof Error?e.message:String(e))}finally{setWorking(false)}
  }
  if(!index&&!error)return <Loading text="Preparando exámenes CAP…"/>
- const savedSession=(()=>{try{return JSON.parse(localStorage.getItem(ACTIVE)||sessionStorage.getItem(ACTIVE)||'null') as ActiveSession|null}catch{return null}})()
+ const savedSession=(()=>{try{return JSON.parse(localStorage.getItem(activeKey())||sessionStorage.getItem(activeKey())||'null') as ActiveSession|null}catch{return null}})()
  return <div className="page cap-page focus-home">
   {savedSession&&<section className="focus-resume" role="status">
    <div><strong>Test sin terminar</strong><p>{savedSession.label} · {Object.keys(savedSession.selectedAnswers).length} respuestas guardadas</p></div>
@@ -351,7 +393,7 @@ function Questionnaires({bank,rows,start}:P){return <div className="page"><butto
 function Exam({bank,stats,start}:P){const [count,setCount]=useState(30),[source,setSource]=useState<StudySource>('random'),[qid,setQid]=useState(bank.questionnaires[0].id);const meta=bank.questionnaires.find(x=>x.id===qid);return <div className="page"><em>SIMULACRO</em><h1>Como un examen</h1><p>No verás la solución hasta finalizar. Las no contestadas quedan en blanco.</p><div className="panel"><label>Número de preguntas</label><div className="segments">{[10,20,30,50].map(n=><button className={count===n?'on':''} onClick={()=>setCount(n)} key={n}>{n}</button>)}</div><label>Contenido</label>{([['random','Todo el banco','Mezcla todos los cuestionarios'],['unseen','Solo nuevas',(stats.total-stats.seen)+' sin ver'],['errors','Solo errores',stats.review+' disponibles'],['questionnaire','Un cuestionario','Elige un bloque concreto']] as any[]).map(x=><button className={'radio '+(source===x[0]?'on':'')} onClick={()=>setSource(x[0])} key={x[0]}><i/><span><b>{x[1]}</b><small>{x[2]}</small></span></button>)}{source==='questionnaire'&&<select value={qid} onChange={e=>setQid(e.target.value)}>{bank.questionnaires.map(q=><option key={q.id} value={q.id}>Sección {q.section} · {q.questionnaireId} ({q.count})</option>)}</select>}<Btn onClick={()=>start('exam',source,count,'Simulacro · '+count,source==='questionnaire'?meta:undefined)}>Comenzar simulacro</Btn></div></div>}
 
 function Results(){
- const data=JSON.parse(localStorage.getItem(LAST)||sessionStorage.getItem(LAST)||'null') as {record:StudySessionRecord;questionIds:string[]}|null
+ const data=JSON.parse(localStorage.getItem(lastKey())||sessionStorage.getItem(lastKey())||'null') as {record:StudySessionRecord;questionIds:string[]}|null
  const [qs,setQs]=useState<Question[]>([])
  const [showAll,setShowAll]=useState(false)
  const [pdfBusy,setPdfBusy]=useState(false)
@@ -389,7 +431,7 @@ function Results(){
   if(!fails.length)return
   const session:ActiveSession={type:'study',source:fails.every(x=>x.questionId.startsWith('cap:'))?'cap-errors':'errors',label:'Repaso del último test',
    questionIds:fails.map(x=>x.questionId),currentIndex:0,selectedAnswers:{},checkedIds:[],startedAt:Date.now()}
-  localStorage.setItem(ACTIVE,JSON.stringify(session))
+  localStorage.setItem(activeKey(),JSON.stringify(session))
   go('quiz')
  }
  return <div className="page pro-results">
@@ -440,6 +482,6 @@ function Results(){
 
 function Stats({bank,rows,stats,sessions}:P){return <div className="page"><em>TU PREPARACIÓN</em><h1>{stats.attempts?stats.acc+'%':'Empieza hoy'}</h1><p>{stats.attempts?'de precisión global':'Tus estadísticas aparecerán aquí.'}</p><div className="statsgrid"><article><small>Vistas</small><b>{stats.seen}</b><span>de {stats.total}</span></article><article><small>Dominadas</small><b>{stats.mastered}</b></article><article><small>Por repasar</small><b>{stats.review}</b></article><article><small>Favoritas</small><b>{stats.fav}</b></article></div><h2>Progreso por cuestionario</h2><div className="progresslist">{bank.questionnaires.map(m=>{const rr=rows.filter(x=>x.questionnaireId===m.section+':'+m.questionnaireId),seen=rr.filter(x=>x.attempts).length;if(!seen)return null;const att=rr.reduce((a,x)=>a+x.attempts,0),cor=rr.reduce((a,x)=>a+x.correct,0);return <div key={m.id}><span><b>{m.questionnaireId}</b> · Sección {m.section}</span><small>{seen}/{m.count} · {percent(cor,att)}%</small><Bar v={percent(seen,m.count)}/></div>})}</div><h2>Últimas sesiones</h2><div className="history">{sessions.slice(0,10).map((s,i)=><div key={i}><span><b>{s.label}</b><small>{s.total} preguntas</small></span><strong>{s.capScoring?(s.netPoints??(s.correct-0.5*s.incorrect)).toLocaleString('es-ES',{maximumFractionDigits:2})+' pt':s.score+'%'}</strong></div>)}</div></div>}
 
-function Settings({theme,setTheme,bank,refresh,userEmail,onSignOut,regionCode,onRegionChange}:{theme:string;setTheme:(s:string)=>void;bank:BankIndex;refresh:()=>Promise<void>;userEmail:string;onSignOut:()=>Promise<void>;regionCode:RegionCode;onRegionChange:(code:RegionCode)=>void}){async function backup(){const d=await exportDatabase(),b=new Blob([JSON.stringify(d,null,2)],{type:'application/json'}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download='rutacap-backup.json';a.click();URL.revokeObjectURL(u)}async function restore(e:any){const f=e.target.files?.[0];if(!f)return;const d=JSON.parse(await f.text());if(!Array.isArray(d.progress))return alert('Copia no válida');await importProgress(d.progress);await refresh();alert('Progreso importado')}async function reset(){if(confirm(PREVIEW?'¿Borrar solo los datos de esta versión de pruebas?':'¿Borrar todo el progreso de tu cuenta? Esta acción afectará a todos tus dispositivos.')){await clearAllData();await refresh()}}return <div className="page"><button className="back" onClick={()=>history.back()}>‹ Volver</button><h1>Mi perfil</h1>{PREVIEW&&<CommercialAccountPreview onContinue={()=>go('home')}/>}<div className="panel pro-profile-region"><small>MI COMUNIDAD</small><div className="pro-profile-region-title"><RegionMark region={regionByCode(regionCode)}/><h2>{regionByCode(regionCode)[1]}</h2></div><label htmlFor="pro-profile-region-select">¿Dónde te presentas?</label><select id="pro-profile-region-select" value={regionCode} onChange={e=>{if(isRegionCode(e.target.value))onRegionChange(e.target.value)}}>{REGIONS.map(r=><option key={r[0]} value={r[0]}>{r[1]}</option>)}</select><p>Preferencia local. El archivo histórico aún no se filtra por comunidad.</p></div><div className="panel account"><small>CUENTA</small><h2>{userEmail}</h2><p>{PREVIEW?'Esta versión guarda el progreso únicamente en este navegador, separado de la aplicación real. No utiliza Supabase.':'Tu progreso está sincronizado con tu cuenta y disponible en cualquier dispositivo donde inicies sesión.'}</p>{!PREVIEW&&<Btn kind="light" onClick={()=>void onSignOut()}>Cerrar sesión</Btn>}</div><div className="panel"><label>Tema</label><div className="segments"><button className={theme==='light'?'on':''} onClick={()=>setTheme('light')}>☀ Claro</button><button className={theme==='dark'?'on':''} onClick={()=>setTheme('dark')}>◐ Oscuro</button></div></div><div className="panel"><h2>Copia de seguridad</h2><p>{PREVIEW?'Los datos de prueba se guardan localmente. Puedes exportarlos como respaldo manual.':'Tu progreso se guarda en tu cuenta. Esta copia sirve como respaldo manual.'}</p><div className="actions"><Btn kind="light" onClick={backup}>↓ Exportar</Btn><label className="btn light">↑ Importar<input type="file" accept=".json" hidden onChange={restore}/></label></div></div><div className="panel"><h2>Banco CAP 2026</h2><p>{bank.totalQuestions.toLocaleString('es-ES')} preguntas · {bank.totalQuestionnaires} cuestionarios · {bank.version}</p></div><div className="panel danger"><h2>Empezar de cero</h2><Btn kind="danger" onClick={reset}>Borrar todo mi progreso</Btn></div></div>}
+function Settings({theme,setTheme,bank,refresh,userEmail,onSignOut,regionCode,onRegionChange}:{theme:string;setTheme:(s:string)=>void;bank:BankIndex;refresh:()=>Promise<void>;userEmail:string;onSignOut:()=>Promise<void>;regionCode:RegionCode;onRegionChange:(code:RegionCode)=>void}){async function backup(){const d=await exportDatabase(),b=new Blob([JSON.stringify(d,null,2)],{type:'application/json'}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download='rutacap-backup.json';a.click();URL.revokeObjectURL(u)}async function restore(e:any){const f=e.target.files?.[0];if(!f)return;const d=JSON.parse(await f.text());if(!Array.isArray(d.progress))return alert('Copia no válida');await importProgress(d.progress);await refresh();alert('Progreso importado')}async function reset(){if(confirm(PREVIEW?'¿Borrar solo los datos de esta versión de pruebas?':'¿Borrar el progreso local de este perfil en este navegador?')){await clearAllData();await refresh()}}return <div className="page"><button className="back" onClick={()=>history.back()}>‹ Volver</button><h1>Mi perfil</h1>{PREVIEW&&<CommercialAccountPreview onContinue={()=>go('home')}/>}<div className="panel pro-profile-region"><small>MI COMUNIDAD</small><div className="pro-profile-region-title"><RegionMark region={regionByCode(regionCode)}/><h2>{regionByCode(regionCode)[1]}</h2></div><label htmlFor="pro-profile-region-select">¿Dónde te presentas?</label><select id="pro-profile-region-select" value={regionCode} onChange={e=>{if(isRegionCode(e.target.value))onRegionChange(e.target.value)}}>{REGIONS.map(r=><option key={r[0]} value={r[0]}>{r[1]}</option>)}</select><p>Preferencia local. El archivo histórico aún no se filtra por comunidad.</p></div><div className="panel account"><small>CUENTA</small><h2>{userEmail}</h2><p>{PREVIEW?'Esta versión guarda el progreso únicamente en este navegador, separado de la aplicación real. No utiliza Supabase.':'Acceso de desarrollo: tus datos permanecen solo en este navegador. La sincronización en la nube no está activada.'}</p>{!PREVIEW&&<Btn kind="light" onClick={()=>void onSignOut()}>{userEmail.startsWith("Modo invitado")?"Salir del modo invitado":"Cerrar sesión"}</Btn>}</div><div className="panel"><label>Tema</label><div className="segments"><button className={theme==='light'?'on':''} onClick={()=>setTheme('light')}>☀ Claro</button><button className={theme==='dark'?'on':''} onClick={()=>setTheme('dark')}>◐ Oscuro</button></div></div><div className="panel"><h2>Copia de seguridad</h2><p>{PREVIEW?'Los datos de prueba se guardan localmente. Puedes exportarlos como respaldo manual.':'Los datos se guardan en este navegador. Exporta una copia si quieres conservarlos.'}</p><div className="actions"><Btn kind="light" onClick={backup}>↓ Exportar</Btn><label className="btn light">↑ Importar<input type="file" accept=".json" hidden onChange={restore}/></label></div></div><div className="panel"><h2>Banco CAP 2026</h2><p>{bank.totalQuestions.toLocaleString('es-ES')} preguntas · {bank.totalQuestionnaires} cuestionarios · {bank.version}</p></div><div className="panel danger"><h2>Empezar de cero</h2><Btn kind="danger" onClick={reset}>Borrar todo mi progreso</Btn></div></div>}
 
 export default App
