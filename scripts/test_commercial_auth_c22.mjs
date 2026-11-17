@@ -21,6 +21,7 @@ test('C22: each verified owner and guest has a separate namespace',()=>{
  assert.ok(src('src/db.ts').includes('indexedDB.open(localDbName(), DB_VERSION)'))
  assert.ok(src('src/Quiz.tsx').includes('activeKey()'))
  assert.ok(src('src/App.tsx').includes('lastKey()'))
+ assert.ok(src('src/App.tsx').includes("sessionStorage.setItem('rutacap-dev-guest-open','1')"))
 })
 test('C22: no cloud migration and only local progress claims',()=>{
  const app=src('src/App.tsx')

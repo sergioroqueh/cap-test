@@ -6,7 +6,7 @@ Base: C21 15bb8c0dc6a4503a3135502c02ea8ca5138a5fcf. PR #21 remains DRAFT. No dep
 - Supabase authentication is enabled only under an explicit development opt-in on localhost/127.0.0.1 port 5173. Production builds, Pages and C5 preview retain Google disabled.
 - Configure .env.local using .env.rutacap-dev.example. Only use the newly created isolated RutaCAP Supabase URL and a modern sb_publishable_ public key. The frontend never receives Google Client Secret or service_role.
 - Uses supabase-js PKCE via signInWithOAuth(google), redirectTo fixed to http://localhost:5173/auth/callback, and auth.getUser verification before assigning the owner cache. Email sign-in uses OTP magic-link with shouldCreateUser:false, so only existing users can receive sign-in links.
-- Guest requires no account or Supabase anonymous auth, and works even without a configured project.
+- Guest requires no account or Supabase anonymous auth, and works even without a configured project. Guest entry persists in the browser tab session across reload; signing out explicitly resets the guest flag.
 - Local IndexedDB, current test, last result and region preference use distinct keys for guest and for each verified UUID; C5 preview retains its previous namespace.
 - On sign out the app leaves the owner scope and returns to the entry. Cached progress is not encrypted at rest in the shared browser profile; this is an isolated development preview, not a finished privacy posture.
 

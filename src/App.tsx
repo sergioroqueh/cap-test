@@ -30,7 +30,7 @@ function Loading({text='Cargando…'}:{text?:string}){return <div className="cen
 
 function App(){
  const [session,setSession]=useState<Session|null>(null)
- const [guest,setGuest]=useState(false)
+ const [guest,setGuest]=useState(()=>{try{return sessionStorage.getItem('rutacap-dev-guest-open')==='1'}catch{return false}})
  const [authReady,setAuthReady]=useState(!authConfigured)
  const [authError,setAuthError]=useState('')
  useEffect(()=>{document.documentElement.dataset.theme=localStorage.getItem(THEME)||'dark'},[])
@@ -44,7 +44,7 @@ function App(){
     if(!live)return
     setLocalOwner(verified?.user.id??null)
     setSession(verified)
-    if(verified){setGuest(false);setAuthError('')}
+    if(verified){sessionStorage.removeItem('rutacap-dev-guest-open');setGuest(false);setAuthError('')}
    } catch {
     if(!live)return
     setLocalOwner(null)
@@ -76,6 +76,7 @@ function App(){
   try{
    if(session)await signOut()
    setLocalOwner(null);setSession(null);setGuest(false);setAuthError('')
+   sessionStorage.removeItem('rutacap-dev-guest-open')
    go('home')
   }catch{setAuthError('No se pudo cerrar la sesión. Vuelve a intentarlo.')}
  }
@@ -84,7 +85,7 @@ function App(){
  if(session)return <CapApp key={'account-'+session.user.id} userEmail={session.user.email||'Cuenta de pruebas'} onSignOut={logout}/>
  if(guest)return <CapApp key="guest" userEmail="Modo invitado · solo este navegador" onSignOut={logout}/>
  return <div className="pro-auth-entry"><CommercialAccountPreview
-  onContinue={()=>{setLocalOwner(null);setGuest(true);setAuthError('')}}
+  onContinue={()=>{setLocalOwner(null);sessionStorage.setItem('rutacap-dev-guest-open','1');setGuest(true);setAuthError('')}}
   authEnabled={authConfigured} notice={authError}
   onGoogle={signInWithGoogle} onEmail={signInWithEmail}
  /></div>
