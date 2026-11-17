@@ -11,6 +11,7 @@ const asHttps = (value: string | undefined | null) => {
     return url.protocol === 'https:' ? url.href : null
   } catch { return null }
 }
+const isMissingCitation = (value: string | null | undefined) => /^(?:sin referencias?(?: doctrinales)?|ninguna?|no consta|n\/?a)$/i.test((value || '').trim())
 const shortFile = (value: string) => value.replace(/^.*[\\/]/, '')
 const shortUrl = (value: string) => {
   try { return new URL(value).hostname.replace(/^www\./, '') }
@@ -23,8 +24,8 @@ export default function AnswerProvenance({question:q}:{question:Question}) {
   const sheetSha = q.originalSheetSha256?.trim() || ''
   const independentUrl = asHttps(q.answerEvidenceUrl)
   const technicalUrls = [...new Set([...(q.technicalDecision?.sources || []),...(q.answerSourceReview?.sources || [])].map(asHttps).filter((url):url is string=>!!url))]
-  const bankNorm = q.norm?.trim() || ''
-  const bankReference = q.reference?.trim() || ''
+  const bankNorm = isMissingCitation(q.norm) ? '' : q.norm?.trim() || ''
+  const bankReference = isMissingCitation(q.reference) ? '' : q.reference?.trim() || ''
   const scored = q.scoringEligible !== false
   const sheetVerified = hasOriginalKey && !!sheetName && !!sheetSha
   const mappedNumber = q.mappedSheetQuestionNumber
