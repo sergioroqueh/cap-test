@@ -2,7 +2,7 @@
 // The caller must provide a fresh VERIFIED identity for EVERY request and must
 // call revoke() on logout, token invalidation or account switch.
 // Future PostgREST code must independently enforce RLS; this is NOT authorization.
-const uuid=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+const uuid=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 export class SyncLeaseError extends Error {
   constructor(code,message) { super(message);this.name='SyncLeaseError';this.code=code }
 }
