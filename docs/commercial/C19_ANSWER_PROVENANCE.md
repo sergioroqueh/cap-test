@@ -13,14 +13,17 @@ Cada alumno debe poder conocer **qué respalda la solución** de una pregunta. T
 - Texto del banco `norm/reference` etiquetado explícitamente como **referencia heredada pendiente de cotejo individual**, jamás como norma validada por defecto. Si no hay fuente registrada: se indica «Fuente pendiente».
 - Para respuestas excluidas, tarjeta «Trazabilidad · sin puntuación»; no implica rehabilitar esa respuesta ni aprobarla para scoring.
 
+## Recuperación de citas ya auditadas sin cambiar la corrección
+Los expedientes R29, R30 y R31 contienen **36 + 23 + 117 = 176** decisiones de tipo `confirmed` con fuentes HTTPS. Antes estaban registradas en los expedientes de auditoría, pero no viajaban a la ficha individual del alumno. Los generadores de esas rondas ahora adjuntan exclusivamente `answerSourceReview` con ronda, motivo y enlaces a los JSON de preguntas **generados**. Esto no altera `correctAnswer`, `originalSheetAnswer`, `technicalDecision`, opciones, IDs ni scoring. Los tests existentes comprueban equivalencia de claves y los nuevos tests exigen que las 176 citas se preserven sin reinterpretarlas como erratas oficiales. Los conteos de modelos con notas R29–R31 se mantienen diferenciados de los modelos que solo reciben metadatos.
+
 ## Medición para no confundir UX con calidad del contenido
-`scripts/audit_answer_provenance.py` recorre los archivos generados del banco general y exámenes; emite contadores agregados sin texto de preguntas, soluciones ni enlaces individuales. Controla coherencia del nombre y SHA de las hojas con letra original. Ejecutado en CI bajo «Audit answer provenance coverage (aggregate only)», salida agregada `artifacts/cap-answer-provenance-coverage.json` incluida en el artefacto de revisión. **Los contadores no significan validación de rigor técnico, actualidad normativa ni permiso de reproducción.**
+`scripts/audit_answer_provenance.py` recorre los archivos generados del banco general y exámenes; exige 176 citas confirmadas válidas y emite contadores agregados sin texto de preguntas, soluciones ni enlaces individuales. Controla coherencia del nombre y SHA de las hojas con letra original. Ejecutado en CI bajo «Audit answer provenance coverage (aggregate only)», salida agregada `artifacts/cap-answer-provenance-coverage.json` incluida en el artefacto de revisión. **Los contadores no significan validación de rigor técnico, actualidad normativa ni permiso de reproducción.**
 
 ## Pruebas añadidas
 `scripts/e2e_cap_focus.mjs`: el modo Examen no deja ver la procedencia antes de entregar; el desglose posterior ofrece ficha en todas las respuestas; el modo Estudio muestra la ficha tras responder, con enlaces HTTPS para casos técnicos documentados; las excluidas permanecen sin puntuación. Mantener comprobaciones de móvil, puntuación y no-regresión.
 
 ## Barreras que siguen cerradas
-- Ningún cambio en `data-src/`, preguntas generadas, letras, ids, frecuencia, scoring o progreso.
+- Ningún cambio en las **fuentes originales** `data-src/`, letras, opciones, IDs, frecuencia, scoring ni progreso. Las preguntas **generadas** incluyen únicamente nuevos metadatos de citas `answerSourceReview` para confirmaciones R29–R31.
 - El lote privado CLM C13 no se ha incorporado a la app ni a CI; los seis holds siguen excluidos y los textos no se publican.
 - Falta cotejo jurídico y de reutilización de las plantillas CLM; esta tarjeta no supone clearance.
 - Sin merge de `main`, deploy, OAuth, Supabase, cambios de dominio ni gastos.
