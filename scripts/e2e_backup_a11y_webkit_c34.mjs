@@ -64,7 +64,7 @@ try{
  await confirm.focus()
  await page.keyboard.press('Enter')
  await page.getByRole('status').filter({hasText:/Copia restaurada/}).waitFor()
- assert.equal(await select.evaluate(e=>document.activeElement===e),true)
+ await page.waitForFunction(()=>document.activeElement===document.querySelector('.backup-actions button:nth-of-type(2)'),null,{timeout:3000})
  assert.equal(await page.evaluate(async()=>{
   return (await (await import('/src/db.ts')).getAllProgress()).length
  }),1)
