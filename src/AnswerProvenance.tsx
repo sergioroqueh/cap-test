@@ -22,7 +22,7 @@ export default function AnswerProvenance({question:q}:{question:Question}) {
   const hasOriginalKey = !!q.originalSheetAnswer
   const sheetSha = q.originalSheetSha256?.trim() || ''
   const independentUrl = asHttps(q.answerEvidenceUrl)
-  const technicalUrls = [...new Set((q.technicalDecision?.sources || []).map(asHttps).filter((url):url is string=>!!url))]
+  const technicalUrls = [...new Set([...(q.technicalDecision?.sources || []),...(q.answerSourceReview?.sources || [])].map(asHttps).filter((url):url is string=>!!url))]
   const bankNorm = q.norm?.trim() || ''
   const bankReference = q.reference?.trim() || ''
   const scored = q.scoringEligible !== false
@@ -54,8 +54,9 @@ export default function AnswerProvenance({question:q}:{question:Question}) {
       <small>Referencia independiente; no sustituye la plantilla ni constituye por sí sola una aprobación editorial completa.</small>
     </p>}
     {technicalUrls.length > 0 && <div className="answer-provenance-links">
-      <b>Normativa y documentos usados en la revisión {q.technicalDecision?.round || 'técnica'}:</b>
+      <b>Normativa y documentos usados en la revisión {q.technicalDecision?.round || q.answerSourceReview?.round || 'técnica'}:</b>
       {technicalUrls.map((url,index)=><a href={url} target="_blank" rel="noopener noreferrer" key={url}>{index+1}. {shortUrl(url)} ↗</a>)}
+      {q.answerSourceReview && <small>Motivo de la confirmación editorial: {q.answerSourceReview.reason}</small>}
       <small>Revisión técnica editorial, no rectificación del tribunal.</small>
     </div>}
     {(bankNorm || bankReference) && <p>
