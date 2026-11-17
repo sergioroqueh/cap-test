@@ -42,7 +42,13 @@ export function prepareAll(spawn = spawnSync) {
   const { command, prefix } = resolvePython(process.platform, spawn)
   for (const filename of STEPS) {
     process.stdout.write('[RutaCAP] ' + filename + '\n')
-    const run = spawn(command, [...prefix, filename], { stdio: 'inherit', windowsHide: true })
+    // JSON files from the CAP historical corpus are UTF-8. On Windows,
+    // Python otherwise may default to cp1252 for Path.read_text().
+    const run = spawn(command, [...prefix, filename], {
+      stdio: 'inherit',
+      windowsHide: true,
+      env: { ...process.env, PYTHONUTF8: '1' }
+    })
     if (run.error) throw run.error
     if (run.status !== 0) throw new Error('Fallo preparando ' + filename + ' (exit=' + run.status + ')')
   }

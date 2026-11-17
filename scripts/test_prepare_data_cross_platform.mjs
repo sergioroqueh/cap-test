@@ -1,7 +1,7 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
-import { resolvePython, STEPS } from './prepare_data_cross_platform.mjs'
+import { resolvePython, STEPS, prepareAll } from './prepare_data_cross_platform.mjs'
 
 test('C25 preserves all 17 original data scripts and the manifest uses a portable runner', () => {
   assert.equal(STEPS.length,17)
@@ -25,4 +25,17 @@ test('C25 supports Windows Python installation without the py launcher',()=>{
 })
 test('C25 does not accept the Microsoft Store missing Python alias',()=>{
   assert.throws(()=>resolvePython('win32',()=>({status:1,stdout:'',stderr:'no se encontró Python'})),/No se encontró Python 3/)
+})
+
+test('C26 forces UTF-8 for all 17 Python generators without changing order',()=>{
+  const observed=[]
+  const fake=(name,args,options)=>{
+    if(args.at(-1)==='--version')return {status:0,stdout:'Python 3.14.2',stderr:''}
+    observed.push({name,args,options})
+    return {status:0,stdout:'',stderr:''}
+  }
+  prepareAll(fake)
+  assert.deepEqual(observed.map(x=>x.args.at(-1)),STEPS)
+  assert.ok(observed.every(x=>x.options?.env?.PYTHONUTF8==='1'))
+  assert.ok(observed.every(x=>x.options.stdio==='inherit'))
 })
