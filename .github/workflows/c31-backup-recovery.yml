@@ -8,6 +8,8 @@ on:
       - 'src/db.ts'
       - 'src/App.tsx'
       - 'src/syncCore.d.mts'
+      - 'src/remoteSyncContract.mjs'
+      - 'scripts/test_remote_sync_contract_c31.mjs'
       - 'scripts/e2e_backup_recovery_c31.mjs'
       - '.github/workflows/c31-backup-recovery.yml'
 permissions:
@@ -28,6 +30,8 @@ jobs:
         run: npm install --no-fund --no-audit
       - name: Check TypeScript and bundle
         run: npm run build
+      - name: Test guarded remote contract without network
+        run: node --test scripts/test_remote_sync_contract_c31.mjs
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
       - name: Run Vite localhost, cloud disabled
