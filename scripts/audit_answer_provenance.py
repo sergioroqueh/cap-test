@@ -65,11 +65,23 @@ def report():
             tech = row.get("technicalDecision") or {}
             sources = tech.get("sources") or []
             historic["technical_review_with_https"] += any(safe_https(s) for s in sources)
+            confirmed = row.get("answerSourceReview") or {}
+            confirmed_sources = confirmed.get("sources") or []
+            if confirmed:
+                if confirmed.get("status") != "confirmed" or confirmed.get("round") not in ("R29", "R30", "R31"):
+                    raise AssertionError("Unexpected confirmed source metadata")
+                if not confirmed.get("reason") or not confirmed_sources or not all(safe_https(s) for s in confirmed_sources):
+                    raise AssertionError("Confirmed review lacks usable evidence")
+                if row.get("technicalDecision"):
+                    raise AssertionError("Confirmed source metadata must not overwrite an editorial decision")
+                historic["confirmed_editorial_sources"] += 1
             historic["legacy_norm_or_reference"] += bool((row.get("norm") or "").strip() or (row.get("reference") or "").strip())
-            if not (has_doc or safe_https(url) or sources or row.get("norm") or row.get("reference")):
+            if not (has_doc or safe_https(url) or sources or confirmed_sources or row.get("norm") or row.get("reference")):
                 historic["no_individual_evidence_metadata"] += 1
     if historic["total_appearances"] != exams["totalImportedQuestions"]:
         raise AssertionError("Historical appearance count mismatch")
+    if historic["confirmed_editorial_sources"] != 176:
+        raise AssertionError("R29–R31 confirmed source references missing: expected 36+23+117")
     result = {
         "scope": "C19 provenance coverage only; not legal or technical approval",
         "general_bank": dict(bank_counts),
