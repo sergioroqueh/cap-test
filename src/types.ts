@@ -44,6 +44,8 @@ export interface Question {
   /** True only when source authority is explicitly verified in the source audit. */
   answerTemplateOfficiallyVerified?: boolean | null
   answerTemplateSourceAuthority?: string | null
+  /** Non-scoring citation of a previously confirmed editorial review (R29–R31). */
+  answerSourceReview?: {round: 'R29' | 'R30' | 'R31'; status: 'confirmed'; reason: string; sources: string[]}
   /** PDF letter after an explicitly recorded numbering alignment. */
   mappedSheetAnswer?: AnswerKey | null
   mappedSheetQuestionNumber?: number | null
