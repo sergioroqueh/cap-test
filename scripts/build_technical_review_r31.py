@@ -34,6 +34,10 @@ for e in ix['exams']:
                 assert k==('2023-12-02-mercancias-global',57) and set(c['restoredOptions'])==set(q['options'])
                 q['technicalDecision']['restoredOptions']=c['restoredOptions']
             affected=True
+        else:
+            assert c['action']=='confirmed'
+            q['answerSourceReview']={'round':c['round'],'status':'confirmed','reason':c['reason'],'sources':c['sources']}
+            affected=True
         seen.add(k)
     if affected:write(path,rows);changed+=1
     assert e['technicalReadyCount']==sum(q['correctAnswer'] is not None and q.get('technicalDecision',{}).get('action')!='exclude' for q in rows)
