@@ -131,3 +131,16 @@ test('C29 incomplete or malformed rows fail before network write',async()=>{
   await assert.rejects(run(local,remote),e=>e instanceof SyncConflictError && e.code==='EVENT_INVALID')
   assert.equal(remote.byUser.size,0)
 })
+
+test('C29 JSONB key reordering cannot create a false event collision',()=>{
+ const first=answer('stable','dev-a',1,true)
+ const reordered={kind:first.kind,answer:first.answer,correct:first.correct,
+   occurredAt:first.occurredAt,questionnaireId:first.questionnaireId,
+   questionId:first.questionId,clock:first.clock,deviceId:first.deviceId,eventId:first.eventId}
+ assert.equal(unionRecords({events:[first],sessions:[]},{events:[reordered],sessions:[]}).events.length,1)
+})
+test('C29 a forged non-UUID user identity is rejected before network access',async()=>{
+ const remote=new Remote(),local=new Local()
+ assert.equal((await run(local,remote,ident('not-a-uuid'))).status,'denied')
+ assert.equal(remote.calls,0)
+})

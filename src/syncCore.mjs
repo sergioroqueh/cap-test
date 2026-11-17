@@ -8,7 +8,14 @@ const fail = (code, message) => { throw new SyncConflictError(code, message) }
 const obj = value => value !== null && typeof value === 'object' && !Array.isArray(value)
 const id = value => typeof value === 'string' && value.length > 0 && value.length <= 200
 const nonneg = value => Number.isSafeInteger(value) && value >= 0
-const key = row => JSON.stringify(row)
+// JSONB reorders object keys; semantic equality must survive a server roundtrip.
+const canonical = value => Array.isArray(value) ? value.map(canonical) :
+  obj(value) ? Object.fromEntries(Object.entries(value)
+    .filter(([,v])=>v !== undefined).sort(([a],[b])=>a.localeCompare(b))
+    .map(([k,v])=>[k,canonical(v)])) : value
+const key = row => JSON.stringify(canonical(row))
+const uuid = value => typeof value === 'string' &&
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value)
 const canonicalSession = row => {
   const { id: _localAutoIncrement, ...payload } = row
   return payload
@@ -148,7 +155,7 @@ export async function syncOfflineFirst({identity,cloudEnabled=false,local,remote
   // The UI does not import or call this draft. Default-deny even with a transport present.
   if (!cloudEnabled) return {status:'disabled',events:0,sessions:0}
   if (!identity?.verified || identity.isAnonymous !== false ||
-      !id(identity.userId) || identity.consented !== true)
+      !uuid(identity.userId) || identity.consented !== true)
     return {status:'denied',events:0,sessions:0}
   if (!local || !remote || typeof idFactory!=='function')
     fail('ADAPTER_INVALID', 'Faltan adaptadores o generador de identidad')
