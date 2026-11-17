@@ -191,6 +191,22 @@ async function prepareBackup(input:unknown, currentOwner:BackupOwner):Promise<{
   validateSnapshot(snapshot)
   return {snapshot,legacy:!owned,version}
 }
+/** Read-only preview: validate ownership, checksum and full content before asking
+ * for confirmation. Restore revalidates everything inside its own transaction.
+ */
+export async function inspectFullBackup(input:unknown):Promise<{
+ version:number; legacy:boolean; questions:number; sessions:number; events:number
+}>{
+  const scope=scopeCapture()
+  const prepared=await prepareBackup(input,scope.owner)
+  scope.verify()
+  return {
+    version:prepared.version,legacy:prepared.legacy,
+    questions:prepared.snapshot.progress.length,
+    sessions:prepared.snapshot.sessions.length,
+    events:prepared.snapshot.journal.length
+  }
+}
 function mergeExisting(local:Snapshot, incoming:Snapshot):Snapshot{
   const current=validateSnapshot(local), source=validateSnapshot(incoming)
   const localReplay=progressReplayed(current.progress,current.journal)
