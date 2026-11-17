@@ -48,7 +48,15 @@ for exam,n,expected in targets:
       'groupOccurrences':by_group[row['frequencyGroup']],
       'exactBankCodes':sorted(set(x[0] for x in exact)),
       'sameStemBankCodes':sorted(set(x[0] for x in same_stem)),
-      'sameStemDistinctFingerprints':len(set(x[1] for x in same_stem))
+      'sameStemDistinctFingerprints':len(set(x[1] for x in same_stem)),
+      'examOptions':sorted(norm(s) for s in row['options'].values()),
+      'bankCandidates':[
+        {'code':candidate['code'],'correctAnswer':candidate['correctAnswer'],
+         'options':sorted(norm(s) for s in candidate['options'].values()),
+         'overlap':len(set(norm(s) for s in row['options'].values()) & set(norm(s) for s in candidate['options'].values()))}
+        for candidate in [q for p in sorted((data/'questions').glob('*.json')) for q in read(p)
+                          if norm(q['question'])==norm(row['question'])]
+      ]
     }
     print('C23 R32 DIAGNOSTIC '+json.dumps(output,ensure_ascii=False,separators=(',',':')))
 print('C23 R32 DIAGNOSTIC SUMMARY '+json.dumps({'bankFingerprintAmbiguities':sum(len(set(x[0] for x in v))>1 for v in bank_by_fp.values()),'bankStemsWithMultipleFingerprints':sum(len(set(x[1] for x in v))>1 for v in bank_by_stem.values())},ensure_ascii=False))
