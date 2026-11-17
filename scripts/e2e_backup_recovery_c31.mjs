@@ -39,11 +39,12 @@ try{
     const db=await import('/src/db.ts')
     const backup=await import('/src/backupRecovery.ts')
     scope.setLocalOwner(B);await db.clearAllData()
-    let refused=false
+    let refused=false, cause=''
     try{await backup.restoreFullBackup(original)}catch(e){
-      refused=String(e).includes('otro perfil')
+      cause=String(e);refused=cause.includes('otro perfil')
     }
-    if(!refused||(await db.getAllProgress()).length)throw Error('Wrong account imported')
+    const bRows=await db.getAllProgress()
+    if(!refused||bRows.length)throw Error('Wrong account imported: '+cause+'; B rows='+bRows.length)
     scope.setLocalOwner(null)
     refused=false
     try{await backup.restoreFullBackup(original)}catch(e){
