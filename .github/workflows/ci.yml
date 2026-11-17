@@ -23,6 +23,9 @@ jobs:
           npm run build
           if grep -R -l 'RUTACAP_PRIVATE_CATALOG_C14' dist; then exit 1; fi
 
+      - name: Guard private CLM stage contract with synthetic data only
+        run: python3 scripts/audit_clm_private_stage_c20.py --self-test
+
       - name: Audit answer provenance coverage (aggregate only)
         run: python3 scripts/audit_answer_provenance.py
 
