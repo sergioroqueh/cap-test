@@ -1,5 +1,5 @@
 import { openDb, requestAsPromise } from './db'
-import { localBackupOwner, localOwnerGeneration, type BackupOwner } from './localScope'
+import { localBackupOwner, localOwnerGeneration, onLocalOwnerChanged, type BackupOwner } from './localScope'
 import { unionRecords, replayProgress } from './syncCore.mjs'
 import type { QuestionProgress, StudySessionRecord, AnswerKey } from './types'
 import type { JournalEvent } from './localJournal'
@@ -245,6 +245,14 @@ export async function restoreFullBackup(input:unknown):Promise<{
   const db=await openDb()
   const tx=db.transaction(stores,'readwrite')
   const completed=done(tx)
+  let identityInvalidated=false
+  let committed=false
+  tx.addEventListener('complete',()=>{committed=true},{once:true})
+  const unsubscribe=onLocalOwnerChanged(()=>{
+    if (committed) return
+    identityInvalidated=true
+    try { tx.abort() } catch { /* transaction already closed */ }
+  })
   try {
     const existing=await readAll(tx)
     scope.verify()
@@ -297,6 +305,7 @@ export async function restoreFullBackup(input:unknown):Promise<{
   } catch(error){
     try {tx.abort()}catch{/* no active transaction */}
     await completed.catch(()=>{})
+    if (identityInvalidated) throw Error('El perfil cambió durante la restauración. La transacción se ha cancelado.')
     throw error
-  } finally {db.close()}
+  } finally {unsubscribe();db.close()}
 }
