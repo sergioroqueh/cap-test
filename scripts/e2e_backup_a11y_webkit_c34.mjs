@@ -80,6 +80,7 @@ try{
  const aborted=await page.evaluate(async(A)=>{
   const scope=await import('/src/localScope.ts')
   const original=IDBObjectStore.prototype.getAll
+  window.c34OriginalGetAll=original
   window.c34Triggered=false
   IDBObjectStore.prototype.getAll=function(...args){
    const result=original.apply(this,args)
