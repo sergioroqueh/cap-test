@@ -22,7 +22,7 @@ def unique(rows):
     return len(ids)
 rows_by_exam={e['id']:read(OUT/'questions'/f"{e['id']}.json") for e in ix['exams']}
 byid={(q['examId'],q['number']):q for rr in rows_by_exam.values() for q in rr}
-seen=set(); changed=set()
+seen=set(); changed=set(); decision_models=set()
 for old,c in zip(queue,cases):
     k=(c['examId'],c['number'])
     assert k not in seen and not old['approved'] and c['approved']
@@ -39,6 +39,7 @@ for old,c in zip(queue,cases):
     if c['action']!='confirmed':
         q['technicalDecision']={key:c[key] for key in ('examId','number','sourcePage','round','historicalAnswer','previousAppliedAnswer','technicalAnswer','action','reason','sources')}
         changed.add(c['examId'])
+        decision_models.add(c['examId'])
     else:
         # Read-only citation: no change to letter, grading or editorial decision.
         q['answerSourceReview']={'round':c['round'],'status':'confirmed','reason':c['reason'],'sources':c['sources']}
@@ -60,4 +61,4 @@ with (OUT/'technical_review_r29.csv').open('w',encoding='utf-8-sig',newline='') 
     fields=['queuePosition','examId','number','sourcePage','question','options','historicalAnswer','previousAppliedAnswer','technicalAnswer','action','reason','sources']
     w=csv.DictWriter(f,fieldnames=fields,extrasaction='ignore');w.writeheader()
     for c in cases:w.writerow({**c,'options':json.dumps(c['options'],ensure_ascii=False),'sources':' | '.join(c['sources'])})
-print('R29 PASS '+json.dumps({'actions':dict(Counter(c['action'] for c in cases)),'models':len(changed),'stats':ix['technicalR29Stats']},ensure_ascii=False))
+print('R29 PASS '+json.dumps({'actions':dict(Counter(c['action'] for c in cases)),'models':len(decision_models),'stats':ix['technicalR29Stats']},ensure_ascii=False))
