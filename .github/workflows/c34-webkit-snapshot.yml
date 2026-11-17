@@ -1,0 +1,77 @@
+name: C34 WebKit + keyboard backup + disposable server snapshot (cloud off)
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'src/BackupPanel.tsx'
+      - 'src/backupPanel.css'
+      - 'src/localScope.ts'
+      - 'src/backupRecovery.ts'
+      - 'scripts/e2e_backup_a11y_webkit_c34.mjs'
+      - 'scripts/e2e_backup_ui_c33.mjs'
+      - 'docs/commercial/sql/C34_snapshot_materialization_fixture.sql'
+      - 'docs/commercial/C34_IOS_AND_SNAPSHOT_DESIGN.md'
+      - '.github/workflows/c34-webkit-snapshot.yml'
+permissions:
+  contents: read
+jobs:
+  local-ux-and-snapshot:
+    if: github.head_ref == 'feat/cap-commercial'
+    runs-on: ubuntu-latest
+    timeout-minutes: 17
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_PASSWORD: c34-synthetic-only
+          POSTGRES_DB: rutacap_c34_disposable
+        options: >-
+          --health-cmd "pg_isready -U postgres -d rutacap_c34_disposable"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install local dependencies
+        run: npm install --no-fund --no-audit
+      - name: Build commercial app without production release
+        run: npm run build
+      - name: Test hypothetical snapshot consumer and prior regressions
+        run: |
+          node --test scripts/test_snapshot_cursor_c33.mjs
+          node --test scripts/test_remote_sync_contract_c31.mjs
+      - name: Server-side snapshot materialization fixture with RLS only in disposable PostgreSQL
+        env:
+          PG_CONTAINER: ${{ job.services.postgres.id }}
+        run: |
+          for f in \
+            docs/commercial/sql/C15_auth_fixture.sql \
+            docs/commercial/sql/C28_full_fidelity_schema_draft.sql \
+            docs/commercial/sql/C29_event_ledger_draft.sql \
+            docs/commercial/sql/C34_snapshot_materialization_fixture.sql; do
+            docker exec -i "$PG_CONTAINER" psql -X -v ON_ERROR_STOP=1 -U postgres -d rutacap_c34_disposable < "$f"
+          done
+      - name: Install Chromium and WebKit engines (not physical Safari)
+        run: npx playwright install --with-deps chromium webkit
+      - name: Start localhost-only Vite
+        run: |
+          npx vite --host 127.0.0.1 --port 5173 --strictPort > /tmp/c34-vite.log 2>&1 &
+          for i in $(seq 1 40); do
+            if curl -fsS http://127.0.0.1:5173/ > /dev/null; then break; fi
+            sleep 1
+          done
+          curl -fsS http://127.0.0.1:5173/ > /dev/null
+      - name: Real Chromium keyboard and WebKit mobile-backup smoke + identity abort
+        run: node scripts/e2e_backup_a11y_webkit_c34.mjs
+      - name: Preserve C33 mobile and desktop backup regression
+        run: node scripts/e2e_backup_ui_c33.mjs
+      - name: Verify cloud and release gates
+        run: |
+          grep -F 'export const cloudConfigured = false' src/supabase.ts
+          ! grep -R -n 'snapshotCursorDraft\|postgrestReadDraft' src/App.tsx src/BackupPanel.tsx src/db.ts src/Quiz.tsx
+          ! grep -n 'supabase' src/backupPanel.css
