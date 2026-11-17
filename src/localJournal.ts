@@ -64,8 +64,9 @@ async function apply(tx: IDBTransaction, counter: State, op: AnswerOperation | F
     return // Already committed in the same database, never increment a second time.
   }
   const existing = await requestAsPromise(progress.get(op.questionId)) as QuestionProgress | undefined
-  if (existing && existing.questionnaireId !== op.questionnaireId)
-    throw Error('Colisión entre preguntas canónicas y cuestionarios')
+  // A canonical CAP question appears in multiple exams. Keep the first
+  // persisted questionnaireId for that questionId, matching legacy db.ts.
+  const canonicalQuestionnaireId = existing?.questionnaireId || op.questionnaireId
   const originKey = 'origin:' + op.questionId
   const origin = await requestAsPromise(meta.get(originKey)) as {key: string, baselineId: string | null} | undefined
   let baselineId = origin?.baselineId ?? null
@@ -87,21 +88,22 @@ async function apply(tx: IDBTransaction, counter: State, op: AnswerOperation | F
   }
   const now = Date.now()
   const isAnswer = 'answer' in op
+  const answerOp = isAnswer ? op : null
   journal.add({
     eventId: op.eventId, deviceId: counter.deviceId, clock: advance(counter),
-    occurredAt: now, questionId: op.questionId, questionnaireId: op.questionnaireId,
+    occurredAt: now, questionId: op.questionId, questionnaireId: canonicalQuestionnaireId,
     kind: isAnswer ? 'answer' : 'favorite',
     ...(baselineId ? {baselineId} : {}),
-    ...(isAnswer ? {answer: op.answer, correct: op.correct} :
+    ...(answerOp ? {answer: answerOp.answer, correct: answerOp.correct} :
       {favorite: !(existing?.favorite ?? false)})
   } satisfies JournalEvent)
   const before = existing || fresh(op)
-  const next: QuestionProgress = isAnswer
+  const next: QuestionProgress = answerOp
     ? {...before, attempts: before.attempts + 1,
-       correct: before.correct + Number(op.correct),
-       incorrect: before.incorrect + Number(!op.correct),
-       streak: op.correct ? before.streak + 1 : 0,
-       lastAnsweredAt: now, lastAnswer: op.answer, lastCorrect: op.correct,
+       correct: before.correct + Number(answerOp.correct),
+       incorrect: before.incorrect + Number(!answerOp.correct),
+       streak: answerOp.correct ? before.streak + 1 : 0,
+       lastAnsweredAt: now, lastAnswer: answerOp.answer, lastCorrect: answerOp.correct,
        updatedAt: now}
     : {...before, favorite: !before.favorite, updatedAt: now}
   progress.put(next)
