@@ -1,0 +1,71 @@
+name: C32 stress + mock-only read draft + disposable RLS (cloud off)
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'src/backupRecovery.ts'
+      - 'src/postgrestReadDraft.mjs'
+      - 'scripts/e2e_backup_stress_c32.mjs'
+      - 'scripts/test_postgrest_read_draft_c32.mjs'
+      - 'docs/commercial/sql/C32_read_only_fixture_rls_test.sql'
+      - 'docs/commercial/C32_STRESS_AND_READ_GATE.md'
+      - '.github/workflows/c32-stress-read-draft.yml'
+permissions:
+  contents: read
+jobs:
+  synthetic-only:
+    if: github.head_ref == 'feat/cap-commercial'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_PASSWORD: c32-synthetic-only
+          POSTGRES_DB: rutacap_c32_disposable
+        options: >-
+          --health-cmd "pg_isready -U postgres -d rutacap_c32_disposable"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install local dependencies
+        run: npm install --no-fund --no-audit
+      - name: TypeScript and app build
+        run: npm run build
+      - name: Test mock-only read paginator with identity and cancellation
+        run: node --test scripts/test_postgrest_read_draft_c32.mjs
+      - name: Verify SQL drafts in fresh disposable PostgreSQL (no project DB)
+        env:
+          PG_CONTAINER: ${{ job.services.postgres.id }}
+        run: |
+          for f in \
+            docs/commercial/sql/C15_auth_fixture.sql \
+            docs/commercial/sql/C28_full_fidelity_schema_draft.sql \
+            docs/commercial/sql/C29_event_ledger_draft.sql \
+            docs/commercial/sql/C32_read_only_fixture_rls_test.sql; do
+            docker exec -i "$PG_CONTAINER" psql -X -v ON_ERROR_STOP=1 -U postgres -d rutacap_c32_disposable < "$f"
+          done
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Start local Vite only
+        run: |
+          npx vite --host 127.0.0.1 --port 5173 --strictPort > /tmp/c32-vite.log 2>&1 &
+          for i in $(seq 1 40); do
+            if curl -fsS http://127.0.0.1:5173/ > /dev/null; then break; fi
+            sleep 1
+          done
+          curl -fsS http://127.0.0.1:5173/ > /dev/null
+      - name: Stress large restore, quota rollback, concurrent tabs and zero cloud
+        run: node scripts/e2e_backup_stress_c32.mjs
+      - name: Verify strict cloud disabled and no adapter wired to app
+        run: |
+          grep -F 'export const cloudConfigured = false' src/supabase.ts
+          ! grep -R -n 'postgrestReadDraft\|createPostgrestReadDraft' src/App.tsx src/Quiz.tsx src/db.ts
+          ! grep -n 'supabase.co' src/postgrestReadDraft.mjs
