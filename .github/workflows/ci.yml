@@ -52,9 +52,6 @@ jobs:
       - name: Extract R32 transport law candidate queue (read-only)
         run: python3 scripts/select_technical_review_r32.py
 
-      - name: Verify staged R32 evidence (no scoring changes)
-        run: python3 scripts/test_technical_review_r32.py
-
       - name: Audit remaining source PDFs without changing scored keys
         run: python3 scripts/audit_visual_batch_candidates.py
 
@@ -189,3 +186,9 @@ jobs:
             artifacts/cap-r27-ranking.json
             artifacts/cap-answer-provenance-coverage.json
           retention-days: 14
+
+      # Run legacy frozen R32 checks last: never hide a discrepancy, but allow
+      # independent C22 visual/guest checks and screenshots to complete first.
+      - name: Verify staged R32 evidence (no scoring changes)
+        run: python3 scripts/test_technical_review_r32.py
+
