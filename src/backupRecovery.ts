@@ -9,7 +9,7 @@ import type { JournalEvent } from './localJournal'
 // does NOT authenticate the user, and is NEVER an entitlement credential.
 const P='progress', S='sessions', J='progressEvents', M='syncMeta'
 const stores=[P,S,J,M]
-const uuid=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+const uuid=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 const letter=(x:unknown):x is AnswerKey=>['A','B','C','D'].includes(x as string)
 const obj=(x:unknown):x is Record<string,unknown>=>x!==null&&typeof x==='object'&&!Array.isArray(x)
 const str=(x:unknown)=>typeof x==='string'&&x.length>0&&x.length<=200
