@@ -1,0 +1,46 @@
+name: C30 local IndexedDB journal (no cloud)
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'src/localJournal.ts'
+      - 'src/db.ts'
+      - 'src/Quiz.tsx'
+      - 'src/types.ts'
+      - 'scripts/e2e_local_journal_c30.mjs'
+      - '.github/workflows/c30-local-journal.yml'
+permissions:
+  contents: read
+jobs:
+  chromium:
+    if: github.head_ref == 'feat/cap-commercial'
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+      - name: Check TypeScript and build
+        run: npm run build
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Run Vite at localhost only
+        run: |
+          npx vite --host 127.0.0.1 --port 5173 --strictPort > /tmp/c30-vite.log 2>&1 &
+          for i in $(seq 1 40); do
+            if curl -fsS http://127.0.0.1:5173/ > /dev/null; then break; fi
+            sleep 1
+          done
+          curl -fsS http://127.0.0.1:5173/ > /dev/null
+      - name: Real IndexedDB offline and retry tests
+        run: node scripts/e2e_local_journal_c30.mjs
+      - name: Guard cloud-off contract
+        run: |
+          grep -F 'export const cloudConfigured = false' src/supabase.ts
+          ! grep -R -n 'synchronizeAccount(' src/App.tsx src/Quiz.tsx src/localJournal.ts
+          ! grep -n 'supabase' src/localJournal.ts
