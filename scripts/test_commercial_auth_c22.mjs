@@ -5,7 +5,7 @@ const src=path=>readFileSync(new URL('../'+path,import.meta.url),'utf8')
 
 test('C22: OAuth requires developer opt-in, localhost and publishable key',()=>{
  const s=src('src/supabase.ts')
- for(const item of ['import.meta.env.DEV',"VITE_RUTACAP_AUTH_DEV === 'true'","window.location.port === '5173'","sb_publishable_","flowType: 'pkce'","provider: 'google'","auth.getUser()","shouldCreateUser: false","export const cloudConfigured = false"]){
+ for(const item of ['import.meta.env.DEV',"VITE_RUTACAP_AUTH_DEV === 'true'","window.location.port === '5173'","rhtbqetskghkarxhrgee.supabase.co","sb_publishable_","flowType: 'pkce'","provider: 'google'","auth.getUser()","shouldCreateUser: false","export const cloudConfigured = false"]){
   // getUser is invoked on client.auth, while the rest are literal contract markers.
   if(item==='auth.getUser()')assert.ok(s.includes('client.auth.getUser()'))
   else assert.ok(s.includes(item),item)

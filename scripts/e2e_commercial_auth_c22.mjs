@@ -10,6 +10,11 @@ try{
   {name:'desktop',width:1440,height:900}
  ]){
   const context=await browser.newContext({viewport:{width:device.width,height:device.height},deviceScaleFactor:1})
+  // Mock-key CI must never request real RutaCAP endpoints.
+  let remoteRequests=0
+  await context.route('https://rhtbqetskghkarxhrgee.supabase.co/**',route=>{
+   remoteRequests++;return route.abort()
+  })
   const page=await context.newPage()
   await page.goto(origin+'/',{waitUntil:'domcontentloaded'})
   const google=page.getByRole('button',{name:/Continuar con Google/})
@@ -26,6 +31,7 @@ try{
   await exit.click()
   await page.getByRole('button',{name:/Continuar como invitado/}).waitFor()
   assert.equal(await page.getByRole('heading',{name:'Seguimos en ruta.'}).count(),0)
+  assert.equal(remoteRequests,0,'CI must not contact the real Supabase endpoint')
   await context.close()
  }
  const context=await browser.newContext({viewport:{width:390,height:844}})

@@ -6,7 +6,10 @@ const publishableKey = import.meta.env.VITE_CAP_PRO_SUPABASE_PUBLISHABLE_KEY?.tr
 function validIsolatedUrl(value: string): boolean {
   try {
     const candidate = new URL(value)
-    return candidate.protocol === 'https:' && /^[a-z0-9-]+\.supabase\.co$/.test(candidate.hostname) && candidate.pathname === '/' && !candidate.username && !candidate.password && !candidate.search && !candidate.hash
+    // Public project ref; prevents accidental use of the other Supabase accounts.
+    return candidate.origin === 'https://rhtbqetskghkarxhrgee.supabase.co' &&
+      candidate.pathname === '/' && !candidate.username && !candidate.password &&
+      !candidate.search && !candidate.hash
   } catch { return false }
 }
 const localDevOrigin = typeof window !== 'undefined' &&
