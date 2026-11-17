@@ -4,7 +4,8 @@ import ConfirmDialog from './ConfirmDialog'
 import AnswerProvenance from './AnswerProvenance'
 import StudyPdfButton from './StudyPdfButton'
 import type { ActiveSession, AnswerKey, Question, QuestionProgress, SessionAnswer, StudySessionRecord } from './types'
-import { addSession, putManyProgress, putProgress } from './db'
+import { addSession } from './db'
+import { completeExam, recordFavorite, recordStudyAnswer, type AnswerOperation } from './localJournal'
 import { resolveQuestions } from './data'
 import { loadBankExamFrequency, type CapCategory, type CapEditorialDecision } from './capExams'
 import { percent } from './utils'
@@ -13,11 +14,6 @@ import { CAP_DURATION_MINUTES, deadlineAt, formatRemaining, gradeSession, remain
 const keys: AnswerKey[] = ['A','B','C','D']
 const go = (page: string) => { location.hash = '#/' + page }
 const progressId = (q: Question) => q.progressId || q.id
-const fresh = (q: Question): QuestionProgress => ({
-  questionId: progressId(q), questionnaireId: q.section + ':' + q.questionnaireId,
-  attempts: 0, correct: 0, incorrect: 0, streak: 0,
-  lastAnsweredAt: 0, favorite: false
-})
 const capDecision = (q: Question) =>
   (q as Question & { editorialDecision?: CapEditorialDecision }).editorialDecision || null
 
@@ -69,6 +65,8 @@ function QuizSession({initial,questions,frequency,pm,refresh}:{
   const [pdfBusy,setPdfBusy]=useState(false)
   const [pdfError,setPdfError]=useState('')
   const lock=useRef(false)
+  const selecting=useRef(false)
+  const favoriting=useRef(false)
   const timed=s.type==='exam'&&s.timed===true
   const duration=s.durationMinutes||CAP_DURATION_MINUTES
   const left=timed?remainingMs(s.startedAt,now,duration):null
@@ -95,7 +93,7 @@ function QuizSession({initial,questions,frequency,pm,refresh}:{
     window.scrollTo({top:0,behavior:'instant'})
   }
   async function select(k:AnswerKey){
-    if(finishing||expired||s.type==='study'&&checked)return
+    if(finishing||expired||selecting.current||s.type==='study'&&checked)return
     if(s.type==='exam'){
       // Persist the answer and advance in one atomic state update. On question 100,
       // stay in place: delivery is always manual unless the real timer expires.
@@ -104,18 +102,62 @@ function QuizSession({initial,questions,frequency,pm,refresh}:{
       window.scrollTo({top:0,behavior:'instant'})
       return
     }
-    save({...s,selectedAnswers:{...s.selectedAnswers,[q.id]:k},checkedIds:[...s.checkedIds,q.id]})
-    if(q.scoringEligible===false)return
-    const prior=pm.get(progressId(q))||fresh(q)
-    const ok=k===q.correctAnswer
-    await putProgress({...prior,attempts:prior.attempts+1,correct:prior.correct+(ok?1:0),incorrect:prior.incorrect+(ok?0:1),streak:ok?prior.streak+1:0,lastAnsweredAt:Date.now(),lastAnswer:k,lastCorrect:ok})
-    await refresh()
+    // Persist the operation key and selection first: on reload the same event
+    // can be retried without double-counting an already committed answer.
+    selecting.current=true
+    const eventId=s.answerEventIds?.[q.id] || crypto.randomUUID()
+    save({...s,selectedAnswers:{...s.selectedAnswers,[q.id]:k},
+      checkedIds:[...s.checkedIds,q.id],
+      answerEventIds:{...s.answerEventIds,[q.id]:eventId}})
+    try {
+      if(q.scoringEligible!==false) {
+        await recordStudyAnswer({
+          eventId,questionId:progressId(q),questionnaireId:q.section+':'+q.questionnaireId,
+          answer:k,correct:k===q.correctAnswer
+        })
+      }
+      await refresh()
+    } catch(err) {
+      console.error('Error al guardar la respuesta local',err)
+      setSaveError('No se ha podido guardar el progreso. Conservamos la respuesta para reintentarla al reabrir el test.')
+    } finally { selecting.current=false }
   }
   async function toggleFavorite(){
-    const prior=pm.get(progressId(q))||fresh(q)
-    await putProgress({...prior,favorite:!prior.favorite})
-    await refresh()
+    if(favoriting.current)return
+    favoriting.current=true
+    try {
+      await recordFavorite({
+        eventId:crypto.randomUUID(),questionId:progressId(q),
+        questionnaireId:q.section+':'+q.questionnaireId
+      })
+      await refresh()
+    } catch(err) {
+      console.error('Error al guardar el favorito',err)
+      setSaveError('No se pudo guardar el favorito. Inténtalo de nuevo.')
+    } finally { favoriting.current=false }
   }
+  useEffect(()=>{
+    // Crash recovery for C30 study operations saved to ActiveSession before IDB.
+    // Legacy checked answers with NO eventId were already counted by old code:
+    // never fabricate a second attempt for them.
+    if(initial.type!=='study')return
+    const pending=(initial.checkedIds||[]).flatMap(qid=>{
+      const key=initial.selectedAnswers[qid], eventId=initial.answerEventIds?.[qid]
+      const question=questions.find(item=>item.id===qid)
+      if(!key||!eventId||!question||question.scoringEligible===false)return []
+      return [{eventId,questionId:progressId(question),
+        questionnaireId:question.section+':'+question.questionnaireId,
+        answer:key,correct:key===question.correctAnswer}]
+    })
+    if(!pending.length)return
+    let active=true
+    ;(async()=>{try{
+      for(const op of pending)await recordStudyAnswer(op)
+      if(active)await refresh()
+    }catch(err){if(active){console.error(err);setSaveError('Hay respuestas sin confirmar en el almacenamiento. Reabre el test para reintentarlo.')}}})()
+    return()=>{active=false}
+  // Recovery derives only from the original persisted session, not each render.
+  },[initial,questions])
   function toggleMarked(){
     const set=new Set(s.markedIds||[])
     if(set.has(q.id))set.delete(q.id);else set.add(q.id)
@@ -138,26 +180,12 @@ function QuizSession({initial,questions,frequency,pm,refresh}:{
         correct:x.scoringEligible!==false&&!!s.selectedAnswers[x.id]&&s.selectedAnswers[x.id]===x.correctAnswer
       }))
       const grade=gradeSession(answers,isCap)
-      if(s.type==='exam'){
-        const changes=new Map<string,QuestionProgress>()
-        for(const x of questions){
-          const key=s.selectedAnswers[x.id]
-          if(!key||x.scoringEligible===false)continue
-          const id=progressId(x)
-          const prior=changes.get(id)||pm.get(id)||fresh(x)
-          const ok=key===x.correctAnswer
-          changes.set(id,{...prior,attempts:prior.attempts+1,correct:prior.correct+(ok?1:0),
-            incorrect:prior.incorrect+(ok?0:1),streak:ok?prior.streak+1:0,lastAnsweredAt:Date.now(),
-            lastAnswer:key,lastCorrect:ok})
-        }
-        if(changes.size){
-          try{await putManyProgress([...changes.values()])}
-          catch(err){console.error('El progreso local se guardó; sincronización pendiente.',err)}
-        }
-      }
+      // Persist stable key before IndexedDB commit. An interrupted retry reuses it.
+      const clientId=s.clientId || crypto.randomUUID()
+      if(!s.clientId)save({...s,clientId})
       const completedAt=Date.now()
       const record:StudySessionRecord={
-        type:s.type,label:s.label,startedAt:s.startedAt,completedAt,
+        clientId,type:s.type,label:s.label,startedAt:s.startedAt,completedAt,
         total:questions.length,answered:grade.answered,correct:grade.correct,incorrect:grade.incorrect,
         score:s.type==='study'?(grade.graded?percent(grade.correct,grade.graded-grade.blank):0):grade.scorePercentage,
         answers,
@@ -167,8 +195,22 @@ function QuizSession({initial,questions,frequency,pm,refresh}:{
         finishedReason:timedOut?'timeout':'manual',
         elapsedSeconds:Math.round((completedAt-s.startedAt)/1000)
       }
-      await addSession(record)
-      localStorage.setItem(lastKey(),JSON.stringify({record,questionIds:s.questionIds}))
+      let storedRecord=record
+      if(s.type==='exam'){
+        const operations:AnswerOperation[]=questions.flatMap((x,index)=>{
+          const key=s.selectedAnswers[x.id]
+          if(!key||x.scoringEligible===false)return []
+          return [{
+            eventId:clientId+':answer:'+index,
+            questionId:progressId(x),questionnaireId:x.section+':'+x.questionnaireId,
+            answer:key,correct:key===x.correctAnswer
+          }]
+        })
+        storedRecord=await completeExam(operations,record)
+      }else{
+        await addSession(record)
+      }
+      localStorage.setItem(lastKey(),JSON.stringify({record:storedRecord,questionIds:s.questionIds}))
       localStorage.removeItem(activeKey())
       sessionStorage.removeItem(activeKey())
       await refresh()

@@ -127,6 +127,10 @@ export interface StudySessionRecord {
 export type StudySource = 'questionnaire' | 'random' | 'unseen' | 'errors' | 'smart' | 'favorites' | 'cap-original' | 'cap-random' | 'cap-mixed' | 'cap-top100' | 'cap-top3' | 'cap-top4' | 'cap-errors' | 'cap-favorites' | 'cap-review'
 
 export interface ActiveSession {
+  /** Durable key reused after interrupted submission; not the IndexedDB numeric id. */
+  clientId?: string
+  /** Stable operation keys for study answers persisted before committing to IndexedDB. */
+  answerEventIds?: Record<string, string>
   type: 'study' | 'exam'
   source: StudySource
   label: string

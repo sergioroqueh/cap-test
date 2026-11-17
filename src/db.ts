@@ -2,11 +2,13 @@ import type { QuestionProgress, StudySessionRecord } from './types'
 import { cloudConfigured, supabase } from './supabase'
 import { localDbName } from './localScope'
 
-const DB_VERSION = 1
+const DB_VERSION = 2
 const PROGRESS = 'progress'
 const SESSIONS = 'sessions'
+const JOURNAL = 'progressEvents'
+const META = 'syncMeta'
 
-function openDb(): Promise<IDBDatabase> {
+export function openDb(): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {
     const request = indexedDB.open(localDbName(), DB_VERSION)
     request.onupgradeneeded = () => {
@@ -19,13 +21,17 @@ function openDb(): Promise<IDBDatabase> {
         const store = db.createObjectStore(SESSIONS, { keyPath: 'id', autoIncrement: true })
         store.createIndex('completedAt', 'completedAt', { unique: false })
       }
+      const sessions = request.transaction!.objectStore(SESSIONS)
+      if (!sessions.indexNames.contains('clientId')) sessions.createIndex('clientId', 'clientId', { unique: false })
+      if (!db.objectStoreNames.contains(JOURNAL)) db.createObjectStore(JOURNAL, { keyPath: 'eventId' })
+      if (!db.objectStoreNames.contains(META)) db.createObjectStore(META, { keyPath: 'key' })
     }
     request.onsuccess = () => resolve(request.result)
     request.onerror = () => reject(request.error)
   })
 }
 
-function requestAsPromise<T>(request: IDBRequest<T>): Promise<T> {
+export function requestAsPromise<T>(request: IDBRequest<T>): Promise<T> {
   return new Promise((resolve, reject) => {
     request.onsuccess = () => resolve(request.result)
     request.onerror = () => reject(request.error)
@@ -40,14 +46,38 @@ async function localProgress(): Promise<QuestionProgress[]> {
   return rows
 }
 
+// C30: one atomic readwrite backfill, stable forever after first successful commit.
+export async function ensureLegacySessionIds(): Promise<void> {
+  const db = await openDb()
+  const tx = db.transaction(SESSIONS, 'readwrite')
+  const done = new Promise<void>((resolve, reject) => {
+    tx.oncomplete = () => resolve()
+    tx.onabort = () => reject(tx.error || new Error('No se guardaron los identificadores'))
+    tx.onerror = () => reject(tx.error || new Error('Error de IndexedDB'))
+  })
+  try {
+    const store = tx.objectStore(SESSIONS)
+    const rows = await requestAsPromise(store.getAll()) as StudySessionRecord[]
+    for (const row of rows) if (!row.clientId) store.put({ ...row, clientId: crypto.randomUUID() })
+    await done
+  } catch (err) {
+    try { tx.abort() } catch { /* already completed/aborted */ }
+    await done.catch(() => {})
+    throw err
+  } finally { db.close() }
+}
 async function localSessions(limit = 5000): Promise<StudySessionRecord[]> {
+  await ensureLegacySessionIds()
   const db = await openDb()
   const tx = db.transaction(SESSIONS, 'readonly')
-  const rows = await requestAsPromise(tx.objectStore(SESSIONS).getAll())
-  db.close()
-  return rows.sort((a, b) => b.completedAt - a.completedAt).slice(0, limit)
+  try {
+    const rows = await requestAsPromise(tx.objectStore(SESSIONS).getAll()) as StudySessionRecord[]
+    return rows.sort((a, b) => b.completedAt - a.completedAt).slice(0, limit)
+  } finally { db.close() }
 }
 
+// The previous direct write is intentionally not used: all quiz answers/favorites
+// must flow through src/localJournal.ts to commit progress + event in one transaction.
 async function putLocalProgress(row: QuestionProgress): Promise<void> {
   const db = await openDb()
   const tx = db.transaction(PROGRESS, 'readwrite')
@@ -60,18 +90,41 @@ async function putLocalProgress(row: QuestionProgress): Promise<void> {
 }
 
 async function addLocalSession(row: StudySessionRecord): Promise<number> {
+  if (!row.clientId) throw new Error('Falta el identificador estable de sesión')
   const db = await openDb()
   const tx = db.transaction(SESSIONS, 'readwrite')
-  const id = await requestAsPromise(tx.objectStore(SESSIONS).add(row))
-  db.close()
-  return Number(id)
+  const done = new Promise<void>((resolve, reject) => {
+    tx.oncomplete = () => resolve()
+    tx.onabort = () => reject(tx.error || new Error('No se guardó la sesión'))
+    tx.onerror = () => reject(tx.error || new Error('Error de IndexedDB'))
+  })
+  try {
+    const store = tx.objectStore(SESSIONS)
+    const previous = await requestAsPromise(store.index('clientId').get(row.clientId)) as StudySessionRecord | undefined
+    if (previous) {
+      if (previous.type !== row.type || previous.startedAt !== row.startedAt ||
+          JSON.stringify(previous.answers) !== JSON.stringify(row.answers))
+        throw new Error('El identificador pertenece a otra sesión: no se sobrescribe')
+      await done
+      return Number(previous.id)
+    }
+    const savedId = await requestAsPromise(store.add(row))
+    await done
+    return Number(savedId)
+  } catch (err) {
+    try { tx.abort() } catch { /* already completed/aborted */ }
+    await done.catch(() => {})
+    throw err
+  } finally { db.close() }
 }
 
 async function clearLocalData(): Promise<void> {
   const db = await openDb()
-  const tx = db.transaction([PROGRESS, SESSIONS], 'readwrite')
+  const tx = db.transaction([PROGRESS, SESSIONS, JOURNAL, META], 'readwrite')
   tx.objectStore(PROGRESS).clear()
   tx.objectStore(SESSIONS).clear()
+  tx.objectStore(JOURNAL).clear()
+  tx.objectStore(META).clear()
   await new Promise<void>((resolve, reject) => {
     tx.oncomplete = () => resolve()
     tx.onerror = () => reject(tx.error)
@@ -141,7 +194,8 @@ async function upsertCloudSessions(rows: StudySessionRecord[]) {
 
 export async function synchronizeAccount(): Promise<'cloud' | 'migrated' | 'empty'> {
   if (!cloudConfigured || !supabase) return 'empty'
-  const userId = await currentUserId()
+  throw new Error('La sincronización heredada C15/C28 está bloqueada: requiere adaptador y migración aprobados.')
+  /*const userId = await currentUserId()
   if (!userId) return 'empty'
 
   const [{ data: cloudProgress, error: progressError }, { data: cloudSessions, error: sessionsError }] =
@@ -176,35 +230,46 @@ export async function synchronizeAccount(): Promise<'cloud' | 'migrated' | 'empt
     return 'migrated'
   }
 
-  return 'empty'
+  return 'empty'*/
 }
 
 export async function getAllProgress(): Promise<QuestionProgress[]> {
   return localProgress()
 }
 
+// Legacy aggregate import only. Quiz must use atomic journal-backed operations.
 export async function putProgress(row: QuestionProgress): Promise<void> {
-  const stamped = { ...row, updatedAt: Date.now() }
-  await putLocalProgress(stamped)
-  try {
-    await upsertCloudProgress([stamped])
-  } catch (error) {
-    console.error('No se pudo sincronizar el progreso con la nube.', error)
-  }
+  await putManyProgress([row])
 }
 
 export async function putManyProgress(rows: QuestionProgress[]): Promise<void> {
+  // A restored aggregate is an opaque legacy baseline, not reconstructed answers.
   const stamped = rows.map((row) => ({ ...row, updatedAt: row.updatedAt || Date.now() }))
   const db = await openDb()
-  const tx = db.transaction(PROGRESS, 'readwrite')
-  const store = tx.objectStore(PROGRESS)
-  stamped.forEach((row) => store.put(row))
-  await new Promise<void>((resolve, reject) => {
+  const tx = db.transaction([PROGRESS, META], 'readwrite')
+  const done = new Promise<void>((resolve, reject) => {
     tx.oncomplete = () => resolve()
-    tx.onerror = () => reject(tx.error)
+    tx.onabort = () => reject(tx.error || new Error('Importación cancelada'))
+    tx.onerror = () => reject(tx.error || new Error('Error de IndexedDB'))
   })
-  db.close()
-  await upsertCloudProgress(stamped)
+  try {
+    const progress = tx.objectStore(PROGRESS), meta = tx.objectStore(META)
+    for (const row of stamped) {
+      if (!row.questionId || !row.questionnaireId || !Number.isSafeInteger(row.attempts) ||
+          row.attempts < 0 || row.correct + row.incorrect !== row.attempts)
+        throw new Error('La copia contiene un registro de progreso inválido')
+      const tracked = await requestAsPromise(meta.get('origin:' + row.questionId))
+      const existing = await requestAsPromise(progress.get(row.questionId)) as QuestionProgress | undefined
+      if (tracked && JSON.stringify(existing) !== JSON.stringify(row))
+        throw new Error('No se puede sobrescribir progreso con operaciones registradas; conserva ambas copias.')
+      if (!tracked) progress.put(row)
+    }
+    await done
+  } catch (err) {
+    try { tx.abort() } catch { /* already completed/aborted */ }
+    await done.catch(() => {})
+    throw err
+  } finally { db.close() }
 }
 
 export async function addSession(row: StudySessionRecord): Promise<number> {
@@ -222,12 +287,19 @@ export async function getRecentSessions(limit = 20): Promise<StudySessionRecord[
   return localSessions(limit)
 }
 
+async function getJournalSnapshotForBackup(): Promise<unknown[]> {
+  const db = await openDb()
+  try { return await requestAsPromise(db.transaction(JOURNAL, 'readonly').objectStore(JOURNAL).getAll()) }
+  finally { db.close() }
+}
+
 export async function exportDatabase() {
   return {
-    version: 2,
+    version: 3,
+    journal: await getJournalSnapshotForBackup(),
     exportedAt: new Date().toISOString(),
     progress: await localProgress(),
-    sessions: await localSessions(5000)
+    sessions: await localSessions(Number.MAX_SAFE_INTEGER)
   }
 }
 
@@ -236,6 +308,7 @@ export async function importProgress(rows: QuestionProgress[]) {
 }
 
 export async function pushLocalSnapshotToCloud() {
+  if (!cloudConfigured) return
   const [progress, sessions] = await Promise.all([localProgress(), localSessions()])
   await Promise.all([upsertCloudProgress(progress), upsertCloudSessions(sessions)])
 }
