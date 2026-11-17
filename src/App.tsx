@@ -33,6 +33,7 @@ function App(){
  const [guest,setGuest]=useState(false)
  const [authReady,setAuthReady]=useState(!authConfigured)
  const [authError,setAuthError]=useState('')
+ useEffect(()=>{document.documentElement.dataset.theme=localStorage.getItem(THEME)||'dark'},[])
  useEffect(()=>{
   if(PREVIEW||!authConfigured||!supabase)return
   let live=true
