@@ -1,6 +1,6 @@
 # C47 — Testigo SQLite separado, recibos P-256 y backup verificable (18/11/2026)
 
-**Estado de la ronda al crear este documento:** pendiente de CI. Los conteos de CI solo se añadirán tras verificación en GitHub Actions. PR #21 sigue DRAFT.
+**Estado CI verificado:** [GitHub Actions C47 #44287579829](https://github.com/sergioroqueh/cap-test/actions/runs/44287579829) **SUCCESS** sobre commit `16c2e0fd1e10d9865202b584d8443bba9c22f14a`: C47 **16/16 TAP**, C46 **14/14**, C45 **30/30**, C44 **40/40**, C43 **24/24**, C42 **20/20**, C41 **20/20**; **164/164 nodos TAP PASS**, equivalentes a 154 casos efectivos al excluir 10 agrupadores. Guardias de aislamiento y cloud OFF PASS. Endurecimiento posterior `1ab45439f68a1cbfcef9dbb0bed14a0eae433a61` elimina la clave pública de los recibos y añade un test explícito; su ejecución [#44287998855](https://github.com/sergioroqueh/cap-test/actions/runs/44287998855) debe comprobarse de forma independiente. PR #21 DRAFT; no implica aptitud para producción.
 
 ## Implementación **SOLO harness**, sin despliegue
 
@@ -10,7 +10,7 @@
 - `scripts/c47_witness_worker.mjs` ejecuta operaciones desde distintos procesos Node mediante **stdin**, sin URL ni servidor HTTP. `scripts/test_witness_authority_c47.mjs` incluye **16 pruebas** Node con procesos concurrentes, abortos de proceso, comprobaciones de recibos con Node/WebCrypto, backups y restauraciones, incluyendo ataques demostrativos.
 - `exportC47Snapshot` utiliza `node:sqlite.backup` y comprueba consistencia del snapshot y estado del testigo antes/después de copiar. Si una escritura avanza el checkpoint en medio, se rechaza con `SNAPSHOT_RACE`. El manifiesto contiene versión, época y huella firmados P-256; no concede por sí mismo autorización de restauración.
 - `restoreC47Snapshot` verifica la firma con la clave pública fijada por el harness, compara el manifiesto con el testigo vivo, valida SQLite y el hash del snapshot y restaura **solo a una ruta nueva** mientras retiene el bloqueo del testigo. Jamás sobrescribe un archivo abierto por escritores. Un backup antiguo válido es rechazado con `STALE_SNAPSHOT`.
-- Los recibos individuales se firman tras el commit principal y se vinculan a `tenant`, `deviceId`, `challenge`, `jti`, `digest`, `revision`, `epoch`, hora lógica de Node, secuencia monotónica y huella del estado. Se firman mediante ECDSA-P256 SHA-256. La verificación WebCrypto se ensaya con JWK pública, pero la clave privada no llega al navegador.
+- Los recibos individuales se firman tras el commit principal y se vinculan a `tenant`, `deviceId`, `challenge`, `jti`, `digest`, `revision`, `epoch`, hora lógica de Node, secuencia monotónica y huella del estado. Se firman mediante ECDSA-P256 SHA-256. La verificación WebCrypto se ensaya con JWK pública obtenida del bootstrap aislado, **no devuelta dentro del recibo**, y la clave privada no llega al navegador.
 
 ## Auditorías adversarias incluidas
 
