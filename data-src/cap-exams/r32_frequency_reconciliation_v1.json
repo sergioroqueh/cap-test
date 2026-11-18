@@ -1,0 +1,632 @@
+{
+  "schemaVersion": 1,
+  "round": "R33",
+  "status": "explicit_historical_metadata_reconciliation",
+  "scope": "R32 frozen ledger versus C23 deterministic frequency metadata only. Does not implement global semantic regrouping, modify exam content, apply staged editorial decisions, or change scoring.",
+  "frozen": {
+    "selectionRun": 43899580500,
+    "baselineCommit": "35b56bf5a7ad65c218126db05973460091a4112d",
+    "ledgerGitBlobSha": "fd8fa3c1113dab8c495282f1982dc627a05e584c"
+  },
+  "observed": {
+    "generationRun": 44345161433,
+    "commit": "9c19f1c05dbf7bd1805691d4a62128791a15b8da"
+  },
+  "policy": {
+    "recurrence": "Modelos oficiales distintos con enunciado y solución textual equivalentes; cada fusión semántica requiere evidencia, no se extrapola automáticamente.",
+    "exactVariant": "Mismo enunciado normalizado y mismo multiconjunto de cuatro opciones normalizadas, independiente de su orden; no implica clave de puntuación nueva.",
+    "dates": "Las fechas distintas son una métrica separada del número de modelos.",
+    "appliedOnlyToKnownCase": "FND clase D: tres modelos, dos fechas, tres variantes exactas (cada una aparece una vez)."
+  },
+  "expected": {
+    "occurrences": 128,
+    "groups": 92,
+    "changes": 35,
+    "ordinalOnly": 32,
+    "frequencyChanges": 3,
+    "scoringChanges": 0
+  },
+  "sources": {
+    "originalRunUrl": "https://github.com/sergioroqueh/cap-test/actions/runs/43899580500",
+    "observedRunUrl": "https://github.com/sergioroqueh/cap-test/actions/runs/44345161433",
+    "diagnosticPrCommentId": 6984729874,
+    "note": "R32 frozen source PDF pages have not been individually physically rechecked in R33."
+  },
+  "changes": [
+    {
+      "examId": "2022-10-01-mercancias-global",
+      "number": 17,
+      "sourcePage": 443,
+      "variantSignature": "cuando existe un unico contrato con el cargador e intervienen de forma sucesiva varios porteadores estamos hablando de una operacion de transporte||en conjunto||extensivo||multimodal||sucesivo",
+      "from": {
+        "group": 30,
+        "frequency": 2,
+        "examFrequency": 2
+      },
+      "to": {
+        "group": 33,
+        "frequency": 2,
+        "examFrequency": 2
+      },
+      "reason": "ordinal_reordering_only"
+    },
+    {
+      "examId": "2023-02-04-mercancias-global",
+      "number": 15,
+      "sourcePage": 241,
+      "variantSignature": "cuando existe un unico contrato con el cargador e intervienen de forma sucesiva varios porteadores estamos hablando de una operacion de transporte||conjunto||extensivo||multimodal||sucesivo",
+      "from": {
+        "group": 31,
+        "frequency": 2,
+        "examFrequency": 2
+      },
+      "to": {
+        "group": 34,
+        "frequency": 2,
+        "examFrequency": 2
+      },
+      "reason": "ordinal_reordering_only"
+    },
+    {
+      "examId": "2024-04-06-mercancias-global",
+      "number": 24,
+      "sourcePage": 5,
+      "variantSignature": "cual es la marca de identificacion de un vehiculo frigorifico normal de la clase d||fnc||fnd||fnf||fre",
+      "from": {
+        "group": 32,
+        "frequency": 2,
+        "examFrequency": 2
+      },
+      "to": {
+        "group": 30,
+        "frequency": 3,
+        "examFrequency": 3
+      },
+      "reason": "same_stem_and_FND_answer_distinct_distractors"
+    },
+    {
+      "examId": "2025-07-26-mercancias-b",
+      "number": 23,
+      "sourcePage": 188,
+      "variantSignature": "cual es la marca de identificacion de un vehiculo frigorifico normal de la clase d||fnd||fnfd||frd||frnd",
+      "from": {
+        "group": 33,
+        "frequency": 2,
+        "examFrequency": 2
+      },
+      "to": {
+        "group": 32,
+        "frequency": 3,
+        "examFrequency": 3
+      },
+      "reason": "same_stem_and_FND_answer_distinct_distractors"
+    },
+    {
+      "examId": "2022-10-01-mercancias-global",
+      "number": 20,
+      "sourcePage": 443,
+      "variantSignature": "para realizar transporte de mercancias de caracter privado complementario se necesita una autorizacion administrativa||depende de cual sea la masa maxima autorizada del vehiculo||no||si pero solo cuando el vehiculo que se utiliza es articulado||si pero solo si se dispone de mas de un vehiculo",
+      "from": {
+        "group": 34,
+        "frequency": 1,
+        "examFrequency": 1
+      },
+      "to": {
+        "group": 35,
+        "frequency": 1,
+        "examFrequency": 1
+      },
+      "reason": "ordinal_reordering_only"
+    },
+    {
+      "examId": "2022-10-01-mercancias-global",
+      "number": 100,
+      "sourcePage": 459,
+      "variantSignature": "en que plazo dictara su laudo la junta arbitral del transporte||1 mes||5 dias||6 meses||en el mismo acto de la vista",
+      "from": {
+        "group": 35,
+        "frequency": 1,
+        "examFrequency": 1
+      },
+      "to": {
+        "group": 36,
+        "frequency": 1,
+        "examFrequency": 1
+      },
+      "reason": "ordinal_reordering_only"
+    },
+    {
+      "examId": "2022-11-26-mercancias-global",
+      "number": 9,
+      "sourcePage": 421,
+      "variantSignature": "que son los transportes de mercancias en regimen de cabotaje||los transportes de proximidad||los transportes que atraviesan un estado sin cargar ni descargar mercancias en el mismo||los transportes realizados integramente en el territorio de un estado extranjero por transportistas que estan establecidos en el mismo||los transportes realizados integramente en el territorio de un estado extranjero por transportistas que no estan establecidos en el mismo",
+      "from": {
+        "group": 36,
+        "frequency": 1,
+        "examFrequency": 1
+      },
+      "to": {
+        "group": 37,
+        "frequency": 1,
+        "examFrequency": 1
+      },
+      "reason": "ordinal_reordering_only"
+    },
+    {
+      "examId": "2022-11-26-mercancias-global",
+      "number": 13,
+      "sourcePage": 422,
+      "variantSignature": "las agencias de transporte de mercancias y los almacenistas distribuidores titulares de una autorizacion de operador de transporte contrataran||con el cargador en nombre del transportista efectivo||con el transportista en nombre del que haya requerido sus servicios||en nombre propio solo cuando utilicen camiones de su propiedad o de los que dispongan en leasing o renting||siempre en nombre propio",
+      "from": {
+        "group": 37,
+        "frequency": 1,
+        "examFrequency": 1
+      },
+      "to": {
+        "group": 38,
+        "frequency": 1,
+        "examFrequency": 1
+      },
+      "reason": "ordinal_reordering_only"
+    },
+    {
+      "examId": "2022-11-26-mercancias-global",
+      "number": 18,
+      "sourcePage": 423,
+      "variantSignature": "hay obligacion de contar con el documento de control de los envios en un transporte de mudanzas||no||si||solo si interviene mas de un vehiculo||solo si intervienen tres o mas vehiculos",
+      "from": {
+        "group": 38,
+        "frequency": 1,
+        "examFrequency": 1
+      },
+      "to": {
+        "group": 39,
+        "frequency": 1,
+        "examFrequency": 1
+      },
+      "reason": "ordinal_reordering_only"
+    },
+    {
+      "examId": "2023-03-25-mercancias-global",
+      "number": 5,
+      "sourcePage": 312,
+      "variantSignature": "las autorizaciones de transporte publico de mercancias que solo permiten efectuar transporte con vehiculos de masa maxima autorizada no superior a 3 5 toneladas se identifican registralmente con la clave||mdle||mdpe||mpce||vde",
+      "from": {
+        "group": 39,
+        "frequency": 1,
+        "examFrequency": 1
+      },
+      "to": {
+        "group": 40,
+        "frequency": 1,
+        "examFrequency": 1
+      },
+      "reason": "ordinal_reordering_only"
+    },
+    {
+      "examId": "2023-03-25-mercancias-global",
+      "number": 16,
+      "sourcePage": 315,
+      "variantSignature": "que es el convenio cmr||es un acuerdo internacional que estipula las condiciones de realizacion de los transportes internacionales de mercancias por carretera||es un acuerdo internacional que estipula las condiciones de realizacion de los transportes internacionales de mercancias por ferrocarril||es un acuerdo internacional que estipula las condiciones de realizacion de los transportes internacionales de mercancias por mar||este convenio no existe",
+      "from": {
+        "group": 40,
+        "frequency": 1,
+        "examFrequency": 1
+      },
+      "to": {
+        "group": 41,
+        "frequency": 1,
+        "examFrequency": 1
+      },
+      "reason": "ordinal_reordering_only"
+    },
+    {
+      "examId": "2023-03-25-mercancias-global",
+      "number": 25,
+      "sourcePage": 316,
+      "variantSignature": "un documento de identificacion con fotografia por cada miembro de la tripulacion es un documento obligatorio que debe llevarse a bordo del vehiculo durante un transporte de mercancias peligrosas||no aunque es obligatoria su confeccion||si debe llevarse a bordo durante el transporte||solo en el caso de transporte de mercancias de la clase 1 o 7||solo en el caso de transportes internacionales",
+      "from": {
+        "group": 41,
+        "frequency": 1,
+        "examFrequency": 1
+      },
+      "to": {
+        "group": 42,
+        "frequency": 1,
+        "examFrequency": 1
+      },
+      "reason": "ordinal_reordering_only"
+    },
+    {
+      "examId": "2023-06-03-mercancias-global",
+      "number": 24,
+      "sourcePage": 295,
+      "variantSignature": "en que casos es obligatorio llevar a bordo del vehiculo el documento de control administrativo||en los transportes de mercancias contratados por consumidores||en todos los transportes de mercancias de ambito nacional||en todos los transportes de mercancias efectuados can vehiculos pesados||en todos los transportes publicos de mercancias",
+      "from": {
+        "group": 42,
+        "frequency": 1,
+        "examFrequency": 1
+      },
+      "to": {
+        "group": 43,
+        "frequency": 1,
+        "examFrequency": 1
+      },
+      "reason": "ordinal_reordering_only"
+    },
+    {
+      "examId": "2023-09-23-mercancias-global",
+      "number": 4,
+      "sourcePage": 460,
+      "variantSignature": "segun el acuerdo atp los vehiculos de temperatura controlada deben ir identificados con||unas letras||unos numeros||unos numeros y unas letras||unos numeros y unos colores",
+      "from": {
+        "group": 43,
+        "frequency": 1,
+        "examFrequency": 1
+      },
+      "to": {
+        "group": 44,
+        "frequency": 1,
+        "examFrequency": 1
+      },
+      "reason": "ordinal_reordering_only"
+    },
+    {
+      "examId": "2023-09-23-mercancias-global",
+      "number": 16,
+      "sourcePage": 463,
+      "variantSignature": "cuando se realice un transporte privado complementario de mercancias se podra facturar a los clientes por este concepto de modo independiente||no||si||solo cuando el recorrido sea superior a 100 km||solo si el volumen transportado supera los 1 000 kg",
+      "from": {
+        "group": 44,
+        "frequency": 1,
+        "examFrequency": 1
+      },
+      "to": {
+        "group": 45,
+        "frequency": 1,
+        "examFrequency": 1
+      },
+      "reason": "ordinal_reordering_only"
+    },
+    {
+      "examId": "2023-09-23-mercancias-global",
+      "number": 20,
+      "sourcePage": 464,
+      "variantSignature": "cual es segun la reglamentacion comunitaria el plazo de validez de la licencia comunitaria para el transporte de mercancias||hasta 10 anos||hasta 6 anos||hasta 8 anos||indeterminado",
+      "from": {
+        "group": 45,
+        "frequency": 1,
+        "examFrequency": 1
+      },
+      "to": {
+        "group": 46,
+        "frequency": 1,
+        "examFrequency": 1
+      },
+      "reason": "ordinal_reordering_only"
+    },
+    {
+      "examId": "2023-12-02-mercancias-global",
+      "number": 4,
+      "sourcePage": 218,
+      "variantSignature": "segun el acuerdo atp debajo de las letras de identificacion de los vehiculos de temperatura controlada se indica||ei ano de expiracion de ia vaiidez dei certificado que deben poseer estos vehicuios||ei ano y dia de expiracion de ia vaiidez dei certificado que deben poseer estos vehicuios||la fecha de expiracion dia mes y ano de ia vaiidez dei certificado que deben poseer estos vehicuios||la fecha de expiracion mes y ano de ia vaiidez dei certificado que deben poseer estos vehicuios",
+      "from": {
+        "group": 46,
+        "frequency": 1,
+        "examFrequency": 1
+      },
+      "to": {
+        "group": 47,
+        "frequency": 1,
+        "examFrequency": 1
+      },
+      "reason": "ordinal_reordering_only"
+    },
+    {
+      "examId": "2023-12-02-mercancias-global",
+      "number": 5,
+      "sourcePage": 218,
+      "variantSignature": "segun el acuerdo atp un vehiculo identificado con las letras frf es||un vehicuio frigorifico normai de ia ciase a||un vehicuio frigorifico normai de ia ciase f||un vehicuio frigorifico reforzado de ia ciase e||un vehicuio frigorifico reforzado de ia ciase f",
+      "from": {
+        "group": 47,
+        "frequency": 1,
+        "examFrequency": 1
+      },
+      "to": {
+        "group": 48,
+        "frequency": 1,
+        "examFrequency": 1
+      },
+      "reason": "ordinal_reordering_only"
+    },
+    {
+      "examId": "2023-12-02-mercancias-global",
+      "number": 13,
+      "sourcePage": 220,
+      "variantSignature": "en los transportes realizados en colaboracion con otros transportistas el transportista que contrata con el cargador respondera frente al transportista colaborador como||cargador||coiaborador||operador de transportes||transportista",
+      "from": {
+        "group": 48,
+        "frequency": 1,
+        "examFrequency": 1
+      },
+      "to": {
+        "group": 49,
+        "frequency": 1,
+        "examFrequency": 1
+      },
+      "reason": "ordinal_reordering_only"
+    },
+    {
+      "examId": "2023-12-02-mercancias-global",
+      "number": 15,
+      "sourcePage": 220,
+      "variantSignature": "cuantas autorizaciones administrativas de transporte publico de mercancias se otorgan por empresa||diez||siete||una por cada vehicuio iigero que posea ia empresa||una que habiiita para reaiizar transporte con ios vehicuios que se ie hayan vincuiado",
+      "from": {
+        "group": 49,
+        "frequency": 1,
+        "examFrequency": 1
+      },
+      "to": {
+        "group": 50,
+        "frequency": 1,
+        "examFrequency": 1
+      },
+      "reason": "ordinal_reordering_only"
+    },
+    {
+      "examId": "2024-04-06-mercancias-global",
+      "number": 14,
+      "sourcePage": 3,
+      "variantSignature": "el convenio cmr se aplicara a los transportes de mercancias efectuados||en ferrocarril entre dos estados signatarios del acuerdo||por cualquiera de los sistemas enunciados en las respuestas anteriores||por vehiculos de carretera entre dos paises y que uno de ellos al menos sea signatario del acuerdo||por via navegable siempre que esta no sea maritima y se efectue entre dos paises signatarios del acuerdo",
+      "from": {
+        "group": 50,
+        "frequency": 1,
+        "examFrequency": 1
+      },
+      "to": {
+        "group": 51,
+        "frequency": 1,
+        "examFrequency": 1
+      },
+      "reason": "ordinal_reordering_only"
+    },
+    {
+      "examId": "2024-04-06-mercancias-global",
+      "number": 15,
+      "sourcePage": 3,
+      "variantSignature": "cuando el consignatario no se encuentre en el domicilio y el cargador no facilite instrucciones que puede hacer el porteador||debe devolver la carga al cargador||esperara a que regrese el consignatario||no puede hacer nada hasta que no reciba instrucciones del cargador||podra solicitar el deposito de la carga ante la junta arbitral del transporte quedando liberado de las obligaciones de entrega",
+      "from": {
+        "group": 51,
+        "frequency": 1,
+        "examFrequency": 1
+      },
+      "to": {
+        "group": 52,
+        "frequency": 1,
+        "examFrequency": 1
+      },
+      "reason": "ordinal_reordering_only"
+    },
+    {
+      "examId": "2024-04-06-mercancias-global",
+      "number": 88,
+      "sourcePage": 18,
+      "variantSignature": "que ocurre si la parte reclamada no acude a la vista celebrada ante una junta arbitral del transporte||impedira la celebracion de la vista||no impedira la celebracion de la vista ni que se dicte el laudo||se dictara directamente el laudo sin celebracion de la vista||se puede celebrar la vista pero no se podra dictar el laudo hasta que se haya dado audiencia al reclamante",
+      "from": {
+        "group": 52,
+        "frequency": 1,
+        "examFrequency": 1
+      },
+      "to": {
+        "group": 53,
+        "frequency": 1,
+        "examFrequency": 1
+      },
+      "reason": "ordinal_reordering_only"
+    },
+    {
+      "examId": "2024-04-06-mercancias-global",
+      "number": 100,
+      "sourcePage": 21,
+      "variantSignature": "para la comparecencia ante una junta arbitral del transporte||es necesaria la presencia de abogado pero no la de procurador||es necesaria la presencia de abogado y procurador||es necesaria la presencia de un procurador pero no la presencia de abogado||no es necesaria la presencia de abogado ni la de procurador",
+      "from": {
+        "group": 53,
+        "frequency": 1,
+        "examFrequency": 1
+      },
+      "to": {
+        "group": 54,
+        "frequency": 1,
+        "examFrequency": 1
+      },
+      "reason": "ordinal_reordering_only"
+    },
+    {
+      "examId": "2024-05-25-mercancias-global",
+      "number": 20,
+      "sourcePage": 387,
+      "variantSignature": "esta limitado el numero maximo de transportes de mercancias consecutivos que se permite realizar en regimen de cabotaje en un determinado estado de acogida||no||si||solo si no se entra al pais de acogida efectuando un transporte internacional||solo si no se tiene una antiguedad de cinco anos en la titularidad de la licencia comunitaria",
+      "from": {
+        "group": 54,
+        "frequency": 1,
+        "examFrequency": 1
+      },
+      "to": {
+        "group": 55,
+        "frequency": 1,
+        "examFrequency": 1
+      },
+      "reason": "ordinal_reordering_only"
+    },
+    {
+      "examId": "2024-05-25-mercancias-global",
+      "number": 22,
+      "sourcePage": 388,
+      "variantSignature": "se requiere alguna autorizacion para ejercer la actividad de transitario en espana||la autorizacion como agencia internacional de transporte de mercancias||la autorizacion de exportador importador concedida por el ministerio de hacienda||la autorizacion de operador de transporte||no se requiere ninguna es una actividad liberalizada",
+      "from": {
+        "group": 55,
+        "frequency": 1,
+        "examFrequency": 1
+      },
+      "to": {
+        "group": 56,
+        "frequency": 1,
+        "examFrequency": 1
+      },
+      "reason": "ordinal_reordering_only"
+    },
+    {
+      "examId": "2024-05-25-mercancias-global",
+      "number": 25,
+      "sourcePage": 388,
+      "variantSignature": "que es el visado de una autorizacion de transporte||certificacion de su existencia y vigencia por parte de la administracion a efectos de acceso a ayudas economicas publicas||constatacion de su vigencia por parte de la inspeccion de transportes||el diligenciado que realiza la administracion para permitir su utilizacion en determinadas categorias de transporte||la comprobacion periodica que realiza la administracion del mantenimiento por parte del transportista de los requisitos para ser titular de la autorizacion de transporte",
+      "from": {
+        "group": 56,
+        "frequency": 1,
+        "examFrequency": 1
+      },
+      "to": {
+        "group": 57,
+        "frequency": 1,
+        "examFrequency": 1
+      },
+      "reason": "ordinal_reordering_only"
+    },
+    {
+      "examId": "2025-02-01-mercancias-global",
+      "number": 23,
+      "sourcePage": 262,
+      "variantSignature": "pueden los estados firmantes del convenio cmr adoptar acuerdos particulares entre ellos que resulten contrarios al mismo||como regla general en ningun caso||solo si los adoptan al menos cinco estados||solo si los adoptan al menos cuatro estados||solo si los adoptan al menos tres estados",
+      "from": {
+        "group": 57,
+        "frequency": 1,
+        "examFrequency": 1
+      },
+      "to": {
+        "group": 58,
+        "frequency": 1,
+        "examFrequency": 1
+      },
+      "reason": "ordinal_reordering_only"
+    },
+    {
+      "examId": "2025-02-01-mercancias-global",
+      "number": 68,
+      "sourcePage": 269,
+      "variantSignature": "que supone la inasistencia a la vista de alguno de los miembros de la junta arbitral del transporte con excepcion del presidente||es causa de nulidad del laudo si se ilega a dictar||impide la celebracion de la vista||no impide la celebracion de la vista ni que se dicte el laudo||no impide la celebracion de la vista pero si que impide que se dicte el laudo",
+      "from": {
+        "group": 58,
+        "frequency": 1,
+        "examFrequency": 1
+      },
+      "to": {
+        "group": 59,
+        "frequency": 1,
+        "examFrequency": 1
+      },
+      "reason": "ordinal_reordering_only"
+    },
+    {
+      "examId": "2025-03-29-mercancias-global",
+      "number": 14,
+      "sourcePage": 334,
+      "variantSignature": "en un contrato de transporte de mercancias por carretera se denomina expedidor a quien||contrata en nombre propio la realizacion del transporte||contrata en nombre propio o por cuenta de un tercero la realizacion del transporte||en los contratos de transporte de mercancias por carretera no existe la figura del expedidor sino la del cargador||hace entrega de las mercancias al transportista por cuenta del cargador en el lugar de recepcion de las mercancias",
+      "from": {
+        "group": 59,
+        "frequency": 1,
+        "examFrequency": 1
+      },
+      "to": {
+        "group": 60,
+        "frequency": 1,
+        "examFrequency": 1
+      },
+      "reason": "ordinal_reordering_only"
+    },
+    {
+      "examId": "2025-03-29-mercancias-global",
+      "number": 22,
+      "sourcePage": 335,
+      "variantSignature": "que tipo de transporte se puede efectuar con una autorizacion identificada registralmente con la clave mdpe||solo interurbano en la comunidad autonoma en la que se reside||solo interurbano en un radio de 100 kilometros||tanto urbano como interurbano en todo el territorio nacional||tanto urbano como interurbano pero limitado a la comunidad autonoma en la que se reside",
+      "from": {
+        "group": 60,
+        "frequency": 1,
+        "examFrequency": 1
+      },
+      "to": {
+        "group": 61,
+        "frequency": 1,
+        "examFrequency": 1
+      },
+      "reason": "ordinal_reordering_only"
+    },
+    {
+      "examId": "2025-03-29-mercancias-global",
+      "number": 24,
+      "sourcePage": 335,
+      "variantSignature": "que establece el convenio cmr||la regulacion del transporte internacional de mercancias y de viajeros||las condiciones de realizacion de los transportes internacionales de mercancias por carretera||las condiciones de realizacion de los transportes internacionales de viajeros por carretera||los sistemas de control policial en carretera",
+      "from": {
+        "group": 61,
+        "frequency": 1,
+        "examFrequency": 1
+      },
+      "to": {
+        "group": 62,
+        "frequency": 1,
+        "examFrequency": 1
+      },
+      "reason": "ordinal_reordering_only"
+    },
+    {
+      "examId": "2025-03-29-mercancias-global",
+      "number": 88,
+      "sourcePage": 345,
+      "variantSignature": "respecto de la frenada en un vehiculo cisterna es importante tener en cuenta que||debe minimizarse el uso de freno de servicio||debe restringirse el uso de los retardadores||no deben usarse los ralentizadores||pueden producirse desplazamientos de liquidos en su interior",
+      "from": {
+        "group": 62,
+        "frequency": 1,
+        "examFrequency": 1
+      },
+      "to": {
+        "group": 63,
+        "frequency": 1,
+        "examFrequency": 1
+      },
+      "reason": "ordinal_reordering_only"
+    },
+    {
+      "examId": "2025-07-26-mercancias-a",
+      "number": 15,
+      "sourcePage": 99,
+      "variantSignature": "el convenio cmr se aplicara a los transportes efectuados||el acuerdo d por cualquiera de los sistemas enunciados en las respuestas anteriores||enferrocarril entre dos estados signatarios del acuerdo||por vehiculos de carretera entre dos paises y que uno de ellos al menos sea signatario||por via navegable siempre que esta no sea maritima y se efectue entre dos paises signatarios del acuerdo",
+      "from": {
+        "group": 63,
+        "frequency": 1,
+        "examFrequency": 1
+      },
+      "to": {
+        "group": 64,
+        "frequency": 1,
+        "examFrequency": 1
+      },
+      "reason": "ordinal_reordering_only"
+    },
+    {
+      "examId": "2025-07-26-mercancias-a",
+      "number": 20,
+      "sourcePage": 99,
+      "variantSignature": "cual es la marca de identificacion de un vehiculo frigorifico normal de la clase d||fnd||fnfd||frnd||rfd",
+      "from": {
+        "group": 64,
+        "frequency": 1,
+        "examFrequency": 1
+      },
+      "to": {
+        "group": 31,
+        "frequency": 3,
+        "examFrequency": 3
+      },
+      "reason": "same_stem_and_FND_answer_distinct_distractors"
+    }
+  ]
+}
