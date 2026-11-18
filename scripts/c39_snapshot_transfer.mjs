@@ -15,11 +15,6 @@ export const canonical = value => {
   throw Error('UNSUPPORTED_VALUE')
 }
 export const sha256 = value => createHash('sha256').update(canonical(value), 'utf8').digest('hex')
-export const makeManifest = ({ownerId,snapshotId,checkpoint,streams}) => {
-  const rows=streams.flatMap(name=>[]) // Explicit validated stream order below.
-  void rows
-  return {ownerId,snapshotId,checkpoint}
-}
 const streamOrder=['events','sessions']
 const die=(code)=>{const e=Error(code);e.code=code;throw e}
 const requireString=(v)=>typeof v==='string'&&v.length>0
