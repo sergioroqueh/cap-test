@@ -1,4 +1,4 @@
-name: C53 jsPDF advisory and real PDF compatibility (disposable)
+name: C53 jsPDF 4.2.1 locked-PDF regression (no deploy)
 on:
   pull_request:
     branches: [main]
@@ -22,36 +22,35 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: C53 generate patched jsPDF candidate only in disposable runner
+          cache: npm
+      - name: C53 immutable install of the reviewed lockfile
+        run: npm ci --no-audit --no-fund
+      - name: C53 verify jsPDF 4.2.1 and audit remaining advisories
         run: |
-          npm ci --no-audit --no-fund
-          npm audit --json > /tmp/c53-before.json || true
-          npm install --save-exact jspdf@4.2.1 --no-audit --no-fund
-          npm ci --no-audit --no-fund
-          npm audit --json > /tmp/c53-after.json || true
-      - name: C53 compare advisory totals, fail if critical vulnerability remains
-        run: |
+          npm audit --json > /tmp/c53-audit.json || true
           node --input-type=module <<'NODE'
           import fs from 'node:fs'
-          const read=path=>JSON.parse(fs.readFileSync(path,'utf8'))
-          const before=read('/tmp/c53-before.json'),after=read('/tmp/c53-after.json')
-          console.log('C53 AUDIT BEFORE '+JSON.stringify(before.metadata?.vulnerabilities))
-          console.log('C53 AUDIT AFTER '+JSON.stringify(after.metadata?.vulnerabilities))
-          console.log('C53 REMAINING PACKAGES '+JSON.stringify(Object.entries(after.vulnerabilities||{})
+          const p=JSON.parse(fs.readFileSync('package.json','utf8'))
+          const lock=JSON.parse(fs.readFileSync('package-lock.json','utf8'))
+          const audit=JSON.parse(fs.readFileSync('/tmp/c53-audit.json','utf8'))
+          if(p.dependencies.jspdf!=='4.2.1' ||
+            lock.packages?.['node_modules/jspdf']?.version!=='4.2.1')
+            throw Error('C53_JSPDF_LOCK_MISMATCH')
+          console.log('C53 SECURITY INVENTORY '+JSON.stringify(audit.metadata?.vulnerabilities))
+          console.log('C53 REMAINING ADVISORIES '+JSON.stringify(Object.entries(audit.vulnerabilities||{})
             .map(([name,v])=>({name,severity:v.severity,range:v.range,fixAvailable:v.fixAvailable}))))
-          if((after.metadata?.vulnerabilities?.critical??-1)!==0)
-            throw Error('CRITICAL_ADVISORY_UNRESOLVED')
-          if(read('package.json').dependencies.jspdf!=='4.2.1')
-            throw Error('JSPDF_NOT_PINNED')
+          if(!audit.metadata?.vulnerabilities ||
+            audit.metadata.vulnerabilities.critical!==0)
+            throw Error('C53_CRITICAL_ADVISORY_PRESENT')
           NODE
-      - name: C53 build preview and confirm cloud remains closed
+      - name: C53 isolated preview build; cloud remains disabled
         run: |
           npm run build:preview
           grep -F 'export const cloudConfigured = false' src/supabase.ts
           ! grep -R -l 'RUTACAP_PRIVATE_CATALOG_C14' dist
-      - name: C53 install Chromium for actual PDF browser regression
+      - name: C53 install Chromium
         run: npx playwright install --with-deps chromium
-      - name: C53 historical exam PDF with marked grid and technical notes
+      - name: C53 real 100-question PDF with correct sheet and technical notes
         run: |
           npm run preview -- --mode cap-preview --host 127.0.0.1 --port 4173 --strictPort > /tmp/c53-preview.log 2>&1 &
           for i in $(seq 1 40); do
@@ -60,15 +59,3 @@ jobs:
           done
           curl -fsS http://127.0.0.1:4173/ > /dev/null
           node scripts/test_pdf_export_c53.mjs
-      - name: C53 print candidate npm package and lockfile in base64 chunks
-        run: |
-          node --input-type=module <<'NODE'
-          import fs from 'node:fs'
-          for(const [name,path] of [['MANIFEST','package.json'],['LOCK','package-lock.json']]){
-            const content=fs.readFileSync(path)
-            const chunks=content.toString('base64').match(/.{1,3000}/g)||[]
-            console.log('C53_SNAPSHOT_BEGIN '+name+' '+chunks.length+' '+content.length)
-            chunks.forEach((chunk,i)=>console.log('C53_SNAPSHOT_CHUNK '+name+' '+i+' '+chunk))
-            console.log('C53_SNAPSHOT_END '+name)
-          }
-          NODE
