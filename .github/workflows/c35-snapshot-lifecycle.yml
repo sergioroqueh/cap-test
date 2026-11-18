@@ -1,0 +1,58 @@
+name: C35 disposable snapshot lifecycle and physical-device test gate
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'docs/commercial/sql/C35_snapshot_lifecycle_fixture.sql'
+      - 'docs/commercial/C35_SNAPSHOT_POLICY_AND_DEVICE_PLAN.md'
+      - '.github/workflows/c35-snapshot-lifecycle.yml'
+permissions:
+  contents: read
+jobs:
+  disposable-only:
+    if: github.head_ref == 'feat/cap-commercial'
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_PASSWORD: c35-fixture-no-live
+          POSTGRES_DB: rutacap_c35_disposable
+        options: >-
+          --health-cmd "pg_isready -U postgres -d rutacap_c35_disposable"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install only local npm dependencies
+        run: npm install --no-fund --no-audit
+      - name: Verify application still builds, without publishing
+        run: npm run build
+      - name: Verify isolated snapshot and logout contracts
+        run: |
+          node --test scripts/test_snapshot_cursor_c33.mjs
+          node --test scripts/test_remote_sync_contract_c31.mjs
+      - name: PostgreSQL lifecycle with synthetic A/B, quotas, TTL, RLS and atomic retries
+        env:
+          PG_CONTAINER: ${{ job.services.postgres.id }}
+        run: |
+          for f in \
+            docs/commercial/sql/C15_auth_fixture.sql \
+            docs/commercial/sql/C28_full_fidelity_schema_draft.sql \
+            docs/commercial/sql/C29_event_ledger_draft.sql \
+            docs/commercial/sql/C34_snapshot_materialization_fixture.sql \
+            docs/commercial/sql/C35_snapshot_lifecycle_fixture.sql; do
+            docker exec -i "$PG_CONTAINER" psql -X -v ON_ERROR_STOP=1 -U postgres -d rutacap_c35_disposable < "$f"
+          done
+      - name: Confirm real cloud remains fully disabled
+        run: |
+          grep -F 'export const cloudConfigured = false' src/supabase.ts
+          ! grep -R -n 'snapshotCursorDraft\|postgrestReadDraft' src/App.tsx src/BackupPanel.tsx src/db.ts src/Quiz.tsx
+          ! grep -nE 'create\s+extension\s+http|dblink|aws_' docs/commercial/sql/C35_snapshot_lifecycle_fixture.sql
