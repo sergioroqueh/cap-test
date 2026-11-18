@@ -1,0 +1,60 @@
+name: C38 disposable snapshot integrity under concurrent writes
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'docs/commercial/sql/C38_snapshot_integrity_fixture.sql'
+      - 'scripts/test_snapshot_integrity_c38.py'
+      - '.github/workflows/c38-snapshot-integrity.yml'
+      - 'docs/commercial/C38_SNAPSHOT_INTEGRITY_RESULTS.md'
+permissions:
+  contents: read
+jobs:
+  disposable-only:
+    if: github.head_ref == 'feat/cap-commercial'
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_PASSWORD: c38-disposable-only
+          POSTGRES_DB: rutacap_c38_disposable
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d rutacap_c38_disposable"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 10
+    env:
+      C38_DATABASE_URL: postgresql://postgres:c38-disposable-only@127.0.0.1:5432/rutacap_c38_disposable
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install disposable PostgreSQL driver
+        run: python -m pip install 'psycopg[binary]==3.2.12'
+      - name: Bootstrap synthetic fixtures and C38 integrity seal
+        env:
+          PG_CONTAINER: ${{ job.services.postgres.id }}
+        run: |
+          for f in \
+            docs/commercial/sql/C15_auth_fixture.sql \
+            docs/commercial/sql/C28_full_fidelity_schema_draft.sql \
+            docs/commercial/sql/C29_event_ledger_draft.sql \
+            docs/commercial/sql/C34_snapshot_materialization_fixture.sql \
+            docs/commercial/sql/C35_snapshot_lifecycle_fixture.sql \
+            docs/commercial/sql/C37_snapshot_guard_fixture.sql \
+            docs/commercial/sql/C38_snapshot_integrity_fixture.sql; do
+            docker exec -i "$PG_CONTAINER" psql -X -v ON_ERROR_STOP=1 -U postgres -d rutacap_c38_disposable < "$f"
+          done
+      - name: Verify true concurrency, materialized integrity and finish
+        run: python -u scripts/test_snapshot_integrity_c38.py
+      - name: Confirm cloud stays disabled
+        run: |
+          grep -F 'export const cloudConfigured = false' src/supabase.ts
+          ! grep -nE 'supabase\.co|SUPABASE_URL|dblink|aws_' scripts/test_snapshot_integrity_c38.py docs/commercial/sql/C38_snapshot_integrity_fixture.sql
