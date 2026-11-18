@@ -103,6 +103,10 @@ export function createC43Trust({namespace,rootPublicJwk,now=()=>Date.now()}={}){
   })
   if(!entry)bad('NO_TRUST_POLICY')
   if((await sha256(entry.policy))!==entry.fingerprint)bad('TRUST_CORRUPT')
+  const verified=bodyPolicy(entry.policy)
+  validatePolicy(verified,now())
+  await verifyJwk(anchor,DOMAIN_POLICY,verified,entry.policy.signature)
+  if(entry.revision!==verified.revision||entry.epoch!==verified.epoch)bad('TRUST_CORRUPT')
   return entry
  }
  const applyPolicy=async(envelope,{abortBeforeCommit=false}={})=>{
