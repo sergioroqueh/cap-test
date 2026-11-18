@@ -55,9 +55,6 @@ jobs:
           python3 scripts/test_technical_review_r30.py
           python3 scripts/test_technical_review_r31.py
 
-      - name: Extract R32 transport law candidate queue (read-only)
-        run: python3 scripts/select_technical_review_r32.py
-
       - name: Audit remaining source PDFs without changing scored keys
         run: python3 scripts/audit_visual_batch_candidates.py
 
@@ -140,6 +137,13 @@ jobs:
           path: dist/
           retention-days: 14
 
+      # R32 candidates are ephemeral generated files. Running npm run build:preview
+      # replays build_data.py, which deletes public/data before regenerating it.
+      # Generate R32 AFTER the last build, BEFORE packaging and frozen validation.
+      # Editorial sources, scoring, answer keys and generator remain unchanged.
+      - name: Extract R32 transport law candidate queue (read-only)
+        run: python3 scripts/select_technical_review_r32.py
+
       - name: Package CAP answer review queue
         uses: actions/upload-artifact@v4
         with:
@@ -196,8 +200,8 @@ jobs:
       - name: C23 diagnostic — investigate R32 frequency drift (read-only)
         run: python3 scripts/diagnose_r32_frequency_c23.py
 
-      # Run legacy frozen R32 checks last: never hide a discrepancy, but allow
-      # independent C22 visual/guest checks and screenshots to complete first.
+      # Check frozen R32 evidence last, after its final generation and packaging.
+      # No rebuild/cleanup may occur between the extractor and this validator.
       - name: Verify staged R32 evidence (no scoring changes)
         run: python3 scripts/test_technical_review_r32.py
 
