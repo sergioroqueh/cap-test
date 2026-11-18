@@ -1,0 +1,99 @@
+name: C54 dependency exposure classification preflight (disposable)
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/c54-exposure-gate.yml'
+permissions:
+  contents: read
+jobs:
+  dependency-exposure:
+    if: github.head_ref == 'feat/cap-commercial'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: C54 verify actual npm audit advisory origin before changes
+        run: |
+          npm ci --no-audit --no-fund
+          npm audit --json > /tmp/c54-before.json || true
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs'
+          const a=JSON.parse(fs.readFileSync('/tmp/c54-before.json','utf8'))
+          console.log('C54_AUDIT_FULL_BEFORE '+JSON.stringify(a.metadata?.vulnerabilities||null))
+          for (const [name,v] of Object.entries(a.vulnerabilities||{})) {
+            console.log('C54_ADVISORY_BEFORE '+JSON.stringify({name,severity:v.severity,
+              isDirect:v.isDirect,range:v.range,effects:v.effects,
+              via:v.via.map(x=>typeof x==='string'?x:({
+                source:x.source,title:x.title,url:x.url,range:x.range,severity:x.severity
+              }))}))
+          }
+          NODE
+      - name: C54 reclassify build-only tools in EPHEMERAL runner
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs'
+          const file='package.json',p=JSON.parse(fs.readFileSync(file,'utf8'))
+          for (const name of ['vite','@vitejs/plugin-react','typescript']) {
+            if (!p.dependencies[name] || p.devDependencies[name]) throw Error('EXPECTED_BUILD_ONLY_DEPENDENCY '+name)
+            p.devDependencies[name]=p.dependencies[name]
+            delete p.dependencies[name]
+          }
+          fs.writeFileSync(file,JSON.stringify(p,null,2)+'\n')
+          NODE
+          npm install --package-lock-only --ignore-scripts --no-audit --no-fund
+          npm ci --no-audit --no-fund
+      - name: C54 compare full versus runtime-only audit and exact dependency graph
+        run: |
+          npm audit --json > /tmp/c54-full.json || true
+          npm audit --omit=dev --json > /tmp/c54-runtime.json || true
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs'
+          const get=p=>JSON.parse(fs.readFileSync(p,'utf8'))
+          const p=get('package.json'),l=get('package-lock.json')
+          const full=get('/tmp/c54-full.json'),runtime=get('/tmp/c54-runtime.json')
+          const before=get('/tmp/c54-before.json')
+          if(l.lockfileVersion!==3)throw Error('LOCK_FORMAT_CHANGED')
+          for (const name of ['vite','@vitejs/plugin-react','typescript']) {
+            if(name in p.dependencies || !p.devDependencies[name] ||
+              l.packages[''].devDependencies[name]!==p.devDependencies[name])
+              throw Error('BUILD_TOOL_NOT_DEV '+name)
+          }
+          const beforeTotals=before.metadata?.vulnerabilities
+          const all=full.metadata?.vulnerabilities
+          const runtimeTotals=runtime.metadata?.vulnerabilities
+          console.log('C54_AUDIT_FULL_AFTER '+JSON.stringify(all||null))
+          console.log('C54_AUDIT_RUNTIME_AFTER '+JSON.stringify(runtimeTotals||null))
+          console.log('C54_PICOMATCH '+JSON.stringify(l.packages?.['node_modules/picomatch']?.version))
+          for (const [name,v] of Object.entries(full.vulnerabilities||{}))
+            console.log('C54_ADVISORY_AFTER '+JSON.stringify({name,severity:v.severity,
+              isDirect:v.isDirect,via:v.via.map(x=>typeof x==='string'?x:({
+                source:x.source,title:x.title,url:x.url,range:x.range,severity:x.severity
+              }))}))
+          if(!beforeTotals||beforeTotals.critical!==0 || !all || all.critical!==0 ||
+            !runtimeTotals || runtimeTotals.critical!==0 || runtimeTotals.high!==0 ||
+            (runtimeTotals.total!==0))
+            throw Error('C54_RUNTIME_AUDIT_NOT_ZERO')
+          NODE
+      - name: C54 verify preview build with reclassified tools, no cloud/deploy
+        run: |
+          npm run build:preview
+          grep -F 'export const cloudConfigured = false' src/supabase.ts
+          ! grep -R -l 'RUTACAP_PRIVATE_CATALOG_C14' dist
+      - name: C54 emit exact candidate manifest and lockfile for review
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs'
+          for(const [name,path] of [['MANIFEST','package.json'],['LOCK','package-lock.json']]){
+            const buf=fs.readFileSync(path), chunks=buf.toString('base64').match(/.{1,3000}/g)||[]
+            console.log('C54_SNAPSHOT_BEGIN '+name+' '+chunks.length+' '+buf.length)
+            chunks.forEach((chunk,i)=>console.log('C54_SNAPSHOT_CHUNK '+name+' '+i+' '+chunk))
+            console.log('C54_SNAPSHOT_END '+name)
+          }
+          NODE
