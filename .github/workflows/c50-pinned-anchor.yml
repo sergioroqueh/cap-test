@@ -1,0 +1,30 @@
+name: C50 bounded pinned-anchor trust gate (fixture only)
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/c50_independent_anchor.mjs'
+      - 'scripts/test_independent_anchor_c50.mjs'
+      - '.github/workflows/c50-pinned-anchor.yml'
+      - 'docs/commercial/C50_TRUST_BOUNDARY_DECISION.md'
+permissions:
+  contents: read
+jobs:
+  focused-anchor-contract:
+    if: github.head_ref == 'feat/cap-commercial'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: C50 eight bounded synthetic proof and rollback cases
+        run: node --test scripts/test_independent_anchor_c50.mjs
+      - name: Verify source isolation and no cloud functionality
+        run: |
+          grep -F 'export const cloudConfigured = false' src/supabase.ts
+          ! grep -R -nE 'c50_independent_anchor|test_independent_anchor_c50' src/
+          ! grep -nE 'SUPABASE_URL|supabase\.co|fetch\(|https?://|DATABASE_URL|process\.env' scripts/c50_independent_anchor.mjs scripts/test_independent_anchor_c50.mjs
