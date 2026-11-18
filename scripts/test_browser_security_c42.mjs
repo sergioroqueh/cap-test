@@ -153,9 +153,9 @@ for(const [engine,type] of [['Chromium',chromium],['WebKit-Linux',webkit]]){
       const namespace=id(),first=await context.newPage(),second=await context.newPage()
       await setup(first,{namespace});await setup(second,{namespace})
       await Promise.all([auth(first),auth(second)])
-      const outcomes=await Promise.all([first,second].map(async p=>{
-        try{await start(p);return 'acquired'}catch(e){return e.code}
-      }))
+      const outcomes=await Promise.all([first,second].map(p=>evaluate(p,async()=>{
+        try{await window.c.acquire();return 'acquired'}catch(e){return e.code}
+      })))
       assert.deepEqual(outcomes.sort(),['LEASE_HELD','acquired'])
       await close(first);await close(second)
     })
