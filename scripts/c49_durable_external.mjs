@@ -87,7 +87,7 @@ const proof=(s,kind,opId,local,result=null)=>{
   chain:JSON.parse(s.certs_json)}
 }
 function createSchema(db){
- db.exec(\`CREATE TABLE anchor (
+ db.exec(`CREATE TABLE anchor (
  id INTEGER PRIMARY KEY CHECK(id=1), sequence INTEGER NOT NULL,
  epoch INTEGER NOT NULL,revision INTEGER NOT NULL,state_digest TEXT NOT NULL,
  local_root TEXT NOT NULL,local_public TEXT NOT NULL,
@@ -102,7 +102,7 @@ function createSchema(db){
  CREATE UNIQUE INDEX single_pending ON operations(status) WHERE status='pending';
  CREATE TABLE nonces (
  tenant TEXT NOT NULL,jti TEXT NOT NULL,device_id TEXT NOT NULL,
- digest TEXT NOT NULL,epoch INTEGER NOT NULL,PRIMARY KEY(tenant,jti));\`)
+ digest TEXT NOT NULL,epoch INTEGER NOT NULL,PRIMARY KEY(tenant,jti));`)
 }
 function validateAction(a){
  if(!['registerDevice','revoke','advance','decide'].includes(a))bad('ACTION_INVALID')
