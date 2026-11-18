@@ -1,0 +1,51 @@
+name: C48 mock-only external monotonic root and recovery gate
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/c48_external_witness_mock.mjs'
+      - 'scripts/test_external_witness_c48.mjs'
+      - 'scripts/c47_witness_authority.mjs'
+      - 'scripts/c47_witness_worker.mjs'
+      - '.github/workflows/c48-external-witness.yml'
+      - 'docs/commercial/C48_EXTERNAL_TRUST_RESULTS.md'
+permissions:
+  contents: read
+jobs:
+  external-trust-audit:
+    if: github.head_ref == 'feat/cap-commercial'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: C48 synthetic separated trust and manual recovery adversarial cases
+        run: node --test scripts/test_external_witness_c48.mjs
+      - name: C47 two-local-file witness regressions
+        run: node --test scripts/test_witness_authority_c47.mjs
+      - name: C46 SQLite atomicity regressions
+        run: node --test scripts/test_sqlite_authority_c46.mjs
+      - name: Install isolated browser test dependencies without editing lockfiles
+        run: npm install --no-save --no-package-lock --no-audit --no-fund
+      - name: Install Chromium and Linux WebKit
+        run: npx playwright install --with-deps chromium webkit
+      - name: C45 signed mock browser authority
+        run: node --test scripts/test_mock_authority_c45.mjs
+      - name: C44 nonce and retirement trust ledger
+        run: node --test scripts/test_trust_ledger_c44.mjs
+      - name: C43 pinned-root mock rotation
+        run: node --test scripts/test_public_trust_c43.mjs
+      - name: C42 browser signature and tab gate
+        run: node --test scripts/test_browser_security_c42.mjs
+      - name: C41 isolated browser journal
+        run: node --test scripts/test_browser_journal_c41.mjs
+      - name: Strict fixture-only scope, cloud disabled and no production hooks
+        run: |
+          grep -F 'export const cloudConfigured = false' src/supabase.ts
+          ! grep -R -nE 'c48_external_witness_mock|test_external_witness_c48' src/
+          ! grep -nE 'SUPABASE_URL|supabase\.co|fetch\(|https?://|DATABASE_URL|process\.env' scripts/c48_external_witness_mock.mjs scripts/test_external_witness_c48.mjs
+          ! grep -nE 'C48_ATTEST_DOMAIN|C48_ROTATE_DOMAIN|PRIVATE_KEY' src/*.ts
