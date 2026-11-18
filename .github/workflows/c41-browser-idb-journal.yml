@@ -22,7 +22,7 @@ jobs:
         with:
           node-version: '22'
       - name: Install project test dependencies (no deploy)
-        run: npm ci --no-audit --no-fund
+        run: npm install --no-save --no-package-lock --no-audit --no-fund
       - name: Install Chromium and Linux WebKit runtime
         run: npx playwright install --with-deps chromium webkit
       - name: Browser IndexedDB journal synthetic scenarios
