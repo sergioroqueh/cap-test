@@ -102,7 +102,7 @@ for(const [engine,type] of [['Chromium',chromium],['WebKit-Linux',webkit]]){
         const env=window.env,trusted=window.trusted
         const options={trustedPublicKeys:trusted,expectedOwner:env.manifest.ownerId,now:()=>1000}
         const variants=[
-          {...env,signature:'A'+env.signature.slice(1)},
+          {...env,signature:(env.signature[0]==='A'?'B':'A')+env.signature.slice(1)},
           {...env,manifest:{...env.manifest,checkpoint:'tampered'}},
           {...env,issuer:'attacker'},
           {...env,audience:'wrong-app'},
