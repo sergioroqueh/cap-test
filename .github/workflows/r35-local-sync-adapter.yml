@@ -1,0 +1,45 @@
+name: R35 local IndexedDB sync adapter (real Chromium, cloud off)
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'src/localSyncAdapter.ts'
+      - 'scripts/e2e_local_sync_adapter_r35.mjs'
+      - 'src/backupRecovery.ts'
+      - 'src/localScope.ts'
+      - 'src/syncCore.mjs'
+      - '.github/workflows/r35-local-sync-adapter.yml'
+permissions:
+  contents: read
+jobs:
+  indexeddb-adapter:
+    if: github.head_ref == 'feat/cap-commercial'
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install from locked dependencies
+        run: npm ci --no-fund --no-audit
+      - name: Check TypeScript and build
+        run: npm run build
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Serve the existing app on loopback only
+        run: |
+          npx vite --host 127.0.0.1 --port 5173 --strictPort > /tmp/r35-vite.log 2>&1 &
+          for i in $(seq 1 40); do
+            if curl -fsS http://127.0.0.1:5173/ > /dev/null; then break; fi
+            sleep 1
+          done
+          curl -fsS http://127.0.0.1:5173/ > /dev/null
+      - name: Exercise real IndexedDB, A/B isolation, rollback and consent
+        run: node scripts/e2e_local_sync_adapter_r35.mjs
+      - name: Preserve cloud and UI gates
+        run: |
+          grep -Fx 'export const cloudConfigured = false' src/supabase.ts
+          ! grep -R -n 'localSyncAdapter' src/App.tsx src/Quiz.tsx src/main.tsx
