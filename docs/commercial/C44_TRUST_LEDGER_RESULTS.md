@@ -1,6 +1,6 @@
 # C44 — Auditoría de claves retiradas, manipulación local y ledger acotado (18/11/2026)
 
-**Estado en esta revisión:** implementación preparada en `feat/cap-commercial` y pendiente de registrar el resultado real de CI C44. PR #21 DRAFT. Ninguna prueba constituye autorización para producción.
+**Estado verificado:** [GitHub Actions C44 #44279603201](https://github.com/sergioroqueh/cap-test/actions/runs/44279603201) **SUCCESS** sobre commit `19202c6e27aa0d8216f23da78884617b0d1ac4e8`. C44: **19/19 subescenarios Chromium** y **19/19 WebKit Linux** (40 nodos TAP incluyendo agrupadores). Regresiones C43: **24/24 nodos TAP**; C42: **20/20**; C41: **20/20**. **104/104 nodos TAP PASS; 96 subescenarios efectivos**. Guardia cloud OFF, sin importaciones desde `src/`, sin secretos en módulo navegador: **PASS**. PR #21 DRAFT. Ninguna prueba constituye autorización para producción.
 
 ## Aislamiento y alcance
 
