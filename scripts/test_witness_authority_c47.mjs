@@ -92,7 +92,7 @@ test('C47 forged, replayed or wrong-root receipt is rejected cryptographically',
 test('C47 10 independent Node processes serialize nonce and witness high-water',async()=>{
  const f=fixture()
  try{
-  const a=open(f),left=person(),right=person()
+  let a=open(f);const left=person(),right=person()
   a.registerDevice(left);a.registerDevice(right);a.close()
   const attempts=await Promise.all(Array.from({length:10},(_,i)=>
    worker(f,'decide',request(i%2?left:right,'same-nonce'))))
