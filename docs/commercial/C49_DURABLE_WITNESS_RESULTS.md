@@ -2,6 +2,10 @@
 
 **ÁMBITO ESTRICTAMENTE SINTÉTICO. NO APTO PARA PRODUCCIÓN.**
 
+**CI verificada sobre commit `6401948a6260df28d87b6ba669b9c92449599b31`:** [GitHub Actions C49 #44298261637](https://github.com/sergioroqueh/cap-test/actions/runs/44298261637) **SUCCESS**. C49 **18/18**, C48 **14/14**, C47 **16/16**, C46 **14/14**, C45 **30/30**, C44 **40/40**, C43 **24/24**, C42 **20/20**, C41 **20/20**: **196/196 nodos TAP PASS** (186 casos efectivos sin 10 agrupadores). Chromium/WebKit e aislamiento de `src/`, `cloudConfigured=false`, sin red/endpoints ni base real: **PASS**. La CI sobre el commit documental posterior debe comprobarse separadamente.
+
+
+
 ## Objetivo y arquitectura
 
 C48 mantenía la raíz externa, el contador, la época y los nonces en memoria del
@@ -71,8 +75,8 @@ atomicidad transaccional entre C47 y C49. La SQLite externa y ambas locales
 siguen bajo la misma cuenta de SO y mismo sistema de archivos: el nombre
 externo describe exclusivamente la frontera SIMULADA del backup local.
 
-Los tests deben correr en CI sobre GitHub para observar un resultado
-reproducible; este documento describe los criterios, no presupone PASS.
+La CI descrita en el encabezado confirma las pruebas sobre el código C49 auditado.
+Cualquier cambio posterior exige una nueva verificación.
 
 Archivos:
 - `scripts/c49_durable_external.mjs`
