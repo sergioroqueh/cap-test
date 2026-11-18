@@ -77,13 +77,24 @@ export function createServerSnapshotProtocol({
         identity.consented !== true || !uuid.test(identity.userId))
       return deny()
     const userId = identity.userId.toLowerCase()
+    const scope = {
+      sessionId: identity.sessionId ?? null,
+      consentRevision: identity.consentRevision ?? null
+    }
+    if ((scope.sessionId !== null || scope.consentRevision !== null) &&
+        (!uuid.test(scope.sessionId) ||
+         !Number.isSafeInteger(scope.consentRevision) || scope.consentRevision < 1))
+      return deny()
     prune()
 
     let snap
     if (snapshotId !== null) {
       snap = snapshots.get(snapshotId)
       // Reveal neither existence nor ownership of a foreign snapshot.
-      if (!snap || snap.owner !== userId) return respond(410, { error: 'SNAPSHOT_UNAVAILABLE' })
+      if (!snap || snap.owner !== userId ||
+          snap.sessionId !== scope.sessionId ||
+          snap.consentRevision !== scope.consentRevision)
+        return respond(410, { error: 'SNAPSHOT_UNAVAILABLE' })
     } else {
       if (snapshots.size >= maxSnapshots)
         return respond(429, { error: 'SNAPSHOT_LIMIT' })
@@ -104,11 +115,23 @@ export function createServerSnapshotProtocol({
         // No incomplete or inconsistent snapshot is returned to the client.
         return respond(503, { error: 'SNAPSHOT_UNAVAILABLE' })
       }
+      // Consent/session may have been revoked while the initial DB read ran.
+      // This is defense in depth; the future DB adapter also needs the consent
+      // predicate inside the same transaction as the data read.
+      let confirmed
+      try { confirmed = await verifyAccessToken(match[1]) } catch { return deny() }
+      if (!confirmed?.verified || confirmed.isAnonymous !== false ||
+          confirmed.consented !== true ||
+          confirmed.userId?.toLowerCase() !== userId ||
+          (confirmed.sessionId ?? null) !== scope.sessionId ||
+          (confirmed.consentRevision ?? null) !== scope.consentRevision)
+        return deny()
       let id
       try { id = randomId() } catch { return respond(503, { error: 'SNAPSHOT_UNAVAILABLE' }) }
       if (typeof id !== 'string' || !opaque.test(id) || snapshots.has(id))
         return respond(503, { error: 'SNAPSHOT_UNAVAILABLE' })
       snap = { owner: userId, expiresAt: clock() + ttlMs,
+        sessionId: scope.sessionId, consentRevision: scope.consentRevision,
         events: records.events, sessions: records.sessions }
       snapshots.set(id, snap)
       snap = { ...snap, id }
