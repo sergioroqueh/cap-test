@@ -1,6 +1,6 @@
 # C45 — Autoridad global simulada, frescura, revocación y recuperación offline (18/11/2026)
 
-**Estado:** implementación aislada preparada en `feat/cap-commercial`, PR #21 DRAFT. Los resultados de GitHub Actions se incorporarán únicamente después de comprobar el run y sus conteos. C45 no habilita ningún componente de producción.
+**Estado verificado:** [GitHub Actions C45 #44282014144](https://github.com/sergioroqueh/cap-test/actions/runs/44282014144) **SUCCESS** sobre commit `388d8ea073c602225ecfe3932ef37ea0f594fbc5`. C45 **30/30 nodos TAP PASS** (4 tests Node + 12 subescenarios Chromium + 12 WebKit Linux + 2 agrupadores); C44 **40/40**, C43 **24/24**, C42 **20/20**, C41 **20/20**. **Total 134/134 nodos TAP PASS**, 124 escenarios efectivos sin agrupadores. Guardias `cloudConfigured=false`, aislamiento `src/` y separación clave privada PASS. PR #21 DRAFT. C45 no habilita ningún componente de producción.
 
 ## Arquitectura mock-only
 
