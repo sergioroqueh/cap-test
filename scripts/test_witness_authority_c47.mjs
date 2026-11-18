@@ -275,7 +275,7 @@ test('C47 concurrent snapshot is consistent or rejects race, never claims stale 
    assert.ok(result.proof.manifest.sequence<=a.inspect().sequence)
    a.close()
   }
-  const a=open(f);assert.equal(a.inspect().nonceCount,6);a.close()
+  const checked=open(f);assert.equal(checked.inspect().nonceCount,6);checked.close()
  }finally{f.cleanup()}
 })
 test('C47 broken or missing witness never silently creates replacement trust root',()=>{
