@@ -44,6 +44,25 @@ seguridad**. No se ha ejecutado `npm audit fix --force`, ni desbloqueado
 dependencias automáticamente. Revisar avisos por impacto y exploitabilidad,
 no actualizar de forma ciega.
 
+**Inventario de seguridad comprobado:** el preflight congelado posterior
+[CI C52 #44337746532](https://github.com/sergioroqueh/cap-test/actions/runs/44337746532)
+ha terminado **SUCCESS** en pinning, `npm ci` y build preview. Sin embargo,
+`npm audit` comunica **6 vulnerabilidades: 5 HIGH y 1 CRITICAL**.
+Los paquetes señalados son `@vitejs/plugin-react`, `fdir`, `jspdf`
+(CRITICAL), `picomatch`, `tinyglobby` y `vite`. La consulta es
+informativa, de modo que SUCCESS significa **reproducibilidad**, NO
+ausencia de vulnerabilidades. `jspdf@3.0.4` tiene advisories críticos
+corregidos en `4.2.1`, cambio mayor que exige revisar las funciones PDF
+de la aplicación antes de adoptar la versión. Las recomendaciones automáticas
+para Vite/plugin React también incluyen cambios mayores; no se aplican
+retrocesos o alteraciones incompatibles sin pruebas dirigidas.
+
+**Puerta de beta BLOQUEADA por dependencia crítica.** La siguiente ronda
+de dependencias debe validar remediaciones concretas (incluido PDF) sin
+modificar puntuación, preguntas ni UI, con `npm audit` posterior. La
+presencia de 6 avisos no permite afirmar que la app sea segura para
+publicación, aunque `npm ci` y la compilación pasen.
+
 ### Error editorial R32: se distinguieron DOS fallos sucesivos
 
 **Primer fallo (reproducido):** el selector
