@@ -201,7 +201,7 @@ export function createC47WitnessAuthority({dbPath,witnessPath,initialTime=1000,t
    },options)
    const receipt={...committed.result,sequence:committed.sequence,stateDigest:committed.stateDigest}
    const signature=signPart(checkpointInfo(witness).private_pem,domain,receipt)
-   return {ok:true,receipt,signature,publicKey:getPublicKey()}
+   return {ok:true,receipt,signature}
   }catch(e){return badResult(e)}
  }
  const close=()=>{main.close();witness.close()}

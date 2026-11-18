@@ -56,6 +56,7 @@ test('C47 signed P-256 receipt verifies in Node and WebCrypto and survives resta
   const pub=a.getPublicKey()
   const decision=a.decide(request(p,'signed'))
   assertSigned(decision,pub)
+  assert.equal('publicKey' in decision,false) // verification key comes from separate pinned bootstrap
   const jwk=createPublicKey(pub).export({format:'jwk'})
   const key=await webcrypto.subtle.importKey('jwk',jwk,{name:'ECDSA',namedCurve:'P-256'},false,['verify'])
   const canonical=value=>{
