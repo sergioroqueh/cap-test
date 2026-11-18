@@ -1,0 +1,74 @@
+name: C53 jsPDF advisory and real PDF compatibility (disposable)
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/c53-pdf-security.yml'
+      - 'scripts/test_pdf_export_c53.mjs'
+      - 'src/pdfExport.ts'
+      - 'package.json'
+      - 'package-lock.json'
+permissions:
+  contents: read
+jobs:
+  pdf-advisory:
+    if: github.head_ref == 'feat/cap-commercial'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: C53 generate patched jsPDF candidate only in disposable runner
+        run: |
+          npm ci --no-audit --no-fund
+          npm audit --json > /tmp/c53-before.json || true
+          npm install --save-exact jspdf@4.2.1 --no-audit --no-fund
+          npm ci --no-audit --no-fund
+          npm audit --json > /tmp/c53-after.json || true
+      - name: C53 compare advisory totals, fail if critical vulnerability remains
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs'
+          const read=path=>JSON.parse(fs.readFileSync(path,'utf8'))
+          const before=read('/tmp/c53-before.json'),after=read('/tmp/c53-after.json')
+          console.log('C53 AUDIT BEFORE '+JSON.stringify(before.metadata?.vulnerabilities))
+          console.log('C53 AUDIT AFTER '+JSON.stringify(after.metadata?.vulnerabilities))
+          console.log('C53 REMAINING PACKAGES '+JSON.stringify(Object.entries(after.vulnerabilities||{})
+            .map(([name,v])=>({name,severity:v.severity,range:v.range,fixAvailable:v.fixAvailable}))))
+          if((after.metadata?.vulnerabilities?.critical??-1)!==0)
+            throw Error('CRITICAL_ADVISORY_UNRESOLVED')
+          if(read('package.json').dependencies.jspdf!=='4.2.1')
+            throw Error('JSPDF_NOT_PINNED')
+          NODE
+      - name: C53 build preview and confirm cloud remains closed
+        run: |
+          npm run build:preview
+          grep -F 'export const cloudConfigured = false' src/supabase.ts
+          ! grep -R -l 'RUTACAP_PRIVATE_CATALOG_C14' dist
+      - name: C53 install Chromium for actual PDF browser regression
+        run: npx playwright install --with-deps chromium
+      - name: C53 historical exam PDF with marked grid and technical notes
+        run: |
+          npm run preview -- --mode cap-preview --host 127.0.0.1 --port 4173 --strictPort > /tmp/c53-preview.log 2>&1 &
+          for i in $(seq 1 40); do
+            if curl -fsS http://127.0.0.1:4173/ > /dev/null; then break; fi
+            sleep 1
+          done
+          curl -fsS http://127.0.0.1:4173/ > /dev/null
+          node scripts/test_pdf_export_c53.mjs
+      - name: C53 print candidate npm package and lockfile in base64 chunks
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs'
+          for(const [name,path] of [['MANIFEST','package.json'],['LOCK','package-lock.json']]){
+            const content=fs.readFileSync(path)
+            const chunks=content.toString('base64').match(/.{1,3000}/g)||[]
+            console.log('C53_SNAPSHOT_BEGIN '+name+' '+chunks.length+' '+content.length)
+            chunks.forEach((chunk,i)=>console.log('C53_SNAPSHOT_CHUNK '+name+' '+i+' '+chunk))
+            console.log('C53_SNAPSHOT_END '+name)
+          }
+          NODE
