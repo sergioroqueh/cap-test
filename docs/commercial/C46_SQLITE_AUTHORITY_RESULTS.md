@@ -1,6 +1,6 @@
 # C46 — Autoridad SQLite desechable: atomicidad multi-proceso, caídas y persistencia (18/11/2026)
 
-**Estado:** código de C46 aislado en la rama `feat/cap-commercial`, PR #21 DRAFT. Resultados GitHub Actions pendientes de verificar al crear estos archivos. Las pruebas locales de Node 22.16 sobre base temporal dieron **14/14 PASS** en tres ejecuciones; los resultados de CI se registrarán solo tras comprobar los logs y el SHA.
+**Estado verificado:** [GitHub Actions C46 #44284286178](https://github.com/sergioroqueh/cap-test/actions/runs/44284286178) **SUCCESS** sobre commit funcional `55b1005bf8997d8f5a5c8ef716ce0c9e769b5761`: C46 **14/14 TAP**, C45 **30/30 TAP**, C44 **40/40 TAP**, C43 **24/24 TAP**, C42 **20/20 TAP**, C41 **20/20 TAP**. **148/148 nodos TAP PASS**, **138 casos efectivos** excluidos 10 agrupadores. Guardias `cloudConfigured=false`, no importación de C46 desde `src/` y ausencia de conexiones de producción **PASS**. Pruebas locales Node 22.16: 14/14 en tres ejecuciones. PR #21 DRAFT; CI PASS no autoriza producción.
 
 ## Contrato simulado y arquitectura
 
