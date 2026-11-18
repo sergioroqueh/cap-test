@@ -1,4 +1,4 @@
-name: C52 dependency reproducibility preflight (no deploy)
+name: C52 frozen dependency gate (no deploy)
 on:
   pull_request:
     branches: [main]
@@ -20,40 +20,45 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Generate candidate lock and exact direct versions in ephemeral runner
+          cache: npm
+      - name: Validate direct exact versions and lockfile correspondence
         run: |
-          npm install --package-lock-only --ignore-scripts --no-audit --no-fund
           node --input-type=module <<'NODE'
           import fs from 'node:fs'
           const p=JSON.parse(fs.readFileSync('package.json','utf8'))
-          const lock=JSON.parse(fs.readFileSync('package-lock.json','utf8'))
-          for (const section of ['dependencies','devDependencies']) {
-            for (const name of Object.keys(p[section]||{})) {
-              const version=lock.packages?.['node_modules/'+name]?.version
-              if (!version || !/^\d+\.\d+\.\d+(?:[-+][a-zA-Z0-9.-]+)?$/.test(version))
-                throw Error('Direct package has no exact lock version: '+name)
-              p[section][name]=version
+          const l=JSON.parse(fs.readFileSync('package-lock.json','utf8'))
+          if(l.lockfileVersion!==3)throw Error('Expected npm lockfile v3')
+          let count=0
+          for(const section of ['dependencies','devDependencies']) {
+            for(const [name,version] of Object.entries(p[section]||{})){
+              if(!/^\d+\.\d+\.\d+(?:[-+][a-zA-Z0-9.-]+)?$/.test(version)||
+                l.packages?.['']?.[section]?.[name]!==version||
+                l.packages?.['node_modules/'+name]?.version!==version)
+                throw Error('Unpinned/mismatched package '+name)
+              count++
             }
           }
-          fs.writeFileSync('package.json',JSON.stringify(p,null,2)+'\n')
+          console.log('C52 EXACT PIN CHECK PASS: '+count+' direct packages')
           NODE
-          npm install --package-lock-only --ignore-scripts --no-audit --no-fund
-      - name: Verify clean frozen installation and preview compilation
+      - name: Clean immutable installation and preview build
         run: |
-          npm ci --ignore-scripts --no-audit --no-fund
+          npm ci --no-audit --no-fund
           npm run build:preview
           grep -F 'export const cloudConfigured = false' src/supabase.ts
           ! grep -R -l 'RUTACAP_PRIVATE_CATALOG_C14' dist
-      - name: Print reproducible candidate as chunked nonsecret base64 (read-only)
+      - name: Security advisories inventory (report-only, never auto-fix)
         run: |
+          npm audit --json > /tmp/c52-audit.json || true
           node --input-type=module <<'NODE'
           import fs from 'node:fs'
-          for (const [name,path] of [['MANIFEST','package.json'],['LOCK','package-lock.json']]) {
-            const bytes=fs.readFileSync(path)
-            const encoded=bytes.toString('base64')
-            const chunks=encoded.match(/.{1,3000}/g)||[]
-            console.log('C52_SNAPSHOT_BEGIN '+name+' '+chunks.length+' '+bytes.length)
-            chunks.forEach((chunk,i)=>console.log('C52_SNAPSHOT_CHUNK '+name+' '+i+' '+chunk))
-            console.log('C52_SNAPSHOT_END '+name)
+          let audit
+          try { audit=JSON.parse(fs.readFileSync('/tmp/c52-audit.json','utf8')) }
+          catch { console.log('C52 NPM AUDIT: unavailable; no security-clearance claim');process.exit(0) }
+          if(!audit.metadata?.vulnerabilities) {
+            console.log('C52 NPM AUDIT: response does not contain vulnerability totals; review manually')
+          } else {
+            console.log('C52 NPM AUDIT TOTALS '+JSON.stringify(audit.metadata.vulnerabilities))
+            console.log('C52 NPM AUDIT PACKAGES '+JSON.stringify(
+              Object.entries(audit.vulnerabilities||{}).map(([name,v])=>({name,severity:v.severity,fixAvailable:v.fixAvailable}))))
           }
           NODE
