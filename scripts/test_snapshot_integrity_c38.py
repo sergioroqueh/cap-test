@@ -40,7 +40,7 @@ def finish(c,owner,sid,digest,count):
     return one(c,'SELECT public.rc_c38_fixture_finish(%s::uuid,%s::uuid,%s,%s)',(owner,sid,digest,count))
 def event(c,name):
     c.execute("""INSERT INTO public.rc_progress_events(user_id,event_id,question_id,payload,occurred_at)
-    VALUES (%s,%s,%s,jsonb_build_object('eventId',%s,'questionId',%s,'questionnaireId','cap',
+    VALUES (%s,%s,%s,jsonb_build_object('eventId',%s::text,'questionId',%s::text,'questionnaireId','cap',
     'deviceId','synthetic','clock',3,'occurredAt',1763500000003::bigint,'kind','answer',
     'answer','C','correct',false),clock_timestamp())""",(A,name,name,name,name))
 
