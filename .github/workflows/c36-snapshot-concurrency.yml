@@ -1,0 +1,58 @@
+name: C36 independent PostgreSQL concurrency (disposable only)
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/test_snapshot_concurrency_c36.py'
+      - 'docs/commercial/C36_CONCURRENCY_REVIEW_AND_CLOUD_GATE.md'
+      - '.github/workflows/c36-snapshot-concurrency.yml'
+      - 'docs/commercial/sql/C35_snapshot_lifecycle_fixture.sql'
+permissions:
+  contents: read
+jobs:
+  multi-session-disposable:
+    if: github.head_ref == 'feat/cap-commercial'
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_PASSWORD: c36-fixture-no-live
+          POSTGRES_DB: rutacap_c36_disposable
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d rutacap_c36_disposable"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 10
+    env:
+      C36_DATABASE_URL: postgresql://postgres:c36-fixture-no-live@127.0.0.1:5432/rutacap_c36_disposable
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install isolated Python PostgreSQL driver
+        run: python -m pip install 'psycopg[binary]==3.2.12'
+      - name: Bootstrap PostgreSQL 17 with synthetic fixtures only
+        env:
+          PG_CONTAINER: ${{ job.services.postgres.id }}
+        run: |
+          for f in \
+            docs/commercial/sql/C15_auth_fixture.sql \
+            docs/commercial/sql/C28_full_fidelity_schema_draft.sql \
+            docs/commercial/sql/C29_event_ledger_draft.sql \
+            docs/commercial/sql/C34_snapshot_materialization_fixture.sql \
+            docs/commercial/sql/C35_snapshot_lifecycle_fixture.sql; do
+            docker exec -i "$PG_CONTAINER" psql -X -v ON_ERROR_STOP=1 -U postgres -d rutacap_c36_disposable < "$f"
+          done
+      - name: Multiple independent sessions — reproduce RR defect, validate RC mitigation
+        run: python -u scripts/test_snapshot_concurrency_c36.py
+      - name: Cloud remains disabled
+        run: |
+          grep -F 'export const cloudConfigured = false' src/supabase.ts
+          ! grep -nE 'supabase\.co|service_role|SUPABASE_URL' scripts/test_snapshot_concurrency_c36.py
