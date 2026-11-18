@@ -35,3 +35,19 @@ Pruebas de conexiones auténticas con resultados reproducibles en CI PostgreSQL 
 ## Evidencia pendiente
 
 No se han ejecutado todavía los escenarios de concurrencia de C36. No declarar PASS ni crear un workflow de apariencia verde que solo ejecute fixtures secuenciales. C35 SUCCESS 44260439620; Validate CAP FAILURE por evidencia R32, no modificar scoring.
+
+## Resultado ejecutado de C36 — 18/11/2026
+
+**Evidencia CI:** GitHub Actions [#44262800203](https://github.com/sergioroqueh/cap-test/actions/runs/44262800203), job `multi-session-disposable`, PostgreSQL 17 efímero con `psycopg` y sesiones físicamente distintas. Script: `scripts/test_snapshot_concurrency_c36.py`. **11 aserciones PASS**. No se ha conectado a Supabase real.
+
+- **Defecto reproducido**: con `REPEATABLE READ`, dos snapshots distintos creados simultáneamente por A sobre una plaza libre devolvieron ambos `created` y dejaron **3 activos pese a máximo 2**. La segunda transacción había tomado su snapshot MVCC antes de adquirir el advisory lock. Por tanto, el bloqueo de C35 **no garantiza** la cuota bajo ese aislamiento.
+- **Mitigación candidata verificada**: con `READ COMMITTED` en el mismo intercalado, primera `created`; segunda `ACTIVE_QUOTA`; quedaron **2 activos**.
+- Mismo `snapshotId` concurrente: `created` + `existing`, exactamente un manifiesto.
+- Checkpoint diferente con igual ID: `SNAPSHOT_ID_COLLISION`.
+- JWT sintético B no puede leer A; `authenticated` no ejecuta cleanup; snapshot expirado no expone filas y cleanup borra en cascada.
+- Verificada en CI la cadena desechable C15/C28/C29/C34/C35 y `cloudConfigured=false`.
+
+**Precisión importante:** los 11 PASS incluyen una **demostración positiva del defecto** de C35, no equivalen a declarar segura la función C35 bajo todas las condiciones. `READ COMMITTED` es solo una posible mitigación, aún sin cierre de protocolo end-to-end. La materialización de origen y las comprobaciones de cuota deben tener semántica coherente ante escrituras de origen concurrentes. No se ha probado JWT validado criptográficamente por gateway ni paginación HTTP real.
+
+**Pendiente para cierre:** prohibir explícitamente el aislamiento inseguro en el diseño backend, comprobar lectura multipágina frente a cleanup en conexiones independientes y transacciones largas (`now()` no avanza dentro de una misma transacción), límites y timeouts bajo carga, y resolver coherencia entre checkpoint materializado y fuente. Mantener cloud **OFF**. Las pruebas físicas de C35 siguen pendientes.
+
