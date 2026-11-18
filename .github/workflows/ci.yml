@@ -16,8 +16,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Install dependencies
-        run: npm install
+      - name: Install frozen dependencies
+        run: npm ci --no-audit --no-fund
       - name: Verify portable Windows and Linux Python data runner
         run: node --test scripts/test_prepare_data_cross_platform.mjs
 
