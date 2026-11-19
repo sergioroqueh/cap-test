@@ -134,7 +134,8 @@ const capDecision = (q:Question):CapEditorialDecision|null =>
 function CapHome({pm,bankCount,seenCount,regionCode,onRegionChange}:{pm:Map<string,QuestionProgress>;bankCount:number;seenCount:number;regionCode:RegionCode;onRegionChange:(code:RegionCode)=>void}){
  const [index,setIndex]=useState<CapExamIndex|null>(null)
  const [editorialTriage,setEditorialTriage]=useState<CapEditorialTriage|null>(null)
- const [category,setCategory]=useState<CapCategory>('mercancias')
+ const [category]=useState<CapCategory>('mercancias')
+ const [archiveCategory,setArchiveCategory]=useState<CapCategory>('mercancias')
  const [mode,setMode]=useState<'study'|'exam'>('exam')
  const [timed,setTimed]=useState(true)
  const [count,setCount]=useState(100)
@@ -153,8 +154,12 @@ function CapHome({pm,bankCount,seenCount,regionCode,onRegionChange}:{pm:Map<stri
  const [sheetReviewBusy,setSheetReviewBusy]=useState(false)
  const [sheetReviewShown,setSheetReviewShown]=useState(false)
  const [sheetReviewOnlyIssues,setSheetReviewOnlyIssues]=useState(false)
- useEffect(()=>{Promise.all([loadCapIndex(),loadCapEditorialTriage()]).then(([ix,tri])=>{setIndex(ix);setEditorialTriage(tri)}).catch(e=>setError(String(e)))},[])
- useEffect(()=>{setPendingId('');setPendingRows([]);setPendingShown(false);setSheetReviewId('');setSheetReviewRows([]);setSheetReviewShown(false)},[category])
+ useEffect(()=>{
+  loadCapIndex().then(setIndex).catch(e=>setError(String(e)))
+  // Solo en desarrollo: un fallo de auditoría no bloquea la portada comercial.
+  if(import.meta.env.DEV)void loadCapEditorialTriage().then(setEditorialTriage).catch(e=>console.warn('Auditoría editorial local no disponible:',e))
+ },[])
+ useEffect(()=>{setPendingId('');setPendingRows([]);setPendingShown(false);setSheetReviewId('');setSheetReviewRows([]);setSheetReviewShown(false)},[archiveCategory])
  useEffect(()=>{
   if(!topDialogOpen||category!=='mercancias')return
   let live=true
@@ -170,9 +175,12 @@ function CapHome({pm,bankCount,seenCount,regionCode,onRegionChange}:{pm:Map<stri
  function closeConvocations(){setShowConvocations(false);requestAnimationFrame(()=>{const trigger=document.getElementById('focus-convocation-trigger');trigger?.focus({preventScroll:true});trigger?.scrollIntoView({behavior:'smooth',block:'center'})})}
  const exams=(index?.exams||[]).filter(x=>x.category===category).sort((a,b)=>b.date.localeCompare(a.date)||a.model.localeCompare(b.model))
  const available=exams.filter(x=>x.hasOriginalAnswerSheet)
+ // La consulta del archivo no altera la modalidad de práctica.
+ const archiveExams=(index?.exams||[]).filter(x=>x.category===archiveCategory).sort((a,b)=>b.date.localeCompare(a.date)||a.model.localeCompare(b.model))
+ const archiveAvailable=archiveExams.filter(x=>x.hasOriginalAnswerSheet)
  const pretty=(x:CapExamMeta)=>new Date(x.date+'T12:00:00').toLocaleDateString('es-ES',{day:'2-digit',month:'short',year:'numeric'})+(x.model==='GLOBAL'?'':' · modelo '+x.model)
  async function showPending(){
-  const selected=exams.find(x=>x.id===pendingId)
+  const selected=archiveExams.find(x=>x.id===pendingId)
   if(!selected)return
   setPendingBusy(true);setError('')
   try{setPendingRows(await loadCapPendingQuestions(selected));setPendingShown(true)}
@@ -180,7 +188,7 @@ function CapHome({pm,bankCount,seenCount,regionCode,onRegionChange}:{pm:Map<stri
   finally{setPendingBusy(false)}
  }
  async function showSheetReview(){
-  const selected=exams.find(x=>x.id===sheetReviewId)
+  const selected=archiveExams.find(x=>x.id===sheetReviewId)
   if(!selected)return
   setSheetReviewBusy(true);setError('')
   try{setSheetReviewRows(await loadCapSheetReview(selected));setSheetReviewShown(true)}
@@ -224,7 +232,7 @@ function CapHome({pm,bankCount,seenCount,regionCode,onRegionChange}:{pm:Map<stri
     const meta=chosen||(available.length?shuffle(available)[0]:undefined)
     if(!meta)throw new Error('No hay convocatorias con plantilla disponibles para esta modalidad.')
     questions=await loadCapQuestions(meta)
-    label='CAP '+(category==='mercancias'?'Mercancías':'Viajeros')+' · '+pretty(meta)
+    label='CAP '+(meta.category==='mercancias'?'Mercancías':'Viajeros')+' · '+pretty(meta)
     if(questions.length!==(meta.expectedCount||100))throw new Error('Esta convocatoria aún no reúne sus 100 preguntas originales; se conserva sin iniciar examen.')
    }
    if(!questions.length)throw new Error(source==='cap-errors'?'¡Vas bien! No tienes errores pendientes de Mercancías.':source==='cap-favorites'?'Aún no has guardado preguntas favoritas. Pulsa la estrella de una pregunta para añadirla.':'No hay preguntas disponibles para esta selección.')
@@ -299,10 +307,10 @@ function CapHome({pm,bankCount,seenCount,regionCode,onRegionChange}:{pm:Map<stri
    </div>
   </details>
   {showConvocations&&<section id="cap-historicos" className="pro-convocation-archive" aria-label="Convocatorias históricas CAP" tabIndex={-1}>
-   <div className="focus-convocation-heading"><div><h2>Por convocatoria</h2><p>{exams.length} modelos · {available.length} con plantilla</p></div><button className="focus-convocation-close" type="button" onClick={closeConvocations} aria-label="Cerrar listado de convocatorias">Cerrar <span aria-hidden="true">×</span></button></div>
-   <div className="pro-archive-filter" role="group" aria-label="Modalidad del archivo"><button type="button" className={category==='mercancias'?'on':''} aria-pressed={category==='mercancias'} onClick={()=>setCategory('mercancias')}>Mercancías</button><button type="button" className={category==='viajeros'?'on':''} aria-pressed={category==='viajeros'} onClick={()=>setCategory('viajeros')}>Viajeros</button></div>
-   <p className="pro-archive-disclaimer">Archivo general · procedencia territorial en revisión. {category==='viajeros'?'Las convocatorias sin plantilla no se pueden iniciar.':''}</p>
-   {[...new Set(exams.map(e=>e.date.slice(0,4)))].map(year=>{const group=exams.filter(e=>e.date.startsWith(year));return <section className="pro-archive-year" key={year}><div className="pro-year-heading"><h3>{year}</h3><span>{group.length} {group.length===1?'modelo':'modelos'}</span></div><div className="list">{group.map(e=><button className="pro-exam-row" key={e.id} data-exam-id={e.id} data-source-pages={e.sourcePageStart+'–'+e.sourcePageEnd} data-disputed={e.disputedCount||0} disabled={!e.hasOriginalAnswerSheet||working} onClick={()=>void begin('cap-original',e)}><span className="pro-exam-date"><b>{e.date.slice(8,10)}</b><small>{new Date(e.date+'T12:00:00').toLocaleDateString('es-ES',{month:'short'}).replace('.','')}</small></span><span className="pro-exam-info"><b>{e.model==='GLOBAL'?'Modelo global':'Modelo '+e.model}</b><small>{e.hasOriginalAnswerSheet?(e.disputedCount?e.readyCount+' puntuables · '+e.disputedCount+' sin puntuar':(e.expectedCount||100)+' preguntas · Con plantilla'):'Sin plantilla'}</small></span><span className="pro-exam-chevron" aria-hidden="true">›</span></button>)}</div></section>})}
+   <div className="focus-convocation-heading"><div><h2>Por convocatoria</h2><p>{archiveExams.length} modelos · {archiveAvailable.length} con plantilla</p></div><button className="focus-convocation-close" type="button" onClick={closeConvocations} aria-label="Cerrar listado de convocatorias">Cerrar <span aria-hidden="true">×</span></button></div>
+   <div className="pro-archive-filter" role="group" aria-label="Modalidad del archivo"><button type="button" className={archiveCategory==='mercancias'?'on':''} aria-pressed={archiveCategory==='mercancias'} onClick={()=>setArchiveCategory('mercancias')}>Mercancías</button><button type="button" className={archiveCategory==='viajeros'?'on':''} aria-pressed={archiveCategory==='viajeros'} onClick={()=>setArchiveCategory('viajeros')}>Viajeros</button></div>
+   <p className="pro-archive-disclaimer">Archivo general · procedencia territorial en revisión. {archiveCategory==='viajeros'?'Las convocatorias sin plantilla no se pueden iniciar.':''}</p>
+   {[...new Set(archiveExams.map(e=>e.date.slice(0,4)))].map(year=>{const group=archiveExams.filter(e=>e.date.startsWith(year));return <section className="pro-archive-year" key={year}><div className="pro-year-heading"><h3>{year}</h3><span>{group.length} {group.length===1?'modelo':'modelos'}</span></div><div className="list">{group.map(e=><button className="pro-exam-row" key={e.id} data-exam-id={e.id} data-source-pages={e.sourcePageStart+'–'+e.sourcePageEnd} data-disputed={e.disputedCount||0} disabled={!e.hasOriginalAnswerSheet||working} onClick={()=>void begin('cap-original',e)}><span className="pro-exam-date"><b>{e.date.slice(8,10)}</b><small>{new Date(e.date+'T12:00:00').toLocaleDateString('es-ES',{month:'short'}).replace('.','')}</small></span><span className="pro-exam-info"><b>{e.model==='GLOBAL'?'Modelo global':'Modelo '+e.model}</b><small>{e.hasOriginalAnswerSheet?(e.disputedCount?e.readyCount+' puntuables · '+e.disputedCount+' sin puntuar':(e.expectedCount||100)+' preguntas · Con plantilla'):'Sin plantilla'}</small></span><span className="pro-exam-chevron" aria-hidden="true">›</span></button>)}</div></section>})}
   </section>}
   {import.meta.env.DEV&&<details className="focus-editorial"><summary>Auditoría editorial · consulta avanzada (solo desarrollo)</summary><div className="focus-editorial-inner">
   <section className="panel cap-pending-panel">
@@ -310,7 +318,7 @@ function CapHome({pm,bankCount,seenCount,regionCode,onRegionChange}:{pm:Map<stri
    <p>Revisa las 100 preguntas de cada examen con sus marcas: conflicto de respuestas, texto sospechoso, desfase de numeración o falta de cotejo. P0 significa prioridad máxima, no una respuesta declarada errónea. Las letras impresas y el banco original no se alteran; R27/R28/R29/R30/R31 distinguen la clave histórica de la técnica.</p>
    <select aria-label="Examen a revisar con plantilla" value={sheetReviewId} onChange={e=>{setSheetReviewId(e.target.value);setSheetReviewShown(false);setSheetReviewRows([])}}>
     <option value="">Seleccionar convocatoria</option>
-    {exams.map(e=><option key={e.id} value={e.id}>{pretty(e)} · {e.hasOriginalAnswerSheet?'con plantilla':'sin plantilla'}</option>)}
+    {archiveExams.map(e=><option key={e.id} value={e.id}>{pretty(e)} · {e.hasOriginalAnswerSheet?'con plantilla':'sin plantilla'}</option>)}
    </select>
    <Btn kind="light" disabled={!sheetReviewId||sheetReviewBusy} onClick={()=>void showSheetReview()}>{sheetReviewBusy?'Leyendo…':'Auditar las 100 preguntas'}</Btn>
    <p><a className="btn light" href={import.meta.env.BASE_URL+'data/exams/editorial_triage_r21.csv'} download="CAP_R21_2600_marcas_editoriales.csv">Exportar las 2.600 preguntas y sus marcas (CSV)</a></p>
@@ -357,7 +365,7 @@ function CapHome({pm,bankCount,seenCount,regionCode,onRegionChange}:{pm:Map<stri
    <p>Consulta el enunciado original y sus cuatro opciones. Las incidencias históricas y técnicas excluidas no puntúan. No se registran como fallos.</p>
    <select aria-label="Convocatoria con preguntas pendientes" value={pendingId} onChange={e=>{setPendingId(e.target.value);setPendingShown(false);setPendingRows([])}}>
     <option value="">Seleccionar convocatoria</option>
-    {exams.filter(e=>e.hasOriginalAnswerSheet&&e.count>e.readyCount).map(e=><option key={e.id} value={e.id}>{pretty(e)} · {e.count-e.readyCount} pendientes</option>)}
+    {archiveExams.filter(e=>e.hasOriginalAnswerSheet&&e.count>e.readyCount).map(e=><option key={e.id} value={e.id}>{pretty(e)} · {e.count-e.readyCount} pendientes</option>)}
    </select>
    <Btn kind="light" disabled={!pendingId||pendingBusy} onClick={()=>void showPending()}>{pendingBusy?'Preparando…':'Consultar sin puntuación'}</Btn>
    {pendingShown&&<div className="cap-pending-results">
