@@ -112,10 +112,7 @@ jobs:
           curl -fsS http://127.0.0.1:5173/ > /dev/null
           node scripts/e2e_commercial_auth_c22.mjs
 
-      - name: R63 inspect packaged archive, 4 viewports and service worker in Chromium
-        run: node scripts/e2e_r63_public_preview.mjs
-
-      - name: Test Focus UI in mobile and desktop browsers
+      - name: Start isolated local preview for R63 and Focus browser tests
         run: |
           npm run preview -- --mode cap-preview --host 127.0.0.1 --port 4173 --strictPort > /tmp/cap-preview.log 2>&1 &
           for i in $(seq 1 30); do
@@ -123,7 +120,12 @@ jobs:
             sleep 1
           done
           curl -fsS http://127.0.0.1:4173/ > /dev/null
-          node scripts/e2e_cap_focus.mjs
+
+      - name: R63 inspect packaged archive, 4 viewports and service worker in Chromium
+        run: node scripts/e2e_r63_public_preview.mjs
+
+      - name: Test Focus UI in mobile and desktop browsers
+        run: node scripts/e2e_cap_focus.mjs
 
       - name: Upload C22 auth and guest screenshots (mocked local client)
         if: always()
