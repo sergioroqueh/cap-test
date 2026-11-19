@@ -118,10 +118,10 @@ function CapApp({userEmail,onSignOut}:{userEmail:string;onSignOut:()=>Promise<vo
  const generalKeys=new Set(bank.questionnaires.map(q=>q.section+':'+q.questionnaireId))
  const bankSeen=rows.filter(x=>x.attempts>0&&generalKeys.has(x.questionnaireId)).length
  return <div className={page==='quiz'?'app pro-quiz-page':'app'}>
-  <header><button className="logo" aria-label="Inicio RutaCAP" onClick={()=>go('home')}><ProBrand/></button><div className="pro-current-page">{page==='home'?'':({general:'Banco general',study:'Estudio',questionnaires:'Cuestionarios',exam:'Test general',quiz:'Test en curso',results:'Resultado',stats:'Progreso',settings:'Perfil'} as Record<string,string>)[page]}{!online&&<small>Sin conexión</small>}</div><button className="gear" aria-label="Perfil y ajustes" onClick={()=>go('settings')}><ProIcon name="person"/></button></header>
+  <header><button className="logo" aria-label="Inicio RutaCAP" onClick={()=>go('home')}><ProBrand/></button><div className="pro-current-page">{page==='home'?'':({general:'Banco general',study:'Estudio',questionnaires:'Cuestionarios',exam:'Crear test',quiz:'Test en curso',results:'Resultado',stats:'Progreso',settings:'Perfil'} as Record<string,string>)[page]}{!online&&<small>Sin conexión</small>}</div><button className="gear" aria-label="Perfil y ajustes" onClick={()=>go('settings')}><ProIcon name="person"/></button></header>
   {PREVIEW&&<div className="cap-preview-banner" role="status"><strong>PREVIEW</strong><span>Datos locales · Sin sincronización</span></div>}
   <main>{load!==null&&<div className="overlay"><Loading text={'Preparando preguntas… '+load+'%'}/></div>}{page==='home'&&<CapHome pm={pm} bankCount={bank.totalQuestions} seenCount={bankSeen} regionCode={regionCode} onRegionChange={changeRegion}/>} {page==='general'&&<Home {...props}/>} {page==='study'&&<Study {...props}/>}  {page==='questionnaires'&&<Questionnaires {...props}/>} {page==='exam'&&<Exam {...props}/>} {page==='quiz'&&<Quiz pm={pm} refresh={refresh}/>} {page==='results'&&<Results/>} {page==='stats'&&<Stats {...props}/>} {page==='settings'&&<Settings theme={theme} setTheme={setTheme} bank={bank} refresh={refresh} userEmail={userEmail} onSignOut={onSignOut} regionCode={regionCode} onRegionChange={changeRegion}/>}</main>
-  {!['quiz','results','settings','questionnaires'].includes(page)&&<nav aria-label="Navegación principal"><button className={page==='home'?'on':''} onClick={()=>go('home')}><ProIcon name="home"/><span>Inicio</span></button><button className={page==='general'||page==='study'?'on':''} onClick={()=>go('general')}><ProIcon name="bank"/><span>Banco</span></button><button className={page==='exam'?'on':''} onClick={()=>go('exam')}><ProIcon name="flag"/><span>Test general</span></button><button className={page==='stats'?'on':''} onClick={()=>go('stats')}><ProIcon name="chart"/><span>Progreso</span></button></nav>}
+  {!['quiz','results','settings','questionnaires'].includes(page)&&<nav aria-label="Navegación principal"><button className={page==='home'?'on':''} onClick={()=>go('home')}><ProIcon name="home"/><span>Inicio</span></button><button className={page==='general'||page==='study'?'on':''} onClick={()=>go('general')}><ProIcon name="bank"/><span>Banco</span></button><button className={page==='exam'?'on':''} onClick={()=>go('exam')}><ProIcon name="flag"/><span>Crear test</span></button><button className={page==='stats'?'on':''} onClick={()=>go('stats')}><ProIcon name="chart"/><span>Progreso</span></button></nav>}
  </div>
 }
 
@@ -291,14 +291,11 @@ function CapHome({pm,bankCount,seenCount,regionCode,onRegionChange}:{pm:Map<stri
    </div>
   </section>
   <details className="focus-options">
-   <summary>Opciones de práctica y archivo</summary>
+   <summary>Personalizar examen mezclado</summary>
    <div className="focus-options-inner">
-    <p className="focus-muted">El examen real usa siempre 100 preguntas y 120 minutos. Los tests de estudio pueden ser más cortos.</p>
-    <label>Preguntas en examen mezclado sin reloj</label>
+    <p className="focus-muted">Este ajuste solo afecta a «Examen mezclado» en modo estudio o sin reloj. No cambia las convocatorias originales ni el simulacro real (100 preguntas, 120 minutos).</p>
+    <label>Número de preguntas del examen mezclado</label>
     <div className="segments">{[10,20,30,50,100].map(x=><button key={x} className={count===x?'on':''} onClick={()=>setCount(x)}>{x}</button>)}</div>
-    <label>Archivo por modalidad</label>
-    <div className="segments"><button className={category==='mercancias'?'on':''} onClick={()=>setCategory('mercancias')}>Mercancías</button><button className={category==='viajeros'?'on':''} onClick={()=>setCategory('viajeros')}>Viajeros · pendiente</button></div>
-    {category==='viajeros'&&<p className="note">Viajeros permanece archivado, sin mezclar sus preguntas ni inventar soluciones hasta verificar su plantilla.</p>}
    </div>
   </details>
   {showConvocations&&<section id="cap-historicos" className="pro-convocation-archive" aria-label="Convocatorias históricas CAP" tabIndex={-1}>
@@ -307,7 +304,7 @@ function CapHome({pm,bankCount,seenCount,regionCode,onRegionChange}:{pm:Map<stri
    <p className="pro-archive-disclaimer">Archivo general · procedencia territorial en revisión. {category==='viajeros'?'Las convocatorias sin plantilla no se pueden iniciar.':''}</p>
    {[...new Set(exams.map(e=>e.date.slice(0,4)))].map(year=>{const group=exams.filter(e=>e.date.startsWith(year));return <section className="pro-archive-year" key={year}><div className="pro-year-heading"><h3>{year}</h3><span>{group.length} {group.length===1?'modelo':'modelos'}</span></div><div className="list">{group.map(e=><button className="pro-exam-row" key={e.id} data-exam-id={e.id} data-source-pages={e.sourcePageStart+'–'+e.sourcePageEnd} data-disputed={e.disputedCount||0} disabled={!e.hasOriginalAnswerSheet||working} onClick={()=>void begin('cap-original',e)}><span className="pro-exam-date"><b>{e.date.slice(8,10)}</b><small>{new Date(e.date+'T12:00:00').toLocaleDateString('es-ES',{month:'short'}).replace('.','')}</small></span><span className="pro-exam-info"><b>{e.model==='GLOBAL'?'Modelo global':'Modelo '+e.model}</b><small>{e.hasOriginalAnswerSheet?(e.disputedCount?e.readyCount+' puntuables · '+e.disputedCount+' sin puntuar':(e.expectedCount||100)+' preguntas · Con plantilla'):'Sin plantilla'}</small></span><span className="pro-exam-chevron" aria-hidden="true">›</span></button>)}</div></section>})}
   </section>}
-  <details className="focus-editorial"><summary>Auditoría editorial · consulta avanzada</summary><div className="focus-editorial-inner">
+  {import.meta.env.DEV&&<details className="focus-editorial"><summary>Auditoría editorial · consulta avanzada (solo desarrollo)</summary><div className="focus-editorial-inner">
   <section className="panel cap-pending-panel">
    <h2>Auditoría editorial · 26 convocatorias</h2>
    <p>Revisa las 100 preguntas de cada examen con sus marcas: conflicto de respuestas, texto sospechoso, desfase de numeración o falta de cotejo. P0 significa prioridad máxima, no una respuesta declarada errónea. Las letras impresas y el banco original no se alteran; R27/R28/R29/R30/R31 distinguen la clave histórica de la técnica.</p>
@@ -373,7 +370,7 @@ function CapHome({pm,bankCount,seenCount,regionCode,onRegionChange}:{pm:Map<stri
     </details>)}
    </div>}
   </section>
-  </div></details>
+  </div></details>}
   <button className="btn light" onClick={()=>go('general')}>Abrir banco general · 8.655 preguntas</button>
   <p className="note">Los 24 modelos con plantilla mantienen sus 100 preguntas y las letras originales; las contradicciones documentadas no puntúan. No se duplican ampliaciones en el cómputo de frecuencia. La plantilla B de julio 2025 fue aportada y contrastada; su procedencia oficial no está acreditada.</p>
  </div>
@@ -382,7 +379,7 @@ function CapHome({pm,bankCount,seenCount,regionCode,onRegionChange}:{pm:Map<stri
 function Home({bank,stats,sessions,start}:P){return <div className="page">
  <section className="hero"><div><em>BANCO CAP 2026</em><h1>Estudia a tu ritmo.<br/>Aprende de cada fallo.</h1><p>{bank.totalQuestions.toLocaleString('es-ES')} preguntas · {bank.totalQuestionnaires} cuestionarios</p></div><strong>{stats.coverage}%<small>visto</small></strong></section>
  <div className="metrics"><article><small>Precisión</small><b>{stats.attempts?stats.acc+'%':'—'}</b><span>{stats.attempts} respuestas</span></article><article><small>Dominadas</small><b>{stats.mastered}</b><span>3 aciertos seguidos</span></article><article><small>Por repasar</small><b>{stats.review}</b><span>errores activos</span></article></div>
- <h2>¿Qué quieres hacer?</h2><div className="cards"><button onClick={()=>start('study','smart',20,'Repaso inteligente')}>✦<span><b>Repaso inteligente</b><small>Prioriza lo que más necesitas</small></span>›</button><button onClick={()=>go('questionnaires')}>▦<span><b>Por cuestionario</b><small>Avanza bloque a bloque</small></span>›</button><button onClick={()=>start('study','errors',20,'Mis errores')}>×<span><b>Mis errores</b><small>{stats.review} pendientes</small></span>›</button><button onClick={()=>go('exam')}>✓<span><b>Simulacro</b><small>Corrección al final</small></span>›</button></div>
+ <h2>¿Qué quieres hacer?</h2><div className="cards"><button onClick={()=>start('study','smart',20,'Repaso inteligente')}>✦<span><b>Repaso inteligente</b><small>Prioriza lo que más necesitas</small></span>›</button><button onClick={()=>go('questionnaires')}>▦<span><b>Por cuestionario</b><small>Avanza bloque a bloque</small></span>›</button><button onClick={()=>start('study','errors',20,'Mis errores')}>×<span><b>Mis errores</b><small>{stats.review} pendientes</small></span>›</button><button onClick={()=>go('exam')}>✓<span><b>Crear test</b><small>Práctica con el banco general</small></span>›</button></div>
  {sessions[0]&&<div className="recent"><div><small>ÚLTIMA SESIÓN</small><b>{sessions[0].label}</b></div><strong>{sessions[0].score}%</strong></div>}<p className="note">Herramienta de estudio basada en el banco proporcionado. No es un servicio oficial de la DGT.</p>
  </div>}
 
@@ -392,7 +389,7 @@ function Study({stats,start}:P){return <div className="page"><em>MODO ESTUDIO</e
 
 function Questionnaires({bank,rows,start}:P){return <div className="page"><button className="back" onClick={()=>history.back()}>‹ Volver</button><h1>Cuestionarios</h1>{[...new Set(bank.questionnaires.map(q=>q.section))].map(sec=><section key={sec}><em>SECCIÓN {sec.replace(';',' / ')}</em><div className="qgrid">{bank.questionnaires.filter(q=>q.section===sec).map(m=>{const k=m.section+':'+m.questionnaireId,r=rows.filter(x=>x.questionnaireId===k),seen=r.filter(x=>x.attempts).length,att=r.reduce((a,x)=>a+x.attempts,0),cor=r.reduce((a,x)=>a+x.correct,0),cov=percent(seen,m.count);return <article key={m.id}><div className="qtop"><span>{m.questionnaireId}</span><b>{cov}%</b></div><h3>{m.title}</h3><small>{m.count} preguntas · {seen?percent(cor,att)+'% acierto':'Sin empezar'}</small><Bar v={cov}/><div className="actions"><Btn onClick={()=>start('study','questionnaire',Math.min(20,m.count),m.title+' · estudio',m)}>Estudiar 20</Btn><Btn kind="light" onClick={()=>start('study','questionnaire',m.count,m.title+' · completo',m)}>Todas</Btn></div></article>})}</div></section>)}</div>}
 
-function Exam({bank,stats,start}:P){const [count,setCount]=useState(30),[source,setSource]=useState<StudySource>('random'),[qid,setQid]=useState(bank.questionnaires[0].id);const meta=bank.questionnaires.find(x=>x.id===qid);return <div className="page"><em>SIMULACRO</em><h1>Como un examen</h1><p>No verás la solución hasta finalizar. Las no contestadas quedan en blanco.</p><div className="panel"><label>Número de preguntas</label><div className="segments">{[10,20,30,50].map(n=><button className={count===n?'on':''} onClick={()=>setCount(n)} key={n}>{n}</button>)}</div><label>Contenido</label>{([['random','Todo el banco','Mezcla todos los cuestionarios'],['unseen','Solo nuevas',(stats.total-stats.seen)+' sin ver'],['errors','Solo errores',stats.review+' disponibles'],['questionnaire','Un cuestionario','Elige un bloque concreto']] as any[]).map(x=><button className={'radio '+(source===x[0]?'on':'')} onClick={()=>setSource(x[0])} key={x[0]}><i/><span><b>{x[1]}</b><small>{x[2]}</small></span></button>)}{source==='questionnaire'&&<select value={qid} onChange={e=>setQid(e.target.value)}>{bank.questionnaires.map(q=><option key={q.id} value={q.id}>Sección {q.section} · {q.questionnaireId} ({q.count})</option>)}</select>}<Btn onClick={()=>start('exam',source,count,'Simulacro · '+count,source==='questionnaire'?meta:undefined)}>Comenzar simulacro</Btn></div></div>}
+function Exam({bank,stats,start}:P){const [count,setCount]=useState(30),[source,setSource]=useState<StudySource>('random'),[qid,setQid]=useState(bank.questionnaires[0].id);const meta=bank.questionnaires.find(x=>x.id===qid);return <div className="page"><em>BANCO GENERAL · PRÁCTICA LIBRE</em><h1>Crea tu test</h1><p>Elige entre 10 y 50 preguntas del banco general de {bank.totalQuestions.toLocaleString('es-ES')}. Corrección al terminar, sin cronómetro CAP. Los simulacros históricos de 100 preguntas y 2 horas están en Inicio.</p><div className="panel"><label>Número de preguntas</label><div className="segments">{[10,20,30,50].map(n=><button className={count===n?'on':''} onClick={()=>setCount(n)} key={n}>{n}</button>)}</div><label>Contenido</label>{([['random','Todo el banco','Mezcla todos los cuestionarios'],['unseen','Solo nuevas',(stats.total-stats.seen)+' sin ver'],['errors','Solo errores',stats.review+' disponibles'],['questionnaire','Un cuestionario','Elige un bloque concreto']] as any[]).map(x=><button className={'radio '+(source===x[0]?'on':'')} onClick={()=>setSource(x[0])} key={x[0]}><i/><span><b>{x[1]}</b><small>{x[2]}</small></span></button>)}{source==='questionnaire'&&<select value={qid} onChange={e=>setQid(e.target.value)}>{bank.questionnaires.map(q=><option key={q.id} value={q.id}>Sección {q.section} · {q.questionnaireId} ({q.count})</option>)}</select>}<Btn onClick={()=>start('exam',source,count,'Test del banco · '+count,source==='questionnaire'?meta:undefined)}>Comenzar test</Btn></div></div>}
 
 function Results(){
  const data=JSON.parse(localStorage.getItem(lastKey())||sessionStorage.getItem(lastKey())||'null') as {record:StudySessionRecord;questionIds:string[]}|null
@@ -438,7 +435,7 @@ function Results(){
  }
  return <div className="page pro-results">
   <button className="back" onClick={()=>go('home')}>‹ Inicio</button>
-  <h1 className="pro-results-heading">{r.type==='exam'?'Resultado del simulacro':'Resultado del estudio'}</h1>
+  <h1 className="pro-results-heading">{r.type==='exam'?(r.capScoring?'Resultado del simulacro':'Resultado del test del banco'):'Resultado del estudio'}</h1>
   <section className={'result '+resultClass}>
    <em>{capStudy?'ESTUDIO CAP · PUNTOS Y PRECISIÓN':capExam?(comparable?'SIMULACRO CAP · 100 PREGUNTAS VÁLIDAS':'CAP · CALIFICACIÓN ORIENTATIVA'):'RESULTADO'}</em>
    <div className="pro-result-score"><ProIcon name="flag"/><div><strong>{capResult?netLabel+(Math.abs(netPoints)===1?' punto':' puntos'):r.score+'%'}</strong><h2 className="pro-result-status">{resultTitle}</h2></div></div>
@@ -489,7 +486,7 @@ function Settings({theme,setTheme,bank,refresh,userEmail,onSignOut,regionCode,on
   if(!confirm(PREVIEW?'¿Borrar solo los datos de esta versión de pruebas?':'¿Borrar el progreso local de este perfil en este navegador?'))return
   try{await clearAllData();await refresh()}catch(err){alert('No se pudieron borrar los datos locales: '+String(err))}
  }
- return <div className="page">
+ return <div className="page pro-profile-page">
   <button className="back" onClick={()=>history.back()}>‹ Volver</button>
   <h1>Mi perfil</h1>
   {PREVIEW&&<CommercialAccountPreview onContinue={()=>go('home')}/>}
