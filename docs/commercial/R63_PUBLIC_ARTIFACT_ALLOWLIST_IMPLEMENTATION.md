@@ -65,7 +65,7 @@ campos es transformado por el empaquetador.
   local, cuatro anchos (390/430/768/1440), portada, archivo 25 Mercancías
   y un Viajeros, ausencia de desbordamiento, recursos sin 4xx; registra
   explícitamente el service worker en un contexto aislado y verifica precarga
-  de los 66 URLs CORE + rutas de preguntas enumeradas, sin editoriales.
+  de 66 rutas en total (7 CORE y 59 JSON de preguntas), sin editoriales.
   El registro automático del SW en Preview permanece deshabilitado como antes.
 - Conserva la batería preexistente de CI que prueba motor, corrección,
   persistencia, reloj, historiales, PDF, UI y responsive.
@@ -87,3 +87,12 @@ desde el contenedor impide por sí sola compilar el checkout local; no se
 debe presentar esta limitación como un PASS de TypeScript o Chromium.
 
 La Preview protegida queda como opción posterior, sin publicarla ahora.
+
+## Estado observado tras el primer commit
+
+Commit funcional R63: 6f786f7c4c9d7a9d445cbf5656e2b5ce10c744ce.
+La API de GitHub no muestra ejecuciones de Actions para dicho SHA al
+consultarla; no se declara PASS de la nueva CI ni del navegador.
+El commit R63 no cambia main. Main se observó posteriormente en
+ d91e59e9f0e648a558a3cbcd93b77fcec7e9612a debido a un cambio
+previo de public/sw.js ajeno a esta ronda (15:21 UTC).
