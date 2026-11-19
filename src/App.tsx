@@ -242,7 +242,7 @@ function CapHome({pm,bankCount,seenCount,regionCode,onRegionChange}:{pm:Map<stri
  const savedSession=(()=>{try{return JSON.parse(localStorage.getItem(activeKey())||sessionStorage.getItem(activeKey())||'null') as ActiveSession|null}catch{return null}})()
  return <div className="page cap-page focus-home">
   {savedSession&&<section className="focus-resume" role="status">
-   <div><strong>Test sin terminar</strong><p>{savedSession.label} · {Object.keys(savedSession.selectedAnswers).length} respuestas guardadas</p></div>
+   <div><strong>Test sin terminar</strong><p>{savedSession.label} · {Object.keys(savedSession.selectedAnswers).length} respuestas guardadas</p>{savedSession.timed&&<p className="focus-resume-clock-note">Simulacro real: el reloj sigue corriendo aunque salgas. Al volver se recalcula el tiempo restante.</p>}</div>
    <button className="btn light" onClick={()=>go('quiz')}>Continuar</button>
   </section>}
   <CommercialHome regionCode={regionCode} onRegionChange={onRegionChange} bankCount={bankCount} seenCount={seenCount} hasArchive={available.length>0&&category==='mercancias'} archiveCount={available.length} working={working} onBank={()=>go('general')} onErrors={()=>void begin('cap-errors')} onFavorites={()=>void begin('cap-favorites')} onTop={()=>{setTopCounts(null);setTopDialogOpen(true)}} onExam={()=>{setMode('exam');setTimed(true);document.getElementById('pro-exam-setup')?.scrollIntoView({behavior:'smooth',block:'start'})}} onStats={()=>go('stats')}/>
