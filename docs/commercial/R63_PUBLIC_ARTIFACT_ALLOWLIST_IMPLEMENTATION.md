@@ -96,3 +96,19 @@ consultarla; no se declara PASS de la nueva CI ni del navegador.
 El commit R63 no cambia main. Main se observó posteriormente en
  d91e59e9f0e648a558a3cbcd93b77fcec7e9612a debido a un cambio
 previo de public/sw.js ajeno a esta ronda (15:21 UTC).
+
+## Verificación local ejecutada (R63)
+
+Los blobs del empaquetador y del test se reprodujeron en un entorno aislado
+Node v22.16.0, confirmando sus SHA de Git: empaquetador
+4fc29823d6106719868f2eb9579f5c10c9c02b36 y test corregido
+d9528d248345700202a68126045955aa7de8ac00.
+Se ejecutó node --test scripts/test_public_package_r63.mjs:
+17 pruebas, 17 PASS, 0 FAIL (fixtures exclusivamente sintéticos).
+La primera ejecución detectó una expectativa errónea de dos entradas en la
+raíz de dist/data; se corrigió a tres (exams, index.json y questions)
+y se repitió toda la prueba hasta PASS. No se usaron bancos reales.
+
+No se ha ejecutado en este entorno npm ci, build:preview, TypeScript,
+ni Chromium con datos reales; las correspondientes comprobaciones de
+GitHub Actions continúan pendientes y deben verificarse antes de desplegar.
