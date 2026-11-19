@@ -85,7 +85,7 @@ test('R63 positive: exact 62 allowlisted files, editorials only removed from dis
   assert.equal(digest(read(f.distRoot, 'data/exams/frequency_by_bank.json')), frequencyBefore)
   assert.equal(index(f.distRoot, 'data/exams/index.json').exams.at(-1).hasOriginalAnswerSheet, false)
   assert.equal(verify(f).manifestSha256, result.manifestSha256)
-  assert.equal(readdirSync(join(f.distRoot, 'data')).length, 2)
+  assert.deepEqual(readdirSync(join(f.distRoot, 'data')).sort(), ['exams', 'index.json', 'questions'])
 })
 test('R63 rejects an unknown file without deleting known editorials', t => {
   const f = fixture(t)
