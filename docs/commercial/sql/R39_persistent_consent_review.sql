@@ -8,7 +8,12 @@
 -- A SQL console setting fabricated JWT GUCs IS NOT a real Auth/RLS test.
 begin;
 
--- Privileged transitions live OUTSIDE the Data API's exposed schemas.\ncreate schema rc_internal;\nrevoke all on schema rc_internal from public, anon, authenticated, service_role;\ngrant usage on schema rc_internal to authenticated;\n\n-- Record only the opt-in for progress synchronization, not a blanket consent.
+-- Privileged transitions live OUTSIDE the Data API's exposed schemas.
+create schema rc_internal;
+revoke all on schema rc_internal from public, anon, authenticated, service_role;
+grant usage on schema rc_internal to authenticated;
+
+-- Record only the opt-in for progress synchronization, not a blanket consent.
 -- Keep the row after revocation to prevent revision reuse. Account deletion
 -- can cascade after a separately authorized retention/erasure review.
 create table public.rc_sync_consents (
