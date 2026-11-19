@@ -470,3 +470,42 @@ html:has(.pro-region-dialog[open]){overflow:hidden}
  .app>main{grid-row:4;width:100%;padding-top:18px;padding-bottom:48px}
  .app.pro-quiz-page>main{padding-bottom:48px}
 }
+
+/* R59 — Legibilidad del contenido, sin perder el carácter de los títulos. */
+:root:not([data-theme="light"]){--muted:#c4cedb}
+.app .page :is(p,.focus-muted,.note){line-height:1.55}
+.app .focus-quiz .focus-question h2{
+ font-weight:760;letter-spacing:-.018em;line-height:1.42;
+}
+.app .focus-quiz .answers button span{
+ font-size:clamp(15px,1.25vw,16px);font-weight:500;line-height:1.55;letter-spacing:0;
+}
+.app .focus-quiz .focus-frequency{
+ font-size:12px;line-height:1.5;font-weight:650;
+}
+.app .focus-quiz .focus-question>small,
+.app .focus-quiz .focus-mark-help,
+.app .focus-quiz .focus-quiz-head>div>b{font-size:12px;line-height:1.45}
+.app .pro-dashboard :is(.pro-archive-note,.pro-quick small){
+ font-size:12px;line-height:1.45;
+}
+.app .panel>label,.app .focus-options label{
+ font-size:13px;line-height:1.45;
+}
+.app .focus-options-inner>.focus-muted{font-size:13px}
+
+/* Perfil: encabezado, acceso, comunidad, respaldo y ajustes con el mismo ancho. */
+.app .pro-profile-page{width:min(100%,580px);max-width:580px;margin-inline:auto}
+.app .pro-profile-page :is(.panel,.pro-account-preview,.backup-panel){
+ width:100%;max-width:100%;min-width:0;
+}
+.app .pro-profile-page .pro-account-preview{margin-inline:0}
+.app .pro-profile-page .pro-profile-region{margin-inline:0}
+.app .pro-profile-page :is(button,select,input){max-width:100%}
+.app .pro-profile-page h1{margin-bottom:18px}
+
+@media(max-width:600px){
+ .app .pro-profile-page{width:100%}
+ .app .focus-quiz .focus-question h2{font-size:clamp(19px,4.6vw,23px);line-height:1.43}
+ .app .pro-dashboard .pro-quick small{font-size:11px}
+}
