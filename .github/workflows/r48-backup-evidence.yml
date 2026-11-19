@@ -6,6 +6,8 @@ on:
       - 'scripts/test_r48_backup_evidence.mjs'
       - 'docs/commercial/R48_BACKUP_EVIDENCE_GATES.md'
       - '.github/workflows/r48-backup-evidence.yml'
+      - 'scripts/test_r50_backup_operational_plan.mjs'
+      - 'docs/commercial/R50_PRIVATE_BACKUP_OPERATIONAL_RUNBOOK.md'
 permissions:
   contents: read
 jobs:
@@ -21,6 +23,6 @@ jobs:
         with:
           node-version: '22'
       - name: Synthetic-only evidence tests
-        run: node --test scripts/test_r48_backup_evidence.mjs
+        run: node --test scripts/test_r48_backup_evidence.mjs scripts/test_r50_backup_operational_plan.mjs
       - name: Verify cloud wiring stays off
         run: grep -Fx 'export const cloudConfigured = false' src/supabase.ts
