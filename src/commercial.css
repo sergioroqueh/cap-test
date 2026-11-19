@@ -452,9 +452,10 @@ html:has(.pro-region-dialog[open]){overflow:hidden}
  .app>.cap-preview-banner{grid-row:2}
  .app>nav{
   grid-row:3;position:relative;left:auto;right:auto;bottom:auto;
-  transform:none;width:calc(100% - 32px);max-width:1090px;
-  height:52px;min-height:52px;margin:10px auto 0;
-  display:flex;align-items:stretch;justify-content:flex-end;
+  transform:none;width:max-content;max-width:calc(100% - 32px);
+  height:52px;min-height:52px;
+  margin:10px max(16px,calc((100vw - 1090px)/2)) 0 auto;
+  display:flex;align-items:stretch;justify-content:flex-end;z-index:1;
   padding:0;overflow:visible;border:1px solid var(--line);border-radius:0;
   background:var(--surface);
  }
