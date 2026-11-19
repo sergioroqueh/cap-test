@@ -1,0 +1,36 @@
+name: C15 commercial account isolation (disposable PostgreSQL)
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'docs/commercial/sql/**'
+      - '.github/workflows/c15-account-isolation.yml'
+permissions:
+  contents: read
+jobs:
+  rls-draft:
+    if: github.head_ref == 'feat/cap-commercial'
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_PASSWORD: synthetic-ci-only
+          POSTGRES_DB: rutacap_draft
+        options: >-
+          --health-cmd "pg_isready -U postgres -d rutacap_draft"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Test isolated draft using synthetic roles
+        env:
+          PG_CONTAINER: ${{ job.services.postgres.id }}
+        run: |
+          for f in docs/commercial/sql/C15_auth_fixture.sql docs/commercial/sql/C15_account_schema_draft.sql docs/commercial/sql/C15_account_rls_test.sql; do
+            docker exec -i "$PG_CONTAINER" psql -X -v ON_ERROR_STOP=1 -U postgres -d rutacap_draft < "$f"
+          done

@@ -1,0 +1,39 @@
+name: C43 offline pinned-root key rotation and replay
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/c43_public_trust.mjs'
+      - 'scripts/test_public_trust_c43.mjs'
+      - '.github/workflows/c43-public-trust.yml'
+      - 'docs/commercial/C43_PUBLIC_TRUST_RESULTS.md'
+permissions:
+  contents: read
+jobs:
+  chromium-webkit-offline:
+    if: github.head_ref == 'feat/cap-commercial'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install test dependencies without modifying lockfiles
+        run: npm install --no-save --no-package-lock --no-audit --no-fund
+      - name: Install Chromium and Linux WebKit
+        run: npx playwright install --with-deps chromium webkit
+      - name: C43 pinned-root rotation anti-replay and cross-tab recovery
+        run: node --test scripts/test_public_trust_c43.mjs
+      - name: C42 signed-browser and BroadcastChannel regression
+        run: node --test scripts/test_browser_security_c42.mjs
+      - name: C41 IndexedDB journal regression
+        run: node --test scripts/test_browser_journal_c41.mjs
+      - name: Validate fixture isolation and disabled cloud
+        run: |
+          grep -F 'export const cloudConfigured = false' src/supabase.ts
+          ! grep -R -n 'c43_public_trust' src/
+          ! grep -nE 'createHmac|privateKey|PRIVATE_KEY|SECRET_KEY|SUPABASE_URL|supabase\.co|fetch\(' scripts/c43_public_trust.mjs
+          ! grep -nE 'SUPABASE_URL|supabase\.co|fetch\(' scripts/test_public_trust_c43.mjs

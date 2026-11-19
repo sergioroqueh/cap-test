@@ -1,12 +1,12 @@
 {
-  "name": "CAP Test 2026",
-  "short_name": "CAP Test",
-  "description": "Estudia y practica el banco de preguntas CAP 2026",
+  "name": "RutaCAP",
+  "short_name": "RutaCAP",
+  "description": "Preparación independiente para el CAP",
   "start_url": "./#/",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#0b1115",
-  "theme_color": "#0b1115",
+  "background_color": "#10151c",
+  "theme_color": "#10151c",
   "lang": "es-ES",
   "icons": [
     {

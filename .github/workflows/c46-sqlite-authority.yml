@@ -1,0 +1,46 @@
+name: C46 disposable SQLite atomicity, restart and rollback audit
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/c46_sqlite_authority.mjs'
+      - 'scripts/c46_sqlite_worker.mjs'
+      - 'scripts/test_sqlite_authority_c46.mjs'
+      - '.github/workflows/c46-sqlite-authority.yml'
+      - 'docs/commercial/C46_SQLITE_AUTHORITY_RESULTS.md'
+permissions:
+  contents: read
+jobs:
+  isolated-authority-audit:
+    if: github.head_ref == 'feat/cap-commercial'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: C46 temporary SQLite Node workers, crashes and rollback
+        run: node --test scripts/test_sqlite_authority_c46.mjs
+      - name: Install browser regression dependencies without changing lockfiles
+        run: npm install --no-save --no-package-lock --no-audit --no-fund
+      - name: Install Linux Chromium and WebKit
+        run: npx playwright install --with-deps chromium webkit
+      - name: C45 mock-only signed online authority regression
+        run: node --test scripts/test_mock_authority_c45.mjs
+      - name: C44 isolated trust ledger regression
+        run: node --test scripts/test_trust_ledger_c44.mjs
+      - name: C43 signed root policy regression
+        run: node --test scripts/test_public_trust_c43.mjs
+      - name: C42 ECDSA and BroadcastChannel regression
+        run: node --test scripts/test_browser_security_c42.mjs
+      - name: C41 IndexedDB browser regression
+        run: node --test scripts/test_browser_journal_c41.mjs
+      - name: Confirm fixture isolation and disabled cloud, no network or real credentials
+        run: |
+          grep -F 'export const cloudConfigured = false' src/supabase.ts
+          ! grep -R -nE 'c46_sqlite_authority|c46_sqlite_worker' src/
+          ! grep -nE 'SUPABASE_URL|supabase\.co|fetch\(|https?://' scripts/c46_sqlite_authority.mjs scripts/c46_sqlite_worker.mjs scripts/test_sqlite_authority_c46.mjs
+          ! grep -nE 'createClient|DATABASE_URL|process\.env' scripts/c46_sqlite_authority.mjs scripts/c46_sqlite_worker.mjs

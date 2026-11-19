@@ -2,3 +2,7 @@ node_modules
 dist
 .DS_Store
 *.local
+
+RutaCAP_*_privad*.json
+RutaCAP_*_importacion*.json
+RutaCAP_*_catalogo_privado.html

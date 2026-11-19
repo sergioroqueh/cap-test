@@ -1,0 +1,1836 @@
+{
+  "schemaVersion": 1,
+  "round": "R29",
+  "reviewDate": "2026-11-16",
+  "baselineCommit": "8f67a897a414372abaea010b000bfe2a0a53a090",
+  "baselineWorkflow": 43883010627,
+  "scope": "62 original R28 queue occurrences. Generated source text, not independent visual reread of source PDFs. Decisions editorial; no official errata. Confirmed cases remain untouched in application.",
+  "cases": [
+    {
+      "examId": "2024-04-06-mercancias-global",
+      "number": 6,
+      "sourcePage": 2,
+      "question": "Todo cuerpo está expuesto a diferentes fuerzas y pares de fuerzas. ¿Qué sucede cuando la suma de las fuerzas y los pares de fuerzas aplicadas a un camión es distinta de cero?",
+      "options": {
+        "A": "Que el vehículo se mueve.",
+        "B": "Que el vehículo se encuentra en reposo.",
+        "C": "Que la trayectoria del vehículo no es recta.",
+        "D": "Que la trayectoria del vehículo es inestable."
+      },
+      "originalSheetAnswer": "A",
+      "correctAnswer": "A",
+      "bankAnswer": "A",
+      "reasons": [
+        "stem:2025-07-26-mercancias-b:7",
+        "fuerzas_newton"
+      ],
+      "approved": true,
+      "queuePosition": 1,
+      "round": "R29",
+      "historicalAnswer": "A",
+      "previousAppliedAnswer": "A",
+      "technicalAnswer": null,
+      "action": "exclude",
+      "reason": "Newton: resultante no nula implica aceleración, no velocidad instantánea necesariamente distinta de cero. Fuerza y momento no se suman entre sí. Ninguna alternativa expresa la ley general.",
+      "sources": [
+        "https://openstax.org/books/f%C3%ADsica-universitaria-volumen-1/pages/5-2-primera-ley-de-newton",
+        "https://openstax.org/books/f%C3%ADsica-universitaria-volumen-1/pages/5-3-segunda-ley-de-newton"
+      ]
+    },
+    {
+      "examId": "2024-04-06-mercancias-global",
+      "number": 79,
+      "sourcePage": 16,
+      "question": "¿Qué filtro puede ser el causante de que por el tubo de escape salga una cantidad excesiva de humo negro?",
+      "options": {
+        "A": "El filtro de aceite.",
+        "B": "El filtro de gasoil.",
+        "C": "El filtro del aire.",
+        "D": "El filtro de inyección."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "reasons": [
+        "humo_negro"
+      ],
+      "approved": true,
+      "queuePosition": 2,
+      "round": "R29",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "confirmed",
+      "reason": "El filtro de aire obstruido limita el oxígeno de admisión y puede producir humo negro. C es la mejor de las cuatro opciones; no implica diagnóstico exclusivo.",
+      "sources": [
+        "https://www.epa.nsw.gov.au/Your-environment/Air/reducing-motor-vehicle-emissions/causes-smoky-vehicles"
+      ]
+    },
+    {
+      "examId": "2024-04-06-mercancias-global",
+      "number": 80,
+      "sourcePage": 17,
+      "question": "Circulando con un vehículo con una determinada relación de marchas seleccionada en la caja de velocidades, el consumo de carburante será menor:",
+      "options": {
+        "A": "cuanto menor sea la velocidad a la que se circule.",
+        "B": "cuanto mayor sea la velocidad a la que se circule.",
+        "C": "cuanto más cargado circule el vehículo.",
+        "D": "cuanto mayor sea su coeficiente aerodinámico."
+      },
+      "originalSheetAnswer": "A",
+      "correctAnswer": "A",
+      "bankAnswer": "A",
+      "reasons": [
+        "caja_cambios_consumo"
+      ],
+      "approved": true,
+      "queuePosition": 3,
+      "round": "R29",
+      "historicalAnswer": "A",
+      "previousAppliedAnswer": "A",
+      "technicalAnswer": "A",
+      "action": "note",
+      "reason": "Con una marcha y condiciones comparables, una velocidad moderada reduce las demandas de potencia, especialmente por aerodinámica. A es el criterio usual CAP; no es una regla de consumo a cualquier régimen, carga o pendiente.",
+      "sources": [
+        "https://sede.idae.gob.es/sites/default/files/2024-01/08.Guia_Conduccion_eficiente_veh_industriales.pdf"
+      ]
+    },
+    {
+      "examId": "2023-07-29-mercancias-a",
+      "number": 44,
+      "sourcePage": 66,
+      "question": "De las siguientes enfermedades, señale cuál no está reconocida como enfermedad profesional en el sector del transporte:",
+      "options": {
+        "A": "Enfermedades osteoarticulares por vibraciones mecánicas.",
+        "B": "Inflamación de la próstata como consecuencia del alto nivel de ruido.",
+        "C": "Sordera provocada por el ruido.",
+        "D": "Otras enfermedades vinculadas al transporte de productos determinados (cloro licuado, manganeso y sus compuestos, etc.)."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "B",
+      "bankAnswer": "B",
+      "reasons": [
+        "enfermedad_profesional"
+      ],
+      "approved": true,
+      "queuePosition": 4,
+      "round": "R29",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "note",
+      "reason": "B: la inflamación prostática por ruido no figura como tal en el cuadro. La sordera por ruido sí figura. C impresa corresponde a la numeración histórica desalineada del modelo A; la solución efectiva B ya procedía del expediente de alineación. No cambiar esa solución.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2006-22169",
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2015-11724#a157"
+      ]
+    },
+    {
+      "examId": "2023-07-29-mercancias-a",
+      "number": 49,
+      "sourcePage": 67,
+      "question": "¿Qué es el consumo específico en un motor?",
+      "options": {
+        "A": "La cantidad de carburante necesaria para producir una unidad de fuerza en una unidad de tiempo.",
+        "B": "La cantidad de calor necesario para producir una unidad de velocidad en una unidad de tiempo.",
+        "C": "La cantidad de carburante necesaria para producir una unidad de potencia en una unidad de tiempo.",
+        "D": "La cantidad de carburante necesaria para producir una unidad de temperatura en una unidad de tiempo."
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "reasons": [
+        "consumo_especifico"
+      ],
+      "approved": true,
+      "queuePosition": 5,
+      "round": "R29",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "note",
+      "reason": "C: masa de carburante por energía útil (potencia por tiempo). B impresa no es la clave efectiva debido a la alineación histórica de julio 2023 A. Se mantiene C ya aplicada, no una nueva corrección.",
+      "sources": [
+        "https://sede.idae.gob.es/sites/default/files/2024-01/08.Guia_Conduccion_eficiente_veh_industriales.pdf"
+      ]
+    },
+    {
+      "examId": "2024-07-20-mercancias-a",
+      "number": 36,
+      "sourcePage": 85,
+      "question": "De las siguientes enfermedades, señale la que no es reconocida como enfermedad profesional en el sector del transporte:",
+      "options": {
+        "A": "Pancreatitis ocasionada por las malas posturas.",
+        "B": "Parálisis del nervio radial por compresión del mismo provocada por posturas forzadas y movimientos repetitivos.",
+        "C": "Fatiga de vainas tendinosas (Inflamación de los tendones de la muñeca y de los dedos por roce y movimiento repetitivo).",
+        "D": "Sordera provocada por el ruido."
+      },
+      "originalSheetAnswer": "A",
+      "correctAnswer": "A",
+      "bankAnswer": "A",
+      "reasons": [
+        "enfermedad_profesional"
+      ],
+      "approved": true,
+      "queuePosition": 6,
+      "round": "R29",
+      "historicalAnswer": "A",
+      "previousAppliedAnswer": "A",
+      "technicalAnswer": "A",
+      "action": "confirmed",
+      "reason": "Pancreatitis por malas posturas no figura como tal; el cuadro incluye determinadas neuropatías por compresión, tendinopatías y sordera por ruido.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2006-22169"
+      ]
+    },
+    {
+      "examId": "2024-07-20-mercancias-a",
+      "number": 55,
+      "sourcePage": 88,
+      "question": "El tipo de caja de velocidades que monte un vehículo, ¿puede influir en el consumo de carburante?",
+      "options": {
+        "A": "Sí, con una caja de velocidades con cambio automático normalmente, el consumo es mayor.",
+        "B": "Sí, con una caja de velocidades con cambio automático normalmente, el consumo es menor",
+        "C": "No, salvo cuando el vehículo circula por una pendiente ascendente.",
+        "D": "No, el consumo no depende del tipo de caja de velocidades"
+      },
+      "originalSheetAnswer": "A",
+      "correctAnswer": "A",
+      "bankAnswer": null,
+      "reasons": [
+        "caja_cambios_consumo"
+      ],
+      "approved": true,
+      "queuePosition": 7,
+      "round": "R29",
+      "historicalAnswer": "A",
+      "previousAppliedAnswer": "A",
+      "technicalAnswer": "A",
+      "action": "note",
+      "reason": "A es el criterio histórico y reproduce la variante R28 del modelo B. El adverbio normalmente limita la afirmación, pero las automáticas modernas pueden consumir menos; no convertir A en regla universal.",
+      "sources": [
+        "https://sede.idae.gob.es/sites/default/files/2024-01/08.Guia_Conduccion_eficiente_veh_industriales.pdf",
+        "https://www.energy.gov/cmei/vehicles/articles/fotw-1127-march-30-2020-model-year-2016-automatic-transmissions-have",
+        "https://www.fueleconomy.gov/feg/tech_adv.shtml"
+      ]
+    },
+    {
+      "examId": "2024-07-20-mercancias-a",
+      "number": 76,
+      "sourcePage": 92,
+      "question": "¿Qué filtro puede ser el causante de que por el tubo de escape salga una cantidad excesiva de humo negro?",
+      "options": {
+        "A": "El filtro de aceite.",
+        "B": "El filtro de gasoil",
+        "C": "El filtro del aire.",
+        "D": "El filtro de inyección."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "reasons": [
+        "humo_negro"
+      ],
+      "approved": true,
+      "queuePosition": 8,
+      "round": "R29",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "confirmed",
+      "reason": "El filtro de aire obstruido limita el oxígeno de admisión y puede producir humo negro. C es la mejor de las cuatro opciones; no implica diagnóstico exclusivo.",
+      "sources": [
+        "https://www.epa.nsw.gov.au/Your-environment/Air/reducing-motor-vehicle-emissions/causes-smoky-vehicles"
+      ]
+    },
+    {
+      "examId": "2025-07-26-mercancias-a",
+      "number": 3,
+      "sourcePage": 97,
+      "question": "En razón a la especificidad de su objeto y de su régimen jurídico, ¿cómo se clasifican los transportes de mercancías?",
+      "options": {
+        "A": "De carga completa y de carga fraccionada.",
+        "B": "Discrecionales, nacionales e internacionales.",
+        "C": "Ordinarios y especiales.",
+        "D": "De mercancía embalada y de mercancía a granel."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "reasons": [
+        "stem:2023-12-02-mercancias-global:3",
+        "clasificacion_transportes"
+      ],
+      "approved": true,
+      "queuePosition": 9,
+      "round": "R29",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "confirmed",
+      "reason": "C: transportes ordinarios y especiales según art. 66 LOTT; las otras opciones corresponden a clasificaciones diferentes o no a la que pregunta el enunciado.",
+      "sources": [
+        "https://boe.es/buscar/act.php?id=BOE-A-1987-17803&lang=es&p=20251204&tn=0"
+      ]
+    },
+    {
+      "examId": "2025-07-26-mercancias-a",
+      "number": 5,
+      "sourcePage": 97,
+      "question": "Todo cuerpo está expuesto a diferentes fuerzas y pares de fuerzas. ¿Qué sucede cuando la suma de las fuerzas y los pares de fuerzas aplicadas a un camión es igual a cero?",
+      "options": {
+        "A": "Que la trayectoria del vehículo es recta.",
+        "B": "Que el vehículo se encuentra en reposo.",
+        "C": "Que puede haber aceleración o desaceleración dependiendo de la pendiente de la vía.",
+        "D": "Que la trayectoria del vehículo es estable."
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "B",
+      "bankAnswer": "B",
+      "reasons": [
+        "fuerzas_newton"
+      ],
+      "approved": true,
+      "queuePosition": 10,
+      "round": "R29",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": null,
+      "action": "exclude",
+      "reason": "Newton: fuerza neta cero conserva el vector velocidad, que puede ser cero o no. A y B solo describen casos; no se especifica el estado inicial. No hay solución única.",
+      "sources": [
+        "https://openstax.org/books/f%C3%ADsica-universitaria-volumen-1/pages/5-2-primera-ley-de-newton",
+        "https://openstax.org/books/f%C3%ADsica-universitaria-volumen-1/pages/5-3-segunda-ley-de-newton"
+      ]
+    },
+    {
+      "examId": "2025-07-26-mercancias-a",
+      "number": 6,
+      "sourcePage": 97,
+      "question": "Todo cuerpo está expuesto a diferentes fuerzas y pares de fuerzas. ¿Qué sucede cuando la suma de las fuerzas y los pares de fuerzas aplicadas a un camión es distinta de cero?",
+      "options": {
+        "A": "Que el vehículo se mueve.",
+        "B": "Que el vehículo se encuentra en reposo",
+        "C": "Que la trayectoria del vehículo no es recta.",
+        "D": "Que la trayectoria del vehículo es inestable."
+      },
+      "originalSheetAnswer": "A",
+      "correctAnswer": "A",
+      "bankAnswer": "A",
+      "reasons": [
+        "stem:2025-07-26-mercancias-b:7",
+        "fuerzas_newton"
+      ],
+      "approved": true,
+      "queuePosition": 11,
+      "round": "R29",
+      "historicalAnswer": "A",
+      "previousAppliedAnswer": "A",
+      "technicalAnswer": null,
+      "action": "exclude",
+      "reason": "Newton: resultante no nula implica aceleración, no velocidad instantánea necesariamente distinta de cero. Fuerza y momento no se suman entre sí. Ninguna alternativa expresa la ley general.",
+      "sources": [
+        "https://openstax.org/books/f%C3%ADsica-universitaria-volumen-1/pages/5-2-primera-ley-de-newton",
+        "https://openstax.org/books/f%C3%ADsica-universitaria-volumen-1/pages/5-3-segunda-ley-de-newton"
+      ]
+    },
+    {
+      "examId": "2025-07-26-mercancias-a",
+      "number": 17,
+      "sourcePage": 99,
+      "question": "¿Cuál de los siguientes factores puede hacer variar el grado de rozamiento?",
+      "options": {
+        "A": "Elestado y superficie de las zapatas.",
+        "B": "La distancia de frenado.",
+        "C": "El peso del camión.",
+        "D": "Lavelocidad de trasferencia de masas."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": null,
+      "reasons": [
+        "stem:2025-07-26-mercancias-b:3"
+      ],
+      "approved": true,
+      "queuePosition": 12,
+      "round": "R29",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "note",
+      "reason": "C es el criterio del temario sobre adherencia neumático-calzada: el peso modifica la normal y el límite de fuerza de fricción, no necesariamente su coeficiente. A alude a la fricción en frenos, otro contacto.",
+      "sources": [
+        "https://openstax.org/books/f%C3%ADsica-universitaria-volumen-1/pages/6-2-friccion"
+      ]
+    },
+    {
+      "examId": "2025-07-26-mercancias-a",
+      "number": 25,
+      "sourcePage": 100,
+      "question": "¿Puede constituirse una sociedad anónima con un capital inicial de 30.000 EUR?",
+      "options": {
+        "A": "Sí, si se documenta el compromiso de los socios de incrementar el capital hasta 60.000 EUR. antes de un año.",
+        "B": "SÍ, si se trata de una sociedad anónima comanditaria.",
+        "C": "No, salvo que el número de socios sea inferior a 5.",
+        "D": "No, en ningún caso."
+      },
+      "originalSheetAnswer": "D",
+      "correctAnswer": "D",
+      "bankAnswer": null,
+      "reasons": [
+        "stem:2025-07-26-mercancias-b:2"
+      ],
+      "approved": true,
+      "queuePosition": 13,
+      "round": "R29",
+      "historicalAnswer": "D",
+      "previousAppliedAnswer": "D",
+      "technicalAnswer": "D",
+      "action": "note",
+      "reason": "D cuando capital inicial significa capital suscrito (mínimo 60.000 EUR, art. 4 LSC). Art. 79 exige desembolso de al menos 25% de cada acción; 30.000 EUR desembolsados sí pueden ser compatibles.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2010-10544"
+      ]
+    },
+    {
+      "examId": "2025-07-26-mercancias-a",
+      "number": 94,
+      "sourcePage": 110,
+      "question": "¿Qué filtro puede ser el causante de que por el tubo de escape salga una cantidad excesiva de humo negro?",
+      "options": {
+        "A": "Elfiltro de aceite.",
+        "B": "Elfiltro de gasoil.",
+        "C": "Elfiltro del aire.",
+        "D": "Elfiltro de inyección."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": null,
+      "reasons": [
+        "humo_negro"
+      ],
+      "approved": true,
+      "queuePosition": 14,
+      "round": "R29",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "confirmed",
+      "reason": "El filtro de aire obstruido limita el oxígeno de admisión y puede producir humo negro. C es la mejor de las cuatro opciones; no implica diagnóstico exclusivo.",
+      "sources": [
+        "https://www.epa.nsw.gov.au/Your-environment/Air/reducing-motor-vehicle-emissions/causes-smoky-vehicles"
+      ]
+    },
+    {
+      "examId": "2026-07-25-mercancias-a",
+      "number": 28,
+      "sourcePage": 116,
+      "question": "¿Qué es el consumo específico de un motor?",
+      "options": {
+        "A": "El consumo de combustible, en litros, para que el vehículo recorra 100 km.",
+        "B": "La forma de medir la cantidad de carburante que gasta el motor en relación a la potencia desarrollada.",
+        "C": "La forma de medir la cantidad de carburante que gasta el motor en relación al par desarrollado.",
+        "D": "La cantidad de kilómetros que puede recorrer un vehículo con una cantidad determinada de combustible (normalmente 10 litros)."
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "B",
+      "bankAnswer": "B",
+      "reasons": [
+        "consumo_especifico"
+      ],
+      "approved": true,
+      "queuePosition": 15,
+      "round": "R29",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "confirmed",
+      "reason": "B es la única que vincula combustible con potencia desarrollada; consumo específico de motor es caudal másico de combustible dividido por potencia útil, expresado típicamente en g/kWh.",
+      "sources": [
+        "https://sede.idae.gob.es/sites/default/files/2024-01/08.Guia_Conduccion_eficiente_veh_industriales.pdf"
+      ]
+    },
+    {
+      "examId": "2026-07-25-mercancias-a",
+      "number": 61,
+      "sourcePage": 121,
+      "question": "¿Qué resistencias intervienen en el movimiento de los vehículos?",
+      "options": {
+        "A": "La resistencia a la rodadura y la resistencia a la pendiente.",
+        "B": "La resistencia que opone el pistón cuando desciende del punto muerto superior al punto muerto inferior.",
+        "C": "La resistencia que opone el pistón cuando asciende del punto muerto inferior al punto muerto superior.",
+        "D": "La resistencia del volante de inercia."
+      },
+      "originalSheetAnswer": "A",
+      "correctAnswer": "A",
+      "bankAnswer": "A",
+      "reasons": [
+        "stem:2023-12-02-mercancias-global:68"
+      ],
+      "approved": true,
+      "queuePosition": 16,
+      "round": "R29",
+      "historicalAnswer": "A",
+      "previousAppliedAnswer": "A",
+      "technicalAnswer": "A",
+      "action": "confirmed",
+      "reason": "A enumera dos resistencias externas reales, rodadura y pendiente. Las otras alternativas no son categorías de resistencia externa al avance; no es una enumeración exhaustiva.",
+      "sources": [
+        "https://sede.idae.gob.es/sites/default/files/2024-01/08.Guia_Conduccion_eficiente_veh_industriales.pdf"
+      ]
+    },
+    {
+      "examId": "2026-07-25-mercancias-a",
+      "number": 68,
+      "sourcePage": 122,
+      "question": "De las siguientes enfermedades, señale cuál no está reconocida como enfermedad profesional en el sector del transporte:",
+      "options": {
+        "A": "Enfermedades osteoarticulares por vibraciones mecánicas.",
+        "B": "Inflamación de la próstata como consecuencia del alto nivel de ruido.",
+        "C": "Sordera provocada por el ruido.",
+        "D": "Otras enfermedades vinculadas al transporte de productos determinados (cloro licuado, manganeso y sus compuestos, etc.)."
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "B",
+      "bankAnswer": "B",
+      "reasons": [
+        "enfermedad_profesional"
+      ],
+      "approved": true,
+      "queuePosition": 17,
+      "round": "R29",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "confirmed",
+      "reason": "Inflamación prostática por ruido no está tipificada como tal; sí figuran hipoacusia por ruido, afecciones por vibración y agentes químicos, en las actividades y exposiciones previstas.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2006-22169",
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2015-11724#a157"
+      ]
+    },
+    {
+      "examId": "2026-07-25-mercancias-a",
+      "number": 80,
+      "sourcePage": 124,
+      "question": "¿Qué filtro puede ser el causante de que por el tubo de escape salga una cantidad excesiva de humo negro?",
+      "options": {
+        "A": "El filtro de aceite.",
+        "B": "El filtro de gasoil.",
+        "C": "El filtro del aire.",
+        "D": "El filtro de inyección."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "reasons": [
+        "humo_negro"
+      ],
+      "approved": true,
+      "queuePosition": 18,
+      "round": "R29",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "confirmed",
+      "reason": "El filtro de aire obstruido limita el oxígeno de admisión y puede producir humo negro. C es la mejor de las cuatro opciones; no implica diagnóstico exclusivo.",
+      "sources": [
+        "https://www.epa.nsw.gov.au/Your-environment/Air/reducing-motor-vehicle-emissions/causes-smoky-vehicles"
+      ]
+    },
+    {
+      "examId": "2026-09-26-mercancias-a",
+      "number": 60,
+      "sourcePage": 137,
+      "question": "El que un automóvil monte una caja de velocidades con cambio manual o con cambio automático, ¿influye en el consumo de carburante?",
+      "options": {
+        "A": "Sí, con las cajas de velocidades con cambio automático el consumo es mayor.",
+        "B": "Sí, con las cajas de velocidades con cambio automático el consumo es menor.",
+        "C": "Si la velocidad es la misma, no influye.",
+        "D": "Si el estilo de conducir es el mismo, no influye."
+      },
+      "originalSheetAnswer": "A",
+      "correctAnswer": "A",
+      "bankAnswer": "A",
+      "reasons": [
+        "caja_cambios_consumo"
+      ],
+      "approved": true,
+      "queuePosition": 19,
+      "round": "R29",
+      "historicalAnswer": "A",
+      "previousAppliedAnswer": "A",
+      "technicalAnswer": null,
+      "action": "exclude",
+      "reason": "Las dos alternativas afirmativas A/B universalizan un aumento o descenso de consumo según el tipo de caja. Depende de vehículo, marcha y sistema; DOE documenta inversión de la tendencia histórica en automóviles con ambos cambios disponibles. No hay opción general única.",
+      "sources": [
+        "https://www.energy.gov/cmei/vehicles/articles/fotw-1127-march-30-2020-model-year-2016-automatic-transmissions-have",
+        "https://www.fueleconomy.gov/feg/tech_adv.shtml"
+      ]
+    },
+    {
+      "examId": "2026-09-26-mercancias-a",
+      "number": 72,
+      "sourcePage": 139,
+      "question": "¿Qué filtro puede ser el causante de que por el tubo de escape salga una cantidad excesiva de humo negro?",
+      "options": {
+        "A": "El filtro de aceite.",
+        "B": "El filtro de gasoil.",
+        "C": "El filtro del aire.",
+        "D": "El filtro de inyección."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "reasons": [
+        "humo_negro"
+      ],
+      "approved": true,
+      "queuePosition": 20,
+      "round": "R29",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "confirmed",
+      "reason": "El filtro de aire obstruido limita el oxígeno de admisión y puede producir humo negro. C es la mejor de las cuatro opciones; no implica diagnóstico exclusivo.",
+      "sources": [
+        "https://www.epa.nsw.gov.au/Your-environment/Air/reducing-motor-vehicle-emissions/causes-smoky-vehicles"
+      ]
+    },
+    {
+      "examId": "2023-07-29-mercancias-b",
+      "number": 76,
+      "sourcePage": 161,
+      "question": "De las siguientes enfermedades, señale cuál no está reconocida como enfermedad profesional en el sector del transporte:",
+      "options": {
+        "A": "Enfermedades osteoarticulares por vibraciones mecánicas.",
+        "B": "Inflamación de la próstata como consecuencia del alto nivel de ruido.",
+        "C": "Sordera provocada por el ruido.",
+        "D": "Otras enfermedades vinculadas al transporte de productos determinados (cloro licuado, manganeso y sus compuestos, etc.)."
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "B",
+      "bankAnswer": "B",
+      "reasons": [
+        "enfermedad_profesional"
+      ],
+      "approved": true,
+      "queuePosition": 21,
+      "round": "R29",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "confirmed",
+      "reason": "Inflamación prostática por ruido no está tipificada como tal; sí figuran hipoacusia por ruido, afecciones por vibración y agentes químicos, en las actividades y exposiciones previstas.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2006-22169",
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2015-11724#a157"
+      ]
+    },
+    {
+      "examId": "2023-07-29-mercancias-b",
+      "number": 92,
+      "sourcePage": 164,
+      "question": "¿Qué es el consumo específico en un motor?",
+      "options": {
+        "A": "La cantidad de carburante necesaria para producir una unidad de fuerza en una unidad de tiempo.",
+        "B": "La cantidad de calor necesario para producir una unidad de velocidad en una unidad de tiempo.",
+        "C": "La cantidad de carburante necesaria para producir una unidad de potencia en una unidad de tiempo.",
+        "D": "La cantidad de carburante necesaria para producir una unidad de temperatura en una unidad de tiempo."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "reasons": [
+        "consumo_especifico"
+      ],
+      "approved": true,
+      "queuePosition": 22,
+      "round": "R29",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "note",
+      "reason": "C aproxima el consumo específico como combustible por unidad de potencia durante una unidad de tiempo; dimensionalmente corresponde a energía útil (g/kWh), no fuerza ni velocidad ni temperatura.",
+      "sources": [
+        "https://sede.idae.gob.es/sites/default/files/2024-01/08.Guia_Conduccion_eficiente_veh_industriales.pdf"
+      ]
+    },
+    {
+      "examId": "2024-07-20-mercancias-b",
+      "number": 57,
+      "sourcePage": 176,
+      "question": "De las siguientes enfermedades, señale la que no es reconocida como enfermedad profesional en el sector del transporte:",
+      "options": {
+        "A": "Pancreatitis ocasionada por las malas posturas.",
+        "B": "Parálisis del nervio radial por compresión del mismo provocada por posturas forzadas y movimientos repetitivos.",
+        "C": "Fatiga de vainas tendinosas (Inflamación de los tendones de la muñeca y de los dedos por roce y movimiento repetitivo).",
+        "D": "Sordera provocada por el ruido."
+      },
+      "originalSheetAnswer": "A",
+      "correctAnswer": "A",
+      "bankAnswer": "A",
+      "reasons": [
+        "enfermedad_profesional"
+      ],
+      "approved": true,
+      "queuePosition": 23,
+      "round": "R29",
+      "historicalAnswer": "A",
+      "previousAppliedAnswer": "A",
+      "technicalAnswer": "A",
+      "action": "confirmed",
+      "reason": "Pancreatitis por malas posturas no figura como tal; el cuadro incluye determinadas neuropatías por compresión, tendinopatías y sordera por ruido.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2006-22169"
+      ]
+    },
+    {
+      "examId": "2024-07-20-mercancias-b",
+      "number": 96,
+      "sourcePage": 183,
+      "question": "¿Qué filtro puede ser el causante de que por el tubo de escape salga una cantidad excesiva de humo negro?",
+      "options": {
+        "A": "El filtro de aceite.",
+        "B": "El filtro de gasoil",
+        "C": "El filtro del aire.",
+        "D": "El filtro de inyección."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "reasons": [
+        "humo_negro"
+      ],
+      "approved": true,
+      "queuePosition": 24,
+      "round": "R29",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "confirmed",
+      "reason": "El filtro de aire obstruido limita el oxígeno de admisión y puede producir humo negro. C es la mejor de las cuatro opciones; no implica diagnóstico exclusivo.",
+      "sources": [
+        "https://www.epa.nsw.gov.au/Your-environment/Air/reducing-motor-vehicle-emissions/causes-smoky-vehicles"
+      ]
+    },
+    {
+      "examId": "2025-07-26-mercancias-b",
+      "number": 11,
+      "sourcePage": 186,
+      "question": "En razón a la especificidad de su objeto y de su régimen jurídico, ¿cómo se clasifican los transportes de mercancías?",
+      "options": {
+        "A": "De carga completa y de carga fraccionada.",
+        "B": "Discrecionales, nacionales e internacionales.",
+        "C": "Ordinarios y especiales.",
+        "D": "De mercancía embalada y de mercancía a granel."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "reasons": [
+        "stem:2023-12-02-mercancias-global:3",
+        "clasificacion_transportes"
+      ],
+      "approved": true,
+      "queuePosition": 25,
+      "round": "R29",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "confirmed",
+      "reason": "C: transportes ordinarios y especiales según art. 66 LOTT; las otras opciones corresponden a clasificaciones diferentes o no a la que pregunta el enunciado.",
+      "sources": [
+        "https://boe.es/buscar/act.php?id=BOE-A-1987-17803&lang=es&p=20251204&tn=0"
+      ]
+    },
+    {
+      "examId": "2025-07-26-mercancias-b",
+      "number": 52,
+      "sourcePage": 193,
+      "question": "¿Qué filtro puede ser el causante de que por el tubo de escape salga una cantidad excesiva de humo negro?",
+      "options": {
+        "A": "El filtro de aceite.",
+        "B": "El filtro de gasoil.",
+        "C": "El filtro del aire.",
+        "D": "El filtro de inyección."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "reasons": [
+        "humo_negro"
+      ],
+      "approved": true,
+      "queuePosition": 26,
+      "round": "R29",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "confirmed",
+      "reason": "El filtro de aire obstruido limita el oxígeno de admisión y puede producir humo negro. C es la mejor de las cuatro opciones; no implica diagnóstico exclusivo.",
+      "sources": [
+        "https://www.epa.nsw.gov.au/Your-environment/Air/reducing-motor-vehicle-emissions/causes-smoky-vehicles"
+      ]
+    },
+    {
+      "examId": "2025-07-26-mercancias-b",
+      "number": 83,
+      "sourcePage": 198,
+      "question": "Ordene los motores de mayor a menor consumo específico.",
+      "options": {
+        "A": "Diésel de inyección directa, diésel de inyección indirecta, gasolina de inyección directa y gasolina de inyección indirecta.",
+        "B": "Gasolina de inyección indirecta, gasolina de inyección directa, diésel de inyección indirecta y diésel de inyección directa.",
+        "C": "Diésel de inyección directa, gasolina de inyección directa, diésel de inyección indirecta y gasolina de inyección indirecta.",
+        "D": "Diésel de inyección indirecta, diésel de inyección directa, gasolina de inyección directa y gasolina de inyección indirecta."
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "B",
+      "bankAnswer": "B",
+      "reasons": [
+        "consumo_especifico"
+      ],
+      "approved": true,
+      "queuePosition": 27,
+      "round": "R29",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "note",
+      "reason": "B reproduce el orden didáctico histórico por tecnología; no existe una clasificación universal independiente del diseño, carga y régimen motor. Se conserva la clave más plausible entre opciones, no se modifica el bloqueo anterior de julio 2025 A q43.",
+      "sources": [
+        "https://sede.idae.gob.es/sites/default/files/2024-01/08.Guia_Conduccion_eficiente_veh_industriales.pdf",
+        "https://www.fueleconomy.gov/feg/atv.shtml"
+      ]
+    },
+    {
+      "examId": "2026-07-25-mercancias-b",
+      "number": 32,
+      "sourcePage": 206,
+      "question": "De las siguientes enfermedades, señale cuál no está reconocida como enfermedad profesional en el sector del transporte:",
+      "options": {
+        "A": "Enfermedades osteoarticulares por vibraciones mecánicas.",
+        "B": "Inflamación de la próstata como consecuencia del alto nivel de ruido.",
+        "C": "Sordera provocada por el ruido.",
+        "D": "Otras enfermedades vinculadas al transporte de productos determinados (cloro licuado, manganeso y sus compuestos, etc.)."
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "B",
+      "bankAnswer": "B",
+      "reasons": [
+        "enfermedad_profesional"
+      ],
+      "approved": true,
+      "queuePosition": 28,
+      "round": "R29",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "confirmed",
+      "reason": "Inflamación prostática por ruido no está tipificada como tal; sí figuran hipoacusia por ruido, afecciones por vibración y agentes químicos, en las actividades y exposiciones previstas.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2006-22169",
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2015-11724#a157"
+      ]
+    },
+    {
+      "examId": "2026-07-25-mercancias-b",
+      "number": 80,
+      "sourcePage": 213,
+      "question": "¿Qué filtro puede ser el causante de que por el tubo de escape salga una cantidad excesiva de humo negro?",
+      "options": {
+        "A": "El filtro de aceite.",
+        "B": "El filtro de gasoil.",
+        "C": "El filtro del aire.",
+        "D": "El filtro de inyección."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "reasons": [
+        "humo_negro"
+      ],
+      "approved": true,
+      "queuePosition": 29,
+      "round": "R29",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "confirmed",
+      "reason": "El filtro de aire obstruido limita el oxígeno de admisión y puede producir humo negro. C es la mejor de las cuatro opciones; no implica diagnóstico exclusivo.",
+      "sources": [
+        "https://www.epa.nsw.gov.au/Your-environment/Air/reducing-motor-vehicle-emissions/causes-smoky-vehicles"
+      ]
+    },
+    {
+      "examId": "2026-07-25-mercancias-b",
+      "number": 90,
+      "sourcePage": 215,
+      "question": "¿Qué es el consumo específico de un motor?",
+      "options": {
+        "A": "El consumo de combustible, en litros, para que el vehículo recorra 100 km.",
+        "B": "La forma de medir la cantidad de carburante que gasta el motor en relación a la potencia desarrollada.",
+        "C": "La forma de medir la cantidad de carburante que gasta el motor en relación al par desarrollado.",
+        "D": "La cantidad de kilómetros que puede recorrer un vehículo con una cantidad determinada de combustible (normalmente 10 litros)."
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "B",
+      "bankAnswer": "B",
+      "reasons": [
+        "consumo_especifico"
+      ],
+      "approved": true,
+      "queuePosition": 30,
+      "round": "R29",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "confirmed",
+      "reason": "B es la única que vincula combustible con potencia desarrollada; consumo específico de motor es caudal másico de combustible dividido por potencia útil, expresado típicamente en g/kWh.",
+      "sources": [
+        "https://sede.idae.gob.es/sites/default/files/2024-01/08.Guia_Conduccion_eficiente_veh_industriales.pdf"
+      ]
+    },
+    {
+      "examId": "2026-07-25-mercancias-b",
+      "number": 92,
+      "sourcePage": 215,
+      "question": "¿Qué resistencias intervienen en el movimiento de los vehículos?",
+      "options": {
+        "A": "La resistencia a la rodadura y la resistencia a la pendiente.",
+        "B": "La resistencia que opone el pistón cuando desciende del punto muerto superior al punto muerto inferior.",
+        "C": "La resistencia que opone el pistón cuando asciende del punto muerto inferior al punto muerto superior.",
+        "D": "La resistencia del volante de inercia."
+      },
+      "originalSheetAnswer": "A",
+      "correctAnswer": "A",
+      "bankAnswer": "A",
+      "reasons": [
+        "stem:2023-12-02-mercancias-global:68"
+      ],
+      "approved": true,
+      "queuePosition": 31,
+      "round": "R29",
+      "historicalAnswer": "A",
+      "previousAppliedAnswer": "A",
+      "technicalAnswer": "A",
+      "action": "confirmed",
+      "reason": "A enumera dos resistencias externas reales, rodadura y pendiente. Las otras alternativas no son categorías de resistencia externa al avance; no es una enumeración exhaustiva.",
+      "sources": [
+        "https://sede.idae.gob.es/sites/default/files/2024-01/08.Guia_Conduccion_eficiente_veh_industriales.pdf"
+      ]
+    },
+    {
+      "examId": "2023-12-02-mercancias-global",
+      "number": 74,
+      "sourcePage": 232,
+      "question": "¿Qué filtro puede ser el causante de que por el tubo de escape salga una cantidad excesiva de humo negro?",
+      "options": {
+        "A": "EI fiItro de aceite.",
+        "B": "EI fiItro de gasoiI.",
+        "C": "EI fiItro deI aire.",
+        "D": "EI fiItro de inyección."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": null,
+      "reasons": [
+        "humo_negro"
+      ],
+      "approved": true,
+      "queuePosition": 32,
+      "round": "R29",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "confirmed",
+      "reason": "El filtro de aire obstruido limita el oxígeno de admisión y puede producir humo negro. C es la mejor de las cuatro opciones; no implica diagnóstico exclusivo.",
+      "sources": [
+        "https://www.epa.nsw.gov.au/Your-environment/Air/reducing-motor-vehicle-emissions/causes-smoky-vehicles"
+      ]
+    },
+    {
+      "examId": "2023-02-04-mercancias-global",
+      "number": 64,
+      "sourcePage": 251,
+      "question": "¿Qué resistencias intervienen en el movimiento de los vehículos?",
+      "options": {
+        "A": "La inercia de los pistones y de los cilindros.",
+        "B": "La inercia del sistema de frenado.",
+        "C": "La resistencia aerodinámica y a la pendiente.",
+        "D": "La resistencia neumática del sistema de suspensión."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "reasons": [
+        "stem:2023-12-02-mercancias-global:68"
+      ],
+      "approved": true,
+      "queuePosition": 33,
+      "round": "R29",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "confirmed",
+      "reason": "C enumera dos resistencias al avance: aerodinámica y pendiente. No exige listar todas; los otros tres distractores no son categorías externas del modelo usado.",
+      "sources": [
+        "https://sede.idae.gob.es/sites/default/files/2024-01/08.Guia_Conduccion_eficiente_veh_industriales.pdf"
+      ]
+    },
+    {
+      "examId": "2025-02-01-mercancias-global",
+      "number": 31,
+      "sourcePage": 263,
+      "question": "De las siguientes enfermedades, señale cuál no es reconocida como enfermedad profesional en el sector del transporte:",
+      "options": {
+        "A": "Inflamación de la vesícula.",
+        "B": "Enfermedades osteoarticulares por vibraciones mecánicas.",
+        "C": "Otras enfermedades vinculadas al transporte de productos determinados (cloro licuado, manganeso y sus compuestos, etc.).",
+        "D": "Lesiones de la piel provocadas por contacto con hidrocarburos, alquitrán, aceites minerales y otros."
+      },
+      "originalSheetAnswer": "A",
+      "correctAnswer": "A",
+      "bankAnswer": "A",
+      "reasons": [
+        "enfermedad_profesional"
+      ],
+      "approved": true,
+      "queuePosition": 34,
+      "round": "R29",
+      "historicalAnswer": "A",
+      "previousAppliedAnswer": "A",
+      "technicalAnswer": "A",
+      "action": "confirmed",
+      "reason": "La inflamación de la vesícula no figura como tal entre riesgos del sector; sí están tipificadas determinadas afecciones por vibración, sustancias y exposición cutánea.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2006-22169"
+      ]
+    },
+    {
+      "examId": "2025-02-01-mercancias-global",
+      "number": 69,
+      "sourcePage": 269,
+      "question": "¿Qué filtro puede ser el causante de que por el tubo de escape salga una cantidad excesiva de humo negro?",
+      "options": {
+        "A": "El filtro de aceite.",
+        "B": "El filtro de gasoil.",
+        "C": "El filtro del aire.",
+        "D": "El filtro de inyección."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "reasons": [
+        "humo_negro"
+      ],
+      "approved": true,
+      "queuePosition": 35,
+      "round": "R29",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "confirmed",
+      "reason": "El filtro de aire obstruido limita el oxígeno de admisión y puede producir humo negro. C es la mejor de las cuatro opciones; no implica diagnóstico exclusivo.",
+      "sources": [
+        "https://www.epa.nsw.gov.au/Your-environment/Air/reducing-motor-vehicle-emissions/causes-smoky-vehicles"
+      ]
+    },
+    {
+      "examId": "2026-02-07-mercancias-global",
+      "number": 48,
+      "sourcePage": 282,
+      "question": "El consumo específico de un motor diésel es:",
+      "options": {
+        "A": "Mayor que el de un motor de gasolina.",
+        "B": "Igual que el de un motor de gasolina.",
+        "C": "Menor que el de un motor de gasolina.",
+        "D": "Menor cuanto mayor sea el número de revoluciones."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "reasons": [
+        "consumo_especifico"
+      ],
+      "approved": true,
+      "queuePosition": 36,
+      "round": "R29",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "note",
+      "reason": "C responde al comportamiento típico del diésel respecto a gasolina; consumo específico cambia con régimen, carga y tecnología. No garantiza que cualquier motor diésel consuma siempre menos que cualquier motor de gasolina.",
+      "sources": [
+        "https://sede.idae.gob.es/sites/default/files/2024-01/08.Guia_Conduccion_eficiente_veh_industriales.pdf",
+        "https://www.fueleconomy.gov/feg/atv.shtml"
+      ]
+    },
+    {
+      "examId": "2026-02-07-mercancias-global",
+      "number": 81,
+      "sourcePage": 287,
+      "question": "¿Qué filtro puede ser el causante de que por el tubo de escape salga una cantidad excesiva de humo negro?",
+      "options": {
+        "A": "El filtro de aceite.",
+        "B": "El filtro de gasoil.",
+        "C": "El filtro del aire.",
+        "D": "El filtro de inyección."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "reasons": [
+        "humo_negro"
+      ],
+      "approved": true,
+      "queuePosition": 37,
+      "round": "R29",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "confirmed",
+      "reason": "El filtro de aire obstruido limita el oxígeno de admisión y puede producir humo negro. C es la mejor de las cuatro opciones; no implica diagnóstico exclusivo.",
+      "sources": [
+        "https://www.epa.nsw.gov.au/Your-environment/Air/reducing-motor-vehicle-emissions/causes-smoky-vehicles"
+      ]
+    },
+    {
+      "examId": "2023-06-03-mercancias-global",
+      "number": 39,
+      "sourcePage": 298,
+      "question": "Para que una dolencia sea considerada enfermedad profesional:",
+      "options": {
+        "A": "debe estar expresamente reconocida como tal por las autoridades sanitarias.",
+        "B": "debe ser una dolencia que ocurra muy frecuentemente.",
+        "C": "debe ser una dolencia grave.",
+        "D": "debe ser una dolencia leve."
+      },
+      "originalSheetAnswer": "A",
+      "correctAnswer": "A",
+      "bankAnswer": "A",
+      "reasons": [
+        "stem:2023-12-02-mercancias-global:53",
+        "enfermedad_profesional"
+      ],
+      "approved": true,
+      "queuePosition": 38,
+      "round": "R29",
+      "historicalAnswer": "A",
+      "previousAppliedAnswer": "A",
+      "technicalAnswer": null,
+      "action": "exclude",
+      "reason": "RD 1299/2006 art. 3: la calificación individual corresponde a la entidad gestora; autoridades sanitarias comunican sospechas (art. 5). Ninguna de las alternativas describe la competencia jurídica. Se conserva la clave histórica.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2006-22169",
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2015-11724#a157"
+      ]
+    },
+    {
+      "examId": "2023-03-25-mercancias-global",
+      "number": 3,
+      "sourcePage": 312,
+      "question": "En razón a la especialidad de su objeto y de su régimen jurídico, ¿cómo se clasifican los transportes de mercancías?",
+      "options": {
+        "A": "Regulares.",
+        "B": "Discrecionales, nacionales e internacionales.",
+        "C": "Ordinarios y especiales.",
+        "D": "Públicos y privados."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": null,
+      "reasons": [
+        "clasificacion_transportes"
+      ],
+      "approved": true,
+      "queuePosition": 39,
+      "round": "R29",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "confirmed",
+      "reason": "C: transportes ordinarios y especiales según art. 66 LOTT; las otras opciones corresponden a clasificaciones diferentes o no a la que pregunta el enunciado.",
+      "sources": [
+        "https://boe.es/buscar/act.php?id=BOE-A-1987-17803&lang=es&p=20251204&tn=0"
+      ]
+    },
+    {
+      "examId": "2023-03-25-mercancias-global",
+      "number": 29,
+      "sourcePage": 317,
+      "question": "¿Qué es el consumo específico en un motor?",
+      "options": {
+        "A": "La cantidad de carburante necesaria para producir una unidad de fuerza en una unidad de tiempo.",
+        "B": "La cantidad de calor necesario para producir una unidad de velocidad en una unidad de tiempo.",
+        "C": "La cantidad de carburante necesaria para producir una unidad de potencia en una unidad de tiempo.",
+        "D": "La cantidad de carburante necesaria para producir una unidad de temperatura en una unidad de tiempo."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "reasons": [
+        "consumo_especifico"
+      ],
+      "approved": true,
+      "queuePosition": 40,
+      "round": "R29",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "note",
+      "reason": "C aproxima el consumo específico como combustible por unidad de potencia durante una unidad de tiempo; dimensionalmente corresponde a energía útil (g/kWh), no fuerza ni velocidad ni temperatura.",
+      "sources": [
+        "https://sede.idae.gob.es/sites/default/files/2024-01/08.Guia_Conduccion_eficiente_veh_industriales.pdf"
+      ]
+    },
+    {
+      "examId": "2023-03-25-mercancias-global",
+      "number": 38,
+      "sourcePage": 319,
+      "question": "De las siguientes enfermedades, señale la que no es reconocida como enfermedad profesional en el sector del transporte:",
+      "options": {
+        "A": "Pancreatitis ocasionada por las malas posturas.",
+        "B": "Parálisis del nervio radial por compresión del mismo provocada por posturas forzadas y movimientos repetitivos.",
+        "C": "Fatiga de vainas tendinosas (Inflamación de los tendones de la muñeca y de los dedos por roce y movimiento repetitivo).",
+        "D": "Sordera provocada por el ruido."
+      },
+      "originalSheetAnswer": "A",
+      "correctAnswer": "A",
+      "bankAnswer": "A",
+      "reasons": [
+        "enfermedad_profesional"
+      ],
+      "approved": true,
+      "queuePosition": 41,
+      "round": "R29",
+      "historicalAnswer": "A",
+      "previousAppliedAnswer": "A",
+      "technicalAnswer": "A",
+      "action": "confirmed",
+      "reason": "Pancreatitis por malas posturas no figura como tal; el cuadro incluye determinadas neuropatías por compresión, tendinopatías y sordera por ruido.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2006-22169"
+      ]
+    },
+    {
+      "examId": "2023-03-25-mercancias-global",
+      "number": 54,
+      "sourcePage": 322,
+      "question": "¿Para cuál de las siguientes aplicaciones no tiene utilidad conocer las curvas de par, potencia y consumo específico?",
+      "options": {
+        "A": "Para identificar la zona de utilización óptima del cuentarrevoluciones.",
+        "B": "Para obtener los márgenes de velocidad de las cajas de cambio de velocidades.",
+        "C": "Para mejorar la seguridad pasiva del vehículo.",
+        "D": "Para obtener mayor rendimiento del motor."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "reasons": [
+        "consumo_especifico"
+      ],
+      "approved": true,
+      "queuePosition": 42,
+      "round": "R29",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "confirmed",
+      "reason": "C: las curvas permiten seleccionar régimen/marcha y aprovechar rendimiento, no diseñar ni mejorar directamente la seguridad pasiva del vehículo.",
+      "sources": [
+        "https://sede.idae.gob.es/sites/default/files/2024-01/08.Guia_Conduccion_eficiente_veh_industriales.pdf"
+      ]
+    },
+    {
+      "examId": "2025-03-29-mercancias-global",
+      "number": 41,
+      "sourcePage": 338,
+      "question": "Como norma general, de los motores que se indican, ¿cuál es el que tiene un mayor consumo específico?",
+      "options": {
+        "A": "El motor diésel de inyección directa.",
+        "B": "El motor diésel de inyección indirecta.",
+        "C": "El motor de gasolina de inyección directa.",
+        "D": "El motor de gasolina de inyección indirecta."
+      },
+      "originalSheetAnswer": "D",
+      "correctAnswer": "D",
+      "bankAnswer": null,
+      "reasons": [
+        "consumo_especifico"
+      ],
+      "approved": true,
+      "queuePosition": 43,
+      "round": "R29",
+      "historicalAnswer": "D",
+      "previousAppliedAnswer": "D",
+      "technicalAnswer": "D",
+      "action": "note",
+      "reason": "D es el criterio general histórico para las tecnologías citadas. La comparación real requiere mapas de consumo y condiciones equivalentes; el dato de la inyección por sí solo no garantiza el orden.",
+      "sources": [
+        "https://sede.idae.gob.es/sites/default/files/2024-01/08.Guia_Conduccion_eficiente_veh_industriales.pdf",
+        "https://www.fueleconomy.gov/feg/atv.shtml"
+      ]
+    },
+    {
+      "examId": "2026-03-28-mercancias-global",
+      "number": 86,
+      "sourcePage": 361,
+      "question": "Al seleccionar la relación de marchas en la caja de velocidades de un vehículo pesado, y para consumir el mínimo carburante posible, es conveniente utilizar aquella:",
+      "options": {
+        "A": "Con la que se obtenga la máxima potencia.",
+        "B": "Con la que se obtenga el mayor número de revoluciones sin llegar a pasar de vueltas el motor.",
+        "C": "Que permita mantener la aguja del cuentarrevoluciones dentro de la zona marcada de color verde en el mismo.",
+        "D": "Con la que se obtenga el mínimo par motor."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "reasons": [
+        "caja_cambios_consumo"
+      ],
+      "approved": true,
+      "queuePosition": 44,
+      "round": "R29",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "confirmed",
+      "reason": "C: la zona verde indicada por fabricante orienta sobre el régimen de mejor eficiencia; no se debe confundir con máxima potencia o revoluciones.",
+      "sources": [
+        "https://sede.idae.gob.es/sites/default/files/2024-01/08.Guia_Conduccion_eficiente_veh_industriales.pdf"
+      ]
+    },
+    {
+      "examId": "2026-03-28-mercancias-global",
+      "number": 88,
+      "sourcePage": 361,
+      "question": "¿Cuál de las siguientes enfermedades no está reconocida como enfermedad profesional en el sector del transporte?",
+      "options": {
+        "A": "Otras enfermedades vinculadas al transporte de productos determinados (cloro licuado, manganeso y sus compuestos, etc.).",
+        "B": "Sordera provocada por el ruido.",
+        "C": "Parálisis facial.",
+        "D": "Parálisis del nervio radial por compresión del mismo provocada por posturas forzadas."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": null,
+      "reasons": [
+        "enfermedad_profesional"
+      ],
+      "approved": true,
+      "queuePosition": 45,
+      "round": "R29",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "confirmed",
+      "reason": "C es el distractor no contemplado como tal para el sector; las otras alternativas corresponden a exposiciones/compresiones reconocidas en el cuadro en condiciones especificadas.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2006-22169"
+      ]
+    },
+    {
+      "examId": "2026-03-28-mercancias-global",
+      "number": 97,
+      "sourcePage": 363,
+      "question": "¿En qué consiste la bursitis, enfermedad profesional reconocida en el sector del transporte?",
+      "options": {
+        "A": "Inflamación de los tendones de la muñeca.",
+        "B": "Una lesión de la piel.",
+        "C": "Inflamación de la bolsa llena de líquido que se encuentra entre la piel y el tendón.",
+        "D": "Una torcedura del ligamento de la rodilla."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "reasons": [
+        "enfermedad_profesional"
+      ],
+      "approved": true,
+      "queuePosition": 46,
+      "round": "R29",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "note",
+      "reason": "C identifica bursitis como inflamación de la bursa; no todas las bursas se sitúan entre piel y tendón, también amortiguan otras interfaces. El carácter profesional requiere exposición según cuadro.",
+      "sources": [
+        "https://medlineplus.gov/spanish/bursitis.html",
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2006-22169"
+      ]
+    },
+    {
+      "examId": "2024-05-25-mercancias-global",
+      "number": 8,
+      "sourcePage": 385,
+      "question": "¿De qué factores, entre otros, depende el grado de rozamiento en un camión?",
+      "options": {
+        "A": "Del calentamiento.",
+        "B": "Del enfriado.",
+        "C": "Del desplazamiento de masas transversales.",
+        "D": "De la presión de los neumáticos."
+      },
+      "originalSheetAnswer": "D",
+      "correctAnswer": "D",
+      "bankAnswer": null,
+      "reasons": [
+        "stem:2023-12-02-mercancias-global:8"
+      ],
+      "approved": true,
+      "queuePosition": 47,
+      "round": "R29",
+      "historicalAnswer": "D",
+      "previousAppliedAnswer": "D",
+      "technicalAnswer": "D",
+      "action": "note",
+      "reason": "D: presión de neumáticos afecta huella de contacto, deformación y transmisión de fuerzas. No equivale a decir que el coeficiente de fricción depende únicamente de la presión.",
+      "sources": [
+        "https://www.nhtsa.gov/sites/nhtsa.gov/files/tirepressure-fmvss-138.pdf",
+        "https://openstax.org/books/f%C3%ADsica-universitaria-volumen-1/pages/6-2-friccion"
+      ]
+    },
+    {
+      "examId": "2024-05-25-mercancias-global",
+      "number": 26,
+      "sourcePage": 389,
+      "question": "¿Cómo se puede definir la enfermedad profesional?",
+      "options": {
+        "A": "Enfermedades con comienzo repentino y de origen no violento.",
+        "B": "Aquella que presenta relación con una determinada rama de actividad u ocupación.",
+        "C": "Aquella que se produce como consecuencia de un accidente en el trabajo.",
+        "D": "Aquella que se produce de camino al trabajo."
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "B",
+      "bankAnswer": "B",
+      "reasons": [
+        "enfermedad_profesional"
+      ],
+      "approved": true,
+      "queuePosition": 48,
+      "round": "R29",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "note",
+      "reason": "B es la mejor definición entre distractores; el concepto legal añade actividad y agente incluidos en el cuadro (LGSS 157), no mera relación estadística con una profesión.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2015-11724#a157",
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2006-22169"
+      ]
+    },
+    {
+      "examId": "2024-05-25-mercancias-global",
+      "number": 40,
+      "sourcePage": 391,
+      "question": "En el sector del transporte está reconocida como enfermedad profesional:",
+      "options": {
+        "A": "el desprendimiento de córnea.",
+        "B": "el síndrome postrotuliano.",
+        "C": "la úlcera de estómago.",
+        "D": "la sordera provocada por el ruido."
+      },
+      "originalSheetAnswer": "D",
+      "correctAnswer": "D",
+      "bankAnswer": "D",
+      "reasons": [
+        "enfermedad_profesional"
+      ],
+      "approved": true,
+      "queuePosition": 49,
+      "round": "R29",
+      "historicalAnswer": "D",
+      "previousAppliedAnswer": "D",
+      "technicalAnswer": "D",
+      "action": "confirmed",
+      "reason": "D: hipoacusia por ruido figura en anexo 1 del RD 1299/2006, incluidos determinados motores diésel y trabajos con exposición. Las otras dolencias no figuran como tal por la actividad descrita.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2006-22169"
+      ]
+    },
+    {
+      "examId": "2024-05-25-mercancias-global",
+      "number": 44,
+      "sourcePage": 392,
+      "question": "El consumo específico de un motor, ¿indica cómo es su rendimiento?",
+      "options": {
+        "A": "No, solo indica la cantidad de litros que consume cada 100 kilómetros.",
+        "B": "No, solo indica cómo es su par motor.",
+        "C": "Sí, a menor consumo específico menor rendimiento del motor.",
+        "D": "Sí, a menor consumo específico mayor rendimiento del motor."
+      },
+      "originalSheetAnswer": "D",
+      "correctAnswer": "D",
+      "bankAnswer": "D",
+      "reasons": [
+        "consumo_especifico"
+      ],
+      "approved": true,
+      "queuePosition": 50,
+      "round": "R29",
+      "historicalAnswer": "D",
+      "previousAppliedAnswer": "D",
+      "technicalAnswer": "D",
+      "action": "note",
+      "reason": "D: para combustible comparable, menor masa por unidad de energía útil implica mayor rendimiento. La eficiencia energética exacta también depende del poder calorífico del combustible.",
+      "sources": [
+        "https://sede.idae.gob.es/sites/default/files/2024-01/08.Guia_Conduccion_eficiente_veh_industriales.pdf"
+      ]
+    },
+    {
+      "examId": "2024-05-25-mercancias-global",
+      "number": 70,
+      "sourcePage": 397,
+      "question": "¿Qué resistencias intervienen en el movimiento de los vehículos?",
+      "options": {
+        "A": "La resistencia a la rodadura y la resistencia aerodinámica.",
+        "B": "La resistencia a la pendiente, solamente.",
+        "C": "La resistencia a la rodadura, solamente.",
+        "D": "La resistencia aerodinámica, únicamente."
+      },
+      "originalSheetAnswer": "A",
+      "correctAnswer": "A",
+      "bankAnswer": "A",
+      "reasons": [
+        "stem:2023-12-02-mercancias-global:68"
+      ],
+      "approved": true,
+      "queuePosition": 51,
+      "round": "R29",
+      "historicalAnswer": "A",
+      "previousAppliedAnswer": "A",
+      "technicalAnswer": "A",
+      "action": "confirmed",
+      "reason": "A enumera rodadura y aerodinámica, ambas resistencias; otras opciones las declaran exclusivas incorrectamente. Pendiente y aceleración también son relevantes según condiciones.",
+      "sources": [
+        "https://sede.idae.gob.es/sites/default/files/2024-01/08.Guia_Conduccion_eficiente_veh_industriales.pdf"
+      ]
+    },
+    {
+      "examId": "2026-05-30-mercancias-global",
+      "number": 29,
+      "sourcePage": 408,
+      "question": "Al prestar ayuda en un accidente de tráfico, ¿cómo se debe colocar a los heridos que sangran por la boca?",
+      "options": {
+        "A": "Sentados.",
+        "B": "Boca arriba.",
+        "C": "Boca abajo, buscando monedas perdidas.",
+        "D": "En posición de defensa."
+      },
+      "originalSheetAnswer": "D",
+      "correctAnswer": "D",
+      "bankAnswer": "D",
+      "reasons": [
+        "stem:2023-12-02-mercancias-global:44"
+      ],
+      "approved": true,
+      "queuePosition": 52,
+      "round": "R29",
+      "historicalAnswer": "D",
+      "previousAppliedAnswer": "D",
+      "technicalAnswer": "D",
+      "action": "note",
+      "reason": "D en el contexto DGT de víctima inconsciente que respira y sangra/vomita con riesgo de aspiración; no mover innecesariamente a un traumatizado y seguir instrucciones del 112. Distractor C contiene expresión anómala; se conserva texto histórico, fotografía no cotejada.",
+      "sources": [
+        "https://sede.dgt.gob.es/export/sites/dgt/.galleries/permisos-de-conducir/certificacion-aptitud-profesores-formacion-vial/2024/Manual-IX-Primeros-Auxilios_2024.pdf"
+      ]
+    },
+    {
+      "examId": "2026-05-30-mercancias-global",
+      "number": 54,
+      "sourcePage": 412,
+      "question": "¿Qué resistencias intervienen en el movimiento de los vehículos?",
+      "options": {
+        "A": "La resistencia de pendiente.",
+        "B": "La resistencia del bolsillo del conductor al pasar por la gasolinera.",
+        "C": "La resistencia al conjunto de la transmisión.",
+        "D": "La resistencia al movimiento del conjunto dámper-cigüeñal."
+      },
+      "originalSheetAnswer": "A",
+      "correctAnswer": "A",
+      "bankAnswer": null,
+      "reasons": [
+        "stem:2023-12-02-mercancias-global:68"
+      ],
+      "approved": true,
+      "queuePosition": 53,
+      "round": "R29",
+      "historicalAnswer": "A",
+      "previousAppliedAnswer": "A",
+      "technicalAnswer": "A",
+      "action": "note",
+      "reason": "A: pendiente es una resistencia externa al avance según manual IDAE. C puede aludir a pérdidas internas de transmisión, pero no a la clasificación de resistencias externas. Mantener la distinción.",
+      "sources": [
+        "https://sede.idae.gob.es/sites/default/files/2024-01/08.Guia_Conduccion_eficiente_veh_industriales.pdf",
+        "https://www.fueleconomy.gov/feg/atv.shtml"
+      ]
+    },
+    {
+      "examId": "2022-11-26-mercancias-global",
+      "number": 81,
+      "sourcePage": 435,
+      "question": "¿Qué filtro, principalmente, puede ser el causante de que por el tubo de escape salga una cantidad excesiva de humo negro?",
+      "options": {
+        "A": "El filtro de aceite.",
+        "B": "El filtro de gasoil.",
+        "C": "El filtro del aire.",
+        "D": "El filtro de inyección."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": null,
+      "reasons": [
+        "humo_negro"
+      ],
+      "approved": true,
+      "queuePosition": 54,
+      "round": "R29",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "confirmed",
+      "reason": "El filtro de aire obstruido limita el oxígeno de admisión y puede producir humo negro. C es la mejor de las cuatro opciones; no implica diagnóstico exclusivo.",
+      "sources": [
+        "https://www.epa.nsw.gov.au/Your-environment/Air/reducing-motor-vehicle-emissions/causes-smoky-vehicles"
+      ]
+    },
+    {
+      "examId": "2022-10-01-mercancias-global",
+      "number": 38,
+      "sourcePage": 447,
+      "question": "¿Cómo se puede definir la enfermedad profesional?",
+      "options": {
+        "A": "Enfermedad con comienzo repentino y de origen no violento.",
+        "B": "Aquella que presenta relación con una determinada rama de actividad u ocupación.",
+        "C": "Aquella que se produce como consecuencia de un accidente en el trabajo.",
+        "D": "Aquella que se produce de camino al trabajo."
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "B",
+      "bankAnswer": "B",
+      "reasons": [
+        "enfermedad_profesional"
+      ],
+      "approved": true,
+      "queuePosition": 55,
+      "round": "R29",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "note",
+      "reason": "B es la mejor definición entre distractores; el concepto legal añade actividad y agente incluidos en el cuadro (LGSS 157), no mera relación estadística con una profesión.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2015-11724#a157",
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2006-22169"
+      ]
+    },
+    {
+      "examId": "2023-09-23-mercancias-global",
+      "number": 30,
+      "sourcePage": 466,
+      "question": "¿Qué es el consumo específico de un motor?",
+      "options": {
+        "A": "El consumo de combustible, en litros, para que el vehículo recorra 100 km.",
+        "B": "La cantidad de carburante que gasta un vehículo para producir una unidad de potencia en una unidad de tiempo.",
+        "C": "La forma de medir la cantidad de carburante que gasta el motor en relación al par desarrollado.",
+        "D": "La cantidad de kilómetros que puede recorrer un vehículo con una cantidad determinada de combustible (normalmente 10 litros)."
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "B",
+      "bankAnswer": null,
+      "reasons": [
+        "consumo_especifico"
+      ],
+      "approved": true,
+      "queuePosition": 56,
+      "round": "R29",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "note",
+      "reason": "B aproxima combustible por potencia y tiempo (energía) aunque dice vehículo; consumo específico se refiere al motor. Unidad típica g/kWh.",
+      "sources": [
+        "https://sede.idae.gob.es/sites/default/files/2024-01/08.Guia_Conduccion_eficiente_veh_industriales.pdf"
+      ]
+    },
+    {
+      "examId": "2023-09-23-mercancias-global",
+      "number": 41,
+      "sourcePage": 468,
+      "question": "Para que una dolencia sea considerada enfermedad profesional:",
+      "options": {
+        "A": "debe estar expresamente reconocida como tal por las autoridades sanitarias.",
+        "B": "debe ser una dolencia que ocurra muy frecuentemente.",
+        "C": "debe ser una dolencia grave.",
+        "D": "debe ser una dolencia leve."
+      },
+      "originalSheetAnswer": "A",
+      "correctAnswer": "A",
+      "bankAnswer": "A",
+      "reasons": [
+        "stem:2023-12-02-mercancias-global:53",
+        "enfermedad_profesional"
+      ],
+      "approved": true,
+      "queuePosition": 57,
+      "round": "R29",
+      "historicalAnswer": "A",
+      "previousAppliedAnswer": "A",
+      "technicalAnswer": null,
+      "action": "exclude",
+      "reason": "RD 1299/2006 art. 3: la calificación individual corresponde a la entidad gestora; autoridades sanitarias comunican sospechas (art. 5). Ninguna de las alternativas describe la competencia jurídica. Se conserva la clave histórica.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2006-22169",
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2015-11724#a157"
+      ]
+    },
+    {
+      "examId": "2025-09-27-mercancias-global",
+      "number": 3,
+      "sourcePage": 482,
+      "question": "En razón de la especificidad de su objeto y de su régimen jurídico, ¿cómo se clasifican los transportes de mercancías?",
+      "options": {
+        "A": "De carga completa y de carga fraccionada.",
+        "B": "Discrecionales, nacionales e internacionales.",
+        "C": "Ordinarios y especiales.",
+        "D": "De mercancía embalada y de mercancía a granel."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": null,
+      "reasons": [
+        "clasificacion_transportes"
+      ],
+      "approved": true,
+      "queuePosition": 58,
+      "round": "R29",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "confirmed",
+      "reason": "C: transportes ordinarios y especiales según art. 66 LOTT; las otras opciones corresponden a clasificaciones diferentes o no a la que pregunta el enunciado.",
+      "sources": [
+        "https://boe.es/buscar/act.php?id=BOE-A-1987-17803&lang=es&p=20251204&tn=0"
+      ]
+    },
+    {
+      "examId": "2025-09-27-mercancias-global",
+      "number": 43,
+      "sourcePage": 489,
+      "question": "¿Cuál de las siguientes enfermedades profesionales no está reconocida como tal en el sector del transporte?",
+      "options": {
+        "A": "Sordera provocada por el ruido.",
+        "B": "Bursitis.",
+        "C": "Gripe A.",
+        "D": "Lesiones de la piel."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "reasons": [
+        "enfermedad_profesional"
+      ],
+      "approved": true,
+      "queuePosition": 59,
+      "round": "R29",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "confirmed",
+      "reason": "C: gripe A no está tipificada como tal en el sector ordinario del transporte; las demás afecciones sí pueden encajar en categorías del cuadro según actividad y agente. No excluye otras vías jurídicas de contingencia laboral.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2006-22169",
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2015-11724#a157"
+      ]
+    },
+    {
+      "examId": "2025-09-27-mercancias-global",
+      "number": 68,
+      "sourcePage": 493,
+      "question": "¿Qué resistencias intervienen en el movimiento de los vehículos?",
+      "options": {
+        "A": "La resistencia de pendiente.",
+        "B": "La resistencia al consumo.",
+        "C": "La resistencia al conjunto de la transmisión.",
+        "D": "La resistencia al movimiento del conjunto dámper−cigüeñal."
+      },
+      "originalSheetAnswer": "A",
+      "correctAnswer": "A",
+      "bankAnswer": null,
+      "reasons": [
+        "stem:2023-12-02-mercancias-global:68"
+      ],
+      "approved": true,
+      "queuePosition": 60,
+      "round": "R29",
+      "historicalAnswer": "A",
+      "previousAppliedAnswer": "A",
+      "technicalAnswer": "A",
+      "action": "note",
+      "reason": "A: pendiente es una resistencia externa al avance según manual IDAE. C puede aludir a pérdidas internas de transmisión, pero no a la clasificación de resistencias externas. Mantener la distinción.",
+      "sources": [
+        "https://sede.idae.gob.es/sites/default/files/2024-01/08.Guia_Conduccion_eficiente_veh_industriales.pdf",
+        "https://www.fueleconomy.gov/feg/atv.shtml"
+      ]
+    },
+    {
+      "examId": "2025-09-27-mercancias-global",
+      "number": 70,
+      "sourcePage": 493,
+      "question": "El uso que se realice de la caja de velocidades de un automóvil, ¿puede influir en el consumo de carburante?",
+      "options": {
+        "A": "Sí.",
+        "B": "No, el consumo solo depende de la velocidad.",
+        "C": "No, el consumo solo depende de la aerodinámica del vehículo.",
+        "D": "No, el consumo solo depende de la cilindrada del motor."
+      },
+      "originalSheetAnswer": "A",
+      "correctAnswer": "A",
+      "bankAnswer": "A",
+      "reasons": [
+        "caja_cambios_consumo"
+      ],
+      "approved": true,
+      "queuePosition": 61,
+      "round": "R29",
+      "historicalAnswer": "A",
+      "previousAppliedAnswer": "A",
+      "technicalAnswer": "A",
+      "action": "confirmed",
+      "reason": "A: marcha seleccionada determina régimen motor y eficiencia para la potencia solicitada; aerodinámica, velocidad y cilindrada no son los únicos factores.",
+      "sources": [
+        "https://sede.idae.gob.es/sites/default/files/2024-01/08.Guia_Conduccion_eficiente_veh_industriales.pdf"
+      ]
+    },
+    {
+      "examId": "2025-09-27-mercancias-global",
+      "number": 77,
+      "sourcePage": 494,
+      "question": "La caja de velocidades de un automóvil permite variar el número de revoluciones en función de la velocidad y, con ello, influir en el consumo de carburante. Por este motivo, y para no aumentar el consumo, el conductor debe:",
+      "options": {
+        "A": "Apurar la primera velocidad hasta IIegar al máximo de revoluciones.",
+        "B": "Apurar la primera velocidad hasta IIegar a un número próximo al máximo de revoluciones.",
+        "C": "Utilizar la primera velocidad lo mínimo posible.",
+        "D": "Utilizar lo menos posible las relaciones de marchas Iargas ya que aumentan las revoluciones por minuto del motor."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": null,
+      "reasons": [
+        "caja_cambios_consumo"
+      ],
+      "approved": true,
+      "queuePosition": 62,
+      "round": "R29",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "confirmed",
+      "reason": "C: utilizar primera solo para iniciar la marcha cuando proceda y pasar a una relación superior adecuada; evitar apurar revoluciones. Respetar condiciones de carga, seguridad y fabricante.",
+      "sources": [
+        "https://sede.idae.gob.es/sites/default/files/2024-01/08.Guia_Conduccion_eficiente_veh_industriales.pdf"
+      ]
+    }
+  ]
+}

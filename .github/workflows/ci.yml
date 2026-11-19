@@ -16,10 +16,24 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Install dependencies
-        run: npm install
+      - name: Install frozen dependencies
+        run: npm ci --no-audit --no-fund
+      - name: Verify portable Windows and Linux Python data runner
+        run: node --test scripts/test_prepare_data_cross_platform.mjs
+
       - name: Validate question bank and build
-        run: npm run build
+        run: |
+          npm run build
+          if grep -R -l 'RUTACAP_PRIVATE_CATALOG_C14' dist; then exit 1; fi
+
+      - name: Guard private CLM stage contract with synthetic data only
+        run: python3 scripts/audit_clm_private_stage_c20.py --self-test
+
+      - name: Audit answer provenance coverage (aggregate only)
+        run: python3 scripts/audit_answer_provenance.py
+
+      - name: Validate C22 auth gates and local isolation
+        run: node --test scripts/test_commercial_auth_c22.mjs
 
       - name: Verify real CAP scoring and persisted wall clock
         run: node --test scripts/test_exam_engine.mjs
@@ -27,8 +41,19 @@ jobs:
       - name: Audit actual Top 100 frequency distribution
         run: node scripts/audit_top100_frequency.mjs
 
+      - name: C23 deterministic frequency match proof (no answer changes)
+        run: python3 scripts/test_frequency_group_determinism_c23.py
+
       - name: Validate CAP overlay isolation and answer provenance
         run: python3 scripts/test_exam_data.py
+
+      - name: Verify R27 technical decisions and unchanged historical data
+        run: |
+          python3 scripts/test_technical_review_r27.py
+          python3 scripts/test_technical_review_r28.py
+          python3 scripts/test_technical_review_r29.py
+          python3 scripts/test_technical_review_r30.py
+          python3 scripts/test_technical_review_r31.py
 
       - name: Audit remaining source PDFs without changing scored keys
         run: python3 scripts/audit_visual_batch_candidates.py
@@ -43,6 +68,34 @@ jobs:
       - name: Install Chromium for real-browser CAP tests
         run: npx playwright install --with-deps chromium
 
+      - name: Verify no private catalog in production or preview bundle
+        run: |
+          if grep -R -l 'RUTACAP_PRIVATE_CATALOG_C14' dist; then exit 1; fi
+          if npx vite build --mode catalog-local; then echo 'Local build should have failed'; exit 1; fi
+      - name: Test isolated private catalog with synthetic records only
+        run: |
+          npm run dev:catalog > /tmp/rutacap-catalog.log 2>&1 &
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:4188/ > /dev/null; then break; fi
+            sleep 1
+          done
+          curl -fsS http://127.0.0.1:4188/ > /dev/null
+          node --experimental-strip-types scripts/test_private_catalog_c14.mjs
+
+      - name: C22 smoke test of local auth entry and guest on real mobile and desktop
+        env:
+          VITE_RUTACAP_AUTH_DEV: 'true'
+          VITE_CAP_PRO_SUPABASE_URL: 'https://rhtbqetskghkarxhrgee.supabase.co'
+          VITE_CAP_PRO_SUPABASE_PUBLISHABLE_KEY: 'sb_publishable_ci_mock_only_not_real'
+        run: |
+          npx vite --host 127.0.0.1 --port 5173 --strictPort > /tmp/rutacap-dev-auth.log 2>&1 &
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:5173/ > /dev/null; then break; fi
+            sleep 1
+          done
+          curl -fsS http://127.0.0.1:5173/ > /dev/null
+          node scripts/e2e_commercial_auth_c22.mjs
+
       - name: Test Focus UI in mobile and desktop browsers
         run: |
           npm run preview -- --mode cap-preview --host 127.0.0.1 --port 4173 --strictPort > /tmp/cap-preview.log 2>&1 &
@@ -53,6 +106,15 @@ jobs:
           curl -fsS http://127.0.0.1:4173/ > /dev/null
           node scripts/e2e_cap_focus.mjs
 
+      - name: Upload C22 auth and guest screenshots (mocked local client)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cap-c22-auth-guest-screenshots
+          path: artifacts/cap-auth-c22/
+          if-no-files-found: ignore
+          retention-days: 14
+
       - name: Upload Focus browser screenshots
         if: always()
         uses: actions/upload-artifact@v4
@@ -62,12 +124,25 @@ jobs:
           if-no-files-found: ignore
           retention-days: 14
 
+      - name: Prepare independent commercial preview (local only)
+        run: |
+          printf '%s\n' 'CAP TEST PRO — preview comercial local' 'No usa la cuenta real, no sincroniza ni registra service worker.' 'Descomprime todo el ZIP en una carpeta nueva.' 'Windows: ejecuta INICIAR-PREVIEW.cmd (requiere Python 3).' 'Alternativa: python -m http.server 4178 --bind 127.0.0.1' 'Abre http://127.0.0.1:4178/ — no abras index.html directamente.' 'Versión de pruebas, no publicar ni redistribuir.' > dist/LEEME-PREVIEW.txt
+          printf '%s\r\n' '@echo off' 'cd /d "%~dp0"' 'echo Abre http://127.0.0.1:4178/ en el navegador. Ctrl+C para cerrar.' 'py -3 -m http.server 4178 --bind 127.0.0.1' 'pause' > dist/INICIAR-PREVIEW.cmd
+          node -e "const fs=require('node:fs');fs.writeFileSync('dist/preview-build.json',JSON.stringify({mode:'cap-preview',commit:process.env.GITHUB_SHA,ref:process.env.GITHUB_REF,cloudSync:false,deployed:false},null,2))"
+
       - name: Package beta preview files (not deployed)
         uses: actions/upload-artifact@v4
         with:
-          name: cap-test-r25-three-preview-build
+          name: cap-test-pro-commercial-preview
           path: dist/
           retention-days: 14
+
+      # R32 candidates are ephemeral generated files. Running npm run build:preview
+      # replays build_data.py, which deletes public/data before regenerating it.
+      # Generate R32 AFTER the last build, BEFORE packaging and frozen validation.
+      # Editorial sources, scoring, answer keys and generator remain unchanged.
+      - name: Extract R32 transport law candidate queue (read-only)
+        run: python3 scripts/select_technical_review_r32.py
 
       - name: Package CAP answer review queue
         uses: actions/upload-artifact@v4
@@ -101,4 +176,32 @@ jobs:
             public/data/exams/alignment_2023_a_review.csv
             public/data/exams/ocr_2025_a_review.csv
             public/data/exams/index.json
+            public/data/exams/technical_review_r27.json
+            public/data/exams/technical_review_r27.csv
+            public/data/exams/technical_review_r27_cross_model.json
+            public/data/exams/technical_review_r28.json
+            public/data/exams/technical_review_r28.csv
+            public/data/exams/technical_review_r28_queue.json
+            public/data/exams/technical_review_r29.json
+            public/data/exams/technical_review_r29.csv
+            public/data/exams/technical_review_r30_candidates.json
+            public/data/exams/technical_review_r30.json
+            public/data/exams/technical_review_r30.csv
+            public/data/exams/technical_review_r31_candidates.json
+            public/data/exams/technical_review_r31.json
+            public/data/exams/technical_review_r31.csv
+            public/data/exams/technical_review_r32_candidates.json
+            public/data/exams/technical_review_r32.json
+            public/data/exams/technical_review_r32.csv
+            artifacts/cap-r27-ranking.json
+            artifacts/cap-answer-provenance-coverage.json
           retention-days: 14
+
+      - name: C23 diagnostic — investigate R32 frequency drift (read-only)
+        run: python3 scripts/diagnose_r32_frequency_c23.py
+
+      # Check frozen R32 evidence last, after its final generation and packaging.
+      # No rebuild/cleanup may occur between the extractor and this validator.
+      - name: Verify staged R32 evidence (no scoring changes)
+        run: python3 scripts/test_technical_review_r32.py
+

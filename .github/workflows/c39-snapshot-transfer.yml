@@ -1,0 +1,31 @@
+name: C39 mock-only SHA256 full snapshot transfer
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/c39_snapshot_transfer.mjs'
+      - 'scripts/test_snapshot_transfer_c39.mjs'
+      - '.github/workflows/c39-snapshot-transfer.yml'
+      - 'docs/commercial/C39_SNAPSHOT_TRANSFER_RESULTS.md'
+permissions:
+  contents: read
+jobs:
+  offline-mock-only:
+    if: github.head_ref == 'feat/cap-commercial'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate SHA256 mock-only transfer, corruption and retry
+        run: node --test scripts/test_snapshot_transfer_c39.mjs
+      - name: Existing C33 snapshot cursor regression
+        run: node --test scripts/test_snapshot_cursor_c33.mjs
+      - name: Cloud disabled; mock only, no remote endpoint
+        run: |
+          grep -F 'export const cloudConfigured = false' src/supabase.ts
+          ! grep -nE 'fetch\(|https?://|supabase\.co|SUPABASE_URL|XMLHttpRequest' scripts/c39_snapshot_transfer.mjs scripts/test_snapshot_transfer_c39.mjs

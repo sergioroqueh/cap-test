@@ -1,0 +1,37 @@
+name: C41 isolated IndexedDB Chromium and WebKit journal
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/c41_browser_journal.mjs'
+      - 'scripts/test_browser_journal_c41.mjs'
+      - '.github/workflows/c41-browser-idb-journal.yml'
+      - 'docs/commercial/C41_BROWSER_IDB_RESULTS.md'
+permissions:
+  contents: read
+jobs:
+  chromium-webkit-fixture:
+    if: github.head_ref == 'feat/cap-commercial'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install project test dependencies (no deploy)
+        run: npm install --no-save --no-package-lock --no-audit --no-fund
+      - name: Install Chromium and Linux WebKit runtime
+        run: npx playwright install --with-deps chromium webkit
+      - name: Browser IndexedDB journal synthetic scenarios
+        run: node --test scripts/test_browser_journal_c41.mjs
+      - name: C40 signed file journal regressions
+        run: node --test scripts/test_signed_journal_c40.mjs
+      - name: Cloud remains off; no frontend import or remote transport
+        run: |
+          grep -F 'export const cloudConfigured = false' src/supabase.ts
+          ! grep -R -n 'c41_browser_journal' src/
+          ! grep -nE 'supabase\.co|SUPABASE_URL|XMLHttpRequest|fetch\(' scripts/c41_browser_journal.mjs scripts/test_browser_journal_c41.mjs
+          ! grep -nE 'createHmac|HMAC|PRIVATE_KEY|SECRET_KEY' scripts/c41_browser_journal.mjs

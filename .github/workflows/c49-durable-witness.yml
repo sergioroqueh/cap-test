@@ -1,0 +1,54 @@
+name: C49 durable separate-process monotonic witness (synthetic only)
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/c49_durable_external.mjs'
+      - 'scripts/c49_external_worker.mjs'
+      - 'scripts/test_durable_external_c49.mjs'
+      - 'scripts/c48_external_witness_mock.mjs'
+      - 'scripts/c47_witness_authority.mjs'
+      - '.github/workflows/c49-durable-witness.yml'
+      - 'docs/commercial/C49_DURABLE_WITNESS_RESULTS.md'
+permissions:
+  contents: read
+jobs:
+  disposable-process-witness:
+    if: github.head_ref == 'feat/cap-commercial'
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: C49 durable witness multi-process and crash tests
+        run: node --test scripts/test_durable_external_c49.mjs
+      - name: C48 in-process object-capability regression
+        run: node --test scripts/test_external_witness_c48.mjs
+      - name: C47 local dual-SQLite regression
+        run: node --test scripts/test_witness_authority_c47.mjs
+      - name: C46 SQLite atomicity regression
+        run: node --test scripts/test_sqlite_authority_c46.mjs
+      - name: Install isolated test-only dependencies
+        run: npm install --no-save --no-package-lock --no-audit --no-fund
+      - name: Install Chromium and WebKit (CI only)
+        run: npx playwright install --with-deps chromium webkit
+      - name: C45 mock-only browser regressions
+        run: node --test scripts/test_mock_authority_c45.mjs
+      - name: C44 trust-ledger regressions
+        run: node --test scripts/test_trust_ledger_c44.mjs
+      - name: C43 pinned-root regression
+        run: node --test scripts/test_public_trust_c43.mjs
+      - name: C42 ECDSA and multi-tab regression
+        run: node --test scripts/test_browser_security_c42.mjs
+      - name: C41 IndexedDB journal regression
+        run: node --test scripts/test_browser_journal_c41.mjs
+      - name: Enforce synthetic isolation, no cloud, no production imports
+        run: |
+          grep -F 'export const cloudConfigured = false' src/supabase.ts
+          ! grep -R -nE 'c49_durable_external|c49_external_worker|test_durable_external_c49' src/
+          ! grep -nE 'SUPABASE_URL|supabase\.co|fetch\(|https?://|DATABASE_URL|process\.env' scripts/c49_durable_external.mjs scripts/c49_external_worker.mjs scripts/test_durable_external_c49.mjs
+          ! grep -nE 'C49|PRIVATE_KEY|external_witness' src/*.ts

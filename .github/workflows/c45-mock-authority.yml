@@ -1,0 +1,46 @@
+name: C45 mock-only global authority and offline fail-closed
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/c45_mock_authority.mjs'
+      - 'scripts/c45_browser_authority.mjs'
+      - 'scripts/test_mock_authority_c45.mjs'
+      - '.github/workflows/c45-mock-authority.yml'
+      - 'docs/commercial/C45_MOCK_AUTHORITY_RESULTS.md'
+permissions:
+  contents: read
+jobs:
+  mock-authority-test:
+    if: github.head_ref == 'feat/cap-commercial'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install test dependencies without modifying lockfiles
+        run: npm install --no-save --no-package-lock --no-audit --no-fund
+      - name: Install Chromium and WebKit Linux
+        run: npx playwright install --with-deps chromium webkit
+      - name: C45 Node authority and browser hostile fixture
+        run: node --test scripts/test_mock_authority_c45.mjs
+      - name: C44 local ledger regression
+        run: node --test scripts/test_trust_ledger_c44.mjs
+      - name: C43 root-pinned trust regression
+        run: node --test scripts/test_public_trust_c43.mjs
+      - name: C42 WebCrypto security regression
+        run: node --test scripts/test_browser_security_c42.mjs
+      - name: C41 IndexedDB regression
+        run: node --test scripts/test_browser_journal_c41.mjs
+      - name: Fixture only no cloud no prod imports and private key separation
+        run: |
+          grep -F 'export const cloudConfigured = false' src/supabase.ts
+          ! grep -R -nE 'c45_mock_authority|c45_browser_authority' src/
+          ! grep -nE 'generateKeyPair|privateKey|node:crypto|createHmac|SUPABASE_URL|supabase\.co|fetch\(' scripts/c45_browser_authority.mjs
+          ! grep -nE 'SUPABASE_URL|supabase\.co|fetch\(' scripts/c45_mock_authority.mjs
+          ! grep -nE 'SUPABASE_URL|supabase\.co|fetch\(' scripts/test_mock_authority_c45.mjs
+          ! grep -nE 'c45_mock_authority|PRIVATE_KEY' scripts/c45_browser_authority.mjs

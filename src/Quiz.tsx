@@ -1,29 +1,24 @@
+import { activeKey, lastKey } from './localScope'
 import { useEffect, useRef, useState } from 'react'
 import ConfirmDialog from './ConfirmDialog'
+import AnswerProvenance from './AnswerProvenance'
 import StudyPdfButton from './StudyPdfButton'
 import type { ActiveSession, AnswerKey, Question, QuestionProgress, SessionAnswer, StudySessionRecord } from './types'
-import { addSession, putManyProgress, putProgress } from './db'
+import { addSession } from './db'
+import { completeExam, recordFavorite, recordStudyAnswer, type AnswerOperation } from './localJournal'
 import { resolveQuestions } from './data'
 import { loadBankExamFrequency, type CapCategory, type CapEditorialDecision } from './capExams'
 import { percent } from './utils'
 import { CAP_DURATION_MINUTES, deadlineAt, formatRemaining, gradeSession, remainingMs } from './examEngine.mjs'
 
-const PREVIEW = import.meta.env.VITE_CAP_PREVIEW === 'true'
-const ACTIVE = PREVIEW ? 'cap-test-beta-active-v1' : 'cap-test-active-v1'
-const LAST = PREVIEW ? 'cap-test-beta-last-v1' : 'cap-test-last-v1'
 const keys: AnswerKey[] = ['A','B','C','D']
 const go = (page: string) => { location.hash = '#/' + page }
 const progressId = (q: Question) => q.progressId || q.id
-const fresh = (q: Question): QuestionProgress => ({
-  questionId: progressId(q), questionnaireId: q.section + ':' + q.questionnaireId,
-  attempts: 0, correct: 0, incorrect: 0, streak: 0,
-  lastAnsweredAt: 0, favorite: false
-})
 const capDecision = (q: Question) =>
   (q as Question & { editorialDecision?: CapEditorialDecision }).editorialDecision || null
 
 function readActive(): ActiveSession | null {
-  try { return JSON.parse(localStorage.getItem(ACTIVE) || sessionStorage.getItem(ACTIVE) || 'null') as ActiveSession | null }
+  try { return JSON.parse(localStorage.getItem(activeKey()) || sessionStorage.getItem(activeKey()) || 'null') as ActiveSession | null }
   catch { return null }
 }
 function Bar({value}:{value:number}) {
@@ -64,13 +59,15 @@ function QuizSession({initial,questions,frequency,pm,refresh}:{
 }){
   const [s,setS]=useState(initial)
   const [now,setNow]=useState(Date.now)
-  const [refShown,setRefShown]=useState(false)
   const [finishing,setFinishing]=useState(false)
   const [confirmSubmit,setConfirmSubmit]=useState(false)
   const [saveError,setSaveError]=useState('')
   const [pdfBusy,setPdfBusy]=useState(false)
   const [pdfError,setPdfError]=useState('')
   const lock=useRef(false)
+  const clientIdRef=useRef(initial.clientId || '')
+  const selecting=useRef(false)
+  const favoriting=useRef(false)
   const timed=s.type==='exam'&&s.timed===true
   const duration=s.durationMinutes||CAP_DURATION_MINUTES
   const left=timed?remainingMs(s.startedAt,now,duration):null
@@ -89,37 +86,79 @@ function QuizSession({initial,questions,frequency,pm,refresh}:{
     :frequency[progressId(q)]
   const save=(next:ActiveSession)=>{
     setS(next)
-    localStorage.setItem(ACTIVE,JSON.stringify(next))
-    sessionStorage.removeItem(ACTIVE)
+    localStorage.setItem(activeKey(),JSON.stringify(next))
+    sessionStorage.removeItem(activeKey())
   }
   const navigate=(index:number)=>{
-    setRefShown(false)
     save({...s,currentIndex:index})
     window.scrollTo({top:0,behavior:'instant'})
   }
   async function select(k:AnswerKey){
-    if(finishing||expired||s.type==='study'&&checked)return
+    if(finishing||expired||selecting.current||s.type==='study'&&checked)return
     if(s.type==='exam'){
       // Persist the answer and advance in one atomic state update. On question 100,
       // stay in place: delivery is always manual unless the real timer expires.
       save({...s,selectedAnswers:{...s.selectedAnswers,[q.id]:k},
         currentIndex:Math.min(s.currentIndex+1,questions.length-1)})
-      setRefShown(false)
       window.scrollTo({top:0,behavior:'instant'})
       return
     }
-    save({...s,selectedAnswers:{...s.selectedAnswers,[q.id]:k},checkedIds:[...s.checkedIds,q.id]})
-    if(q.scoringEligible===false)return
-    const prior=pm.get(progressId(q))||fresh(q)
-    const ok=k===q.correctAnswer
-    await putProgress({...prior,attempts:prior.attempts+1,correct:prior.correct+(ok?1:0),incorrect:prior.incorrect+(ok?0:1),streak:ok?prior.streak+1:0,lastAnsweredAt:Date.now(),lastAnswer:k,lastCorrect:ok})
-    await refresh()
+    // Persist the operation key and selection first: on reload the same event
+    // can be retried without double-counting an already committed answer.
+    selecting.current=true
+    const eventId=s.answerEventIds?.[q.id] || crypto.randomUUID()
+    save({...s,selectedAnswers:{...s.selectedAnswers,[q.id]:k},
+      checkedIds:[...s.checkedIds,q.id],
+      answerEventIds:{...s.answerEventIds,[q.id]:eventId}})
+    try {
+      if(q.scoringEligible!==false) {
+        await recordStudyAnswer({
+          eventId,questionId:progressId(q),questionnaireId:q.section+':'+q.questionnaireId,
+          answer:k,correct:k===q.correctAnswer
+        })
+      }
+      await refresh()
+    } catch(err) {
+      console.error('Error al guardar la respuesta local',err)
+      setSaveError('No se ha podido guardar el progreso. Conservamos la respuesta para reintentarla al reabrir el test.')
+    } finally { selecting.current=false }
   }
   async function toggleFavorite(){
-    const prior=pm.get(progressId(q))||fresh(q)
-    await putProgress({...prior,favorite:!prior.favorite})
-    await refresh()
+    if(favoriting.current)return
+    favoriting.current=true
+    try {
+      await recordFavorite({
+        eventId:crypto.randomUUID(),questionId:progressId(q),
+        questionnaireId:q.section+':'+q.questionnaireId
+      })
+      await refresh()
+    } catch(err) {
+      console.error('Error al guardar el favorito',err)
+      setSaveError('No se pudo guardar el favorito. Inténtalo de nuevo.')
+    } finally { favoriting.current=false }
   }
+  useEffect(()=>{
+    // Crash recovery for C30 study operations saved to ActiveSession before IDB.
+    // Legacy checked answers with NO eventId were already counted by old code:
+    // never fabricate a second attempt for them.
+    if(initial.type!=='study')return
+    const pending=(initial.checkedIds||[]).flatMap(qid=>{
+      const key=initial.selectedAnswers[qid], eventId=initial.answerEventIds?.[qid]
+      const question=questions.find(item=>item.id===qid)
+      if(!key||!eventId||!question||question.scoringEligible===false)return []
+      return [{eventId,questionId:progressId(question),
+        questionnaireId:question.section+':'+question.questionnaireId,
+        answer:key,correct:key===question.correctAnswer}]
+    })
+    if(!pending.length)return
+    let active=true
+    ;(async()=>{try{
+      for(const op of pending)await recordStudyAnswer(op)
+      if(active)await refresh()
+    }catch(err){if(active){console.error(err);setSaveError('Hay respuestas sin confirmar en el almacenamiento. Reabre el test para reintentarlo.')}}})()
+    return()=>{active=false}
+  // Recovery derives only from the original persisted session, not each render.
+  },[initial,questions])
   function toggleMarked(){
     const set=new Set(s.markedIds||[])
     if(set.has(q.id))set.delete(q.id);else set.add(q.id)
@@ -142,26 +181,13 @@ function QuizSession({initial,questions,frequency,pm,refresh}:{
         correct:x.scoringEligible!==false&&!!s.selectedAnswers[x.id]&&s.selectedAnswers[x.id]===x.correctAnswer
       }))
       const grade=gradeSession(answers,isCap)
-      if(s.type==='exam'){
-        const changes=new Map<string,QuestionProgress>()
-        for(const x of questions){
-          const key=s.selectedAnswers[x.id]
-          if(!key||x.scoringEligible===false)continue
-          const id=progressId(x)
-          const prior=changes.get(id)||pm.get(id)||fresh(x)
-          const ok=key===x.correctAnswer
-          changes.set(id,{...prior,attempts:prior.attempts+1,correct:prior.correct+(ok?1:0),
-            incorrect:prior.incorrect+(ok?0:1),streak:ok?prior.streak+1:0,lastAnsweredAt:Date.now(),
-            lastAnswer:key,lastCorrect:ok})
-        }
-        if(changes.size){
-          try{await putManyProgress([...changes.values()])}
-          catch(err){console.error('El progreso local se guardó; sincronización pendiente.',err)}
-        }
-      }
+      // Persist stable key before IndexedDB commit. An interrupted retry reuses it.
+      const clientId=clientIdRef.current || s.clientId || crypto.randomUUID()
+      clientIdRef.current=clientId
+      if(!s.clientId)save({...s,clientId})
       const completedAt=Date.now()
       const record:StudySessionRecord={
-        type:s.type,label:s.label,startedAt:s.startedAt,completedAt,
+        clientId,type:s.type,label:s.label,startedAt:s.startedAt,completedAt,
         total:questions.length,answered:grade.answered,correct:grade.correct,incorrect:grade.incorrect,
         score:s.type==='study'?(grade.graded?percent(grade.correct,grade.graded-grade.blank):0):grade.scorePercentage,
         answers,
@@ -171,10 +197,24 @@ function QuizSession({initial,questions,frequency,pm,refresh}:{
         finishedReason:timedOut?'timeout':'manual',
         elapsedSeconds:Math.round((completedAt-s.startedAt)/1000)
       }
-      await addSession(record)
-      localStorage.setItem(LAST,JSON.stringify({record,questionIds:s.questionIds}))
-      localStorage.removeItem(ACTIVE)
-      sessionStorage.removeItem(ACTIVE)
+      let storedRecord=record
+      if(s.type==='exam'){
+        const operations:AnswerOperation[]=questions.flatMap((x,index)=>{
+          const key=s.selectedAnswers[x.id]
+          if(!key||x.scoringEligible===false)return []
+          return [{
+            eventId:clientId+':answer:'+index,
+            questionId:progressId(x),questionnaireId:x.section+':'+x.questionnaireId,
+            answer:key,correct:key===x.correctAnswer
+          }]
+        })
+        storedRecord=await completeExam(operations,record)
+      }else{
+        await addSession(record)
+      }
+      localStorage.setItem(lastKey(),JSON.stringify({record:storedRecord,questionIds:s.questionIds}))
+      localStorage.removeItem(activeKey())
+      sessionStorage.removeItem(activeKey())
       await refresh()
       go('results')
     }catch(err){
@@ -227,8 +267,6 @@ function QuizSession({initial,questions,frequency,pm,refresh}:{
       <button className={'focus-mark '+((s.markedIds||[]).includes(q.id)?'on':'')} onClick={toggleMarked} aria-pressed={(s.markedIds||[]).includes(q.id)}>⚑ { (s.markedIds||[]).includes(q.id)?'Marcada':'Revisar luego'}</button>
     </div>
     <p className="focus-mark-help">⚑ Revisar: solo durante este test. <span>★ Favorita: se guarda para otros repasos.</span></p>
-    <StudyPdfButton busy={pdfBusy} onClick={()=>void downloadPdf()}/>
-    {pdfError&&<p className="focus-muted" role="alert">{pdfError}</p>}
     <details className="focus-index">
       <summary>Índice de preguntas · {markedCount} marcadas para revisar</summary>
       <div className="focus-question-grid">{questions.map((x,index)=><button key={x.id}
@@ -252,7 +290,9 @@ function QuizSession({initial,questions,frequency,pm,refresh}:{
       })}</div>
       {renderFeedback&&(q.scoringEligible===false
         ?<div className="feedback" role="status"><b>No puntúa · incidencia editorial</b><p>Tu respuesta no cuenta como acierto ni como error.</p>{decision&&<p>{decision.decision}</p>}{decision?.editorialAnswer&&<p>Orientación técnica: {decision.editorialAnswer}</p>}</div>
-        :<div className={'feedback '+(isCorrect?'ok':'bad')} role="status"><b>{isCorrect?'✓ Correcta':'× Incorrecta · respuesta '+q.correctAnswer}</b><button onClick={()=>setRefShown(v=>!v)}>{refShown?'Ocultar':'Ver fundamento'}</button>{refShown&&<div><p><strong>Norma:</strong> {q.norm||'Sin referencia normativa adicional'}</p><p><strong>Referencia:</strong> {q.reference||'Consultar enunciado original'}</p></div>}</div>)}
+        :<div className={'feedback '+(isCorrect?'ok':'bad')} role="status"><b>{isCorrect?'✓ Correcta':'× Incorrecta · respuesta '+q.correctAnswer}</b></div>)}
+      {renderFeedback&&<AnswerProvenance question={q}/>}
+      {renderFeedback&&q.technicalDecision&&<div className="cap-r25-final" role="note"><b>{q.technicalDecision.action==='correct'?(q.technicalDecision.round||'R27')+' · Corrección técnica':q.technicalDecision.action==='exclude'?(q.technicalDecision.round||'R27')+' · Pregunta sin puntuación':(q.technicalDecision.round||'R27')+' · Matiz técnico'}</b><p>Plantilla original: {q.technicalDecision.historicalAnswer} · Solución técnica: {q.technicalDecision.technicalAnswer||'Sin respuesta única válida'}</p><p>{q.technicalDecision.reason}</p><small>Decisión editorial de estudio, no rectificación oficial.</small></div>}
     </article>
     {saveError&&<div className="focus-notice" role="alert"><span aria-hidden="true">ⓘ</span><span>{saveError}</span><button onClick={()=>setSaveError('')} aria-label="Cerrar aviso">×</button></div>}
     <footer className="focus-quiz-actions">
@@ -260,6 +300,8 @@ function QuizSession({initial,questions,frequency,pm,refresh}:{
       <button className="btn light" disabled={s.currentIndex===questions.length-1||finishing} onClick={()=>navigate(s.currentIndex+1)}>Siguiente</button>
       <button className="btn primary" disabled={finishing} onClick={()=>void finish()}>{finishing?'Guardando…':'Entregar'}</button>
     </footer>
+    <StudyPdfButton busy={pdfBusy} onClick={()=>void downloadPdf()}/>
+    {pdfError&&<p className="focus-muted" role="alert">{pdfError}</p>}
     {confirmSubmit&&<ConfirmDialog
       title="¿Entregar el examen?"
       message={'Quedan '+(questions.length-answeredCount)+' preguntas en blanco. Valdrán 0 puntos y no se registrarán como fallos. Puedes seguir respondiendo si lo prefieres.'}

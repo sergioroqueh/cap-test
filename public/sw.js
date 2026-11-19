@@ -1,5 +1,6 @@
-const CACHE = 'cap-test-2026-11-05-focus-release-v2'
-const BASE = '/cap-test/'
+const BASE = new URL(self.registration.scope).pathname
+const PREFIX = 'cap-test-pro:' + BASE + ':'
+const CACHE = PREFIX + 'c1-2026-11-16'
 const CORE = [
   BASE,
   `${BASE}index.html`,
@@ -15,47 +16,50 @@ self.addEventListener('install', (event) => {
     const cache = await caches.open(CACHE)
     await cache.addAll(CORE)
     try {
-      const response = await fetch(`${BASE}data/index.json`)
-      const index = await response.json()
-      const bankFiles = index.questionnaires.map((item) => `${BASE}${item.path}`)
-      await cache.addAll(bankFiles)
-      const exams = await fetch(BASE + 'data/exams/index.json').then(r=>r.json())
-      const examFiles = exams.exams.map(item => BASE + item.path)
-      await cache.addAll(examFiles)
+      const index = await fetch(BASE + 'data/index.json').then(r => r.json())
+      await cache.addAll(index.questionnaires.map(item => BASE + item.path))
+      const exams = await fetch(BASE + 'data/exams/index.json').then(r => r.json())
+      await cache.addAll(exams.exams.map(item => BASE + item.path))
     } catch (_) {
-      // La app sigue siendo instalable aunque falle la precarga completa del banco.
+      // Offline archive prefetch is best effort.
     }
     await self.skipWaiting()
   })())
 })
-
 self.addEventListener('activate', (event) => {
-  event.waitUntil(
-    caches.keys().then((keys) => Promise.all(keys.filter((key) => key !== CACHE).map((key) => caches.delete(key)))).then(() => self.clients.claim())
-  )
+  event.waitUntil((async () => {
+    const keys = await caches.keys()
+    await Promise.all(keys.filter(key => key.startsWith(PREFIX) && key !== CACHE).map(key => caches.delete(key)))
+    await self.clients.claim()
+  })())
 })
-
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return
   const url = new URL(event.request.url)
-  if (url.origin !== location.origin || !url.pathname.startsWith(BASE)) return
-
-  if (event.request.mode === 'navigate') {
-    event.respondWith(fetch(event.request).then((response) => {
-      const copy = response.clone()
-      caches.open(CACHE).then((cache) => cache.put(BASE, copy))
-      return response
-    }).catch(() => caches.match(BASE)))
-    return
-  }
-
-  event.respondWith(
-    caches.match(event.request).then((cached) => cached || fetch(event.request).then((response) => {
-      if (response.ok) {
-        const copy = response.clone()
-        caches.open(CACHE).then((cache) => cache.put(event.request, copy))
+  if (url.origin !== self.location.origin || !url.pathname.startsWith(BASE)) return
+  // Never cache OAuth callback URLs or any authenticated request.
+  if (url.searchParams.has('code') || url.searchParams.has('error') || event.request.headers.has('Authorization')) return
+  // Only cache known static app assets, never arbitrary endpoints on a root domain.
+  const relative = url.pathname.slice(BASE.length)
+  const navigation = event.request.mode === 'navigate'
+  if (!navigation && !/^(?:index\.html|manifest\.webmanifest|icon\.svg|assets\/|data\/)/.test(relative)) return
+  event.respondWith((async () => {
+    const cache = await caches.open(CACHE)
+    if (navigation) {
+      try {
+        const response = await fetch(event.request)
+        if (response.ok && (relative === '' || relative === 'index.html') && !url.search) await cache.put(BASE, response.clone())
+        return response
+      } catch (error) {
+        const cached = await cache.match(BASE)
+        if (cached) return cached
+        throw error
       }
-      return response
-    }))
-  )
+    }
+    const cached = await cache.match(event.request)
+    if (cached) return cached
+    const response = await fetch(event.request)
+    if (response.ok) await cache.put(event.request, response.clone())
+    return response
+  })())
 })

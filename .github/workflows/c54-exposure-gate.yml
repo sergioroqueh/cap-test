@@ -1,0 +1,69 @@
+name: C54 dependency exposure classification (fixture only)
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/c54-exposure-gate.yml'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'docs/commercial/C54_DEPENDENCY_EXPOSURE_RESULTS.md'
+permissions:
+  contents: read
+jobs:
+  dependency-exposure:
+    if: github.head_ref == 'feat/cap-commercial'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: C54 immutable installation and exact dependency scope
+        run: |
+          npm ci --no-audit --no-fund
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs'
+          const p=JSON.parse(fs.readFileSync('package.json','utf8'))
+          const l=JSON.parse(fs.readFileSync('package-lock.json','utf8'))
+          if (l.lockfileVersion!==3) throw Error('LOCK_VERSION')
+          for(const name of ['vite','@vitejs/plugin-react','typescript']){
+            if(name in p.dependencies || !p.devDependencies[name] ||
+              l.packages?.['']?.devDependencies?.[name]!==p.devDependencies[name] ||
+              l.packages?.['node_modules/'+name]?.dev!==true)
+              throw Error('BUILD_DEPENDENCY_SCOPE '+name)
+          }
+          for(const [name,version] of Object.entries(p.dependencies||{})){
+            if(l.packages?.['']?.dependencies?.[name]!==version ||
+               l.packages?.['node_modules/'+name]?.version!==version)
+               throw Error('RUNTIME_DEPENDENCY_LOCK '+name)
+          }
+          console.log('C54 CLASSIFICATION PASS: Node-only toolchain in devDependencies')
+          NODE
+      - name: C54 report full audit and require zero production-install advisories
+        run: |
+          npm audit --json > /tmp/c54-full.json || true
+          npm audit --omit=dev --json > /tmp/c54-runtime.json || true
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs'
+          const get=p=>JSON.parse(fs.readFileSync(p,'utf8'))
+          const full=get('/tmp/c54-full.json'),runtime=get('/tmp/c54-runtime.json')
+          console.log('C54 FULL AUDIT '+JSON.stringify(full.metadata?.vulnerabilities||null))
+          console.log('C54 OMIT DEV AUDIT '+JSON.stringify(runtime.metadata?.vulnerabilities||null))
+          const via=Object.entries(full.vulnerabilities||{}).map(([name,v])=>({
+            name,severity:v.severity,via:v.via.map(x=>typeof x==='string'?x:x.url)
+          }))
+          console.log('C54 FULL ADVISORY CHAIN '+JSON.stringify(via))
+          if(!full.metadata?.vulnerabilities || full.metadata.vulnerabilities.critical!==0)
+            throw Error('FULL_AUDIT_CRITICAL_OR_MISSING')
+          if(!runtime.metadata?.vulnerabilities || runtime.metadata.vulnerabilities.total!==0)
+            throw Error('RUNTIME_AUDIT_NOT_CLEAN')
+          NODE
+      - name: C54 isolated preview build; cloud remains disabled
+        run: |
+          npm run build:preview
+          grep -F 'export const cloudConfigured = false' src/supabase.ts
+          ! grep -R -l 'RUTACAP_PRIVATE_CATALOG_C14' dist

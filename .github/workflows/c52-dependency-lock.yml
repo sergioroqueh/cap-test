@@ -1,0 +1,64 @@
+name: C52 frozen dependency gate (no deploy)
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/c52-dependency-lock.yml'
+      - 'package.json'
+      - 'package-lock.json'
+permissions:
+  contents: read
+jobs:
+  dependency-lock:
+    if: github.head_ref == 'feat/cap-commercial'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Validate direct exact versions and lockfile correspondence
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs'
+          const p=JSON.parse(fs.readFileSync('package.json','utf8'))
+          const l=JSON.parse(fs.readFileSync('package-lock.json','utf8'))
+          if(l.lockfileVersion!==3)throw Error('Expected npm lockfile v3')
+          let count=0
+          for(const section of ['dependencies','devDependencies']) {
+            for(const [name,version] of Object.entries(p[section]||{})){
+              if(!/^\d+\.\d+\.\d+(?:[-+][a-zA-Z0-9.-]+)?$/.test(version)||
+                l.packages?.['']?.[section]?.[name]!==version||
+                l.packages?.['node_modules/'+name]?.version!==version)
+                throw Error('Unpinned/mismatched package '+name)
+              count++
+            }
+          }
+          console.log('C52 EXACT PIN CHECK PASS: '+count+' direct packages')
+          NODE
+      - name: Clean immutable installation and preview build
+        run: |
+          npm ci --no-audit --no-fund
+          npm run build:preview
+          grep -F 'export const cloudConfigured = false' src/supabase.ts
+          ! grep -R -l 'RUTACAP_PRIVATE_CATALOG_C14' dist
+      - name: Security advisories inventory (report-only, never auto-fix)
+        run: |
+          npm audit --json > /tmp/c52-audit.json || true
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs'
+          let audit
+          try { audit=JSON.parse(fs.readFileSync('/tmp/c52-audit.json','utf8')) }
+          catch { console.log('C52 NPM AUDIT: unavailable; no security-clearance claim');process.exit(0) }
+          if(!audit.metadata?.vulnerabilities) {
+            console.log('C52 NPM AUDIT: response does not contain vulnerability totals; review manually')
+          } else {
+            console.log('C52 NPM AUDIT TOTALS '+JSON.stringify(audit.metadata.vulnerabilities))
+            console.log('C52 NPM AUDIT PACKAGES '+JSON.stringify(
+              Object.entries(audit.vulnerabilities||{}).map(([name,v])=>({name,severity:v.severity,fixAvailable:v.fixAvailable}))))
+          }
+          NODE

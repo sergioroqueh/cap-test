@@ -42,7 +42,7 @@ function pdfText(value: string): string {
 function fileName(label: string, withSolutions: boolean): string {
   const slug = label.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
     .toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 78)
-  return 'cap-test-' + (slug || 'examen') + (withSolutions ? '-soluciones' : '') + '.pdf'
+  return 'rutacap-' + (slug || 'examen') + (withSolutions ? '-soluciones' : '') + '.pdf'
 }
 
 /** Download the exact questions and letter order stored in the active/completed session. */
@@ -56,7 +56,7 @@ export function exportExamPdf({ label, questions, withSolutions = false }: ExamP
     doc.setTextColor(26, 39, 49)
     doc.setFont('helvetica', 'bold')
     doc.setFontSize(10)
-    doc.text('CAP TEST', LEFT, 10.5)
+    doc.text('RutaCAP', LEFT, 10.5)
     doc.setFont('helvetica', 'normal')
     doc.setFontSize(8)
     doc.text('DOCUMENTO DE ESTUDIO - NO OFICIAL', PAGE_WIDTH-RIGHT, 10.5, { align:'right' })
@@ -184,6 +184,21 @@ export function exportExamPdf({ label, questions, withSolutions = false }: ExamP
     })
   }
 
+  const technical=questions.map((q,i)=>({q,i})).filter(({q})=>!!q.technicalDecision)
+  if(withSolutions && technical.length){
+    nextPage()
+    doc.setTextColor(26,39,49)
+    writeLines(['NOTAS DE REVISION TECNICA R27/R28/R29/R30/R31'],13,7,LEFT,'bold')
+    writeLines(split('Las casillas reflejan la solucion de estudio. Se conserva la letra historica; estas decisiones no son una rectificacion oficial.',CONTENT_WIDTH,9),9,5)
+    y+=3
+    technical.forEach(({q,i})=>{
+      const d=q.technicalDecision!
+      ensure(17)
+      writeLines(split('Pregunta '+(i+1)+' | Original: '+d.historicalAnswer+' | Tecnica: '+(d.technicalAnswer||'NP'),CONTENT_WIDTH,9,'bold'),9,5,LEFT,'bold')
+      writeLines(split(d.reason,CONTENT_WIDTH,8.5),8.5,4.5)
+      y+=3
+    })
+  }
   const totalPages = doc.getNumberOfPages()
   for (let p=1;p<=totalPages;p++) {
     doc.setPage(p)
@@ -192,7 +207,7 @@ export function exportExamPdf({ label, questions, withSolutions = false }: ExamP
     doc.setTextColor(102, 113, 122)
     doc.setFont('helvetica','normal')
     doc.setFontSize(8)
-    doc.text('CAP Test | Material de preparacion. No sustituye las fuentes oficiales.', LEFT, 287.5)
+    doc.text('RutaCAP | Material de preparacion. No sustituye las fuentes oficiales.', LEFT, 287.5)
     doc.text(p + ' / ' + totalPages, PAGE_WIDTH-RIGHT, 287.5, {align:'right'})
   }
   doc.save(fileName(label, withSolutions))

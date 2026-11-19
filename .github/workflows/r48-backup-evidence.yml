@@ -1,0 +1,28 @@
+name: R48 synthetic backup evidence gate (no cloud)
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/test_r48_backup_evidence.mjs'
+      - 'docs/commercial/R48_BACKUP_EVIDENCE_GATES.md'
+      - '.github/workflows/r48-backup-evidence.yml'
+      - 'scripts/test_r50_backup_operational_plan.mjs'
+      - 'docs/commercial/R50_PRIVATE_BACKUP_OPERATIONAL_RUNBOOK.md'
+permissions:
+  contents: read
+jobs:
+  evidence-fixtures:
+    if: github.head_ref == 'feat/cap-commercial'
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Synthetic-only evidence tests
+        run: node --test scripts/test_r48_backup_evidence.mjs scripts/test_r50_backup_operational_plan.mjs
+      - name: Verify cloud wiring stays off
+        run: grep -Fx 'export const cloudConfigured = false' src/supabase.ts

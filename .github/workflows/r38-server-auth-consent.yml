@@ -1,0 +1,79 @@
+name: R38-R45 server auth, RPC and rollout gates
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'src/serverAuthConsentGate.mjs'
+      - 'src/serverSnapshotProtocol.mjs'
+      - 'src/serverSnapshotRpcReader.mjs'
+      - 'src/serverAuthBackingReaders.mjs'
+      - 'scripts/test_server_snapshot_rpc_r41.mjs'
+      - 'scripts/test_server_auth_backing_r42.mjs'
+      - 'scripts/test_server_session_rls_r43.mjs'
+      - 'docs/commercial/sql/R43_SESSION_REVOCATION_ATOMIC_REVIEW.sql'
+      - 'scripts/r44_disposable_pg17_bootstrap.sql'
+      - 'scripts/r44_disposable_pg17_review.sql'
+      - 'docs/commercial/sql/R45_PREFLIGHT_READ_ONLY.sql'
+      - 'docs/commercial/sql/R45_POSTFLIGHT_READ_ONLY.sql'
+      - 'scripts/test_r45_readonly_gates.mjs'
+      - 'scripts/test_server_auth_consent_r38.mjs'
+      - '.github/workflows/r38-server-auth-consent.yml'
+permissions:
+  contents: read
+jobs:
+  auth-consent:
+    if: github.head_ref == 'feat/cap-commercial'
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Local signed-JWT verification and R36 interoperability
+        run: node --test scripts/test_server_auth_consent_r38.mjs scripts/test_server_snapshot_r36.mjs scripts/test_server_snapshot_rpc_r41.mjs scripts/test_server_auth_backing_r42.mjs scripts/test_server_session_rls_r43.mjs scripts/test_r45_readonly_gates.mjs
+      - name: No cloud wiring, deployments or secret keys
+        run: |
+          grep -Fx 'export const cloudConfigured = false' src/supabase.ts
+          ! grep -R -n 'serverAuthConsentGate' src/App.tsx src/Quiz.tsx src/main.tsx
+          ! grep -n -E 'SUPABASE_SERVICE_ROLE_KEY|sb_secret_' src/serverAuthConsentGate.mjs
+          ! grep -R -n 'serverSnapshotRpcReader' src/App.tsx src/Quiz.tsx src/main.tsx
+          ! grep -R -n 'serverAuthBackingReaders' src/App.tsx src/Quiz.tsx src/main.tsx
+
+  r44-disposable-postgresql17:
+    if: github.head_ref == 'feat/cap-commercial'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_PASSWORD: r44-disposable-ci-only
+          POSTGRES_DB: rutacap_r44_disposable
+        options: >-
+          --health-cmd "pg_isready -U postgres -d rutacap_r44_disposable"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Parse and exercise R43 only in throwaway PostgreSQL 17
+        env:
+          PG_CONTAINER: ${{ job.services.postgres.id }}
+        run: |
+          for f in \
+            scripts/r44_disposable_pg17_bootstrap.sql \
+            docs/commercial/sql/C28_full_fidelity_schema_draft.sql \
+            docs/commercial/sql/C29_event_ledger_draft.sql \
+            docs/commercial/sql/R37_consistent_snapshot_review.sql \
+            docs/commercial/sql/R39_persistent_consent_review.sql \
+            docs/commercial/sql/R43_SESSION_REVOCATION_ATOMIC_REVIEW.sql \
+            scripts/r44_disposable_pg17_review.sql; do
+            docker exec -i "$PG_CONTAINER" psql -X -v ON_ERROR_STOP=1 -U postgres -d rutacap_r44_disposable < "$f"
+          done
+      - name: Cloud remains disconnected
+        run: grep -Fx 'export const cloudConfigured = false' src/supabase.ts

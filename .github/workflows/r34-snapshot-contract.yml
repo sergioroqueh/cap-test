@@ -1,0 +1,35 @@
+name: R34 offline remote snapshot readiness (loopback only)
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'src/remoteSnapshotReader.mjs'
+      - 'src/cloudUploadPreflight.ts'
+      - 'scripts/test_remote_snapshot_r34.mjs'
+      - 'src/remoteSyncContract.mjs'
+      - 'src/syncCore.mjs'
+      - '.github/workflows/r34-snapshot-contract.yml'
+permissions:
+  contents: read
+jobs:
+  read-only-adapter:
+    if: github.head_ref == 'feat/cap-commercial'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Loopback HTTP A/B identity and full pagination
+        run: node --test scripts/test_remote_snapshot_r34.mjs
+      - name: Build/typecheck the independent local backup preflight
+        run: |
+          npm ci --no-fund --no-audit
+          npm run build
+      - name: No live cloud wiring
+        run: |
+          grep -Fx 'export const cloudConfigured = false' src/supabase.ts
+          ! grep -R -n 'remoteSnapshotReader\|cloudUploadPreflight' src/App.tsx src/main.tsx src/Quiz.tsx

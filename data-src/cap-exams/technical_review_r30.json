@@ -1,0 +1,2414 @@
+{
+  "schemaVersion": 1,
+  "round": "R30",
+  "reviewDate": "2026-11-16",
+  "baselineCommit": "4c5e1cc54b600eb248b7ab274f4f899c355b97d1",
+  "selectionRun": 43893690933,
+  "scope": "First 16 exact option-set groups, from generated archive. Independent review of actual options and consolidated legal sources, no image recollation or official errata. Historical scoring untouched; confirmed rows remain unchanged in app.",
+  "cases": [
+    {
+      "examId": "2023-07-29-mercancias-a",
+      "number": 89,
+      "sourcePage": 76,
+      "question": "La prevención de riesgos laborales implica obligaciones en el ámbito del transporte:",
+      "options": {
+        "A": "sólo para el empresario.",
+        "B": "sólo para el trabajador.",
+        "C": "para el empresario y da consejos al trabajador.",
+        "D": "para el empresario y el trabajador."
+      },
+      "originalSheetAnswer": "A",
+      "correctAnswer": "D",
+      "bankAnswer": "D",
+      "examFrequency": 10,
+      "group": 1,
+      "frequency": 10,
+      "round": "R30",
+      "historicalAnswer": "A",
+      "previousAppliedAnswer": "D",
+      "technicalAnswer": "D",
+      "action": "note",
+      "reason": "La Ley 31/1995, arts. 14 y 29, atribuye deberes preventivos tanto al empresario como al trabajador; el deber de protección empresarial no desaparece por los deberes de este último. La letra impresa difiere de la solución ya aplicada por la alineación histórica de julio 2023 A; se conserva sin nueva corrección.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1995-24292#a14",
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1995-24292#a29"
+      ]
+    },
+    {
+      "examId": "2024-07-20-mercancias-a",
+      "number": 64,
+      "sourcePage": 90,
+      "question": "La prevención de riesgos laborales implica obligaciones en el ámbito del transporte:",
+      "options": {
+        "A": "solo para el empresario",
+        "B": "solo para el trabajador",
+        "C": "para el empresario y da consejos al trabajador",
+        "D": "para el empresario y el trabajador."
+      },
+      "originalSheetAnswer": "D",
+      "correctAnswer": "D",
+      "bankAnswer": "D",
+      "examFrequency": 10,
+      "group": 1,
+      "frequency": 10,
+      "round": "R30",
+      "historicalAnswer": "D",
+      "previousAppliedAnswer": "D",
+      "technicalAnswer": "D",
+      "action": "confirmed",
+      "reason": "La Ley 31/1995, arts. 14 y 29, atribuye deberes preventivos tanto al empresario como al trabajador; el deber de protección empresarial no desaparece por los deberes de este último.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1995-24292#a14",
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1995-24292#a29"
+      ]
+    },
+    {
+      "examId": "2023-07-29-mercancias-b",
+      "number": 64,
+      "sourcePage": 158,
+      "question": "La prevención de riesgos laborales implica obligaciones en el ámbito del transporte:",
+      "options": {
+        "A": "solo para el empresario.",
+        "B": "solo para el trabajador.",
+        "C": "para el empresario y da consejos al trabajador.",
+        "D": "para el empresario y el trabajador."
+      },
+      "originalSheetAnswer": "D",
+      "correctAnswer": "D",
+      "bankAnswer": "D",
+      "examFrequency": 10,
+      "group": 1,
+      "frequency": 10,
+      "round": "R30",
+      "historicalAnswer": "D",
+      "previousAppliedAnswer": "D",
+      "technicalAnswer": "D",
+      "action": "confirmed",
+      "reason": "La Ley 31/1995, arts. 14 y 29, atribuye deberes preventivos tanto al empresario como al trabajador; el deber de protección empresarial no desaparece por los deberes de este último.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1995-24292#a14",
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1995-24292#a29"
+      ]
+    },
+    {
+      "examId": "2024-07-20-mercancias-b",
+      "number": 67,
+      "sourcePage": 178,
+      "question": "La prevención de riesgos laborales implica obligaciones en el ámbito del transporte:",
+      "options": {
+        "A": "solo para el empresario",
+        "B": "solo para el trabajador",
+        "C": "para el empresario y da consejos al trabajador",
+        "D": "para el empresario y el trabajador."
+      },
+      "originalSheetAnswer": "D",
+      "correctAnswer": "D",
+      "bankAnswer": "D",
+      "examFrequency": 10,
+      "group": 1,
+      "frequency": 10,
+      "round": "R30",
+      "historicalAnswer": "D",
+      "previousAppliedAnswer": "D",
+      "technicalAnswer": "D",
+      "action": "confirmed",
+      "reason": "La Ley 31/1995, arts. 14 y 29, atribuye deberes preventivos tanto al empresario como al trabajador; el deber de protección empresarial no desaparece por los deberes de este último.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1995-24292#a14",
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1995-24292#a29"
+      ]
+    },
+    {
+      "examId": "2025-03-29-mercancias-global",
+      "number": 35,
+      "sourcePage": 337,
+      "question": "La prevención de riesgos laborales implica obligaciones en el ámbito del transporte:",
+      "options": {
+        "A": "Solo para el empresario.",
+        "B": "Solo para el trabajador.",
+        "C": "Para el empresario y da consejos al trabajador.",
+        "D": "Para el empresario y el trabajador."
+      },
+      "originalSheetAnswer": "D",
+      "correctAnswer": "D",
+      "bankAnswer": "D",
+      "examFrequency": 10,
+      "group": 1,
+      "frequency": 10,
+      "round": "R30",
+      "historicalAnswer": "D",
+      "previousAppliedAnswer": "D",
+      "technicalAnswer": "D",
+      "action": "confirmed",
+      "reason": "La Ley 31/1995, arts. 14 y 29, atribuye deberes preventivos tanto al empresario como al trabajador; el deber de protección empresarial no desaparece por los deberes de este último.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1995-24292#a14",
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1995-24292#a29"
+      ]
+    },
+    {
+      "examId": "2024-05-25-mercancias-global",
+      "number": 99,
+      "sourcePage": 403,
+      "question": "La prevención de riesgos laborales implica obligaciones en el ámbito del transporte:",
+      "options": {
+        "A": "solo para el empresario.",
+        "B": "solo para el trabajador.",
+        "C": "para el empresario y da consejos al trabajador.",
+        "D": "para el empresario y el trabajador."
+      },
+      "originalSheetAnswer": "D",
+      "correctAnswer": "D",
+      "bankAnswer": "D",
+      "examFrequency": 10,
+      "group": 1,
+      "frequency": 10,
+      "round": "R30",
+      "historicalAnswer": "D",
+      "previousAppliedAnswer": "D",
+      "technicalAnswer": "D",
+      "action": "confirmed",
+      "reason": "La Ley 31/1995, arts. 14 y 29, atribuye deberes preventivos tanto al empresario como al trabajador; el deber de protección empresarial no desaparece por los deberes de este último.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1995-24292#a14",
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1995-24292#a29"
+      ]
+    },
+    {
+      "examId": "2022-11-26-mercancias-global",
+      "number": 28,
+      "sourcePage": 425,
+      "question": "La prevención de riesgos laborales implica obligaciones en el ámbito del transporte:",
+      "options": {
+        "A": "solo para el empresario.",
+        "B": "solo para el trabajador.",
+        "C": "para el empresario y da consejos al trabajador.",
+        "D": "para el empresario y el trabajador."
+      },
+      "originalSheetAnswer": "D",
+      "correctAnswer": "D",
+      "bankAnswer": "D",
+      "examFrequency": 10,
+      "group": 1,
+      "frequency": 10,
+      "round": "R30",
+      "historicalAnswer": "D",
+      "previousAppliedAnswer": "D",
+      "technicalAnswer": "D",
+      "action": "confirmed",
+      "reason": "La Ley 31/1995, arts. 14 y 29, atribuye deberes preventivos tanto al empresario como al trabajador; el deber de protección empresarial no desaparece por los deberes de este último.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1995-24292#a14",
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1995-24292#a29"
+      ]
+    },
+    {
+      "examId": "2022-10-01-mercancias-global",
+      "number": 32,
+      "sourcePage": 446,
+      "question": "La prevención de riesgos laborales implica obligaciones en el ámbito del transporte:",
+      "options": {
+        "A": "solo para el empresario.",
+        "B": "solo para el trabajador.",
+        "C": "para el empresario y da consejos al trabajador.",
+        "D": "para el empresario y el trabajador."
+      },
+      "originalSheetAnswer": "D",
+      "correctAnswer": "D",
+      "bankAnswer": "D",
+      "examFrequency": 10,
+      "group": 1,
+      "frequency": 10,
+      "round": "R30",
+      "historicalAnswer": "D",
+      "previousAppliedAnswer": "D",
+      "technicalAnswer": "D",
+      "action": "confirmed",
+      "reason": "La Ley 31/1995, arts. 14 y 29, atribuye deberes preventivos tanto al empresario como al trabajador; el deber de protección empresarial no desaparece por los deberes de este último.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1995-24292#a14",
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1995-24292#a29"
+      ]
+    },
+    {
+      "examId": "2026-05-30-mercancias-global",
+      "number": 37,
+      "sourcePage": 409,
+      "question": "La prevención de riesgos laborales implica obligaciones en el ámbito del transporte:",
+      "options": {
+        "A": "Solo para el empresario, que para eso firma los papeles.",
+        "B": "Solo para el trabajador, que para eso conduce.",
+        "C": "Para el empresario y da consejos al trabajador.",
+        "D": "Para el empresario y el trabajador."
+      },
+      "originalSheetAnswer": "D",
+      "correctAnswer": "D",
+      "bankAnswer": "D",
+      "examFrequency": 10,
+      "group": 2,
+      "frequency": 10,
+      "round": "R30",
+      "historicalAnswer": "D",
+      "previousAppliedAnswer": "D",
+      "technicalAnswer": "D",
+      "action": "confirmed",
+      "reason": "Aunque contiene distractores coloquiales, D expresa las obligaciones de ambas partes (arts. 14 y 29 LPRL). Se conserva literal digitalizado; no se ha cotejado la imagen original.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1995-24292#a14",
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1995-24292#a29"
+      ]
+    },
+    {
+      "examId": "2026-09-26-mercancias-a",
+      "number": 61,
+      "sourcePage": 138,
+      "question": "La prevención de riesgos laborales implica obligaciones en el ámbito del transporte:",
+      "options": {
+        "A": "solo para el empresario.",
+        "B": "solo para el trabajador.",
+        "C": "para el empresario y de consejos al trabajador.",
+        "D": "para el empresario y el trabajador."
+      },
+      "originalSheetAnswer": "D",
+      "correctAnswer": "D",
+      "bankAnswer": "D",
+      "examFrequency": 10,
+      "group": 3,
+      "frequency": 10,
+      "round": "R30",
+      "historicalAnswer": "D",
+      "previousAppliedAnswer": "D",
+      "technicalAnswer": "D",
+      "action": "confirmed",
+      "reason": "D: deber de protección del empresario y obligaciones de prevención del trabajador. El error de grafía de un distractor no altera el sentido.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1995-24292#a14",
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1995-24292#a29"
+      ]
+    },
+    {
+      "examId": "2023-07-29-mercancias-a",
+      "number": 94,
+      "sourcePage": 77,
+      "question": "Cuando se adelante a un ciclista en una vía fuera de poblado, ¿qué se deberá tener en cuenta?",
+      "options": {
+        "A": "Que hay que adelantar muy rápido para pasarlo lo antes posible.",
+        "B": "Que la separación lateral no debe ser inferior a 1,50 metros.",
+        "C": "Que la distancia lateral mínima debe ser de 5 metros.",
+        "D": "Que no se debe ocupar en parte o la totalidad del carril continuo de la calzada."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "B",
+      "bankAnswer": "B",
+      "examFrequency": 9,
+      "group": 4,
+      "frequency": 9,
+      "round": "R30",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "note",
+      "reason": "La separación de referencia es al menos 1,5 m. Art. 35.4 LSV: ocupar carril contiguo o contrario cuando proceda y, si hay más de un carril por sentido, cambio completo obligatorio; no basta limitarse a medir la distancia. Adelantar solo si es seguro. La letra impresa difiere de la solución ya aplicada por la alineación histórica de julio 2023 A; se conserva sin nueva corrección.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2015-11722#a35"
+      ]
+    },
+    {
+      "examId": "2024-07-20-mercancias-a",
+      "number": 89,
+      "sourcePage": 94,
+      "question": "Cuando se adelante a un ciclista en una vía fuera de poblado, ¿qué se deberá tener en cuenta?",
+      "options": {
+        "A": "Que hay que adelantar muy rápido para pasarlo lo antes posible",
+        "B": "Que la separación lateral no debe ser inferior a 1,50 metros.",
+        "C": "Que la distancia lateral mínima debe ser de 5 metros",
+        "D": "Que no se debe ocupar en parte o la totalidad del carril continuo de la calzada"
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "B",
+      "bankAnswer": "B",
+      "examFrequency": 9,
+      "group": 4,
+      "frequency": 9,
+      "round": "R30",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "note",
+      "reason": "La separación de referencia es al menos 1,5 m. Art. 35.4 LSV: ocupar carril contiguo o contrario cuando proceda y, si hay más de un carril por sentido, cambio completo obligatorio; no basta limitarse a medir la distancia. Adelantar solo si es seguro.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2015-11722#a35"
+      ]
+    },
+    {
+      "examId": "2025-07-26-mercancias-a",
+      "number": 47,
+      "sourcePage": 103,
+      "question": "Cuando se adelante a un ciclista en una vía fuera de poblado, ¿qué se deberá tener en cuenta?",
+      "options": {
+        "A": "Que hay que adelantar muy rápido para pasarlo lo antes posible.",
+        "B": "Que la separación lateral no debe ser inferior a 1,50 metros.",
+        "C": "Que la distancia lateral mínima debe ser de 5 metros.",
+        "D": "Que no se debe ocupar en parte o la totalidad del carril continuo de la calzada."
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "B",
+      "bankAnswer": "B",
+      "examFrequency": 9,
+      "group": 4,
+      "frequency": 9,
+      "round": "R30",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "note",
+      "reason": "La separación de referencia es al menos 1,5 m. Art. 35.4 LSV: ocupar carril contiguo o contrario cuando proceda y, si hay más de un carril por sentido, cambio completo obligatorio; no basta limitarse a medir la distancia. Adelantar solo si es seguro.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2015-11722#a35"
+      ]
+    },
+    {
+      "examId": "2026-07-25-mercancias-a",
+      "number": 85,
+      "sourcePage": 124,
+      "question": "Cuando se adelante a un ciclista en una vía fuera de poblado, ¿qué se deberá tener en cuenta?",
+      "options": {
+        "A": "Que hay que adelantar muy rápido para pasarlo lo antes posible.",
+        "B": "Que la separación lateral no debe ser inferior a 1,50 metros.",
+        "C": "Que la distancia lateral mínima debe ser de 5 metros.",
+        "D": "Que no se debe ocupar en parte o la totalidad del carril continuo de la calzada."
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "B",
+      "bankAnswer": "B",
+      "examFrequency": 9,
+      "group": 4,
+      "frequency": 9,
+      "round": "R30",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "note",
+      "reason": "La separación de referencia es al menos 1,5 m. Art. 35.4 LSV: ocupar carril contiguo o contrario cuando proceda y, si hay más de un carril por sentido, cambio completo obligatorio; no basta limitarse a medir la distancia. Adelantar solo si es seguro.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2015-11722#a35"
+      ]
+    },
+    {
+      "examId": "2023-07-29-mercancias-b",
+      "number": 49,
+      "sourcePage": 155,
+      "question": "Cuando se adelante a un ciclista en una vía fuera de poblado, ¿qué se deberá tener en cuenta?",
+      "options": {
+        "A": "Que hay que adelantar muy rápido para pasarlo lo antes posible.",
+        "B": "Que la separación lateral no debe ser inferior a 1,50 metros.",
+        "C": "Que la distancia lateral mínima debe ser de 5 metros.",
+        "D": "Que no se debe ocupar en parte o la totalidad del carril continuo de la calzada."
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "B",
+      "bankAnswer": "B",
+      "examFrequency": 9,
+      "group": 4,
+      "frequency": 9,
+      "round": "R30",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "note",
+      "reason": "La separación de referencia es al menos 1,5 m. Art. 35.4 LSV: ocupar carril contiguo o contrario cuando proceda y, si hay más de un carril por sentido, cambio completo obligatorio; no basta limitarse a medir la distancia. Adelantar solo si es seguro.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2015-11722#a35"
+      ]
+    },
+    {
+      "examId": "2024-07-20-mercancias-b",
+      "number": 48,
+      "sourcePage": 175,
+      "question": "Cuando se adelante a un ciclista en una vía fuera de poblado, ¿qué se deberá tener en cuenta?",
+      "options": {
+        "A": "Que hay que adelantar muy rápido para pasarlo lo antes posible",
+        "B": "Que la separación lateral no debe ser inferior a 1,50 metros.",
+        "C": "Que la distancia lateral mínima debe ser de 5 metros",
+        "D": "Que no se debe ocupar en parte o la totalidad del carril continuo de la calzada"
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "B",
+      "bankAnswer": "B",
+      "examFrequency": 9,
+      "group": 4,
+      "frequency": 9,
+      "round": "R30",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "note",
+      "reason": "La separación de referencia es al menos 1,5 m. Art. 35.4 LSV: ocupar carril contiguo o contrario cuando proceda y, si hay más de un carril por sentido, cambio completo obligatorio; no basta limitarse a medir la distancia. Adelantar solo si es seguro.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2015-11722#a35"
+      ]
+    },
+    {
+      "examId": "2026-07-25-mercancias-b",
+      "number": 50,
+      "sourcePage": 209,
+      "question": "Cuando se adelante a un ciclista en una vía fuera de poblado, ¿qué se deberá tener en cuenta?",
+      "options": {
+        "A": "Que hay que adelantar muy rápido para pasarlo lo antes posible.",
+        "B": "Que la separación lateral no debe ser inferior a 1,50 metros.",
+        "C": "Que la distancia lateral mínima debe ser de 5 metros.",
+        "D": "Que no se debe ocupar en parte o la totalidad del carril continuo de la calzada."
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "B",
+      "bankAnswer": "B",
+      "examFrequency": 9,
+      "group": 4,
+      "frequency": 9,
+      "round": "R30",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "note",
+      "reason": "La separación de referencia es al menos 1,5 m. Art. 35.4 LSV: ocupar carril contiguo o contrario cuando proceda y, si hay más de un carril por sentido, cambio completo obligatorio; no basta limitarse a medir la distancia. Adelantar solo si es seguro.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2015-11722#a35"
+      ]
+    },
+    {
+      "examId": "2026-02-07-mercancias-global",
+      "number": 47,
+      "sourcePage": 282,
+      "question": "Cuando se adelante a un ciclista en una vía fuera de poblado, ¿qué se deberá tener en cuenta?",
+      "options": {
+        "A": "Que hay que adelantar muy rápido para pasarlo lo antes posible.",
+        "B": "Que la separación lateral no debe ser inferior a 1,50 metros.",
+        "C": "Que la distancia lateral mínima debe ser de 5 metros.",
+        "D": "Que no se debe ocupar en parte o la totalidad del carril continuo de la calzada."
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "B",
+      "bankAnswer": "B",
+      "examFrequency": 9,
+      "group": 4,
+      "frequency": 9,
+      "round": "R30",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "note",
+      "reason": "La separación de referencia es al menos 1,5 m. Art. 35.4 LSV: ocupar carril contiguo o contrario cuando proceda y, si hay más de un carril por sentido, cambio completo obligatorio; no basta limitarse a medir la distancia. Adelantar solo si es seguro.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2015-11722#a35"
+      ]
+    },
+    {
+      "examId": "2025-03-29-mercancias-global",
+      "number": 94,
+      "sourcePage": 346,
+      "question": "Cuando se adelante a un ciclista en una vía fuera de poblado, ¿qué se deberá tener en cuenta?",
+      "options": {
+        "A": "Que hay que adelantar muy rápido para pasarlo lo antes posible.",
+        "B": "Que la separación lateral no debe ser inferior a 1,50 metros.",
+        "C": "Que la distancia lateral mínima debe ser de 5 metros.",
+        "D": "Que no se debe ocupar en parte o la totalidad del carril continuo de la calzada."
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "B",
+      "bankAnswer": "B",
+      "examFrequency": 9,
+      "group": 4,
+      "frequency": 9,
+      "round": "R30",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "note",
+      "reason": "La separación de referencia es al menos 1,5 m. Art. 35.4 LSV: ocupar carril contiguo o contrario cuando proceda y, si hay más de un carril por sentido, cambio completo obligatorio; no basta limitarse a medir la distancia. Adelantar solo si es seguro.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2015-11722#a35"
+      ]
+    },
+    {
+      "examId": "2023-07-29-mercancias-a",
+      "number": 59,
+      "sourcePage": 69,
+      "question": "¿Qué documento no es obligatorio llevar a bordo del vehículo?",
+      "options": {
+        "A": "Permiso de circulación.",
+        "B": "Ficha técnica (ITV).",
+        "C": "Póliza de seguro de responsabilidad civil.",
+        "D": "Certificado ADR o ATP cuando sean necesarios."
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "examFrequency": 8,
+      "group": 5,
+      "frequency": 8,
+      "round": "R30",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "note",
+      "reason": "En España no es obligatorio portar la póliza o recibo del seguro, aunque sí mantener la cobertura obligatoria. Permiso de circulación y ficha ITV son exigibles. Los documentos especiales ADR/ATP se exigen cuando proceda; la placa ATP reglamentaria puede equivaler al certificado. El acuerdo M364 permite que el certificado ADR de remolque esté accesible en el propio remolque bajo sus condiciones. C sigue siendo la mejor respuesta general. La letra impresa difiere de la solución ya aplicada por la alineación histórica de julio 2023 A; se conserva sin nueva corrección.",
+      "sources": [
+        "https://www.dgt.es/nuestros-servicios/tu-vehiculo/documentacion-de-un-vehiculo/que-documentacion-debes-llevar-en-tu-vehiculo",
+        "https://www.boe.es/eli/es/ai/2024/11/01/(1)",
+        "https://boe.es/diario_boe/txt.php?id=BOE-A-2025-12309&lang=es"
+      ]
+    },
+    {
+      "examId": "2025-07-26-mercancias-a",
+      "number": 27,
+      "sourcePage": 100,
+      "question": "¿Qué documento no es obligatorio llevar a bordo del vehículo?",
+      "options": {
+        "A": "Permiso de circulación.",
+        "B": "Ficha técnica (ITV).",
+        "C": "Póliza de seguro de responsabilidad civil.",
+        "D": "Certificado ADR o ATP cuando sean necesarios."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "examFrequency": 8,
+      "group": 5,
+      "frequency": 8,
+      "round": "R30",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "note",
+      "reason": "En España no es obligatorio portar la póliza o recibo del seguro, aunque sí mantener la cobertura obligatoria. Permiso de circulación y ficha ITV son exigibles. Los documentos especiales ADR/ATP se exigen cuando proceda; la placa ATP reglamentaria puede equivaler al certificado. El acuerdo M364 permite que el certificado ADR de remolque esté accesible en el propio remolque bajo sus condiciones. C sigue siendo la mejor respuesta general.",
+      "sources": [
+        "https://www.dgt.es/nuestros-servicios/tu-vehiculo/documentacion-de-un-vehiculo/que-documentacion-debes-llevar-en-tu-vehiculo",
+        "https://www.boe.es/eli/es/ai/2024/11/01/(1)",
+        "https://boe.es/diario_boe/txt.php?id=BOE-A-2025-12309&lang=es"
+      ]
+    },
+    {
+      "examId": "2026-09-26-mercancias-a",
+      "number": 81,
+      "sourcePage": 141,
+      "question": "¿Qué documento no es obligatorio llevar a bordo del vehículo?",
+      "options": {
+        "A": "Permiso de circulación.",
+        "B": "Ficha técnica (ITV).",
+        "C": "Póliza de seguro de responsabilidad civil.",
+        "D": "Certificado ADR o ATP cuando sean necesarios."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "examFrequency": 8,
+      "group": 5,
+      "frequency": 8,
+      "round": "R30",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "note",
+      "reason": "En España no es obligatorio portar la póliza o recibo del seguro, aunque sí mantener la cobertura obligatoria. Permiso de circulación y ficha ITV son exigibles. Los documentos especiales ADR/ATP se exigen cuando proceda; la placa ATP reglamentaria puede equivaler al certificado. El acuerdo M364 permite que el certificado ADR de remolque esté accesible en el propio remolque bajo sus condiciones. C sigue siendo la mejor respuesta general.",
+      "sources": [
+        "https://www.dgt.es/nuestros-servicios/tu-vehiculo/documentacion-de-un-vehiculo/que-documentacion-debes-llevar-en-tu-vehiculo",
+        "https://www.boe.es/eli/es/ai/2024/11/01/(1)",
+        "https://boe.es/diario_boe/txt.php?id=BOE-A-2025-12309&lang=es"
+      ]
+    },
+    {
+      "examId": "2023-07-29-mercancias-b",
+      "number": 45,
+      "sourcePage": 154,
+      "question": "¿Qué documento no es obligatorio llevar a bordo del vehículo?",
+      "options": {
+        "A": "Permiso de circulación.",
+        "B": "Ficha técnica (ITV).",
+        "C": "Póliza de seguro de responsabilidad civil.",
+        "D": "Certificado ADR o ATP cuando sean necesarios."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "examFrequency": 8,
+      "group": 5,
+      "frequency": 8,
+      "round": "R30",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "note",
+      "reason": "En España no es obligatorio portar la póliza o recibo del seguro, aunque sí mantener la cobertura obligatoria. Permiso de circulación y ficha ITV son exigibles. Los documentos especiales ADR/ATP se exigen cuando proceda; la placa ATP reglamentaria puede equivaler al certificado. El acuerdo M364 permite que el certificado ADR de remolque esté accesible en el propio remolque bajo sus condiciones. C sigue siendo la mejor respuesta general.",
+      "sources": [
+        "https://www.dgt.es/nuestros-servicios/tu-vehiculo/documentacion-de-un-vehiculo/que-documentacion-debes-llevar-en-tu-vehiculo",
+        "https://www.boe.es/eli/es/ai/2024/11/01/(1)",
+        "https://boe.es/diario_boe/txt.php?id=BOE-A-2025-12309&lang=es"
+      ]
+    },
+    {
+      "examId": "2025-07-26-mercancias-b",
+      "number": 35,
+      "sourcePage": 190,
+      "question": "¿Qué documento no es obligatorio llevar a bordo del vehículo?",
+      "options": {
+        "A": "Permiso de circulación.",
+        "B": "Ficha técnica (ITV).",
+        "C": "Póliza de seguro de responsabilidad civil.",
+        "D": "Certificado ADR o ATP cuando sean necesarios."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "examFrequency": 8,
+      "group": 5,
+      "frequency": 8,
+      "round": "R30",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "note",
+      "reason": "En España no es obligatorio portar la póliza o recibo del seguro, aunque sí mantener la cobertura obligatoria. Permiso de circulación y ficha ITV son exigibles. Los documentos especiales ADR/ATP se exigen cuando proceda; la placa ATP reglamentaria puede equivaler al certificado. El acuerdo M364 permite que el certificado ADR de remolque esté accesible en el propio remolque bajo sus condiciones. C sigue siendo la mejor respuesta general.",
+      "sources": [
+        "https://www.dgt.es/nuestros-servicios/tu-vehiculo/documentacion-de-un-vehiculo/que-documentacion-debes-llevar-en-tu-vehiculo",
+        "https://www.boe.es/eli/es/ai/2024/11/01/(1)",
+        "https://boe.es/diario_boe/txt.php?id=BOE-A-2025-12309&lang=es"
+      ]
+    },
+    {
+      "examId": "2025-02-01-mercancias-global",
+      "number": 51,
+      "sourcePage": 266,
+      "question": "¿Qué documento no es obligatorio llevar a bordo del vehículo?",
+      "options": {
+        "A": "Permiso de circulación.",
+        "B": "Ficha técnica (ITV).",
+        "C": "Póliza de seguro de responsabilidad civil.",
+        "D": "Certificado ADR o ATP cuando sean necesarios."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "examFrequency": 8,
+      "group": 5,
+      "frequency": 8,
+      "round": "R30",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "note",
+      "reason": "En España no es obligatorio portar la póliza o recibo del seguro, aunque sí mantener la cobertura obligatoria. Permiso de circulación y ficha ITV son exigibles. Los documentos especiales ADR/ATP se exigen cuando proceda; la placa ATP reglamentaria puede equivaler al certificado. El acuerdo M364 permite que el certificado ADR de remolque esté accesible en el propio remolque bajo sus condiciones. C sigue siendo la mejor respuesta general.",
+      "sources": [
+        "https://www.dgt.es/nuestros-servicios/tu-vehiculo/documentacion-de-un-vehiculo/que-documentacion-debes-llevar-en-tu-vehiculo",
+        "https://www.boe.es/eli/es/ai/2024/11/01/(1)",
+        "https://boe.es/diario_boe/txt.php?id=BOE-A-2025-12309&lang=es"
+      ]
+    },
+    {
+      "examId": "2026-02-07-mercancias-global",
+      "number": 62,
+      "sourcePage": 284,
+      "question": "¿Qué documento no es obligatorio llevar a bordo del vehículo?",
+      "options": {
+        "A": "Permiso de circulación.",
+        "B": "Ficha técnica (ITV).",
+        "C": "Póliza de seguro de responsabilidad civil.",
+        "D": "Certificado ADR o ATP cuando sean necesarios."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "examFrequency": 8,
+      "group": 5,
+      "frequency": 8,
+      "round": "R30",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "note",
+      "reason": "En España no es obligatorio portar la póliza o recibo del seguro, aunque sí mantener la cobertura obligatoria. Permiso de circulación y ficha ITV son exigibles. Los documentos especiales ADR/ATP se exigen cuando proceda; la placa ATP reglamentaria puede equivaler al certificado. El acuerdo M364 permite que el certificado ADR de remolque esté accesible en el propio remolque bajo sus condiciones. C sigue siendo la mejor respuesta general.",
+      "sources": [
+        "https://www.dgt.es/nuestros-servicios/tu-vehiculo/documentacion-de-un-vehiculo/que-documentacion-debes-llevar-en-tu-vehiculo",
+        "https://www.boe.es/eli/es/ai/2024/11/01/(1)",
+        "https://boe.es/diario_boe/txt.php?id=BOE-A-2025-12309&lang=es"
+      ]
+    },
+    {
+      "examId": "2023-03-25-mercancias-global",
+      "number": 92,
+      "sourcePage": 330,
+      "question": "¿Qué documento no es obligatorio llevar a bordo del vehículo?",
+      "options": {
+        "A": "Permiso de circulación.",
+        "B": "Ficha técnica (ITV).",
+        "C": "Póliza de seguro de responsabilidad civil.",
+        "D": "Certificado ADR o ATP cuando sean necesarios."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "examFrequency": 8,
+      "group": 5,
+      "frequency": 8,
+      "round": "R30",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "note",
+      "reason": "En España no es obligatorio portar la póliza o recibo del seguro, aunque sí mantener la cobertura obligatoria. Permiso de circulación y ficha ITV son exigibles. Los documentos especiales ADR/ATP se exigen cuando proceda; la placa ATP reglamentaria puede equivaler al certificado. El acuerdo M364 permite que el certificado ADR de remolque esté accesible en el propio remolque bajo sus condiciones. C sigue siendo la mejor respuesta general.",
+      "sources": [
+        "https://www.dgt.es/nuestros-servicios/tu-vehiculo/documentacion-de-un-vehiculo/que-documentacion-debes-llevar-en-tu-vehiculo",
+        "https://www.boe.es/eli/es/ai/2024/11/01/(1)",
+        "https://boe.es/diario_boe/txt.php?id=BOE-A-2025-12309&lang=es"
+      ]
+    },
+    {
+      "examId": "2024-04-06-mercancias-global",
+      "number": 29,
+      "sourcePage": 6,
+      "question": "Los equipos de protección individual (EPI):",
+      "options": {
+        "A": "son elementos de aplicación indirecta sobre el cuerpo del trabajador.",
+        "B": "tienen la finalidad de disminuir o impedir las lesiones.",
+        "C": "normalmente se clasifican por las partes que componen los equipos.",
+        "D": "tienen por finalidad impedir el bajo rendimiento en el trabajo."
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "B",
+      "bankAnswer": "B",
+      "examFrequency": 8,
+      "group": 6,
+      "frequency": 8,
+      "round": "R30",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "confirmed",
+      "reason": "El RD 773/1997 art. 2 define EPI como equipo llevado o sujetado por el trabajador para proteger frente a riesgos para su seguridad o salud; B expresa su objetivo. No sustituye medidas colectivas cuando estas son suficientes.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1997-12735#a2",
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1995-24292#a14"
+      ]
+    },
+    {
+      "examId": "2023-07-29-mercancias-a",
+      "number": 36,
+      "sourcePage": 64,
+      "question": "Los equipos de protección individual (EPI):",
+      "options": {
+        "A": "son elementos de aplicación indirecta sobre el cuerpo del trabajador.",
+        "B": "tienen la finalidad de disminuir o impedir las lesiones.",
+        "C": "normalmente se clasifican por las partes que componen los equipos.",
+        "D": "tienen por finalidad impedir el bajo rendimiento en el trabajo."
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "B",
+      "bankAnswer": "B",
+      "examFrequency": 8,
+      "group": 6,
+      "frequency": 8,
+      "round": "R30",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "confirmed",
+      "reason": "El RD 773/1997 art. 2 define EPI como equipo llevado o sujetado por el trabajador para proteger frente a riesgos para su seguridad o salud; B expresa su objetivo. No sustituye medidas colectivas cuando estas son suficientes.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1997-12735#a2",
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1995-24292#a14"
+      ]
+    },
+    {
+      "examId": "2024-07-20-mercancias-a",
+      "number": 47,
+      "sourcePage": 87,
+      "question": "Los equipos de protección individual (EPI):",
+      "options": {
+        "A": "son elementos de aplicación indirecta sobre el cuerpo del trabajador",
+        "B": "tienen la finalidad de disminuir o impedir las lesiones",
+        "C": "normalmente se clasifican por las partes que componen los equipos.",
+        "D": "tienen por finalidad impedir el bajo rendimiento en el trabajo"
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "B",
+      "bankAnswer": "B",
+      "examFrequency": 8,
+      "group": 6,
+      "frequency": 8,
+      "round": "R30",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "confirmed",
+      "reason": "El RD 773/1997 art. 2 define EPI como equipo llevado o sujetado por el trabajador para proteger frente a riesgos para su seguridad o salud; B expresa su objetivo. No sustituye medidas colectivas cuando estas son suficientes.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1997-12735#a2",
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1995-24292#a14"
+      ]
+    },
+    {
+      "examId": "2023-07-29-mercancias-b",
+      "number": 60,
+      "sourcePage": 157,
+      "question": "Los equipos de protección individual (EPI):",
+      "options": {
+        "A": "son elementos de aplicación indirecta sobre el cuerpo del trabajador.",
+        "B": "tienen la finalidad de disminuir o impedir las lesiones.",
+        "C": "normalmente se clasifican por las partes que componen los equipos.",
+        "D": "tienen por finalidad impedir el bajo rendimiento en el trabajo."
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "B",
+      "bankAnswer": "B",
+      "examFrequency": 8,
+      "group": 6,
+      "frequency": 8,
+      "round": "R30",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "confirmed",
+      "reason": "El RD 773/1997 art. 2 define EPI como equipo llevado o sujetado por el trabajador para proteger frente a riesgos para su seguridad o salud; B expresa su objetivo. No sustituye medidas colectivas cuando estas son suficientes.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1997-12735#a2",
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1995-24292#a14"
+      ]
+    },
+    {
+      "examId": "2024-07-20-mercancias-b",
+      "number": 99,
+      "sourcePage": 184,
+      "question": "Los equipos de protección individual (EPI):",
+      "options": {
+        "A": "son elementos de aplicación indirecta sobre el cuerpo del trabajador",
+        "B": "tienen la finalidad de disminuir o impedir las lesiones",
+        "C": "normalmente se clasifican por las partes que componen los equipos.",
+        "D": "tienen por finalidad impedir el bajo rendimiento en el trabajo"
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "B",
+      "bankAnswer": "B",
+      "examFrequency": 8,
+      "group": 6,
+      "frequency": 8,
+      "round": "R30",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "confirmed",
+      "reason": "El RD 773/1997 art. 2 define EPI como equipo llevado o sujetado por el trabajador para proteger frente a riesgos para su seguridad o salud; B expresa su objetivo. No sustituye medidas colectivas cuando estas son suficientes.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1997-12735#a2",
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1995-24292#a14"
+      ]
+    },
+    {
+      "examId": "2026-02-07-mercancias-global",
+      "number": 75,
+      "sourcePage": 286,
+      "question": "Los equipos de protección individual (EPI):",
+      "options": {
+        "A": "Son elementos de aplicación indirecta sobre el cuerpo del trabajador.",
+        "B": "Tienen la finalidad de disminuir o impedir las lesiones.",
+        "C": "Normalmente se clasifican por las partes que componen los equipos.",
+        "D": "Tienen por finalidad impedir el bajo rendimiento en el trabajo."
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "B",
+      "bankAnswer": "B",
+      "examFrequency": 8,
+      "group": 6,
+      "frequency": 8,
+      "round": "R30",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "confirmed",
+      "reason": "El RD 773/1997 art. 2 define EPI como equipo llevado o sujetado por el trabajador para proteger frente a riesgos para su seguridad o salud; B expresa su objetivo. No sustituye medidas colectivas cuando estas son suficientes.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1997-12735#a2",
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1995-24292#a14"
+      ]
+    },
+    {
+      "examId": "2023-03-25-mercancias-global",
+      "number": 39,
+      "sourcePage": 319,
+      "question": "Los equipos de protección individual (EPI) ...",
+      "options": {
+        "A": "son elementos de aplicación indirecta sobre el cuerpo del trabajador.",
+        "B": "tienen la finalidad de disminuir o impedir las lesiones.",
+        "C": "normalmente se clasifican por las partes que componen los equipos.",
+        "D": "tienen por finalidad impedir el bajo rendimiento en el trabajo."
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "B",
+      "bankAnswer": "B",
+      "examFrequency": 8,
+      "group": 6,
+      "frequency": 8,
+      "round": "R30",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "confirmed",
+      "reason": "El RD 773/1997 art. 2 define EPI como equipo llevado o sujetado por el trabajador para proteger frente a riesgos para su seguridad o salud; B expresa su objetivo. No sustituye medidas colectivas cuando estas son suficientes.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1997-12735#a2",
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1995-24292#a14"
+      ]
+    },
+    {
+      "examId": "2024-05-25-mercancias-global",
+      "number": 36,
+      "sourcePage": 391,
+      "question": "Los equipos de protección individual (EPI):",
+      "options": {
+        "A": "son elementos de aplicación indirecta sobre el cuerpo del trabajador.",
+        "B": "tienen la finalidad de disminuir o impedir las lesiones.",
+        "C": "normalmente se clasifican por las partes que componen los equipos.",
+        "D": "tienen por finalidad impedir el bajo rendimiento en el trabajo."
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "B",
+      "bankAnswer": "B",
+      "examFrequency": 8,
+      "group": 6,
+      "frequency": 8,
+      "round": "R30",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "confirmed",
+      "reason": "El RD 773/1997 art. 2 define EPI como equipo llevado o sujetado por el trabajador para proteger frente a riesgos para su seguridad o salud; B expresa su objetivo. No sustituye medidas colectivas cuando estas son suficientes.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1997-12735#a2",
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1995-24292#a14"
+      ]
+    },
+    {
+      "examId": "2024-04-06-mercancias-global",
+      "number": 99,
+      "sourcePage": 20,
+      "question": "El uso del cinturón de seguridad es obligatorio en vías:",
+      "options": {
+        "A": "urbanas e interurbanas.",
+        "B": "interurbanas, ya que en vías urbanas es recomendable, pero no obligatorio.",
+        "C": "interurbanas, en cualquier caso, y urbanas si así lo prevé la correspondiente ordenanza municipal.",
+        "D": "urbanas exclusivamente."
+      },
+      "originalSheetAnswer": "A",
+      "correctAnswer": "A",
+      "bankAnswer": "A",
+      "examFrequency": 8,
+      "group": 7,
+      "frequency": 8,
+      "round": "R30",
+      "historicalAnswer": "A",
+      "previousAppliedAnswer": "A",
+      "technicalAnswer": "A",
+      "action": "note",
+      "reason": "Reglamento General de Circulación, art. 117: obligación en vías urbanas e interurbanas en vehículos que deban disponer de cinturones; art. 119 contempla exenciones. Redacción vigente desde 01/10/2026: no trasladar automáticamente las antiguas excepciones urbanas del reparto.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2003-23514#a117",
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2003-23514#a119"
+      ]
+    },
+    {
+      "examId": "2024-07-20-mercancias-a",
+      "number": 38,
+      "sourcePage": 85,
+      "question": "El uso del cinturón de seguridad es obligatorio en vías:",
+      "options": {
+        "A": "urbanas e interurbanas.",
+        "B": "interurbanas, ya que en vías urbanas es recomendable, pero no obligatorio",
+        "C": "interurbanas, en cualquier caso, y urbanas si así lo prevé la correspondiente ordenanza municipal.",
+        "D": "urbanas exclusivamente"
+      },
+      "originalSheetAnswer": "A",
+      "correctAnswer": "A",
+      "bankAnswer": "A",
+      "examFrequency": 8,
+      "group": 7,
+      "frequency": 8,
+      "round": "R30",
+      "historicalAnswer": "A",
+      "previousAppliedAnswer": "A",
+      "technicalAnswer": "A",
+      "action": "note",
+      "reason": "Reglamento General de Circulación, art. 117: obligación en vías urbanas e interurbanas en vehículos que deban disponer de cinturones; art. 119 contempla exenciones. Redacción vigente desde 01/10/2026: no trasladar automáticamente las antiguas excepciones urbanas del reparto.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2003-23514#a117",
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2003-23514#a119"
+      ]
+    },
+    {
+      "examId": "2024-07-20-mercancias-b",
+      "number": 37,
+      "sourcePage": 173,
+      "question": "El uso del cinturón de seguridad es obligatorio en vías:",
+      "options": {
+        "A": "urbanas e interurbanas.",
+        "B": "interurbanas, ya que en vías urbanas es recomendable, pero no obligatorio",
+        "C": "interurbanas, en cualquier caso, y urbanas si así lo prevé la correspondiente ordenanza municipal.",
+        "D": "urbanas exclusivamente"
+      },
+      "originalSheetAnswer": "A",
+      "correctAnswer": "A",
+      "bankAnswer": "A",
+      "examFrequency": 8,
+      "group": 7,
+      "frequency": 8,
+      "round": "R30",
+      "historicalAnswer": "A",
+      "previousAppliedAnswer": "A",
+      "technicalAnswer": "A",
+      "action": "note",
+      "reason": "Reglamento General de Circulación, art. 117: obligación en vías urbanas e interurbanas en vehículos que deban disponer de cinturones; art. 119 contempla exenciones. Redacción vigente desde 01/10/2026: no trasladar automáticamente las antiguas excepciones urbanas del reparto.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2003-23514#a117",
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2003-23514#a119"
+      ]
+    },
+    {
+      "examId": "2023-02-04-mercancias-global",
+      "number": 31,
+      "sourcePage": 244,
+      "question": "El uso del cinturón de seguridad es obligatorio en vías:",
+      "options": {
+        "A": "urbanas e interurbanas.",
+        "B": "interurbanas, ya que en vías urbanas es recomendable, pero no obligatorio.",
+        "C": "interurbanas, en cualquier caso, y urbanas si así lo prevé la correspondiente ordenanza municipal.",
+        "D": "urbanas exclusivamente."
+      },
+      "originalSheetAnswer": "A",
+      "correctAnswer": "A",
+      "bankAnswer": "A",
+      "examFrequency": 8,
+      "group": 7,
+      "frequency": 8,
+      "round": "R30",
+      "historicalAnswer": "A",
+      "previousAppliedAnswer": "A",
+      "technicalAnswer": "A",
+      "action": "note",
+      "reason": "Reglamento General de Circulación, art. 117: obligación en vías urbanas e interurbanas en vehículos que deban disponer de cinturones; art. 119 contempla exenciones. Redacción vigente desde 01/10/2026: no trasladar automáticamente las antiguas excepciones urbanas del reparto.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2003-23514#a117",
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2003-23514#a119"
+      ]
+    },
+    {
+      "examId": "2025-02-01-mercancias-global",
+      "number": 75,
+      "sourcePage": 270,
+      "question": "El uso del cinturón de seguridad es obligatorio en vías:",
+      "options": {
+        "A": "urbanas e interurbanas.",
+        "B": "interurbanas, ya que en vías urbanas es recomendable, pero no obligatorio.",
+        "C": "interurbanas, en cualquier caso, y urbanas si así lo prevé la correspondiente ordenanza municipal.",
+        "D": "urbanas exclusivamente."
+      },
+      "originalSheetAnswer": "A",
+      "correctAnswer": "A",
+      "bankAnswer": "A",
+      "examFrequency": 8,
+      "group": 7,
+      "frequency": 8,
+      "round": "R30",
+      "historicalAnswer": "A",
+      "previousAppliedAnswer": "A",
+      "technicalAnswer": "A",
+      "action": "note",
+      "reason": "Reglamento General de Circulación, art. 117: obligación en vías urbanas e interurbanas en vehículos que deban disponer de cinturones; art. 119 contempla exenciones. Redacción vigente desde 01/10/2026: no trasladar automáticamente las antiguas excepciones urbanas del reparto.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2003-23514#a117",
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2003-23514#a119"
+      ]
+    },
+    {
+      "examId": "2023-03-25-mercancias-global",
+      "number": 77,
+      "sourcePage": 327,
+      "question": "El uso del cinturón de seguridad es obligatorio en vías:",
+      "options": {
+        "A": "urbanas e interurbanas.",
+        "B": "interurbanas, ya que en vías urbanas es recomendable, pero no obligatorio.",
+        "C": "interurbanas, en cualquier caso, y urbanas si así lo prevé la correspondiente ordenanza municipal.",
+        "D": "urbanas exclusivamente."
+      },
+      "originalSheetAnswer": "A",
+      "correctAnswer": "A",
+      "bankAnswer": "A",
+      "examFrequency": 8,
+      "group": 7,
+      "frequency": 8,
+      "round": "R30",
+      "historicalAnswer": "A",
+      "previousAppliedAnswer": "A",
+      "technicalAnswer": "A",
+      "action": "note",
+      "reason": "Reglamento General de Circulación, art. 117: obligación en vías urbanas e interurbanas en vehículos que deban disponer de cinturones; art. 119 contempla exenciones. Redacción vigente desde 01/10/2026: no trasladar automáticamente las antiguas excepciones urbanas del reparto.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2003-23514#a117",
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2003-23514#a119"
+      ]
+    },
+    {
+      "examId": "2023-12-02-mercancias-global",
+      "number": 95,
+      "sourcePage": 236,
+      "question": "El uso del cinturón de seguridad es obligatorio en vías:",
+      "options": {
+        "A": "Urbanas e interurbanas.",
+        "B": "Interurbanas, ya que en vías urbanas es recomendabIe, pero no obIigatorio.",
+        "C": "Interurbanas, en cuaIquier caso, y urbanas si así Io prevé Ia correspondiente ordenanza municipaI.",
+        "D": "Urbanas excIusivamente."
+      },
+      "originalSheetAnswer": "A",
+      "correctAnswer": "A",
+      "bankAnswer": "A",
+      "examFrequency": 8,
+      "group": 8,
+      "frequency": 8,
+      "round": "R30",
+      "historicalAnswer": "A",
+      "previousAppliedAnswer": "A",
+      "technicalAnswer": "A",
+      "action": "note",
+      "reason": "Art. 117 RGC: cinturón obligatorio en vías urbanas e interurbanas; art. 119 recoge exenciones. Redacción vigente desde 01/10/2026. Diferencias de grafía OCR no cambian la solución.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2003-23514#a117",
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2003-23514#a119"
+      ]
+    },
+    {
+      "examId": "2026-05-30-mercancias-global",
+      "number": 33,
+      "sourcePage": 409,
+      "question": "El uso del cinturón de seguridad es obligatorio en vías:",
+      "options": {
+        "A": "Urbanas e interurbanas.",
+        "B": "Interurbanas, para que no se arrugue la camiseta.",
+        "C": "Interurbanas, en cualquier caso, y urbanas si así lo prevé la correspondiente ordenanza municipal.",
+        "D": "Urbanas exclusivamente."
+      },
+      "originalSheetAnswer": "A",
+      "correctAnswer": "A",
+      "bankAnswer": "A",
+      "examFrequency": 8,
+      "group": 9,
+      "frequency": 8,
+      "round": "R30",
+      "historicalAnswer": "A",
+      "previousAppliedAnswer": "A",
+      "technicalAnswer": "A",
+      "action": "note",
+      "reason": "Art. 117 RGC: cinturón obligatorio en ambas vías, con las exenciones del art. 119 en la redacción vigente. El distractor coloquial no afecta a la respuesta; no se ha cotejado la imagen.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2003-23514#a117",
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2003-23514#a119"
+      ]
+    },
+    {
+      "examId": "2024-04-06-mercancias-global",
+      "number": 32,
+      "sourcePage": 7,
+      "question": "¿Cómo se llaman las enfermedades producidas por las condiciones en las que se desarrolla el trabajo?",
+      "options": {
+        "A": "Enfermedades posturales.",
+        "B": "Accidentes de trabajo.",
+        "C": "Enfermedades profesionales.",
+        "D": "Lesiones laborales."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "examFrequency": 7,
+      "group": 10,
+      "frequency": 7,
+      "round": "R30",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "note",
+      "reason": "C es la respuesta didáctica entre las ofrecidas. En sentido jurídico (LGSS art. 157) la enfermedad profesional exige actividad y agente del cuadro; no toda dolencia laboral es profesional, y algunas pueden calificarse como accidente de trabajo (art. 156).",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2015-11724#a157"
+      ]
+    },
+    {
+      "examId": "2024-07-20-mercancias-a",
+      "number": 34,
+      "sourcePage": 84,
+      "question": "¿Cómo se llaman las enfermedades producidas por las condiciones en las que se desarrolla el trabajo?",
+      "options": {
+        "A": "Enfermedades posturales.",
+        "B": "Accidentes de trabajo.",
+        "C": "Enfermedades profesionales.",
+        "D": "Lesiones laborales"
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "examFrequency": 7,
+      "group": 10,
+      "frequency": 7,
+      "round": "R30",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "note",
+      "reason": "C es la respuesta didáctica entre las ofrecidas. En sentido jurídico (LGSS art. 157) la enfermedad profesional exige actividad y agente del cuadro; no toda dolencia laboral es profesional, y algunas pueden calificarse como accidente de trabajo (art. 156).",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2015-11724#a157"
+      ]
+    },
+    {
+      "examId": "2025-07-26-mercancias-a",
+      "number": 71,
+      "sourcePage": 107,
+      "question": "¿Cómo se llaman las enfermedades producidas por las condiciones en las que se desarrolla el trabajo?",
+      "options": {
+        "A": "Enfermedades posturales.",
+        "B": "Accidentes de trabajo.",
+        "C": "Enfermedades profesionales.",
+        "D": "Lesiones laborales."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "examFrequency": 7,
+      "group": 10,
+      "frequency": 7,
+      "round": "R30",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "note",
+      "reason": "C es la respuesta didáctica entre las ofrecidas. En sentido jurídico (LGSS art. 157) la enfermedad profesional exige actividad y agente del cuadro; no toda dolencia laboral es profesional, y algunas pueden calificarse como accidente de trabajo (art. 156).",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2015-11724#a157"
+      ]
+    },
+    {
+      "examId": "2024-07-20-mercancias-b",
+      "number": 76,
+      "sourcePage": 180,
+      "question": "¿Cómo se llaman las enfermedades producidas por las condiciones en las que se desarrolla el trabajo?",
+      "options": {
+        "A": "Enfermedades posturales.",
+        "B": "Accidentes de trabajo.",
+        "C": "Enfermedades profesionales.",
+        "D": "Lesiones laborales"
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "examFrequency": 7,
+      "group": 10,
+      "frequency": 7,
+      "round": "R30",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "note",
+      "reason": "C es la respuesta didáctica entre las ofrecidas. En sentido jurídico (LGSS art. 157) la enfermedad profesional exige actividad y agente del cuadro; no toda dolencia laboral es profesional, y algunas pueden calificarse como accidente de trabajo (art. 156).",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2015-11724#a157"
+      ]
+    },
+    {
+      "examId": "2025-07-26-mercancias-b",
+      "number": 59,
+      "sourcePage": 194,
+      "question": "¿Cómo se llaman las enfermedades producidas por las condiciones en las que se desarrolla el trabajo?",
+      "options": {
+        "A": "Enfermedades posturales.",
+        "B": "Accidentes de trabajo.",
+        "C": "Enfermedades profesionales.",
+        "D": "Lesiones laborales."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "examFrequency": 7,
+      "group": 10,
+      "frequency": 7,
+      "round": "R30",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "note",
+      "reason": "C es la respuesta didáctica entre las ofrecidas. En sentido jurídico (LGSS art. 157) la enfermedad profesional exige actividad y agente del cuadro; no toda dolencia laboral es profesional, y algunas pueden calificarse como accidente de trabajo (art. 156).",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2015-11724#a157"
+      ]
+    },
+    {
+      "examId": "2026-02-07-mercancias-global",
+      "number": 72,
+      "sourcePage": 286,
+      "question": "¿Cómo se llaman las enfermedades producidas por las condiciones en las que se desarrolla el trabajo?",
+      "options": {
+        "A": "Enfermedades posturales.",
+        "B": "Accidentes de trabajo.",
+        "C": "Enfermedades profesionales.",
+        "D": "Lesiones laborales."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "examFrequency": 7,
+      "group": 10,
+      "frequency": 7,
+      "round": "R30",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "note",
+      "reason": "C es la respuesta didáctica entre las ofrecidas. En sentido jurídico (LGSS art. 157) la enfermedad profesional exige actividad y agente del cuadro; no toda dolencia laboral es profesional, y algunas pueden calificarse como accidente de trabajo (art. 156).",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2015-11724#a157"
+      ]
+    },
+    {
+      "examId": "2023-03-25-mercancias-global",
+      "number": 100,
+      "sourcePage": 331,
+      "question": "¿Cómo se llaman las enfermedades producidas por las condiciones en las que se desarrolla el trabajo?",
+      "options": {
+        "A": "Enfermedades posturales.",
+        "B": "Accidentes de trabajo.",
+        "C": "Enfermedades profesionales.",
+        "D": "Lesiones laborales."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "examFrequency": 7,
+      "group": 10,
+      "frequency": 7,
+      "round": "R30",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "note",
+      "reason": "C es la respuesta didáctica entre las ofrecidas. En sentido jurídico (LGSS art. 157) la enfermedad profesional exige actividad y agente del cuadro; no toda dolencia laboral es profesional, y algunas pueden calificarse como accidente de trabajo (art. 156).",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2015-11724#a157"
+      ]
+    },
+    {
+      "examId": "2024-04-06-mercancias-global",
+      "number": 49,
+      "sourcePage": 10,
+      "question": "La percepción del riesgo por el conductor, ¿se puede ver alterada por el alcohol y las drogas?",
+      "options": {
+        "A": "Sí, siempre.",
+        "B": "Nunca.",
+        "C": "Solo por las drogas.",
+        "D": "Solo por el alcohol."
+      },
+      "originalSheetAnswer": "A",
+      "correctAnswer": "A",
+      "bankAnswer": "A",
+      "examFrequency": 7,
+      "group": 11,
+      "frequency": 7,
+      "round": "R30",
+      "historicalAnswer": "A",
+      "previousAppliedAnswer": "A",
+      "technicalAnswer": "A",
+      "action": "note",
+      "reason": "Alcohol y otras drogas pueden alterar percepción y decisiones, no solo uno de ellos. A es la única alternativa que reconoce ambos riesgos; 'siempre' es una generalización preventiva, no una afirmación de efecto clínico idéntico en toda persona y dosis.",
+      "sources": [
+        "https://www.dgt.es/muevete-con-seguridad/evita-conductas-de-riesgo/consumo-de-alcohol/index.html",
+        "https://www.dgt.es/conoce-la-dgt/que-hacemos/conocimiento-e-investigacion/revision-sistematica-sobre-drogas-y-conduccion"
+      ]
+    },
+    {
+      "examId": "2023-07-29-mercancias-a",
+      "number": 74,
+      "sourcePage": 72,
+      "question": "La percepción del riesgo por el conductor, ¿se puede ver alterada por el alcohol y las drogas?",
+      "options": {
+        "A": "Sí, siempre.",
+        "B": "Nunca.",
+        "C": "Solo por las drogas.",
+        "D": "Solo por el alcohol."
+      },
+      "originalSheetAnswer": "D",
+      "correctAnswer": "A",
+      "bankAnswer": "A",
+      "examFrequency": 7,
+      "group": 11,
+      "frequency": 7,
+      "round": "R30",
+      "historicalAnswer": "D",
+      "previousAppliedAnswer": "A",
+      "technicalAnswer": "A",
+      "action": "note",
+      "reason": "Alcohol y otras drogas pueden alterar percepción y decisiones, no solo uno de ellos. A es la única alternativa que reconoce ambos riesgos; 'siempre' es una generalización preventiva, no una afirmación de efecto clínico idéntico en toda persona y dosis. La letra impresa difiere de la solución ya aplicada por la alineación histórica de julio 2023 A; se conserva sin nueva corrección.",
+      "sources": [
+        "https://www.dgt.es/muevete-con-seguridad/evita-conductas-de-riesgo/consumo-de-alcohol/index.html",
+        "https://www.dgt.es/conoce-la-dgt/que-hacemos/conocimiento-e-investigacion/revision-sistematica-sobre-drogas-y-conduccion"
+      ]
+    },
+    {
+      "examId": "2024-07-20-mercancias-a",
+      "number": 96,
+      "sourcePage": 95,
+      "question": "La percepción del riesgo por el conductor, ¿se puede ver alterada por el alcohol y las drogas?",
+      "options": {
+        "A": "Sí, siempre",
+        "B": "Nunca.",
+        "C": "Solo por las drogas",
+        "D": "Solo por el alcohol"
+      },
+      "originalSheetAnswer": "A",
+      "correctAnswer": "A",
+      "bankAnswer": "A",
+      "examFrequency": 7,
+      "group": 11,
+      "frequency": 7,
+      "round": "R30",
+      "historicalAnswer": "A",
+      "previousAppliedAnswer": "A",
+      "technicalAnswer": "A",
+      "action": "note",
+      "reason": "Alcohol y otras drogas pueden alterar percepción y decisiones, no solo uno de ellos. A es la única alternativa que reconoce ambos riesgos; 'siempre' es una generalización preventiva, no una afirmación de efecto clínico idéntico en toda persona y dosis.",
+      "sources": [
+        "https://www.dgt.es/muevete-con-seguridad/evita-conductas-de-riesgo/consumo-de-alcohol/index.html",
+        "https://www.dgt.es/conoce-la-dgt/que-hacemos/conocimiento-e-investigacion/revision-sistematica-sobre-drogas-y-conduccion"
+      ]
+    },
+    {
+      "examId": "2025-07-26-mercancias-a",
+      "number": 57,
+      "sourcePage": 105,
+      "question": "La percepción del riesgo por el conductor, ¿se puede ver alterada por el alcohol y las drogas?",
+      "options": {
+        "A": "Sí, siempre.",
+        "B": "Nunca.",
+        "C": "Solo por las drogas.",
+        "D": "Solo por el alcohol."
+      },
+      "originalSheetAnswer": "A",
+      "correctAnswer": "A",
+      "bankAnswer": "A",
+      "examFrequency": 7,
+      "group": 11,
+      "frequency": 7,
+      "round": "R30",
+      "historicalAnswer": "A",
+      "previousAppliedAnswer": "A",
+      "technicalAnswer": "A",
+      "action": "note",
+      "reason": "Alcohol y otras drogas pueden alterar percepción y decisiones, no solo uno de ellos. A es la única alternativa que reconoce ambos riesgos; 'siempre' es una generalización preventiva, no una afirmación de efecto clínico idéntico en toda persona y dosis.",
+      "sources": [
+        "https://www.dgt.es/muevete-con-seguridad/evita-conductas-de-riesgo/consumo-de-alcohol/index.html",
+        "https://www.dgt.es/conoce-la-dgt/que-hacemos/conocimiento-e-investigacion/revision-sistematica-sobre-drogas-y-conduccion"
+      ]
+    },
+    {
+      "examId": "2023-07-29-mercancias-b",
+      "number": 96,
+      "sourcePage": 165,
+      "question": "La percepción del riesgo por el conductor, ¿se puede ver alterada por el alcohol y las drogas?",
+      "options": {
+        "A": "Sí, siempre.",
+        "B": "Nunca.",
+        "C": "Solo por las drogas.",
+        "D": "Solo por el alcohol."
+      },
+      "originalSheetAnswer": "A",
+      "correctAnswer": "A",
+      "bankAnswer": "A",
+      "examFrequency": 7,
+      "group": 11,
+      "frequency": 7,
+      "round": "R30",
+      "historicalAnswer": "A",
+      "previousAppliedAnswer": "A",
+      "technicalAnswer": "A",
+      "action": "note",
+      "reason": "Alcohol y otras drogas pueden alterar percepción y decisiones, no solo uno de ellos. A es la única alternativa que reconoce ambos riesgos; 'siempre' es una generalización preventiva, no una afirmación de efecto clínico idéntico en toda persona y dosis.",
+      "sources": [
+        "https://www.dgt.es/muevete-con-seguridad/evita-conductas-de-riesgo/consumo-de-alcohol/index.html",
+        "https://www.dgt.es/conoce-la-dgt/que-hacemos/conocimiento-e-investigacion/revision-sistematica-sobre-drogas-y-conduccion"
+      ]
+    },
+    {
+      "examId": "2024-07-20-mercancias-b",
+      "number": 47,
+      "sourcePage": 174,
+      "question": "La percepción del riesgo por el conductor, ¿se puede ver alterada por el alcohol y las drogas?",
+      "options": {
+        "A": "Sí, siempre",
+        "B": "Nunca.",
+        "C": "Solo por las drogas",
+        "D": "Solo por el alcohol"
+      },
+      "originalSheetAnswer": "A",
+      "correctAnswer": "A",
+      "bankAnswer": "A",
+      "examFrequency": 7,
+      "group": 11,
+      "frequency": 7,
+      "round": "R30",
+      "historicalAnswer": "A",
+      "previousAppliedAnswer": "A",
+      "technicalAnswer": "A",
+      "action": "note",
+      "reason": "Alcohol y otras drogas pueden alterar percepción y decisiones, no solo uno de ellos. A es la única alternativa que reconoce ambos riesgos; 'siempre' es una generalización preventiva, no una afirmación de efecto clínico idéntico en toda persona y dosis.",
+      "sources": [
+        "https://www.dgt.es/muevete-con-seguridad/evita-conductas-de-riesgo/consumo-de-alcohol/index.html",
+        "https://www.dgt.es/conoce-la-dgt/que-hacemos/conocimiento-e-investigacion/revision-sistematica-sobre-drogas-y-conduccion"
+      ]
+    },
+    {
+      "examId": "2025-07-26-mercancias-b",
+      "number": 64,
+      "sourcePage": 195,
+      "question": "La percepción del riesgo por el conductor, ¿se puede ver alterada por el alcohol y las drogas?",
+      "options": {
+        "A": "Sí, siempre.",
+        "B": "Nunca.",
+        "C": "Solo por las drogas.",
+        "D": "Solo por el alcohol."
+      },
+      "originalSheetAnswer": "A",
+      "correctAnswer": "A",
+      "bankAnswer": "A",
+      "examFrequency": 7,
+      "group": 11,
+      "frequency": 7,
+      "round": "R30",
+      "historicalAnswer": "A",
+      "previousAppliedAnswer": "A",
+      "technicalAnswer": "A",
+      "action": "note",
+      "reason": "Alcohol y otras drogas pueden alterar percepción y decisiones, no solo uno de ellos. A es la única alternativa que reconoce ambos riesgos; 'siempre' es una generalización preventiva, no una afirmación de efecto clínico idéntico en toda persona y dosis.",
+      "sources": [
+        "https://www.dgt.es/muevete-con-seguridad/evita-conductas-de-riesgo/consumo-de-alcohol/index.html",
+        "https://www.dgt.es/conoce-la-dgt/que-hacemos/conocimiento-e-investigacion/revision-sistematica-sobre-drogas-y-conduccion"
+      ]
+    },
+    {
+      "examId": "2026-07-25-mercancias-a",
+      "number": 12,
+      "sourcePage": 113,
+      "question": "¿Qué nos permite el sistema GPS en el transporte?",
+      "options": {
+        "A": "Conocer en cada momento el estado de la mercancía.",
+        "B": "Conocer el porcentaje de utilización de los vehículos.",
+        "C": "Conocer en todo momento la posición de los vehículos.",
+        "D": "Conocer el estado de las carreteras."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "examFrequency": 6,
+      "group": 12,
+      "frequency": 6,
+      "round": "R30",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "note",
+      "reason": "El receptor GPS determina su posición a partir de señales satelitales; la comunicación a una central requiere un sistema adicional y cobertura/disponibilidad. 'En todo momento' no constituye garantía técnica absoluta.",
+      "sources": [
+        "https://www.gps.gov/gps"
+      ]
+    },
+    {
+      "examId": "2026-07-25-mercancias-b",
+      "number": 19,
+      "sourcePage": 204,
+      "question": "¿Qué nos permite el sistema GPS en el transporte?",
+      "options": {
+        "A": "Conocer en cada momento el estado de la mercancía.",
+        "B": "Conocer el porcentaje de utilización de los vehículos.",
+        "C": "Conocer en todo momento la posición de los vehículos.",
+        "D": "Conocer el estado de las carreteras."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "examFrequency": 6,
+      "group": 12,
+      "frequency": 6,
+      "round": "R30",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "note",
+      "reason": "El receptor GPS determina su posición a partir de señales satelitales; la comunicación a una central requiere un sistema adicional y cobertura/disponibilidad. 'En todo momento' no constituye garantía técnica absoluta.",
+      "sources": [
+        "https://www.gps.gov/gps"
+      ]
+    },
+    {
+      "examId": "2025-02-01-mercancias-global",
+      "number": 1,
+      "sourcePage": 259,
+      "question": "¿Qué nos permite el sistema GPS en el transporte?",
+      "options": {
+        "A": "Conocer en cada momento el estado de la mercancía.",
+        "B": "Conocer el porcentaje de utilización de los vehículos.",
+        "C": "Conocer en todo momento la posición de los vehículos.",
+        "D": "Conocer el estado de las carreteras."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "examFrequency": 6,
+      "group": 12,
+      "frequency": 6,
+      "round": "R30",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "note",
+      "reason": "El receptor GPS determina su posición a partir de señales satelitales; la comunicación a una central requiere un sistema adicional y cobertura/disponibilidad. 'En todo momento' no constituye garantía técnica absoluta.",
+      "sources": [
+        "https://www.gps.gov/gps"
+      ]
+    },
+    {
+      "examId": "2023-06-03-mercancias-global",
+      "number": 16,
+      "sourcePage": 294,
+      "question": "¿Qué nos permite el sistema GPS en el transporte?",
+      "options": {
+        "A": "Conocer en cada momento el estado de la mercancía.",
+        "B": "Conocer el porcentaje de utilización de los vehículos.",
+        "C": "Conocer en todo momento la posición de los vehículos.",
+        "D": "Conocer el estado de las carreteras."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "examFrequency": 6,
+      "group": 12,
+      "frequency": 6,
+      "round": "R30",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "note",
+      "reason": "El receptor GPS determina su posición a partir de señales satelitales; la comunicación a una central requiere un sistema adicional y cobertura/disponibilidad. 'En todo momento' no constituye garantía técnica absoluta.",
+      "sources": [
+        "https://www.gps.gov/gps"
+      ]
+    },
+    {
+      "examId": "2023-03-25-mercancias-global",
+      "number": 18,
+      "sourcePage": 315,
+      "question": "¿Qué nos permite el sistema GPS en el transporte?",
+      "options": {
+        "A": "Conocer en cada momento el estado de la mercancía.",
+        "B": "Conocer el porcentaje de utilización de los vehículos.",
+        "C": "Conocer en todo momento la posición de los vehículos.",
+        "D": "Conocer el estado de las carreteras."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "examFrequency": 6,
+      "group": 12,
+      "frequency": 6,
+      "round": "R30",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "note",
+      "reason": "El receptor GPS determina su posición a partir de señales satelitales; la comunicación a una central requiere un sistema adicional y cobertura/disponibilidad. 'En todo momento' no constituye garantía técnica absoluta.",
+      "sources": [
+        "https://www.gps.gov/gps"
+      ]
+    },
+    {
+      "examId": "2025-03-29-mercancias-global",
+      "number": 13,
+      "sourcePage": 333,
+      "question": "¿Qué nos permite el sistema GPS en el transporte?",
+      "options": {
+        "A": "Conocer en cada momento el estado de la mercancía.",
+        "B": "Conocer el porcentaje de utilización de los vehículos.",
+        "C": "Conocer en todo momento la posición de los vehículos.",
+        "D": "Conocer el estado de las carreteras."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "examFrequency": 6,
+      "group": 12,
+      "frequency": 6,
+      "round": "R30",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "note",
+      "reason": "El receptor GPS determina su posición a partir de señales satelitales; la comunicación a una central requiere un sistema adicional y cobertura/disponibilidad. 'En todo momento' no constituye garantía técnica absoluta.",
+      "sources": [
+        "https://www.gps.gov/gps"
+      ]
+    },
+    {
+      "examId": "2025-09-27-mercancias-global",
+      "number": 10,
+      "sourcePage": 483,
+      "question": "¿Qué nos permite el sistema GPS en el transporte?",
+      "options": {
+        "A": "Conocer en cada momento el estado de la mercancía.",
+        "B": "Conocer el porcentaje de utilización de los vehículos.",
+        "C": "Conocer en todo momento la posición de los vehículos.",
+        "D": "Conocer el estado de las carreteras."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": null,
+      "examFrequency": 2,
+      "group": 12,
+      "frequency": 6,
+      "round": "R30",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "note",
+      "reason": "El receptor GPS determina su posición a partir de señales satelitales; la comunicación a una central requiere un sistema adicional y cobertura/disponibilidad. 'En todo momento' no constituye garantía técnica absoluta.",
+      "sources": [
+        "https://www.gps.gov/gps"
+      ]
+    },
+    {
+      "examId": "2023-07-29-mercancias-a",
+      "number": 99,
+      "sourcePage": 78,
+      "question": "¿Quién será el responsable de las infracciones que se cometan respecto de las normas de circulación durante la realización de un transporte?",
+      "options": {
+        "A": "El empresario.",
+        "B": "El cargador.",
+        "C": "El conductor.",
+        "D": "El consignatario."
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "examFrequency": 6,
+      "group": 13,
+      "frequency": 6,
+      "round": "R30",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "note",
+      "reason": "Como regla, quien comete la infracción de circulación responde (art. 82 LSV), normalmente el conductor. El artículo contempla excepciones, incluidas responsabilidades del titular, y las infracciones de ordenación del transporte tienen su propio régimen. C es la mejor respuesta al supuesto general, no una inmunidad empresarial. La letra impresa difiere de la solución ya aplicada por la alineación histórica de julio 2023 A; se conserva sin nueva corrección.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2015-11722#a82",
+        "https://www.boe.es/eli/es/l/1987/07/30/16/con"
+      ]
+    },
+    {
+      "examId": "2024-07-20-mercancias-a",
+      "number": 43,
+      "sourcePage": 86,
+      "question": "¿Quién será el responsable de las infracciones que se cometan respecto de las normas de circulación durante la realización de un transporte?",
+      "options": {
+        "A": "El empresario",
+        "B": "El cargador.",
+        "C": "El conductor",
+        "D": "El consignatario."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "examFrequency": 6,
+      "group": 13,
+      "frequency": 6,
+      "round": "R30",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "note",
+      "reason": "Como regla, quien comete la infracción de circulación responde (art. 82 LSV), normalmente el conductor. El artículo contempla excepciones, incluidas responsabilidades del titular, y las infracciones de ordenación del transporte tienen su propio régimen. C es la mejor respuesta al supuesto general, no una inmunidad empresarial.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2015-11722#a82",
+        "https://www.boe.es/eli/es/l/1987/07/30/16/con"
+      ]
+    },
+    {
+      "examId": "2026-09-26-mercancias-a",
+      "number": 83,
+      "sourcePage": 141,
+      "question": "¿Quién será el responsable de las infracciones que se cometan respecto de las normas de circulación durante la realización de un transporte?",
+      "options": {
+        "A": "El empresario.",
+        "B": "El cargador.",
+        "C": "El conductor.",
+        "D": "El consignatario."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "examFrequency": 6,
+      "group": 13,
+      "frequency": 6,
+      "round": "R30",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "note",
+      "reason": "Como regla, quien comete la infracción de circulación responde (art. 82 LSV), normalmente el conductor. El artículo contempla excepciones, incluidas responsabilidades del titular, y las infracciones de ordenación del transporte tienen su propio régimen. C es la mejor respuesta al supuesto general, no una inmunidad empresarial.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2015-11722#a82",
+        "https://www.boe.es/eli/es/l/1987/07/30/16/con"
+      ]
+    },
+    {
+      "examId": "2023-07-29-mercancias-b",
+      "number": 55,
+      "sourcePage": 156,
+      "question": "¿Quién será el responsable de las infracciones que se cometan respecto de las normas de circulación durante la realización de un transporte?",
+      "options": {
+        "A": "El empresario.",
+        "B": "El cargador.",
+        "C": "El conductor.",
+        "D": "El consignatario."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "examFrequency": 6,
+      "group": 13,
+      "frequency": 6,
+      "round": "R30",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "note",
+      "reason": "Como regla, quien comete la infracción de circulación responde (art. 82 LSV), normalmente el conductor. El artículo contempla excepciones, incluidas responsabilidades del titular, y las infracciones de ordenación del transporte tienen su propio régimen. C es la mejor respuesta al supuesto general, no una inmunidad empresarial.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2015-11722#a82",
+        "https://www.boe.es/eli/es/l/1987/07/30/16/con"
+      ]
+    },
+    {
+      "examId": "2024-07-20-mercancias-b",
+      "number": 41,
+      "sourcePage": 173,
+      "question": "¿Quién será el responsable de las infracciones que se cometan respecto de las normas de circulación durante la realización de un transporte?",
+      "options": {
+        "A": "El empresario",
+        "B": "El cargador.",
+        "C": "El conductor",
+        "D": "El consignatario."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "examFrequency": 6,
+      "group": 13,
+      "frequency": 6,
+      "round": "R30",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "note",
+      "reason": "Como regla, quien comete la infracción de circulación responde (art. 82 LSV), normalmente el conductor. El artículo contempla excepciones, incluidas responsabilidades del titular, y las infracciones de ordenación del transporte tienen su propio régimen. C es la mejor respuesta al supuesto general, no una inmunidad empresarial.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2015-11722#a82",
+        "https://www.boe.es/eli/es/l/1987/07/30/16/con"
+      ]
+    },
+    {
+      "examId": "2024-05-25-mercancias-global",
+      "number": 46,
+      "sourcePage": 393,
+      "question": "¿Quién será el responsable de las infracciones que se cometan respecto de las normas de circulación durante la realización de un transporte?",
+      "options": {
+        "A": "El empresario.",
+        "B": "El cargador.",
+        "C": "El conductor.",
+        "D": "El consignatario."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "examFrequency": 6,
+      "group": 13,
+      "frequency": 6,
+      "round": "R30",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "note",
+      "reason": "Como regla, quien comete la infracción de circulación responde (art. 82 LSV), normalmente el conductor. El artículo contempla excepciones, incluidas responsabilidades del titular, y las infracciones de ordenación del transporte tienen su propio régimen. C es la mejor respuesta al supuesto general, no una inmunidad empresarial.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-2015-11722#a82",
+        "https://www.boe.es/eli/es/l/1987/07/30/16/con"
+      ]
+    },
+    {
+      "examId": "2023-07-29-mercancias-a",
+      "number": 46,
+      "sourcePage": 66,
+      "question": "¿Qué significan las siglas “PAS\" en relación con la actuación ante el incendio de un vehículo?",
+      "options": {
+        "A": "Parar, apagar y sofocar.",
+        "B": "Proteger, alertar y socorrer.",
+        "C": "Parar, avisar y socorrer.",
+        "D": "Proteger, avisar y señalizar."
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "B",
+      "bankAnswer": "B",
+      "examFrequency": 6,
+      "group": 14,
+      "frequency": 6,
+      "round": "R30",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "note",
+      "reason": "PAS: proteger, avisar (alertar) y socorrer. B es la alternativa equivalente. Ante incendio priorizar la seguridad, alejarse si hay peligro y avisar al 112; no intentar extinguirlo si no es seguro.",
+      "sources": [
+        "https://revista.dgt.es/es/salud-vial/2021/0128-PAS-Proteger-Avisar-Socirrer.shtml"
+      ]
+    },
+    {
+      "examId": "2025-07-26-mercancias-a",
+      "number": 46,
+      "sourcePage": 103,
+      "question": "¿Qué significan las siglas “PAS\" en relación con la actuación ante el incendio de un vehículo?",
+      "options": {
+        "A": "Parar, apagar y sofocar.",
+        "B": "Proteger, alertar y socorrer.",
+        "C": "Parar, avisar y socorrer.",
+        "D": "Proteger, avisar y señalizar."
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "B",
+      "bankAnswer": "B",
+      "examFrequency": 6,
+      "group": 14,
+      "frequency": 6,
+      "round": "R30",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "note",
+      "reason": "PAS: proteger, avisar (alertar) y socorrer. B es la alternativa equivalente. Ante incendio priorizar la seguridad, alejarse si hay peligro y avisar al 112; no intentar extinguirlo si no es seguro.",
+      "sources": [
+        "https://revista.dgt.es/es/salud-vial/2021/0128-PAS-Proteger-Avisar-Socirrer.shtml"
+      ]
+    },
+    {
+      "examId": "2026-09-26-mercancias-a",
+      "number": 71,
+      "sourcePage": 139,
+      "question": "¿Qué significan las siglas \"PAS\" en relación con la actuación ante el incendio de un vehículo?",
+      "options": {
+        "A": "Parar, apagar y sofocar.",
+        "B": "Proteger, alertar y socorrer.",
+        "C": "Parar, avisar y socorrer.",
+        "D": "Proteger, avisar y señalizar."
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "B",
+      "bankAnswer": "B",
+      "examFrequency": 6,
+      "group": 14,
+      "frequency": 6,
+      "round": "R30",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "note",
+      "reason": "PAS: proteger, avisar (alertar) y socorrer. B es la alternativa equivalente. Ante incendio priorizar la seguridad, alejarse si hay peligro y avisar al 112; no intentar extinguirlo si no es seguro.",
+      "sources": [
+        "https://revista.dgt.es/es/salud-vial/2021/0128-PAS-Proteger-Avisar-Socirrer.shtml"
+      ]
+    },
+    {
+      "examId": "2023-07-29-mercancias-b",
+      "number": 27,
+      "sourcePage": 150,
+      "question": "¿Qué significan las siglas “PAS\" en relación con la actuación ante el incendio de un vehículo?",
+      "options": {
+        "A": "Parar, apagar y sofocar.",
+        "B": "Proteger, alertar y socorrer.",
+        "C": "Parar, avisar y socorrer.",
+        "D": "Proteger, avisar y señalizar."
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "B",
+      "bankAnswer": "B",
+      "examFrequency": 6,
+      "group": 14,
+      "frequency": 6,
+      "round": "R30",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "note",
+      "reason": "PAS: proteger, avisar (alertar) y socorrer. B es la alternativa equivalente. Ante incendio priorizar la seguridad, alejarse si hay peligro y avisar al 112; no intentar extinguirlo si no es seguro.",
+      "sources": [
+        "https://revista.dgt.es/es/salud-vial/2021/0128-PAS-Proteger-Avisar-Socirrer.shtml"
+      ]
+    },
+    {
+      "examId": "2025-07-26-mercancias-b",
+      "number": 69,
+      "sourcePage": 196,
+      "question": "¿Qué significan las siglas \"PAS\" en relación con la actuación ante el incendio de un vehículo?",
+      "options": {
+        "A": "Parar, apagar y sofocar.",
+        "B": "Proteger, alertar y socorrer.",
+        "C": "Parar, avisar y socorrer.",
+        "D": "Proteger, avisar y señalizar."
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "B",
+      "bankAnswer": "B",
+      "examFrequency": 6,
+      "group": 14,
+      "frequency": 6,
+      "round": "R30",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "note",
+      "reason": "PAS: proteger, avisar (alertar) y socorrer. B es la alternativa equivalente. Ante incendio priorizar la seguridad, alejarse si hay peligro y avisar al 112; no intentar extinguirlo si no es seguro.",
+      "sources": [
+        "https://revista.dgt.es/es/salud-vial/2021/0128-PAS-Proteger-Avisar-Socirrer.shtml"
+      ]
+    },
+    {
+      "examId": "2026-05-30-mercancias-global",
+      "number": 34,
+      "sourcePage": 409,
+      "question": "¿Qué significan las siglas “PAS” en relación con la actuación ante el incendio de un vehículo?",
+      "options": {
+        "A": "Parar, apagar y sofocar.",
+        "B": "Proteger, alertar y socorrer.",
+        "C": "Parar, avisar y socorrer.",
+        "D": "Proteger, avisar y señalizar."
+      },
+      "originalSheetAnswer": "B",
+      "correctAnswer": "B",
+      "bankAnswer": "B",
+      "examFrequency": 6,
+      "group": 14,
+      "frequency": 6,
+      "round": "R30",
+      "historicalAnswer": "B",
+      "previousAppliedAnswer": "B",
+      "technicalAnswer": "B",
+      "action": "note",
+      "reason": "PAS: proteger, avisar (alertar) y socorrer. B es la alternativa equivalente. Ante incendio priorizar la seguridad, alejarse si hay peligro y avisar al 112; no intentar extinguirlo si no es seguro.",
+      "sources": [
+        "https://revista.dgt.es/es/salud-vial/2021/0128-PAS-Proteger-Avisar-Socirrer.shtml"
+      ]
+    },
+    {
+      "examId": "2025-07-26-mercancias-a",
+      "number": 12,
+      "sourcePage": 98,
+      "question": "¿Cuál es el vehículo apropiado para efectuar mudanzas?",
+      "options": {
+        "A": "Vehículo jaula.",
+        "B": "Portavehículos.",
+        "C": "Capitoné.",
+        "D": "Portacontenedores."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "examFrequency": 6,
+      "group": 15,
+      "frequency": 6,
+      "round": "R30",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "confirmed",
+      "reason": "Anexo II RGV, clasificación por construcción 21: capitoné es un receptáculo cerrado acolchado o especialmente adaptado; adecuado para mudanzas frente a jaula, portavehículos y portacontenedores.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1999-1826"
+      ]
+    },
+    {
+      "examId": "2025-07-26-mercancias-b",
+      "number": 1,
+      "sourcePage": 185,
+      "question": "¿Cuál es el vehículo apropiado para efectuar mudanzas?",
+      "options": {
+        "A": "Vehículo jaula.",
+        "B": "Portavehículos.",
+        "C": "Capitoné.",
+        "D": "Portacontenedores."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "examFrequency": 6,
+      "group": 15,
+      "frequency": 6,
+      "round": "R30",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "confirmed",
+      "reason": "Anexo II RGV, clasificación por construcción 21: capitoné es un receptáculo cerrado acolchado o especialmente adaptado; adecuado para mudanzas frente a jaula, portavehículos y portacontenedores.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1999-1826"
+      ]
+    },
+    {
+      "examId": "2025-02-01-mercancias-global",
+      "number": 3,
+      "sourcePage": 259,
+      "question": "¿Cuál es el vehículo apropiado para efectuar mudanzas?",
+      "options": {
+        "A": "Vehículo jaula.",
+        "B": "Portavehículos.",
+        "C": "Capitoné.",
+        "D": "Portacontenedores."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "examFrequency": 6,
+      "group": 15,
+      "frequency": 6,
+      "round": "R30",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "confirmed",
+      "reason": "Anexo II RGV, clasificación por construcción 21: capitoné es un receptáculo cerrado acolchado o especialmente adaptado; adecuado para mudanzas frente a jaula, portavehículos y portacontenedores.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1999-1826"
+      ]
+    },
+    {
+      "examId": "2023-03-25-mercancias-global",
+      "number": 13,
+      "sourcePage": 314,
+      "question": "¿Cuál es el vehículo apropiado para efectuar mudanzas?",
+      "options": {
+        "A": "Vehículo jaula.",
+        "B": "Portavehículos.",
+        "C": "Capitoné.",
+        "D": "Portacontenedores."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "examFrequency": 6,
+      "group": 15,
+      "frequency": 6,
+      "round": "R30",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "confirmed",
+      "reason": "Anexo II RGV, clasificación por construcción 21: capitoné es un receptáculo cerrado acolchado o especialmente adaptado; adecuado para mudanzas frente a jaula, portavehículos y portacontenedores.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1999-1826"
+      ]
+    },
+    {
+      "examId": "2022-11-26-mercancias-global",
+      "number": 8,
+      "sourcePage": 421,
+      "question": "¿Cuál es el vehículo apropiado para efectuar mudanzas?",
+      "options": {
+        "A": "Vehículo jaula.",
+        "B": "Portavehículos.",
+        "C": "Capitoné.",
+        "D": "Portacontenedores."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "examFrequency": 6,
+      "group": 15,
+      "frequency": 6,
+      "round": "R30",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "confirmed",
+      "reason": "Anexo II RGV, clasificación por construcción 21: capitoné es un receptáculo cerrado acolchado o especialmente adaptado; adecuado para mudanzas frente a jaula, portavehículos y portacontenedores.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1999-1826"
+      ]
+    },
+    {
+      "examId": "2025-09-27-mercancias-global",
+      "number": 2,
+      "sourcePage": 482,
+      "question": "¿Cuál es el vehículo apropiado para efectuar mudanzas?",
+      "options": {
+        "A": "Vehículo jaula.",
+        "B": "Portavehículos.",
+        "C": "Capitoné.",
+        "D": "Portacontenedores."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "examFrequency": 6,
+      "group": 15,
+      "frequency": 6,
+      "round": "R30",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "confirmed",
+      "reason": "Anexo II RGV, clasificación por construcción 21: capitoné es un receptáculo cerrado acolchado o especialmente adaptado; adecuado para mudanzas frente a jaula, portavehículos y portacontenedores.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1999-1826"
+      ]
+    },
+    {
+      "examId": "2023-07-29-mercancias-a",
+      "number": 15,
+      "sourcePage": 59,
+      "question": "¿A cuál de los siguientes transportes se aplicará el convenio CMR?",
+      "options": {
+        "A": "A los transportes privados complementarios.",
+        "B": "A los transportes nacionales de mercancías.",
+        "C": "A los transportes internacionales de mercancías.",
+        "D": "A los transportes internacionales de viajeros."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "examFrequency": 6,
+      "group": 16,
+      "frequency": 6,
+      "round": "R30",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "note",
+      "reason": "CMR art. 1: transporte de mercancías por carretera a título oneroso entre dos países distintos, al menos uno contratante. Excluye transportes bajo convenios postales internacionales, funerarios y mudanzas. C es la categoría correcta, no todos los transportes internacionales sin excepción.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1974-753#a1"
+      ]
+    },
+    {
+      "examId": "2024-07-20-mercancias-a",
+      "number": 20,
+      "sourcePage": 82,
+      "question": "¿A cuál de los siguientes transportes se aplicará el convenio CMR?",
+      "options": {
+        "A": "A los transportes privados complementarios.",
+        "B": "A los transportes nacionales de mercancías",
+        "C": "A los transportes internacionales de mercancías.",
+        "D": "A los transportes internacionales de viajeros."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "examFrequency": 6,
+      "group": 16,
+      "frequency": 6,
+      "round": "R30",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "note",
+      "reason": "CMR art. 1: transporte de mercancías por carretera a título oneroso entre dos países distintos, al menos uno contratante. Excluye transportes bajo convenios postales internacionales, funerarios y mudanzas. C es la categoría correcta, no todos los transportes internacionales sin excepción.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1974-753#a1"
+      ]
+    },
+    {
+      "examId": "2023-07-29-mercancias-b",
+      "number": 10,
+      "sourcePage": 146,
+      "question": "¿A cuál de los siguientes transportes se aplicará el convenio CMR?",
+      "options": {
+        "A": "A los transportes privados complementarios.",
+        "B": "A los transportes nacionales de mercancías.",
+        "C": "A los transportes internacionales de mercancías.",
+        "D": "A los transportes internacionales de viajeros."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "examFrequency": 6,
+      "group": 16,
+      "frequency": 6,
+      "round": "R30",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "note",
+      "reason": "CMR art. 1: transporte de mercancías por carretera a título oneroso entre dos países distintos, al menos uno contratante. Excluye transportes bajo convenios postales internacionales, funerarios y mudanzas. C es la categoría correcta, no todos los transportes internacionales sin excepción.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1974-753#a1"
+      ]
+    },
+    {
+      "examId": "2024-07-20-mercancias-b",
+      "number": 1,
+      "sourcePage": 167,
+      "question": "¿A cuál de los siguientes transportes se aplicará el convenio CMR?",
+      "options": {
+        "A": "A los transportes privados complementarios.",
+        "B": "A los transportes nacionales de mercancías",
+        "C": "A los transportes internacionales de mercancías.",
+        "D": "A los transportes internacionales de viajeros."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "examFrequency": 6,
+      "group": 16,
+      "frequency": 6,
+      "round": "R30",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "note",
+      "reason": "CMR art. 1: transporte de mercancías por carretera a título oneroso entre dos países distintos, al menos uno contratante. Excluye transportes bajo convenios postales internacionales, funerarios y mudanzas. C es la categoría correcta, no todos los transportes internacionales sin excepción.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1974-753#a1"
+      ]
+    },
+    {
+      "examId": "2026-02-07-mercancias-global",
+      "number": 14,
+      "sourcePage": 277,
+      "question": "¿A cuál de los siguientes transportes se aplicará el convenio CMR?",
+      "options": {
+        "A": "A los transportes privados complementarios.",
+        "B": "A los transportes nacionales de mercancías.",
+        "C": "A los transportes internacionales de mercancías.",
+        "D": "A los transportes internacionales de viajeros."
+      },
+      "originalSheetAnswer": "C",
+      "correctAnswer": "C",
+      "bankAnswer": "C",
+      "examFrequency": 6,
+      "group": 16,
+      "frequency": 6,
+      "round": "R30",
+      "historicalAnswer": "C",
+      "previousAppliedAnswer": "C",
+      "technicalAnswer": "C",
+      "action": "note",
+      "reason": "CMR art. 1: transporte de mercancías por carretera a título oneroso entre dos países distintos, al menos uno contratante. Excluye transportes bajo convenios postales internacionales, funerarios y mudanzas. C es la categoría correcta, no todos los transportes internacionales sin excepción.",
+      "sources": [
+        "https://www.boe.es/buscar/act.php?id=BOE-A-1974-753#a1"
+      ]
+    }
+  ]
+}

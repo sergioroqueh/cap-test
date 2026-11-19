@@ -1,0 +1,41 @@
+name: R37 disposable PostgreSQL RLS snapshot (no Supabase)
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'docs/commercial/sql/R37_consistent_snapshot_review.sql'
+      - 'scripts/r37_disposable_postgres_rls.sql'
+      - '.github/workflows/r37-disposable-postgres-rls.yml'
+permissions:
+  contents: read
+jobs:
+  postgres-rls-snapshot:
+    if: github.head_ref == 'feat/cap-commercial'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    services:
+      db:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: test_only_no_real_credentials
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Install psql client
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq postgresql-client
+      - name: RLS integration against throwaway PostgreSQL
+        env:
+          PGPASSWORD: test_only_no_real_credentials
+        run: |
+          psql --host 127.0.0.1 --port 5432 --username postgres --dbname postgres \
+            -v ON_ERROR_STOP=1 -f scripts/r37_disposable_postgres_rls.sql
+      - name: Ensure cloud stays disabled
+        run: grep -Fx 'export const cloudConfigured = false' src/supabase.ts

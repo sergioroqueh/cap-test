@@ -1,0 +1,51 @@
+name: C33 mobile backup UI + isolated snapshot cursor (cloud off)
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'src/BackupPanel.tsx'
+      - 'src/backupPanel.css'
+      - 'src/App.tsx'
+      - 'src/backupRecovery.ts'
+      - 'src/snapshotCursorDraft.mjs'
+      - 'scripts/e2e_backup_ui_c33.mjs'
+      - 'scripts/test_snapshot_cursor_c33.mjs'
+      - 'docs/commercial/C33_MOBILE_AND_SNAPSHOT_GATE.md'
+      - '.github/workflows/c33-mobile-snapshot.yml'
+permissions:
+  contents: read
+jobs:
+  ui-and-fixtures:
+    if: github.head_ref == 'feat/cap-commercial'
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install dependencies (no audit modification)
+        run: npm install --no-fund --no-audit
+      - name: Build application and check TypeScript
+        run: npm run build
+      - name: Verify pinned snapshot semantics using mock-only provider
+        run: node --test scripts/test_snapshot_cursor_c33.mjs
+      - name: Install headless Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Start localhost-only Vite
+        run: |
+          npx vite --host 127.0.0.1 --port 5173 --strictPort > /tmp/c33-vite.log 2>&1 &
+          for i in $(seq 1 40); do
+            if curl -fsS http://127.0.0.1:5173/ > /dev/null; then break; fi
+            sleep 1
+          done
+          curl -fsS http://127.0.0.1:5173/ > /dev/null
+      - name: Real mobile and desktop UI download, selection, restore, errors and scope
+        run: node scripts/e2e_backup_ui_c33.mjs
+      - name: Verify hard cloud-off gate and no real remote adapter
+        run: |
+          grep -F 'export const cloudConfigured = false' src/supabase.ts
+          ! grep -R -n 'snapshotCursorDraft\|postgrestReadDraft' src/App.tsx src/BackupPanel.tsx src/db.ts src/Quiz.tsx
+          ! grep -n 'supabase' src/snapshotCursorDraft.mjs

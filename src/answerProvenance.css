@@ -1,0 +1,25 @@
+/* C19. Source traceability is always visible after correction, never during an exam. */
+.answer-provenance{
+  margin-top:12px;
+  padding:13px 14px;
+  border:1px solid var(--line);
+  border-radius:14px;
+  background:var(--bg);
+  color:var(--text);
+  min-width:0;
+  overflow-wrap:anywhere;
+}
+.answer-provenance-head{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:7px}
+.answer-provenance-head strong{font-size:13px;line-height:1.35}
+.answer-provenance-head span{color:var(--muted);font-size:10px;font-weight:750}
+.answer-provenance p{color:var(--text);font-size:12px;line-height:1.52;margin:9px 0 0}
+.answer-provenance p b,.answer-provenance-links b{font-weight:800}
+.answer-provenance small{display:block;color:var(--muted);font-size:10px;line-height:1.45;margin-top:5px}
+.answer-provenance code{font-size:10px;color:var(--muted);overflow-wrap:anywhere}
+.answer-provenance a{color:var(--primary);font-size:12px;font-weight:740;text-decoration:underline;text-underline-offset:2px}
+.answer-provenance a:focus-visible{outline:2px solid var(--primary);outline-offset:3px}
+.answer-provenance-links{display:grid;gap:6px;margin-top:10px}
+.answer-provenance-links b{font-size:12px;line-height:1.4}
+.review .answer-provenance{margin-top:10px}
+.review .answer-provenance p{font-size:12px}
+@media(max-width:340px){.answer-provenance{padding:11px 12px}.answer-provenance-head{align-items:flex-start}}

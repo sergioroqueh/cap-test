@@ -1,0 +1,48 @@
+name: C47 disposable witness, signed receipts and safe snapshot recovery
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/c47_witness_authority.mjs'
+      - 'scripts/c47_witness_worker.mjs'
+      - 'scripts/test_witness_authority_c47.mjs'
+      - '.github/workflows/c47-witness-authority.yml'
+      - 'docs/commercial/C47_WITNESS_AUTHORITY_RESULTS.md'
+permissions:
+  contents: read
+jobs:
+  witness-only:
+    if: github.head_ref == 'feat/cap-commercial'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: C47 witness, signed receipts, multi-worker and online backup
+        run: node --test scripts/test_witness_authority_c47.mjs
+      - name: C46 atomic SQLite regression
+        run: node --test scripts/test_sqlite_authority_c46.mjs
+      - name: Install test-only browsers without editing lockfiles
+        run: npm install --no-save --no-package-lock --no-audit --no-fund
+      - name: Install Chromium and Linux WebKit
+        run: npx playwright install --with-deps chromium webkit
+      - name: C45 mock-only browser verification regression
+        run: node --test scripts/test_mock_authority_c45.mjs
+      - name: C44 IndexedDB trust ledger regression
+        run: node --test scripts/test_trust_ledger_c44.mjs
+      - name: C43 pinned-root rotation regression
+        run: node --test scripts/test_public_trust_c43.mjs
+      - name: C42 ECDSA tab regression
+        run: node --test scripts/test_browser_security_c42.mjs
+      - name: C41 IndexedDB browser journal regression
+        run: node --test scripts/test_browser_journal_c41.mjs
+      - name: Strictly no cloud and no browser private key or production import
+        run: |
+          grep -F 'export const cloudConfigured = false' src/supabase.ts
+          ! grep -R -nE 'c47_witness_authority|c47_witness_worker' src/
+          ! grep -nE 'SUPABASE_URL|supabase\.co|fetch\(|https?://|DATABASE_URL|process\.env' scripts/c47_witness_authority.mjs scripts/c47_witness_worker.mjs scripts/test_witness_authority_c47.mjs
+          ! grep -nE 'c47_witness_authority|PRIVATE_KEY' src/*.ts

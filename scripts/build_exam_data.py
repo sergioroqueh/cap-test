@@ -31,6 +31,22 @@ def norm(text):
 def fingerprint(q):
     return norm(q['question']) + '||' + '||'.join(sorted(norm(t) for t in q['options'].values()))
 
+def select_frequency_bank_match(question, candidates):
+    """Stable frequency classification only; never changes the linked bank ID or answer.
+
+    Fallback stem+answer candidates may contain several bank questions with
+    different distractors. Pick the most similar option set, then a lexical
+    code/ID tie-break independent of filesystem glob ordering.
+    """
+    if not candidates:
+        return None
+    options = {norm(text) for text in question['options'].values()}
+    return min(candidates, key=lambda row: (
+        -len(options & {norm(text) for text in row['options'].values()}),
+        str(row['code']),
+        str(row['id'])
+    ))
+
 def parse_page(text,page):
     positions = list(QSTART.finditer(text))
     rows, errors = [], []
@@ -513,7 +529,12 @@ def generate():
             else:status='sin_respuesta_verificada'
             original=matching[0] if matching and len(mapped)==1 else None
             key=fingerprint(q)
-            group='b:'+original['code'] if original else 't:'+sha256(key.encode()).hexdigest()[:18]
+            # C23: frequency identity must not inherit matching[0] filesystem
+            # order. Keep original (canonical ID, grading and progress) unchanged.
+            frequency_match=(select_frequency_bank_match(q,matching)
+                             if matching and len(mapped)==1 else None)
+            group=('b:'+str(frequency_match['code']) if frequency_match
+                   else 't:'+sha256(key.encode()).hexdigest()[:18])
             answer=inferred if status in ('coincidencia_automatica','coincidencia_alineacion_provisional_pendiente_revision','coincidencia_plantilla_corregida_visual_pendiente_revision','respuesta_banco_pendiente_revision',
                                            'coincidencia_enunciado_banco_plantilla_pendiente_revision',
                                            'respuesta_banco_enunciado_pendiente_revision') else None

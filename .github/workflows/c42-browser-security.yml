@@ -1,0 +1,39 @@
+name: C42 offline public-key browser revocation and IDB abort
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/c42_browser_security.mjs'
+      - 'scripts/test_browser_security_c42.mjs'
+      - '.github/workflows/c42-browser-security.yml'
+      - 'docs/commercial/C42_BROWSER_SECURITY_RESULTS.md'
+permissions:
+  contents: read
+jobs:
+  chromium-webkit-synthetic:
+    if: github.head_ref == 'feat/cap-commercial'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install test dependencies without creating a lockfile
+        run: npm install --no-save --no-package-lock --no-audit --no-fund
+      - name: Install browser engines in isolated CI
+        run: npx playwright install --with-deps chromium webkit
+      - name: Verify ECDSA signature, cross-tab revocation and IDB abort in both engines
+        run: node --test scripts/test_browser_security_c42.mjs
+      - name: Verify earlier C41 IndexedDB scenarios
+        run: node --test scripts/test_browser_journal_c41.mjs
+      - name: Verify C40 Node-only signature fixture regression
+        run: node --test scripts/test_signed_journal_c40.mjs
+      - name: Verify no production import, secrets or active cloud
+        run: |
+          grep -F 'export const cloudConfigured = false' src/supabase.ts
+          ! grep -R -n 'c42_browser_security' src/
+          ! grep -nE 'createHmac|privateKey|PRIVATE_KEY|SECRET_KEY|SUPABASE_URL|supabase\.co|fetch\(' scripts/c42_browser_security.mjs
+          ! grep -nE 'supabase\.co|SUPABASE_URL|fetch\(' scripts/test_browser_security_c42.mjs

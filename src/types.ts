@@ -1,6 +1,21 @@
 export type AnswerKey = 'A' | 'B' | 'C' | 'D'
 
+export interface CapTechnicalDecision {
+  round?: 'R27' | 'R28' | 'R29' | 'R30' | 'R31'
+  examId: string
+  number: number
+  sourcePage: number
+  historicalAnswer: AnswerKey
+  previousAppliedAnswer?: AnswerKey
+  restoredOptions?: Record<AnswerKey, string>
+  technicalAnswer: AnswerKey | null
+  action: 'correct' | 'exclude' | 'note'
+  reason: string
+  sources: string[]
+}
+
 export interface Question {
+  technicalDecision?: CapTechnicalDecision
   id: string
   code: string
   number: number
@@ -23,6 +38,14 @@ export interface Question {
   originalSheetQuestionNumber?: number | null
   originalSheetSourceFile?: string | null
   originalSheetSha256?: string | null
+  /** Public, individually checked evidence. Not automatically a final tribunal key. */
+  answerEvidenceUrl?: string
+  answerEvidenceSource?: string
+  /** True only when source authority is explicitly verified in the source audit. */
+  answerTemplateOfficiallyVerified?: boolean | null
+  answerTemplateSourceAuthority?: string | null
+  /** Non-scoring citation of a previously confirmed editorial review (R29–R31). */
+  answerSourceReview?: {round: 'R29' | 'R30' | 'R31'; status: 'confirmed'; reason: string; sources: string[]}
   /** PDF letter after an explicitly recorded numbering alignment. */
   mappedSheetAnswer?: AnswerKey | null
   mappedSheetQuestionNumber?: number | null
@@ -104,6 +127,10 @@ export interface StudySessionRecord {
 export type StudySource = 'questionnaire' | 'random' | 'unseen' | 'errors' | 'smart' | 'favorites' | 'cap-original' | 'cap-random' | 'cap-mixed' | 'cap-top100' | 'cap-top3' | 'cap-top4' | 'cap-errors' | 'cap-favorites' | 'cap-review'
 
 export interface ActiveSession {
+  /** Durable key reused after interrupted submission; not the IndexedDB numeric id. */
+  clientId?: string
+  /** Stable operation keys for study answers persisted before committing to IndexedDB. */
+  answerEventIds?: Record<string, string>
   type: 'study' | 'exam'
   source: StudySource
   label: string

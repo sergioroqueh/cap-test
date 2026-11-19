@@ -1,0 +1,34 @@
+name: R30 audit selection
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/select_technical_review_r30.py'
+      - '.github/workflows/r30-audit-selection.yml'
+permissions:
+  contents: read
+jobs:
+  select:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Generate historical data and select candidates
+        run: |
+          python3 scripts/build_data.py
+          python3 scripts/build_exam_data.py
+          python3 scripts/build_template_review.py
+          python3 scripts/build_sheet_audit.py
+          python3 scripts/build_convocation_audit_r20.py
+          python3 scripts/build_editorial_triage_r21.py
+          python3 scripts/build_editorial_casebook_r22.py
+          python3 scripts/build_editorial_casebook_r23.py
+          python3 scripts/build_editorial_casebook_r24.py
+          python3 scripts/build_three_conflicts_decisions_r25.py
+          python3 scripts/build_technical_review_r27.py
+          python3 scripts/build_technical_review_r28.py
+          python3 scripts/build_technical_review_r29.py
+          python3 scripts/select_technical_review_r30.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: r30-candidate-selection
+          path: public/data/exams/technical_review_r30_candidates.json

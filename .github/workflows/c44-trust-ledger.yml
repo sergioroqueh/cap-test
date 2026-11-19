@@ -1,0 +1,41 @@
+name: C44 offline retirement, tamper and bounded nonce ledger
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'scripts/c44_trust_ledger.mjs'
+      - 'scripts/test_trust_ledger_c44.mjs'
+      - '.github/workflows/c44-trust-ledger.yml'
+      - 'docs/commercial/C44_TRUST_LEDGER_RESULTS.md'
+permissions:
+  contents: read
+jobs:
+  browser-trust-audit:
+    if: github.head_ref == 'feat/cap-commercial'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install test dependencies without altering lockfiles
+        run: npm install --no-save --no-package-lock --no-audit --no-fund
+      - name: Install Chromium and WebKit Linux
+        run: npx playwright install --with-deps chromium webkit
+      - name: C44 independent retirement, tamper, nonce and crash suite
+        run: node --test scripts/test_trust_ledger_c44.mjs
+      - name: C43 original public trust regression
+        run: node --test scripts/test_public_trust_c43.mjs
+      - name: C42 ECDSA and two-tab regression
+        run: node --test scripts/test_browser_security_c42.mjs
+      - name: C41 IndexedDB regression
+        run: node --test scripts/test_browser_journal_c41.mjs
+      - name: Verify local fixture only, cloud disabled, no secret key
+        run: |
+          grep -F 'export const cloudConfigured = false' src/supabase.ts
+          ! grep -R -n 'c44_trust_ledger' src/
+          ! grep -nE 'createHmac|privateKey|PRIVATE_KEY|SECRET_KEY|SUPABASE_URL|supabase\.co|fetch\(' scripts/c44_trust_ledger.mjs
+          ! grep -nE 'SUPABASE_URL|supabase\.co|fetch\(' scripts/test_trust_ledger_c44.mjs

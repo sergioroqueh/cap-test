@@ -1,0 +1,49 @@
+/* C33: compact profile backup experience, keyboard accessible and touch friendly. */
+.backup-panel{overflow-wrap:anywhere}
+.backup-heading{display:flex;flex-wrap:wrap;gap:7px 12px;align-items:center;justify-content:space-between;margin-bottom:8px}
+.backup-heading h2{margin:0}
+.backup-local-label{display:inline-flex;align-items:center;border:1px solid var(--line);
+  border-radius:99px;background:var(--soft);color:var(--muted);padding:5px 10px;font-size:10px;font-weight:800}
+.backup-panel>p{font-size:12px;line-height:1.55}
+.backup-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:15px}
+.backup-actions .btn{width:100%;min-width:0;min-height:48px;padding:10px 12px;
+  font-size:12px;white-space:normal;overflow-wrap:anywhere}
+.backup-actions .btn:focus-visible{outline:3px solid var(--primary);outline-offset:3px}
+.backup-actions .btn:disabled{cursor:progress;opacity:.6}
+.backup-file-input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.backup-preview{margin-top:16px;border:1px solid var(--line);border-radius:15px;
+  background:var(--bg);padding:14px;min-width:0}
+.backup-preview h3{margin:0 0 6px;font-size:14px}
+.backup-file-name{font-size:11px;overflow-wrap:anywhere}
+.backup-preview>p{font-size:12px;margin:8px 0;line-height:1.45}
+.backup-counts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:7px;margin:12px 0}
+.backup-counts span{min-width:0;border-radius:10px;background:var(--surface);padding:10px 7px;
+  font-size:10px;text-align:center;color:var(--muted)}
+.backup-counts strong{display:block;font-size:17px;color:var(--text);font-variant-numeric:tabular-nums}
+.backup-warning{color:var(--warn)!important;font-weight:700}
+.backup-confirm-actions{margin-top:12px}
+.backup-notice{margin-top:12px!important;padding:12px 13px;border-radius:10px;
+  border:1px solid var(--line);background:var(--soft);font-size:12px;
+  color:var(--text);overflow-wrap:anywhere}
+.backup-notice.error{border-color:var(--danger);color:var(--danger)}
+.backup-notice.success{border-color:var(--success)}
+@media(max-width:420px){
+  .backup-actions{grid-template-columns:1fr}
+  .backup-actions .btn{min-height:48px}
+  .backup-counts{gap:5px}
+  .backup-counts span{padding:8px 5px}
+  .backup-counts strong{font-size:15px}
+}
+@media(prefers-reduced-motion:reduce){.backup-panel *{scroll-behavior:auto}}
+
+/* C34 keyboard and mobile-WebKit polish. Keep backup options secondary. */
+.backup-preview h3:focus{outline:none}
+.backup-preview h3:focus-visible{outline:2px solid var(--primary);outline-offset:4px}
+.backup-phase{margin-top:12px!important;color:var(--muted);font-size:12px}
+.backup-share{margin-top:11px;padding:12px;border:1px solid var(--line);
+  border-radius:12px;background:var(--soft);display:flex;align-items:center;gap:12px;
+  justify-content:space-between;flex-wrap:wrap}
+.backup-share p{flex:1 1 185px;font-size:11px;line-height:1.45}
+.backup-share .btn{flex:0 0 auto;min-height:48px;max-width:100%;white-space:normal}
+@media(max-width:420px){.backup-share .btn{flex:1 1 100%}}
