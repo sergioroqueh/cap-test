@@ -165,12 +165,12 @@ $$;
 create function public.rc_grant_progress_sync_consent_v1(p_notice_version text)
 returns integer language sql volatile security invoker
 set search_path = ''
-as $ select rc_internal.rc_grant_progress_sync_consent_v1(p_notice_version); $;
+as $$ select rc_internal.rc_grant_progress_sync_consent_v1(p_notice_version); $$;
 
 create function public.rc_revoke_progress_sync_consent_v1()
 returns integer language sql volatile security invoker
 set search_path = ''
-as $ select rc_internal.rc_revoke_progress_sync_consent_v1(); $;
+as $$ select rc_internal.rc_revoke_progress_sync_consent_v1(); $$;
 
 revoke all on function rc_internal.rc_grant_progress_sync_consent_v1(text)
  from public, anon, authenticated;
