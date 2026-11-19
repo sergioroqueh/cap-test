@@ -21,9 +21,17 @@ jobs:
       - name: Verify portable Windows and Linux Python data runner
         run: node --test scripts/test_prepare_data_cross_platform.mjs
 
+      - name: R63 validate allowlist with synthetic data only
+        run: node --test scripts/test_public_package_r63.mjs
+
       - name: Validate question bank and build
         run: |
           npm run build
+          node scripts/package_public_data_r63.mjs --verify
+          test -f public/data/exams/editorial_casebook_r23.json
+          test -f public/data/exams/editorial_casebook_r23.csv
+          test ! -e dist/data/exams/editorial_casebook_r23.json
+          test ! -e dist/data/exams/editorial_casebook_r23.csv
           if grep -R -l 'RUTACAP_PRIVATE_CATALOG_C14' dist; then exit 1; fi
 
       - name: Guard private CLM stage contract with synthetic data only
@@ -62,8 +70,16 @@ jobs:
         run: |
           npm run build:preview
           test -f dist/index.html
-          test -f dist/data/exams/editorial_casebook_r23.json
-          test -f dist/data/exams/editorial_casebook_r23.csv
+          test -f dist/manifest.webmanifest
+          test -f dist/sw.js
+          test -f dist/data/index.json
+          test -f dist/data/exams/index.json
+          test -f dist/data/exams/frequency_by_bank.json
+          test -f public/data/exams/editorial_casebook_r23.json
+          test -f public/data/exams/editorial_casebook_r23.csv
+          test ! -e dist/data/exams/editorial_casebook_r23.json
+          test ! -e dist/data/exams/editorial_casebook_r23.csv
+          node scripts/package_public_data_r63.mjs --verify
 
       - name: Install Chromium for real-browser CAP tests
         run: npx playwright install --with-deps chromium
@@ -106,6 +122,9 @@ jobs:
           curl -fsS http://127.0.0.1:4173/ > /dev/null
           node scripts/e2e_cap_focus.mjs
 
+      - name: R63 inspect packaged archive, 4 viewports and service worker in Chromium
+        run: node scripts/e2e_r63_public_preview.mjs
+
       - name: Upload C22 auth and guest screenshots (mocked local client)
         if: always()
         uses: actions/upload-artifact@v4
@@ -124,11 +143,28 @@ jobs:
           if-no-files-found: ignore
           retention-days: 14
 
+      - name: Upload R63 real-browser screenshot evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cap-r63-public-package-browser
+          path: artifacts/r63-public-package-e2e/
+          if-no-files-found: ignore
+          retention-days: 14
+
       - name: Prepare independent commercial preview (local only)
         run: |
           printf '%s\n' 'CAP TEST PRO — preview comercial local' 'No usa la cuenta real, no sincroniza ni registra service worker.' 'Descomprime todo el ZIP en una carpeta nueva.' 'Windows: ejecuta INICIAR-PREVIEW.cmd (requiere Python 3).' 'Alternativa: python -m http.server 4178 --bind 127.0.0.1' 'Abre http://127.0.0.1:4178/ — no abras index.html directamente.' 'Versión de pruebas, no publicar ni redistribuir.' > dist/LEEME-PREVIEW.txt
           printf '%s\r\n' '@echo off' 'cd /d "%~dp0"' 'echo Abre http://127.0.0.1:4178/ en el navegador. Ctrl+C para cerrar.' 'py -3 -m http.server 4178 --bind 127.0.0.1' 'pause' > dist/INICIAR-PREVIEW.cmd
           node -e "const fs=require('node:fs');fs.writeFileSync('dist/preview-build.json',JSON.stringify({mode:'cap-preview',commit:process.env.GITHUB_SHA,ref:process.env.GITHUB_REF,cloudSync:false,deployed:false},null,2))"
+
+      - name: Save R63 retained-data SHA-256 inventory
+        uses: actions/upload-artifact@v4
+        with:
+          name: cap-r63-public-data-hash-manifest
+          path: artifacts/r63-public-allowlist-manifest.json
+          if-no-files-found: error
+          retention-days: 14
 
       - name: Package beta preview files (not deployed)
         uses: actions/upload-artifact@v4
