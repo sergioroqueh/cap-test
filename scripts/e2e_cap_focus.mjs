@@ -458,8 +458,8 @@ try{
  // The general question bank must also export a generated exam PDF.
  const generalContext=await browser.newContext({viewport:{width:390,height:844},isMobile:true})
  const general=await openHome(generalContext)
- await general.locator('nav button').filter({hasText:'Test general'}).click()
- await general.getByRole('button',{name:'Comenzar simulacro'}).click()
+ await general.getByRole('navigation',{name:'Navegación principal'}).getByRole('button',{name:'Crear test'}).click()
+ await general.getByRole('button',{name:'Comenzar test',exact:true}).click()
  await general.locator('.focus-question').waitFor({timeout:30000})
  const generalSession=await readSession(general)
  assert.equal(generalSession.source,'random')
