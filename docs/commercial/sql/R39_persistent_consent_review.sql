@@ -8,7 +8,7 @@
 -- A SQL console setting fabricated JWT GUCs IS NOT a real Auth/RLS test.
 begin;
 
--- Record only the opt-in for progress synchronization, not a blanket consent.
+-- Privileged transitions live OUTSIDE the Data API's exposed schemas.\ncreate schema rc_internal;\nrevoke all on schema rc_internal from public, anon, authenticated, service_role;\ngrant usage on schema rc_internal to authenticated;\n\n-- Record only the opt-in for progress synchronization, not a blanket consent.
 -- Keep the row after revocation to prevent revision reuse. Account deletion
 -- can cascade after a separately authorized retention/erasure review.
 create table public.rc_sync_consents (
@@ -68,7 +68,7 @@ create policy rc_sync_consent_audit_owner_read on public.rc_sync_consent_audit
 -- users cannot arbitrarily set revision, owner, purpose or timestamps.
 -- Function owner must be a reviewed trusted DB migration role.
 -- The function receives NO user_id and performs no dynamic SQL.
-create function public.rc_grant_progress_sync_consent_v1(p_notice_version text)
+create function rc_internal.rc_grant_progress_sync_consent_v1(p_notice_version text)
 returns integer
 language plpgsql volatile security definer
 set search_path = ''
@@ -121,7 +121,7 @@ begin
 end;
 $$;
 
-create function public.rc_revoke_progress_sync_consent_v1()
+create function rc_internal.rc_revoke_progress_sync_consent_v1()
 returns integer
 language plpgsql volatile security definer
 set search_path = ''
@@ -160,10 +160,30 @@ begin
 end;
 $$;
 
+-- Invoker RPC wrappers deliberately expose only the authenticated opt-in API,
+-- never a privileged function in the public PostgREST schema.
+create function public.rc_grant_progress_sync_consent_v1(p_notice_version text)
+returns integer language sql volatile security invoker
+set search_path = ''
+as $ select rc_internal.rc_grant_progress_sync_consent_v1(p_notice_version); $;
+
+create function public.rc_revoke_progress_sync_consent_v1()
+returns integer language sql volatile security invoker
+set search_path = ''
+as $ select rc_internal.rc_revoke_progress_sync_consent_v1(); $;
+
+revoke all on function rc_internal.rc_grant_progress_sync_consent_v1(text)
+ from public, anon, authenticated;
+revoke all on function rc_internal.rc_revoke_progress_sync_consent_v1()
+ from public, anon, authenticated;
 revoke all on function public.rc_grant_progress_sync_consent_v1(text)
  from public, anon, authenticated;
 revoke all on function public.rc_revoke_progress_sync_consent_v1()
  from public, anon, authenticated;
+grant execute on function rc_internal.rc_grant_progress_sync_consent_v1(text)
+ to authenticated;
+grant execute on function rc_internal.rc_revoke_progress_sync_consent_v1()
+ to authenticated;
 grant execute on function public.rc_grant_progress_sync_consent_v1(text)
  to authenticated;
 grant execute on function public.rc_revoke_progress_sync_consent_v1()
