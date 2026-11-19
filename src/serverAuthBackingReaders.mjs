@@ -2,7 +2,7 @@
 // service_role/secret key. Disabled by default and fail-closed on every error.
 // Caller MUST first verify JWT via R38 getClaims/getUser; PostgREST independently
 // verifies the same bearer and runs RLS.
-const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 const tokenShape = /^[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+$/
 const validId = x => typeof x === 'string' && uuid.test(x)
 const validToken = x => typeof x === 'string' && x.length >= 20 &&
