@@ -88,6 +88,15 @@ begin
  exception when insufficient_privilege then rejected := true;
  end;
  if not rejected then raise exception 'R44 FAIL: stale JWT revoke accepted'; end if;
+ rejected := false;
+ begin
+   insert into public.rc_progress_events(user_id,event_id,question_id,payload,occurred_at)
+   values ('11111111-1111-4111-8111-111111111111','r44-stale-insert','r44-q2',
+     '{"eventId":"r44-stale-insert","questionId":"r44-q2","questionnaireId":"hist","deviceId":"r44","clock":2,"occurredAt":1795000000001,"kind":"answer","answer":"B","correct":false}'::jsonb,
+     now());
+ exception when insufficient_privilege then rejected := true;
+ end;
+ if not rejected then raise exception 'R44 FAIL: stale JWT direct INSERT accepted'; end if;
 end
 $r44$;
 
@@ -116,4 +125,16 @@ begin
 end
 $r44$;
 reset role;
-\echo 'R44 PG17 disposable PASS: parsed all SQL, owner RLS, old-session denial, consent revisions, anon grants. NOT REAL AUTH.'
+-- Expired auth.sessions.not_after must disable even a signed-looking claim.
+update auth.sessions set not_after=now()-interval '1 second'
+  where id='aaaaaaaa-1111-4111-8111-aaaaaaaaaaaa';
+set role authenticated;
+do $r44$
+begin
+ if public.rc_is_active_session_v1()
+    or (select count(*) from public.rc_progress_events) <> 0
+ then raise exception 'R44 FAIL: expired session retained direct access'; end if;
+end
+$r44$;
+reset role;
+\echo 'R44 PG17 disposable PASS: SQL, RLS, stale JWT reads/INSERT/RPC, consent, not_after, grants; NOT REAL AUTH.'
