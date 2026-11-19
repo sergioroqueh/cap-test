@@ -112,6 +112,9 @@ jobs:
           curl -fsS http://127.0.0.1:5173/ > /dev/null
           node scripts/e2e_commercial_auth_c22.mjs
 
+      - name: R63 inspect packaged archive, 4 viewports and service worker in Chromium
+        run: node scripts/e2e_r63_public_preview.mjs
+
       - name: Test Focus UI in mobile and desktop browsers
         run: |
           npm run preview -- --mode cap-preview --host 127.0.0.1 --port 4173 --strictPort > /tmp/cap-preview.log 2>&1 &
@@ -121,9 +124,6 @@ jobs:
           done
           curl -fsS http://127.0.0.1:4173/ > /dev/null
           node scripts/e2e_cap_focus.mjs
-
-      - name: R63 inspect packaged archive, 4 viewports and service worker in Chromium
-        run: node scripts/e2e_r63_public_preview.mjs
 
       - name: Upload C22 auth and guest screenshots (mocked local client)
         if: always()
@@ -159,6 +159,7 @@ jobs:
           node -e "const fs=require('node:fs');fs.writeFileSync('dist/preview-build.json',JSON.stringify({mode:'cap-preview',commit:process.env.GITHUB_SHA,ref:process.env.GITHUB_REF,cloudSync:false,deployed:false},null,2))"
 
       - name: Save R63 retained-data SHA-256 inventory
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: cap-r63-public-data-hash-manifest
