@@ -379,3 +379,93 @@ html:has(.pro-region-dialog[open]){overflow:hidden}
 .pro-account-message{color:var(--text);background:var(--soft);border-radius:8px;padding:10px;font-size:12px}
 .pro-google-button:disabled{opacity:.6}
 @media(min-width:700px){.pro-auth-entry{padding-block:50px}}
+
+
+/* R58 — Dirección visual RutaCAP: geometría ortogonal, conservando identidad y legibilidad.
+   Cambio de presentación únicamente. No altera flujos, datos, preguntas ni puntuación. */
+:root{--rutacap-section-radius:0px;--rutacap-control-radius:2px}
+
+/* Los contenedores dejan de parecer tarjetas tipo píldora. */
+.app :is(.hero,.panel,.tip,.recent,.pro-destination,.pro-sign,.pro-route-card,
+ .pro-quick,.pro-regions,.pro-convocation-archive,.pro-region-dialog,
+ .focus-hero,.focus-resume,.focus-options,.focus-editorial,.focus-index,
+ .focus-provenance,.focus-question,.focus-dialog,.focus-notice,
+ .result,.progresslist,.history,.review article,.qgrid article,
+ .metrics article,.statsgrid article,.pro-results .result,.pro-welcome){
+  border-radius:var(--rutacap-section-radius);
+}
+
+/* Controles discretamente suavizados (2px): lectura visual de rectángulo. */
+.app :is(.btn,.cards button,.list button,.segments,.segments button,.radio,
+ .answers button,.answers i,.focus-quiz-head button,.focus-mark,
+ .focus-choice,.focus-choice button,.focus-timer-toggle,.focus-timer-toggle button,
+ .focus-clock,.focus-exam-count,.focus-question-grid button,.focus-primary,
+ .pro-region-feature,.pro-region-row,.pro-modal-close,.pro-archive-filter,
+ .pro-archive-filter button,.pro-exam-row,.pro-exam-date,.pro-guest-button,
+ .pro-google-button,.pro-account-preview,.pro-account-intro,select,input,
+ .pro-profile-region select){
+  border-radius:var(--rutacap-control-radius);
+}
+.app :is(.focus-question h2,.pro-sign strong,.pro-brand b,
+ .pro-region-mark,.pro-track,.pro-track i,.pro-archive-filter,
+ .pro-result-status,.pro-quick,.pro-bank-link){
+  border-radius:0;
+}
+.app .pro-brand-mark{border-radius:0}
+.app .pro-region-dialog{border-radius:0}
+.app .pro-region-dialog .pro-region-row{border-radius:2px}
+.app .focus-quiz .focus-question{border-radius:0}
+.app .focus-quiz .focus-question h2{border-radius:0}
+.app .pro-results .result{border-radius:0}
+.app .focus-quiz .answers button{border-radius:2px}
+.app .focus-quiz .focus-quiz-actions{border-radius:0}
+.app .focus-quiz .focus-quiz-actions .btn{border-radius:2px}
+.app .pro-route-card,.app .pro-quick,.app .focus-hero,.app .panel{
+  box-shadow:0 2px 0 color-mix(in srgb,var(--line) 55%,transparent);
+}
+
+/* Acceso: el mismo criterio geométrico también fuera del contenedor .app. */
+.pro-auth-entry :is(.pro-account-preview,.pro-account-intro,
+ .pro-google-button,.pro-guest-button,.pro-email-signin input,
+ .pro-email-signin button,.pro-account-error,.pro-account-message){
+  border-radius:2px;
+}
+
+/* Móviles y pantallas pequeñas: tarjetas respirables y zona segura inferior. */
+@media(max-width:600px){
+ .app .pro-main-grid{grid-template-columns:minmax(0,1fr)}
+ .app .pro-route-card{padding:15px}
+ .app .pro-bank>strong{margin-top:12px}
+}
+@media(max-width:799px){
+ .app:has(> nav)>main{padding-bottom:calc(96px + env(safe-area-inset-bottom))}
+ .app>nav{border-radius:0}
+ .app>nav button{min-width:0}
+}
+
+/* Escritorio: navegación integrada en el flujo, no flotando sobre las tarjetas. 
+   Se reordena solo visualmente: se conservan botones, rutas y accesibilidad. */
+@media(min-width:800px){
+ .app{display:grid;grid-template-columns:minmax(0,1fr);
+  grid-template-rows:auto auto auto minmax(0,1fr);min-height:100dvh}
+ .app>header{grid-row:1}
+ .app>.cap-preview-banner{grid-row:2}
+ .app>nav{
+  grid-row:3;position:relative;left:auto;right:auto;bottom:auto;
+  transform:none;width:calc(100% - 32px);max-width:1090px;
+  height:52px;min-height:52px;margin:10px auto 0;
+  display:flex;align-items:stretch;justify-content:flex-end;
+  padding:0;overflow:visible;border:1px solid var(--line);border-radius:0;
+  background:var(--surface);
+ }
+ .app>nav button{
+  flex:0 0 auto;display:flex;flex-direction:row;justify-content:center;
+  align-items:center;gap:8px;min-width:128px;padding:0 16px;
+  border-left:1px solid var(--line);border-radius:0;
+ }
+ .app>nav button:first-child{border-left:0}
+ .app>nav button svg{width:20px;height:20px}
+ .app>nav .on:before{top:auto;bottom:0;left:0;width:100%;height:3px;border-radius:0}
+ .app>main{grid-row:4;width:100%;padding-top:18px;padding-bottom:48px}
+ .app.pro-quiz-page>main{padding-bottom:48px}
+}
