@@ -65,9 +65,9 @@ export function createServerAuthConsentGate({
 
       const userId = c.sub.toLowerCase()
       const sessionId = c.session_id.toLowerCase()
-      const active = await checkActiveSession({ userId, sessionId })
+      const active = await checkActiveSession({ userId, sessionId, accessToken: jwt })
       if (active !== true) return null
-      const consent = await readConsent({ userId, purpose })
+      const consent = await readConsent({ userId, purpose, accessToken: jwt })
       if (!consent || consent.userId !== userId ||
           consent.purpose !== purpose || consent.granted !== true ||
           !validRevision(consent.revision) || consent.revokedAt !== null)
