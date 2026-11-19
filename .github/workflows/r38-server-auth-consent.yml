@@ -1,10 +1,12 @@
-name: R38 server JWT and revocable consent boundary (offline)
+name: R38-R41 server auth and snapshot RPC boundary (offline)
 on:
   pull_request:
     branches: [main]
     paths:
       - 'src/serverAuthConsentGate.mjs'
       - 'src/serverSnapshotProtocol.mjs'
+      - 'src/serverSnapshotRpcReader.mjs'
+      - 'scripts/test_server_snapshot_rpc_r41.mjs'
       - 'scripts/test_server_auth_consent_r38.mjs'
       - '.github/workflows/r38-server-auth-consent.yml'
 permissions:
@@ -22,9 +24,10 @@ jobs:
         with:
           node-version: '22'
       - name: Local signed-JWT verification and R36 interoperability
-        run: node --test scripts/test_server_auth_consent_r38.mjs scripts/test_server_snapshot_r36.mjs
+        run: node --test scripts/test_server_auth_consent_r38.mjs scripts/test_server_snapshot_r36.mjs scripts/test_server_snapshot_rpc_r41.mjs
       - name: No cloud wiring, deployments or secret keys
         run: |
           grep -Fx 'export const cloudConfigured = false' src/supabase.ts
           ! grep -R -n 'serverAuthConsentGate' src/App.tsx src/Quiz.tsx src/main.tsx
           ! grep -n -E 'SUPABASE_SERVICE_ROLE_KEY|sb_secret_' src/serverAuthConsentGate.mjs
+          ! grep -R -n 'serverSnapshotRpcReader' src/App.tsx src/Quiz.tsx src/main.tsx

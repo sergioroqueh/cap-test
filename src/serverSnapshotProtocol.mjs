@@ -17,9 +17,10 @@ const bad = () => respond(400, { error: 'INVALID_REQUEST' })
  * verifyAccessToken(bearer): server-side JWT/user AND active consent verification.
  *   Return {verified:true, userId:<uuid>, isAnonymous:false, consented:true}.
  *   Never decode an unverified token, trust user_metadata or accept userId from URL.
- * takeConsistentSnapshot(userId): read BOTH events and sessions in one consistent
- *   database transaction with owner RLS. This requirement is the responsibility
- *   of the future PostgreSQL adapter; this module cannot guarantee DB isolation.
+ * takeConsistentSnapshot(userId, {accessToken, sessionId, consentRevision}):
+ *   fetch both resources in ONE database statement with owner RLS. Only an R38
+ *   VERIFIED bearer may be forwarded; a production adapter must fail closed.
+ *   Legacy R36/R38 test doubles can ignore the second argument.
  *
  * Caller owns HTTP routing, TLS, security headers, rate limiting and observability.
  * No database mutation, service_role, deployment, real project or cloud wiring.
@@ -100,7 +101,11 @@ export function createServerSnapshotProtocol({
         return respond(429, { error: 'SNAPSHOT_LIMIT' })
       let records
       try {
-        records = await takeConsistentSnapshot(userId)
+        records = await takeConsistentSnapshot(userId, {
+          accessToken: match[1],
+          sessionId: scope.sessionId,
+          consentRevision: scope.consentRevision
+        })
         if (!records || !Array.isArray(records.events) || !Array.isArray(records.sessions) ||
             records.events.length > maxRows || records.sessions.length > maxRows)
           throw Error('R36_INCOMPLETE_SOURCE')
