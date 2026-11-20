@@ -81,6 +81,9 @@ jobs:
           test ! -e dist/data/exams/editorial_casebook_r23.csv
           node scripts/package_public_data_r63.mjs --verify
 
+      - name: R72 audit 62 public-data SHA-256 and candidate-order sensitivity (read-only)
+        run: python3 scripts/audit_r72_reproducibility.py --input dist --output artifacts/r72-public-data-diagnostics.json
+
       - name: Install Chromium for real-browser CAP tests
         run: npx playwright install --with-deps chromium
 
@@ -167,6 +170,15 @@ jobs:
           name: cap-r63-public-data-hash-manifest
           path: artifacts/r63-public-allowlist-manifest.json
           if-no-files-found: error
+          retention-days: 14
+
+      - name: Save R72 read-only reproducibility diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cap-r72-reproducibility-diagnostics
+          path: artifacts/r72-public-data-diagnostics.json
+          if-no-files-found: ignore
           retention-days: 14
 
       - name: Package beta preview files (not deployed)
