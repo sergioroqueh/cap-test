@@ -49,11 +49,21 @@ function starPath(cx:number,cy:number,r:number){
 export function RegionMark({region}:{region:Region}){
  return <span className="pro-region-mark" data-region={region[0]} style={{backgroundColor:region[2]}}><svg viewBox="0 0 48 48" fill="currentColor" aria-hidden="true" focusable="false">{region[0]==='md'?<>{[[9,17],[19,17],[29,17],[39,17],[14,30],[24,30],[34,30]].map(([x,y])=><path key={x+':'+y} d={starPath(x,y,5)}/>)}</>:<path fillRule="evenodd" d={region[3]}/>}</svg></span>
 }
-type Props={regionCode:RegionCode;onRegionChange:(code:RegionCode)=>void;bankCount:number;seenCount:number;hasArchive:boolean;archiveCount:number;onBank:()=>void;onErrors:()=>void;onFavorites:()=>void;onTop:()=>void;onExam:()=>void;onStats:()=>void;working:boolean}
+type Props={regionCode:RegionCode;onRegionChange:(code:RegionCode)=>void;bankCount:number;seenCount:number;hasArchive:boolean;archiveCount:number;onBank:()=>void;onErrors:()=>void;onFavorites:()=>void;onTop:()=>void;onExam:()=>void;onStats:()=>void;working:boolean;shortcutNotice:string;onDismissShortcutNotice:()=>void}
 export default function CommercialHome(p:Props){
  const [regions,setRegions]=useState(false)
  const regionDialog=useRef<HTMLDialogElement>(null)
  const regionTrigger=useRef<HTMLButtonElement>(null)
+ const shortcutNoticeRef=useRef<HTMLDivElement>(null)
+ useEffect(()=>{
+  if(!p.shortcutNotice)return
+  const node=shortcutNoticeRef.current
+  if(!node)return
+  const rect=node.getBoundingClientRect()
+  if(rect.bottom>window.innerHeight-70||rect.top<75){
+   node.scrollIntoView({block:'nearest',behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'})
+  }
+ },[p.shortcutNotice])
  useEffect(()=>{const d=regionDialog.current;if(regions&&d&&!d.open)d.showModal()},[regions])
  function closeRegions(){regionDialog.current?.close();setRegions(false);regionTrigger.current?.focus()}
  const selectedRegion=regionByCode(p.regionCode)
@@ -80,6 +90,7 @@ export default function CommercialHome(p:Props){
     <div className="pro-region-grid">{REGIONS.map(r=><button type="button" className={'pro-region-row '+(r[0]===p.regionCode?'selected':'')} key={r[0]} aria-pressed={r[0]===p.regionCode} onClick={()=>{p.onRegionChange(r[0]);closeRegions()}}><RegionMark region={r}/><span><b>{r[1]}</b><small>{r[0]===p.regionCode?'Seleccionada':r[0]==='clm'?'En catalogación':'En preparación'}</small></span>{r[0]===p.regionCode&&<span className="pro-region-tick" aria-hidden="true">✓</span>}</button>)}</div>
    </dialog>}
   <div className="pro-quick-grid">{actions.map(([icon,title,desc,action,color])=><button key={title} className={'pro-quick '+color} onClick={action} disabled={p.working||!p.hasArchive}><ProIcon name={icon}/><span><b>{title}</b><small>{desc}</small></span><span aria-hidden="true">›</span></button>)}</div>
+  {p.shortcutNotice&&<div ref={shortcutNoticeRef} className="focus-notice pro-quick-notice" role="status" aria-live="polite"><span aria-hidden="true">ⓘ</span><span>{p.shortcutNotice}</span><button type="button" aria-label="Cerrar aviso" onClick={p.onDismissShortcutNotice}>×</button></div>}
   <p className="pro-independent">Preparación independiente · No es una aplicación oficial.</p>
  </section>
 }

@@ -142,9 +142,10 @@ function CapHome({pm,bankCount,seenCount,regionCode,onRegionChange}:{pm:Map<stri
  const [showConvocations,setShowConvocations]=useState(false)
  const [topDialogOpen,setTopDialogOpen]=useState(false)
  const [topCounts,setTopCounts]=useState<{three:number;four:number}|null>(null)
- const [replaceRequest,setReplaceRequest]=useState<{source:'cap-original'|'cap-random'|'cap-mixed'|'cap-top100'|'cap-top3'|'cap-top4'|'cap-errors'|'cap-favorites'|'cap-review';chosen?:CapExamMeta}|null>(null)
+ const [replaceRequest,setReplaceRequest]=useState<{source:'cap-original'|'cap-random'|'cap-mixed'|'cap-top100'|'cap-top3'|'cap-top4'|'cap-errors'|'cap-favorites'|'cap-review';chosen?:CapExamMeta;fromShortcut?:boolean}|null>(null)
  const [working,setWorking]=useState(false)
  const [error,setError]=useState('')
+ const [shortcutNotice,setShortcutNotice]=useState('')
  const [pendingId,setPendingId]=useState('')
  const [pendingRows,setPendingRows]=useState<CapPendingQuestion[]>([])
  const [pendingShown,setPendingShown]=useState(false)
@@ -197,10 +198,11 @@ function CapHome({pm,bankCount,seenCount,regionCode,onRegionChange}:{pm:Map<stri
  }
  const showSheetRows=sheetReviewOnlyIssues?sheetReviewRows.filter(q=>q.reviewPriority!=='P4'||!!q.r22Case||!!q.r23Case||!!q.r24Case||!!q.technicalDecision):sheetReviewRows
  const selectedTriage=editorialTriage?.exams.find(e=>e.examId===sheetReviewId)
- async function begin(source:'cap-original'|'cap-random'|'cap-mixed'|'cap-top100'|'cap-top3'|'cap-top4'|'cap-errors'|'cap-favorites'|'cap-review',chosen?:CapExamMeta,replaceConfirmed=false){
+ async function begin(source:'cap-original'|'cap-random'|'cap-mixed'|'cap-top100'|'cap-top3'|'cap-top4'|'cap-errors'|'cap-favorites'|'cap-review',chosen?:CapExamMeta,replaceConfirmed=false,fromShortcut=false){
   setError('')
+  setShortcutNotice('')
   const existing=localStorage.getItem(activeKey())||sessionStorage.getItem(activeKey())
-  if(existing&&!replaceConfirmed){setReplaceRequest({source,chosen});return}
+  if(existing&&!replaceConfirmed){setReplaceRequest({source,chosen,fromShortcut});return}
   setWorking(true)
   try{
    let questions:Question[]=[]
@@ -244,7 +246,7 @@ function CapHome({pm,bankCount,seenCount,regionCode,onRegionChange}:{pm:Map<stri
    localStorage.setItem(activeKey(),JSON.stringify(session))
    sessionStorage.removeItem(activeKey())
    go('quiz')
-  }catch(e){setError(e instanceof Error?e.message:String(e))}finally{setWorking(false)}
+  }catch(e){const message=e instanceof Error?e.message:String(e);if(fromShortcut)setShortcutNotice(message);else setError(message)}finally{setWorking(false)}
  }
  if(!index&&!error)return <Loading text="Preparando exámenes CAP…"/>
  const savedSession=(()=>{try{return JSON.parse(localStorage.getItem(activeKey())||sessionStorage.getItem(activeKey())||'null') as ActiveSession|null}catch{return null}})()
@@ -253,7 +255,7 @@ function CapHome({pm,bankCount,seenCount,regionCode,onRegionChange}:{pm:Map<stri
    <div><strong>Test sin terminar</strong><p>{savedSession.label} · {Object.keys(savedSession.selectedAnswers).length} respuestas guardadas</p>{savedSession.timed&&<p className="focus-resume-clock-note">Simulacro real: el reloj sigue corriendo aunque salgas. Al volver se recalcula el tiempo restante.</p>}</div>
    <button className="btn light" onClick={()=>go('quiz')}>Continuar</button>
   </section>}
-  <CommercialHome regionCode={regionCode} onRegionChange={onRegionChange} bankCount={bankCount} seenCount={seenCount} hasArchive={available.length>0&&category==='mercancias'} archiveCount={available.length} working={working} onBank={()=>go('general')} onErrors={()=>void begin('cap-errors')} onFavorites={()=>void begin('cap-favorites')} onTop={()=>{setTopCounts(null);setTopDialogOpen(true)}} onExam={()=>{setMode('exam');setTimed(true);document.getElementById('pro-exam-setup')?.scrollIntoView({behavior:'smooth',block:'start'})}} onStats={()=>go('stats')}/>
+  <CommercialHome regionCode={regionCode} onRegionChange={onRegionChange} bankCount={bankCount} seenCount={seenCount} hasArchive={available.length>0&&category==='mercancias'} archiveCount={available.length} working={working} onBank={()=>go('general')} shortcutNotice={shortcutNotice} onDismissShortcutNotice={()=>setShortcutNotice('')} onErrors={()=>void begin('cap-errors',undefined,false,true)} onFavorites={()=>void begin('cap-favorites',undefined,false,true)} onTop={()=>{setShortcutNotice('');setTopCounts(null);setTopDialogOpen(true)}} onExam={()=>{setShortcutNotice('');setMode('exam');setTimed(true);document.getElementById('pro-exam-setup')?.scrollIntoView({behavior:'smooth',block:'start'})}} onStats={()=>go('stats')}/>
   <section id="pro-exam-setup" className="focus-hero" aria-labelledby="focus-title">
    <div className="focus-eyebrow"><span className="focus-status-dot"/> RUTACAP · MERCANCÍAS</div>
    <h1 id="focus-title">Configura tu práctica.</h1>
@@ -285,7 +287,7 @@ function CapHome({pm,bankCount,seenCount,regionCode,onRegionChange}:{pm:Map<stri
     confirmLabel="Empezar nuevo test"
     cancelLabel="Conservar mi test"
     onCancel={()=>setReplaceRequest(null)}
-    onConfirm={()=>{const request=replaceRequest;setReplaceRequest(null);void begin(request.source,request.chosen,true)}}
+    onConfirm={()=>{const request=replaceRequest;setReplaceRequest(null);void begin(request.source,request.chosen,true,request.fromShortcut)}}
   />}
   <section className="focus-practices" aria-labelledby="focus-other">
    <div className="focus-section-heading"><h2 id="focus-other">Otras formas de practicar</h2><p>Elige una convocatoria, combina preguntas o repasa lo que más necesitas.</p></div>

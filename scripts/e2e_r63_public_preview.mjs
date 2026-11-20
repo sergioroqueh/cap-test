@@ -25,6 +25,34 @@ try {
     assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1),
       width + 'px: viewport overflow')
     await page.screenshot({ path: artifacts + '/home-' + width + '.png' })
+    // R71: top shortcuts report next to their controls, not after exam setup.
+    for (const [buttonText, expected] of [
+      ['Errores', /No tienes errores pendientes/],
+      ['Favoritos', /Aún no has guardado preguntas favoritas/]
+    ]) {
+      await page.locator('.pro-quick-grid button').filter({ hasText: buttonText }).click()
+      const notice = page.locator('.pro-quick-notice')
+      await notice.waitFor({ timeout: 30000 })
+      assert.match(await notice.innerText(), expected)
+      const positions = await page.evaluate(() => {
+        const quick = document.querySelector('.pro-quick-grid').getBoundingClientRect()
+        const notice = document.querySelector('.pro-quick-notice').getBoundingClientRect()
+        const hero = document.querySelector('.focus-hero').getBoundingClientRect()
+        return { quickBottom: quick.bottom, noticeTop: notice.top, noticeBottom: notice.bottom, heroTop: hero.top }
+      })
+      assert.ok(positions.noticeTop >= positions.quickBottom - 1 &&
+        positions.noticeBottom < positions.heroTop,
+        width + 'px: shortcut feedback must appear between shortcuts and exam setup')
+      await page.waitForFunction(() => {
+        const el = document.querySelector('.pro-quick-notice')
+        if (!el) return false
+        const rect = el.getBoundingClientRect()
+        return rect.top >= 64 && rect.bottom <= innerHeight - 50
+      }, null, { timeout: 5000 })
+      await notice.getByRole('button', { name: 'Cerrar aviso' }).click()
+      await notice.waitFor({ state: 'detached' })
+    }
+
     await page.locator('.focus-practice-grid button').filter({ hasText: 'Por convocatoria' }).click()
     await page.locator('#cap-historicos').waitFor()
     assert.equal(await page.locator('#cap-historicos .list button').count(), 25)
