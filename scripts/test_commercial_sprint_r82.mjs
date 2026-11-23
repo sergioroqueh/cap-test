@@ -61,7 +61,7 @@ test('email OTP is opt-in, verifies six digits, and does not impersonate synced 
  assert.match(auth,/verifyEmailOtp\(email: string, token: string\)/)
  assert.match(auth,/type: 'email'/)
  assert.match(auth,/shouldCreateUser: publicAuth/)
- assert.match(entry,/emailOtpEnabled&&codeSent/)
+ assert.match(entry,/emailOtpEnabled&&!usePassword&&codeSent/)
  assert.match(entry,/pattern="\[0-9\]\{6\}"/)
  assert.match(app,/onVerifyEmail=\{verifyEmailOtp\}/)
  assert.match(wf,/RUTACAP_EMAIL_OTP/)
