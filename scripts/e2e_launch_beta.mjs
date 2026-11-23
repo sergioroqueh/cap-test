@@ -27,10 +27,10 @@ try {
    }
   })
   assert.ok(legalLayout.valid,legalLayout.reason)
-  assert.equal(await page.getByText('BETA GRATUITA', { exact: true }).count(), 1)
+  assert.equal(await page.getByText('VERSIÓN BETA GRATUITA', { exact: true }).count(), 1)
   assert.equal(await page.getByRole('button', { name: /Continuar con Google/ }).count(), 0, 'No disabled OAuth in beta')
   assert.ok(await page.getByText('Versión beta independiente', { exact: false }).isVisible(), 'Beta disclosure required')
-  await page.getByRole('button',{name:/Empezar a practicar gratis/}).click()
+  await page.getByRole('button',{name:/Continuar como invitado/}).click()
   await page.locator('.pro-dashboard').waitFor({timeout:30000})
   const overflow = await page.evaluate(()=>document.documentElement.scrollWidth > document.documentElement.clientWidth + 1)
   assert.equal(overflow,false,'Horizontal overflow at '+width)
