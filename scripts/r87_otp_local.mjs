@@ -41,6 +41,7 @@ const env = {
   VITE_RUTACAP_AUTH_DEV: 'true',
   VITE_RUTACAP_DEV_SIGNUPS: 'true',
   VITE_RUTACAP_EMAIL_OTP: 'true',
+  VITE_RUTACAP_PASSWORD_AUTH: 'true',
   VITE_RUTACAP_GOOGLE_AUTH: 'false',
   VITE_RUTACAP_PUBLIC_AUTH: 'false',
   VITE_RUTACAP_BILLING_ENABLED: 'false',
@@ -58,8 +59,8 @@ if (buildData.error || buildData.status !== 0) {
 }
 
 console.log('\nRutaCAP OTP local: http://localhost:5173')
-console.log('Proyecto: rutacap-dev. Google OFF. Stripe OFF. Sync OFF. Ningún despliegue.')
-console.log('Usa el formulario por correo, recibe el OTP y verifica el acceso. Ctrl+C para finalizar.\n')
+console.log('Proyecto: rutacap-dev. Google OFF. Stripe OFF. Sync OFF. Contraseña opcional ON. Ningún despliegue.')
+console.log('Puedes entrar por código o, después de crearla en Mi perfil, por contraseña. Ctrl+C para finalizar.\n')
 const server = spawn(process.execPath, ['node_modules/vite/bin/vite.js', '--host', '127.0.0.1', '--port', '5173', '--strictPort'], {
   env, stdio: 'inherit', windowsHide: true,
 })

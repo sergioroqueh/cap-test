@@ -38,6 +38,9 @@ const devSignupConfigured = devAuth &&
   import.meta.env.VITE_RUTACAP_DEV_SIGNUPS === 'true'
 export const emailOtpConfigured = authConfigured &&
   import.meta.env.VITE_RUTACAP_EMAIL_OTP === 'true'
+// R88: optional password sign-in for verified RutaCAP accounts.
+export const passwordConfigured = authConfigured &&
+  import.meta.env.VITE_RUTACAP_PASSWORD_AUTH === 'true'
 export const cloudConfigured = false
 export const supabase = authConfigured
   ? createClient(url, publishableKey, { auth: {
@@ -85,6 +88,29 @@ export async function verifyEmailOtp(email: string, token: string): Promise<void
   })
   if (error) throw error
   if (!(await getSession())) throw new Error('No se pudo verificar la nueva sesión.')
+}
+
+export async function signInWithPassword(email: string, password: string): Promise<void> {
+  if (!passwordConfigured) throw new Error('El acceso con contraseña no está habilitado.')
+  const normalizedEmail = email.trim().toLowerCase()
+  if (!normalizedEmail || !password) throw new Error('Introduce correo y contraseña.')
+  const { error } = await requireAuth().auth.signInWithPassword({
+    email: normalizedEmail, password
+  })
+  if (error) throw error
+  if (!(await getSession())) throw new Error('No se pudo verificar la sesión.')
+}
+
+export async function setAccountPassword(password: string): Promise<void> {
+  if (!passwordConfigured) throw new Error('La contraseña no está habilitada en este entorno.')
+  if (password.length < 12 || password.length > 128)
+    throw new Error('Utiliza una contraseña de entre 12 y 128 caracteres.')
+  const client = requireAuth()
+  const session = await getSession()
+  if (!session?.user.email || !session.user.email_confirmed_at)
+    throw new Error('Debes tener una cuenta con correo confirmado para establecer contraseña.')
+  const { error } = await client.auth.updateUser({ password })
+  if (error) throw error
 }
 
 export async function signOut(): Promise<void> {

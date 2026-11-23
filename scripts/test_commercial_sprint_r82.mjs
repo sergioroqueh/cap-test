@@ -107,3 +107,27 @@ test('R87 local OTP runner is isolated and never persists keys or enables billin
  assert.match(entry,/import.meta.env.DEV && error instanceof Error/)
  assert.match(auth,/export const cloudConfigured = false/)
 });
+
+test('R88: verified users can optionally configure and use email/password without removing OTP',()=>{
+ const auth=read('src/supabase.ts')
+ const entry=read('src/CommercialAccountPreview.tsx')
+ const account=read('src/CommercialPasswordPanel.tsx')
+ const app=read('src/App.tsx')
+ const local=read('scripts/r87_otp_local.mjs')
+ const wf=read('.github/workflows/launch-beta.yml')
+ assert.match(auth,/VITE_RUTACAP_PASSWORD_AUTH === 'true'/)
+ assert.match(auth,/auth\.signInWithPassword\(/)
+ assert.match(auth,/auth\.updateUser\(\{ password \}\)/)
+ assert.match(auth,/await getSession\(\)/)
+ assert.match(auth,/session\.user\.email_confirmed_at/)
+ assert.match(entry,/passwordEnabled&&usePassword/)
+ assert.match(entry,/onPassword\(email,password\)/)
+ assert.match(entry,/emailOtpEnabled&&!usePassword/)
+ assert.match(account,/minLength=\{12\}/)
+ assert.match(account,/setAccountPassword\(first\)/)
+ assert.match(app,/onPassword=\{signInWithPassword\}/)
+ assert.match(app,/<CommercialPasswordPanel signedIn=\{signedIn\}\/>/)
+ assert.match(local,/VITE_RUTACAP_PASSWORD_AUTH: 'true'/)
+ assert.match(wf,/RUTACAP_PASSWORD_AUTH/)
+ assert.match(auth,/export const cloudConfigured = false/)
+});

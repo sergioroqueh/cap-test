@@ -31,6 +31,7 @@ jobs:
           VITE_RUTACAP_BILLING_ENABLED: ${{ vars.RUTACAP_BILLING_ENABLED }}
           VITE_RUTACAP_EMAIL_OTP: ${{ vars.RUTACAP_EMAIL_OTP }}
           VITE_RUTACAP_GOOGLE_AUTH: ${{ vars.RUTACAP_GOOGLE_AUTH }}
+          VITE_RUTACAP_PASSWORD_AUTH: ${{ vars.RUTACAP_PASSWORD_AUTH }}
         run: npm run build:launch
       - name: Test first-use beta journey in Chromium
         run: |

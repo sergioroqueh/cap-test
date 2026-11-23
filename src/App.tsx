@@ -4,13 +4,14 @@ import AnswerProvenance from './AnswerProvenance'
 import CommercialHome, { ProBrand, ProIcon, isRegionCode, regionByCode, RegionMark, REGIONS, type RegionCode } from './CommercialHome'
 import { CommercialAccountPreview } from './CommercialAccountPreview'
 import { CommercialBillingPanel } from './CommercialBillingPanel'
+import { CommercialPasswordPanel } from './CommercialPasswordPanel'
 import ConfirmDialog from './ConfirmDialog'
 import StudyPdfButton from './StudyPdfButton'
 import TopFrequencyDialog from './TopFrequencyDialog'
 import { CAP_DURATION_MINUTES, gradeSession, frequentExamQuestionsAtOrAbove, mostFrequentExamQuestions, uniqueExamQuestions } from './examEngine.mjs'
 import type { ActiveSession, AnswerKey, BankIndex, Question, QuestionProgress, QuestionnaireMeta, StudySessionRecord, StudySource } from './types'
 import { addSession, clearAllData, getAllProgress, getRecentSessions, pushLocalSnapshotToCloud, putProgress } from './db'
-import { authConfigured, emailOtpConfigured, googleConfigured, getSession, signInWithEmail, signInWithGoogle, signOut, supabase, verifyEmailOtp } from './supabase'
+import { authConfigured, emailOtpConfigured, googleConfigured, passwordConfigured, getSession, signInWithEmail, signInWithGoogle, signInWithPassword, signOut, supabase, verifyEmailOtp } from './supabase'
 import { activeKey, lastKey, regionKey, setLocalOwner } from './localScope'
 import BackupPanel from './BackupPanel'
 import type { Session } from '@supabase/supabase-js'
@@ -88,8 +89,8 @@ function App(){
  if(guest)return <CapApp key="guest" userEmail="Modo invitado · solo este navegador" onSignOut={logout}/>
  return <div className="pro-auth-entry"><CommercialAccountPreview
   onContinue={()=>{setLocalOwner(null);sessionStorage.setItem('rutacap-dev-guest-open','1');setGuest(true);setAuthError('')}}
-  authEnabled={authConfigured} googleEnabled={googleConfigured} emailOtpEnabled={emailOtpConfigured} notice={authError}
-  onGoogle={signInWithGoogle} onEmail={signInWithEmail} onVerifyEmail={verifyEmailOtp}
+  authEnabled={authConfigured} googleEnabled={googleConfigured} emailOtpEnabled={emailOtpConfigured} passwordEnabled={passwordConfigured} notice={authError}
+  onGoogle={signInWithGoogle} onEmail={signInWithEmail} onVerifyEmail={verifyEmailOtp} onPassword={signInWithPassword}
  /></div>
 }
 
@@ -515,6 +516,7 @@ function Settings({theme,setTheme,bank,refresh,userEmail,onSignOut,signedIn,regi
    <p>{PREVIEW?'Esta versión guarda el progreso únicamente en este navegador, separado de la aplicación real. No utiliza Supabase.':'El progreso permanece en este navegador. La sincronización entre dispositivos todavía no está activada.'}</p>
    {!PREVIEW&&<Btn kind="light" onClick={()=>void onSignOut()}>{userEmail.startsWith("Modo invitado")?'Salir del modo invitado':'Cerrar sesión'}</Btn>}
   </div>
+  <CommercialPasswordPanel signedIn={signedIn}/>
   <CommercialBillingPanel signedIn={signedIn}/>
   <div className="panel"><label>Tema</label><div className="segments">
    <button className={theme==='light'?'on':''} onClick={()=>setTheme('light')}>☀ Claro</button>

@@ -9,12 +9,16 @@ type Props = {
   onEmail?: (email: string) => Promise<void>
   onVerifyEmail?: (email: string, code: string) => Promise<void>
   emailOtpEnabled?: boolean
+  passwordEnabled?: boolean
+  onPassword?: (email: string, password: string) => Promise<void>
   notice?: string
 }
 // No real third-party requests in preview; development OAuth is explicit opt-in.
 const launchBeta = import.meta.env.VITE_CAP_LAUNCH === 'true'
-export function CommercialAccountPreview({onContinue,authEnabled=false,googleEnabled=false,onGoogle,onEmail,onVerifyEmail,emailOtpEnabled=false,notice}:Props){
+export function CommercialAccountPreview({onContinue,authEnabled=false,googleEnabled=false,onGoogle,onEmail,onVerifyEmail,emailOtpEnabled=false,passwordEnabled=false,onPassword,notice}:Props){
  const [email,setEmail]=useState('')
+ const [password,setPassword]=useState('')
+ const [usePassword,setUsePassword]=useState(false)
  const [code,setCode]=useState('')
  const [codeSent,setCodeSent]=useState(false)
  const [busy,setBusy]=useState(false)
@@ -33,12 +37,27 @@ export function CommercialAccountPreview({onContinue,authEnabled=false,googleEna
   <div className="pro-account-intro">{(authEnabled||launchBeta)&&<ProBrand/>}<span className="pro-account-tag">{authEnabled?(launchBeta?'ACCESO · CUENTA GRATIS':'ACCESO · DESARROLLO'):launchBeta?'VERSIÓN BETA GRATUITA':'ACCESO · PREVIEW LOCAL'}</span><h2>Tu próximo destino: aprobar.</h2><p>Practica tus exámenes CAP. El progreso de esta etapa permanece en tu navegador, sin sincronización entre dispositivos.</p></div>
   {googleEnabled&&<><button type="button" className="pro-google-button" disabled={busy} onClick={()=>onGoogle&&void run(onGoogle)} aria-describedby="pro-google-status"><svg viewBox="0 0 48 48" width="22" height="22" aria-hidden="true"><path fill="#4285F4" d="M44 24.5c0-1.4-.1-2.8-.4-4.2H24v8h11.2a9.6 9.6 0 0 1-4.2 6.3v5.2h6.8c4-3.7 6.2-9.1 6.2-15.3Z"/><path fill="#34A853" d="M24 45c5.6 0 10.4-1.9 13.8-5.2L31 34.6a12.5 12.5 0 0 1-18.6-6.5H5.4v5.4A21 21 0 0 0 24 45Z"/><path fill="#FBBC05" d="M12.4 28.1a12.6 12.6 0 0 1 0-8.2v-5.4h-7a21 21 0 0 0 0 19Z"/><path fill="#EA4335" d="M24 11.2c3 0 5.7 1 7.8 3.1l6-6A20.1 20.1 0 0 0 24 3 21 21 0 0 0 5.4 14.5l7 5.4A12.5 12.5 0 0 1 24 11.2Z"/></svg>Continuar con Google</button>
   <p id="pro-google-status" className="pro-account-status">Google permite entrar con tu cuenta. Tu progreso sigue siendo local hasta que esté disponible la sincronización.</p></>}
-  {authEnabled&&emailOtpEnabled&&<form className="pro-email-signin" onSubmit={e=>{e.preventDefault();if(onEmail)void run(async()=>{await onEmail(email);setCodeSent(true);setMessage('Te hemos enviado un código de acceso. Comprueba tu correo electrónico.')})}}>
+  {authEnabled&&passwordEnabled&&<button type="button" className="pro-google-button" disabled={busy}
+   onClick={()=>{setUsePassword(v=>!v);setError('');setMessage('');setPassword('')}}>
+    {usePassword?'Entrar con código por correo':'Entrar con contraseña'}
+  </button>}
+  {authEnabled&&passwordEnabled&&usePassword&&<form className="pro-email-signin"
+   onSubmit={e=>{e.preventDefault();if(onPassword)void run(()=>onPassword(email,password))}}>
+   <label htmlFor="pro-access-password-email">Correo electrónico</label>
+   <input id="pro-access-password-email" type="email" autoComplete="username" value={email}
+    onChange={e=>setEmail(e.target.value)} placeholder="tu@email.es" disabled={busy} required/>
+   <label htmlFor="pro-access-password">Contraseña</label>
+   <input id="pro-access-password" type="password" autoComplete="current-password" value={password}
+    onChange={e=>setPassword(e.target.value)} disabled={busy} required/>
+   <button type="submit" disabled={busy||!onPassword||!email.trim()||!password}>Iniciar sesión</button>
+   {emailOtpEnabled&&<small>Si no tienes contraseña o la has olvidado, entra con un código.</small>}
+  </form>}
+  {authEnabled&&emailOtpEnabled&&!usePassword&&<form className="pro-email-signin" onSubmit={e=>{e.preventDefault();if(onEmail)void run(async()=>{await onEmail(email);setCodeSent(true);setMessage('Te hemos enviado un código de acceso. Comprueba tu correo electrónico.')})}}>
    <label htmlFor="pro-access-email">O accede por correo electrónico</label>
    <input id="pro-access-email" type="email" autoComplete="email" value={email} onChange={e=>{setEmail(e.target.value);setCodeSent(false);setCode('')}} placeholder="tu@email.es" required disabled={busy}/>
    <button type="submit" disabled={busy||!email.trim()}>{codeSent?'Reenviar código':'Enviar código de acceso'}</button>
   </form>}
-  {authEnabled&&emailOtpEnabled&&codeSent&&<form className="pro-email-signin" onSubmit={e=>{e.preventDefault();if(onVerifyEmail)void run(()=>onVerifyEmail(email,code))}}>
+  {authEnabled&&emailOtpEnabled&&!usePassword&&codeSent&&<form className="pro-email-signin" onSubmit={e=>{e.preventDefault();if(onVerifyEmail)void run(()=>onVerifyEmail(email,code))}}>
    <label htmlFor="pro-access-code">Código de seis cifras</label>
    <input id="pro-access-code" type="text" inputMode="numeric" autoComplete="one-time-code" pattern="[0-9]{6}" maxLength={6} value={code} onChange={e=>setCode(e.target.value.replace(/[^0-9]/g,'').slice(0,6))} placeholder="000000" required disabled={busy}/>
    <button type="submit" disabled={busy||!onVerifyEmail||code.length!==6}>Verificar y entrar</button>
