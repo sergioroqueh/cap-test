@@ -1,0 +1,5 @@
+# Stripe webhooks require an unauthenticated transport endpoint, but the
+# R82 handler verifies Stripe-Signature and checks Supabase JWT itself on
+# all customer actions. Do not deploy before reviewing the R82 runbook.
+[functions.rutacap-billing]
+verify_jwt = false

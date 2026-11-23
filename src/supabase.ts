@@ -13,25 +13,35 @@ function validIsolatedUrl(value: string): boolean {
   } catch { return false }
 }
 const localDevOrigin = typeof window !== 'undefined' &&
-  /^(localhost|127\.0\.0\.1)$/.test(window.location.hostname) &&
+  (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') &&
   window.location.port === '5173'
-export const authConfigured = import.meta.env.DEV &&
+// Public auth must be explicitly enabled in a dedicated launch build.
+// R80 and previous GitHub Pages/Vercel builds remain guest-only.
+const publicLaunchOrigin = typeof window !== 'undefined' &&
+  window.location.origin === 'https://rutacap.es'
+const publicAuth = import.meta.env.PROD &&
+  import.meta.env.VITE_CAP_LAUNCH === 'true' &&
+  import.meta.env.VITE_RUTACAP_PUBLIC_AUTH === 'true' &&
+  publicLaunchOrigin && validIsolatedUrl(url) &&
+  publishableKey.startsWith('sb_publishable_')
+const devAuth = import.meta.env.DEV &&
   import.meta.env.VITE_CAP_PREVIEW !== 'true' &&
   import.meta.env.VITE_RUTACAP_AUTH_DEV === 'true' &&
   localDevOrigin && validIsolatedUrl(url) &&
   publishableKey.startsWith('sb_publishable_')
+export const authConfigured = publicAuth || devAuth
 export const cloudConfigured = false
 export const supabase = authConfigured
   ? createClient(url, publishableKey, { auth: {
       flowType: 'pkce', persistSession: true, autoRefreshToken: true,
-      detectSessionInUrl: true, storageKey: 'rutacap-dev-oauth-v1'
+      detectSessionInUrl: true, storageKey: publicAuth ? 'rutacap-public-oauth-v1' : 'rutacap-dev-oauth-v1'
     } })
   : null
 function requireAuth() {
   if (!supabase) throw new Error('El acceso de desarrollo no está configurado.')
   return supabase
 }
-function callbackUrl() { return window.location.origin + '/auth/callback' }
+function callbackUrl() { return (publicAuth ? 'https://rutacap.es' : window.location.origin) + '/auth/callback' }
 export async function getSession(): Promise<Session | null> {
   const client = requireAuth()
   const { data: sessionData, error: sessionError } = await client.auth.getSession()
@@ -51,7 +61,7 @@ export async function signInWithGoogle(): Promise<void> {
 export async function signInWithEmail(email: string): Promise<void> {
   const { error } = await requireAuth().auth.signInWithOtp({
     email: email.trim(),
-    options: { emailRedirectTo: callbackUrl(), shouldCreateUser: false }
+    options: { emailRedirectTo: callbackUrl(), shouldCreateUser: publicAuth }
   })
   if (error) throw error
 }

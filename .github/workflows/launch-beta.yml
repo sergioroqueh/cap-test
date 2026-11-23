@@ -19,7 +19,14 @@ jobs:
         run: npm ci --no-audit --no-fund
       - name: Validate legal page generator syntax (without personal data)
         run: python3 -m py_compile ops/rutacap/legal/build_legal_pages.py
+      - name: R82 security boundary checks (no network or test payments)
+        run: node --test scripts/test_commercial_sprint_r82.mjs
       - name: Validate commercial beta artifact
+        env:
+          VITE_RUTACAP_PUBLIC_AUTH: ${{ vars.RUTACAP_PUBLIC_AUTH }}
+          VITE_CAP_PRO_SUPABASE_URL: ${{ vars.RUTACAP_SUPABASE_URL }}
+          VITE_CAP_PRO_SUPABASE_PUBLISHABLE_KEY: ${{ vars.RUTACAP_SUPABASE_PUBLISHABLE_KEY }}
+          VITE_RUTACAP_BILLING_ENABLED: ${{ vars.RUTACAP_BILLING_ENABLED }}
         run: npm run build:launch
       - name: Test first-use beta journey in Chromium
         run: |

@@ -3,6 +3,7 @@ import Quiz from './Quiz'
 import AnswerProvenance from './AnswerProvenance'
 import CommercialHome, { ProBrand, ProIcon, isRegionCode, regionByCode, RegionMark, REGIONS, type RegionCode } from './CommercialHome'
 import { CommercialAccountPreview } from './CommercialAccountPreview'
+import { CommercialBillingPanel } from './CommercialBillingPanel'
 import ConfirmDialog from './ConfirmDialog'
 import StudyPdfButton from './StudyPdfButton'
 import TopFrequencyDialog from './TopFrequencyDialog'
@@ -83,7 +84,7 @@ function App(){
  }
  if(PREVIEW)return <CapApp userEmail="Modo pruebas · solo este navegador" onSignOut={async()=>{}}/>
  if(!authReady)return <Loading text="Comprobando tu acceso…"/>
- if(session)return <CapApp key={'account-'+session.user.id} userEmail={session.user.email||'Cuenta de pruebas'} onSignOut={logout}/>
+ if(session)return <CapApp key={'account-'+session.user.id} userEmail={session.user.email||'Mi cuenta'} onSignOut={logout} signedIn/>
  if(guest)return <CapApp key="guest" userEmail="Modo invitado · solo este navegador" onSignOut={logout}/>
  return <div className="pro-auth-entry"><CommercialAccountPreview
   onContinue={()=>{setLocalOwner(null);sessionStorage.setItem('rutacap-dev-guest-open','1');setGuest(true);setAuthError('')}}
@@ -92,7 +93,7 @@ function App(){
  /></div>
 }
 
-function CapApp({userEmail,onSignOut}:{userEmail:string;onSignOut:()=>Promise<void>}){
+function CapApp({userEmail,onSignOut,signedIn=false}:{userEmail:string;onSignOut:()=>Promise<void>;signedIn?:boolean}){
  const [page,setPage]=useState<Route>(route()),[bank,setBank]=useState<BankIndex|null>(null),[rows,setRows]=useState<QuestionProgress[]>([]),[sessions,setSessions]=useState<StudySessionRecord[]>([]),[busy,setBusy]=useState(true),[load,setLoad]=useState<number|null>(null),[online,setOnline]=useState(navigator.onLine),[theme,setTheme]=useState(localStorage.getItem(THEME)||'dark')
  const [regionCode,setRegionCode]=useState<RegionCode>(readRegion)
  function changeRegion(code:RegionCode){setRegionCode(code);try{localStorage.setItem(regionKey(),code)}catch{/* in-memory preference remains */}}
@@ -120,7 +121,7 @@ function CapApp({userEmail,onSignOut}:{userEmail:string;onSignOut:()=>Promise<vo
  return <div className={page==='quiz'?'app pro-quiz-page':'app'}>
   <header><button className="logo" aria-label="Inicio RutaCAP" onClick={()=>go('home')}><ProBrand/></button><div className="pro-current-page">{page==='home'?'':({general:'Banco general',study:'Estudio',questionnaires:'Cuestionarios',exam:'Crear test',quiz:'Test en curso',results:'Resultado',stats:'Progreso',settings:'Perfil'} as Record<string,string>)[page]}{!online&&<small>Sin conexión</small>}</div><button className="gear" aria-label="Perfil y ajustes" onClick={()=>go('settings')}><ProIcon name="person"/></button></header>
   {PREVIEW&&<div className="cap-preview-banner" role="status"><strong>PREVIEW</strong><span>Datos locales · Sin sincronización</span></div>}
-  <main>{load!==null&&<div className="overlay"><Loading text={'Preparando preguntas… '+load+'%'}/></div>}{page==='home'&&<CapHome pm={pm} bankCount={bank.totalQuestions} seenCount={bankSeen} regionCode={regionCode} onRegionChange={changeRegion}/>} {page==='general'&&<Home {...props}/>} {page==='study'&&<Study {...props}/>}  {page==='questionnaires'&&<Questionnaires {...props}/>} {page==='exam'&&<Exam {...props}/>} {page==='quiz'&&<Quiz pm={pm} refresh={refresh}/>} {page==='results'&&<Results/>} {page==='stats'&&<Stats {...props}/>} {page==='settings'&&<Settings theme={theme} setTheme={setTheme} bank={bank} refresh={refresh} userEmail={userEmail} onSignOut={onSignOut} regionCode={regionCode} onRegionChange={changeRegion}/>}</main>
+  <main>{load!==null&&<div className="overlay"><Loading text={'Preparando preguntas… '+load+'%'}/></div>}{page==='home'&&<CapHome pm={pm} bankCount={bank.totalQuestions} seenCount={bankSeen} regionCode={regionCode} onRegionChange={changeRegion}/>} {page==='general'&&<Home {...props}/>} {page==='study'&&<Study {...props}/>}  {page==='questionnaires'&&<Questionnaires {...props}/>} {page==='exam'&&<Exam {...props}/>} {page==='quiz'&&<Quiz pm={pm} refresh={refresh}/>} {page==='results'&&<Results/>} {page==='stats'&&<Stats {...props}/>} {page==='settings'&&<Settings theme={theme} setTheme={setTheme} bank={bank} refresh={refresh} userEmail={userEmail} onSignOut={onSignOut} signedIn={signedIn} regionCode={regionCode} onRegionChange={changeRegion}/>}</main>
   {!['quiz','results','settings','questionnaires'].includes(page)&&<nav aria-label="Navegación principal"><button className={page==='home'?'on':''} onClick={()=>go('home')}><ProIcon name="home"/><span>Inicio</span></button><button className={page==='general'||page==='study'?'on':''} onClick={()=>go('general')}><ProIcon name="bank"/><span>Banco</span></button><button className={page==='exam'?'on':''} onClick={()=>go('exam')}><ProIcon name="flag"/><span>Crear test</span></button><button className={page==='stats'?'on':''} onClick={()=>go('stats')}><ProIcon name="chart"/><span>Progreso</span></button></nav>}
  </div>
 }
@@ -491,7 +492,7 @@ function Results(){
 
 function Stats({bank,rows,stats,sessions}:P){return <div className="page"><em>TU PREPARACIÓN</em><h1>{stats.attempts?stats.acc+'%':'Empieza hoy'}</h1><p>{stats.attempts?'de precisión global':'Tus estadísticas aparecerán aquí.'}</p><div className="statsgrid"><article><small>Vistas</small><b>{stats.seen}</b><span>de {stats.total}</span></article><article><small>Dominadas</small><b>{stats.mastered}</b></article><article><small>Por repasar</small><b>{stats.review}</b></article><article><small>Favoritas</small><b>{stats.fav}</b></article></div><h2>Progreso por cuestionario</h2><div className="progresslist">{bank.questionnaires.map(m=>{const rr=rows.filter(x=>x.questionnaireId===m.section+':'+m.questionnaireId),seen=rr.filter(x=>x.attempts).length;if(!seen)return null;const att=rr.reduce((a,x)=>a+x.attempts,0),cor=rr.reduce((a,x)=>a+x.correct,0);return <div key={m.id}><span><b>{m.questionnaireId}</b> · Sección {m.section}</span><small>{seen}/{m.count} · {percent(cor,att)}%</small><Bar v={percent(seen,m.count)}/></div>})}</div><h2>Últimas sesiones</h2><div className="history">{sessions.slice(0,10).map((s,i)=><div key={i}><span><b>{s.label}</b><small>{s.total} preguntas</small></span><strong>{s.capScoring?(s.netPoints??(s.correct-0.5*s.incorrect)).toLocaleString('es-ES',{maximumFractionDigits:2})+' pt':s.score+'%'}</strong></div>)}</div></div>}
 
-function Settings({theme,setTheme,bank,refresh,userEmail,onSignOut,regionCode,onRegionChange}:{theme:string;setTheme:(s:string)=>void;bank:BankIndex;refresh:()=>Promise<void>;userEmail:string;onSignOut:()=>Promise<void>;regionCode:RegionCode;onRegionChange:(code:RegionCode)=>void}){
+function Settings({theme,setTheme,bank,refresh,userEmail,onSignOut,signedIn,regionCode,onRegionChange}:{theme:string;setTheme:(s:string)=>void;bank:BankIndex;refresh:()=>Promise<void>;userEmail:string;onSignOut:()=>Promise<void>;signedIn:boolean;regionCode:RegionCode;onRegionChange:(code:RegionCode)=>void}){
  async function reset(){
   if(!confirm(PREVIEW?'¿Borrar solo los datos de esta versión de pruebas?':'¿Borrar el progreso local de este perfil en este navegador?'))return
   try{await clearAllData();await refresh()}catch(err){alert('No se pudieron borrar los datos locales: '+String(err))}
@@ -511,9 +512,10 @@ function Settings({theme,setTheme,bank,refresh,userEmail,onSignOut,regionCode,on
   </div>
   <div className="panel account">
    <small>CUENTA</small><h2>{userEmail}</h2>
-   <p>{PREVIEW?'Esta versión guarda el progreso únicamente en este navegador, separado de la aplicación real. No utiliza Supabase.':'Acceso de desarrollo: tus datos permanecen solo en este navegador. La sincronización en la nube no está activada.'}</p>
+   <p>{PREVIEW?'Esta versión guarda el progreso únicamente en este navegador, separado de la aplicación real. No utiliza Supabase.':'El progreso permanece en este navegador. La sincronización entre dispositivos todavía no está activada.'}</p>
    {!PREVIEW&&<Btn kind="light" onClick={()=>void onSignOut()}>{userEmail.startsWith("Modo invitado")?'Salir del modo invitado':'Cerrar sesión'}</Btn>}
   </div>
+  <CommercialBillingPanel signedIn={signedIn}/>
   <div className="panel"><label>Tema</label><div className="segments">
    <button className={theme==='light'?'on':''} onClick={()=>setTheme('light')}>☀ Claro</button>
    <button className={theme==='dark'?'on':''} onClick={()=>setTheme('dark')}>◐ Oscuro</button>
