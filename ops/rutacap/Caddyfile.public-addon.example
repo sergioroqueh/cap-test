@@ -1,0 +1,41 @@
+# RutaCAP R78 — AÑADIR al Caddyfile existente solamente tras cumplir las
+# puertas de publicación. NO sustituir el bloque beta.rutacap.es:
+# ese bloque contiene el hash privado de basic_auth que debe preservarse.
+#
+# Publicar un banco completo implica servir /data/*.json sin contraseña.
+# Hasta acreditar derechos/avisos legales, NO añadir este bloque al
+# Caddyfile activo ni cambiar DNS de @ y www.
+
+rutacap.es {
+    root * /srv/rutacap/current
+    encode zstd gzip
+
+    header {
+        X-Content-Type-Options "nosniff"
+        Referrer-Policy "strict-origin-when-cross-origin"
+        Permissions-Policy "camera=(), microphone=(), geolocation=()"
+        Strict-Transport-Security "max-age=86400"
+    }
+
+    # HTML, service worker and question data always revalidate.
+    @noCache path / /index.html /sw.js /data/*
+    header @noCache Cache-Control "no-cache, must-revalidate"
+
+    @assets path /assets/*
+    header @assets Cache-Control "public, max-age=31536000, immutable"
+
+    # Missing source/data files MUST be 404, never index.html.
+    @static path /data/* /assets/* /sw.js /manifest.webmanifest /icon.svg
+    handle @static {
+        file_server
+    }
+
+    handle {
+        try_files {path} /index.html
+        file_server
+    }
+}
+
+www.rutacap.es {
+    redir https://rutacap.es{uri} permanent
+}
