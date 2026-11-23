@@ -73,3 +73,21 @@ test('Premium presentation requires an unexpired paid subscription, not a browse
  assert.match(billing,/Date\.parse\(renewalAt\) > Date\.now\(\)/)
  assert.match(billing,/return \{tier:active\?'premium':'free'/)
 });
+
+test('R86: separately gate public Google, email OTP and dev-only registrations',()=>{
+ const client=read('src/supabase.ts')
+ const app=read('src/App.tsx')
+ const entry=read('src/CommercialAccountPreview.tsx')
+ const workflow=read('.github/workflows/launch-beta.yml')
+ assert.match(client,/VITE_RUTACAP_GOOGLE_AUTH === 'true'/)
+ assert.match(client,/if \(!googleConfigured\) throw new Error/)
+ assert.match(client,/VITE_RUTACAP_DEV_SIGNUPS === 'true'/)
+ assert.match(client,/shouldCreateUser: publicAuth \|\| devSignupConfigured/)
+ assert.match(app,/googleEnabled=\{googleConfigured\}/)
+ assert.match(entry,/\{googleEnabled&&<>/)
+ assert.doesNotMatch(entry,/disabled=\{!authEnabled\|\|busy\}/)
+ assert.match(entry,/Continuar como invitado/)
+ assert.match(workflow,/feat\/rutacap-commerce-sprint-20261123/)
+ assert.match(workflow,/RUTACAP_GOOGLE_AUTH/)
+ assert.match(client,/export const cloudConfigured = false/)
+});

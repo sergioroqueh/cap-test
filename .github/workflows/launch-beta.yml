@@ -1,7 +1,7 @@
 name: RutaCAP public beta build (no deployment)
 on:
   push:
-    branches: [feat/cap-commercial]
+    branches: [feat/cap-commercial, feat/rutacap-commerce-sprint-20261123]
   workflow_dispatch:
 
 permissions:
@@ -30,6 +30,7 @@ jobs:
           VITE_CAP_PRO_SUPABASE_PUBLISHABLE_KEY: ${{ vars.RUTACAP_SUPABASE_PUBLISHABLE_KEY }}
           VITE_RUTACAP_BILLING_ENABLED: ${{ vars.RUTACAP_BILLING_ENABLED }}
           VITE_RUTACAP_EMAIL_OTP: ${{ vars.RUTACAP_EMAIL_OTP }}
+          VITE_RUTACAP_GOOGLE_AUTH: ${{ vars.RUTACAP_GOOGLE_AUTH }}
         run: npm run build:launch
       - name: Test first-use beta journey in Chromium
         run: |

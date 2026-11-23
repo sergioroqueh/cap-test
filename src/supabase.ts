@@ -30,6 +30,12 @@ const devAuth = import.meta.env.DEV &&
   localDevOrigin && validIsolatedUrl(url) &&
   publishableKey.startsWith('sb_publishable_')
 export const authConfigured = publicAuth || devAuth
+// Google and email OTP can be enabled separately; never show an unconfigured provider.
+export const googleConfigured = authConfigured &&
+  import.meta.env.VITE_RUTACAP_GOOGLE_AUTH === 'true'
+// Testing brand-new accounts locally is opt-in, never the default for local development.
+const devSignupConfigured = devAuth &&
+  import.meta.env.VITE_RUTACAP_DEV_SIGNUPS === 'true'
 export const emailOtpConfigured = authConfigured &&
   import.meta.env.VITE_RUTACAP_EMAIL_OTP === 'true'
 export const cloudConfigured = false
@@ -55,6 +61,7 @@ export async function getSession(): Promise<Session | null> {
   return sessionData.session
 }
 export async function signInWithGoogle(): Promise<void> {
+  if (!googleConfigured) throw new Error('Google no está configurado para este entorno.')
   const { error } = await requireAuth().auth.signInWithOAuth({
     provider: 'google', options: { redirectTo: callbackUrl() }
   })
@@ -64,7 +71,7 @@ export async function signInWithEmail(email: string): Promise<void> {
   if (!emailOtpConfigured) throw new Error('El acceso por código todavía no está habilitado.')
   const { error } = await requireAuth().auth.signInWithOtp({
     email: email.trim().toLowerCase(),
-    options: { emailRedirectTo: callbackUrl(), shouldCreateUser: publicAuth }
+    options: { emailRedirectTo: callbackUrl(), shouldCreateUser: publicAuth || devSignupConfigured }
   })
   if (error) throw error
 }

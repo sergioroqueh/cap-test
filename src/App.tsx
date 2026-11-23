@@ -10,7 +10,7 @@ import TopFrequencyDialog from './TopFrequencyDialog'
 import { CAP_DURATION_MINUTES, gradeSession, frequentExamQuestionsAtOrAbove, mostFrequentExamQuestions, uniqueExamQuestions } from './examEngine.mjs'
 import type { ActiveSession, AnswerKey, BankIndex, Question, QuestionProgress, QuestionnaireMeta, StudySessionRecord, StudySource } from './types'
 import { addSession, clearAllData, getAllProgress, getRecentSessions, pushLocalSnapshotToCloud, putProgress } from './db'
-import { authConfigured, emailOtpConfigured, getSession, signInWithEmail, signInWithGoogle, signOut, supabase, verifyEmailOtp } from './supabase'
+import { authConfigured, emailOtpConfigured, googleConfigured, getSession, signInWithEmail, signInWithGoogle, signOut, supabase, verifyEmailOtp } from './supabase'
 import { activeKey, lastKey, regionKey, setLocalOwner } from './localScope'
 import BackupPanel from './BackupPanel'
 import type { Session } from '@supabase/supabase-js'
@@ -88,7 +88,7 @@ function App(){
  if(guest)return <CapApp key="guest" userEmail="Modo invitado · solo este navegador" onSignOut={logout}/>
  return <div className="pro-auth-entry"><CommercialAccountPreview
   onContinue={()=>{setLocalOwner(null);sessionStorage.setItem('rutacap-dev-guest-open','1');setGuest(true);setAuthError('')}}
-  authEnabled={authConfigured} emailOtpEnabled={emailOtpConfigured} notice={authError}
+  authEnabled={authConfigured} googleEnabled={googleConfigured} emailOtpEnabled={emailOtpConfigured} notice={authError}
   onGoogle={signInWithGoogle} onEmail={signInWithEmail} onVerifyEmail={verifyEmailOtp}
  /></div>
 }
