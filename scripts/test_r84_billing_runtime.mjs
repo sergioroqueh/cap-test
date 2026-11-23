@@ -3,15 +3,20 @@ import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import { createHmac, webcrypto } from 'node:crypto'
 import vm from 'node:vm'
-import ts from 'typescript'
+import { stripTypeScriptTypes } from 'node:module'
 
 // Entirely synthetic; DOES NOT contact Supabase, Stripe, or any real account.
 function bootSyntheticBilling() {
   const source = readFileSync('supabase/functions/rutacap-billing/index.ts', 'utf8')
-  const script = ts.transpileModule(source, {
-    compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.CommonJS },
-    fileName: 'index.ts'
-  }).outputText
+  // TypeScript 7 no longer exports the old JS ScriptTarget/ModuleKind API.
+  // This synthetic fixture uses only erasable type syntax; Node 22 can strip
+  // those types without fetching packages, issuing requests or invoking Deno.
+  const externalImport = "import { createClient } from 'npm:@supabase/supabase-js@2.119.1'"
+  assert.ok(source.includes(externalImport), 'Pinned Supabase client import changed unexpectedly')
+  const script = stripTypeScriptTypes(
+    source.replace(externalImport, 'const { createClient } = __testSupabase'),
+    { mode: 'strip' }
+  )
   const env = {
     STRIPE_SECRET_KEY: 'sk_test_synthetic_not_a_real_key',
     STRIPE_WEBHOOK_SECRET: 'whsec_synthetic_not_a_real_secret',
@@ -87,10 +92,7 @@ function bootSyntheticBilling() {
   }
   let handler
   const sandbox = {
-    exports:{}, module:{exports:{}}, require:specifier => {
-      assert.match(specifier,/^npm:@supabase\/supabase-js@/)
-      return {createClient:()=>admin}
-    },
+    __testSupabase: {createClient:()=>admin},
     Deno:{env:{get:k=>env[k]||''},serve:fn=>{handler=fn}},
     fetch:fetchMock, crypto:webcrypto, TextEncoder, URL, URLSearchParams, Request, Response,
     Date, console
