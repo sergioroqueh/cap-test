@@ -10,7 +10,9 @@ const serviceKey = env('SUPABASE_SERVICE_ROLE_KEY')
 const stripePrice = env('STRIPE_PRICE_ID')
 const isLive = stripeKey.startsWith('sk_live_')
 const liveApproved = env('RUTACAP_LIVE_BILLING') === 'approved'
-const admin = supaUrl && serviceKey ? createClient(supaUrl, serviceKey, {
+// A wrong Supabase project must fail closed rather than writing billing records elsewhere.
+const ISOLATED_SUPABASE_URL = 'https://rhtbqetskghkarxhrgee.supabase.co'
+const admin = supaUrl === ISOLATED_SUPABASE_URL && serviceKey ? createClient(supaUrl, serviceKey, {
  auth:{persistSession:false,autoRefreshToken:false}
 }) : null
 
@@ -79,12 +81,17 @@ async function synchronizeSubscription(subscriptionId: string){
  const periodEnd=Number.isSafeInteger(period)&&period>0?new Date(period*1000).toISOString():null
  const price=subscription.items?.data?.[0]?.price?.id || ''
  if(!/^price_[A-Za-z0-9]+$/.test(price))throw Error('Precio de suscripción no válido')
+ // A Stripe subscription for a different product/price must never grant RutaCAP Premium.
+ if(price!==stripePrice)return
  const {data:previous,error:prevError}=await admin.from('rc_billing_subscriptions')
    .select('stripe_subscription_id,status').eq('user_id',linked.user_id).maybeSingle()
  if(prevError)throw Error('No se pudo leer suscripción')
  // Ignore late cancellation from an older subscription after a replacement.
- if(previous?.stripe_subscription_id!==subscriptionId && previous &&
-   ['canceled','incomplete_expired'].includes(status))return
+ if(previous?.stripe_subscription_id!==subscriptionId && previous){
+   if(['canceled','incomplete_expired'].includes(status))return
+   // A parallel unfinished Checkout cannot revoke an existing paid subscription.
+   if(['active','trialing'].includes(previous.status) && !['active','trialing'].includes(status))return
+ }
  const {error}=await admin.from('rc_billing_subscriptions').upsert({
   user_id:linked.user_id,stripe_customer_id:customerId,
   stripe_subscription_id:subscriptionId,status,price_id:price,
@@ -112,8 +119,13 @@ async function webhook(req:Request){
   let subscriptionId=''
   if(['customer.subscription.created','customer.subscription.updated','customer.subscription.deleted'].includes(event.type)){
    subscriptionId=event.data?.object?.id || ''
-  }else if(event.type==='checkout.session.completed' && event.data?.object?.mode==='subscription'){
+  }else if(['checkout.session.completed','checkout.session.async_payment_succeeded'].includes(event.type) &&
+    event.data?.object?.mode==='subscription'){
    subscriptionId=event.data?.object?.subscription || ''
+  }else if(event.type==='invoice.paid'){
+   // Stripe 2025-03-31+ stores the subscription reference in invoice.parent.
+   const invoice=event.data?.object
+   subscriptionId=invoice?.parent?.subscription_details?.subscription || invoice?.subscription || ''
   }
   if(subscriptionId)await synchronizeSubscription(subscriptionId)
   const {error}=await admin.from('rc_billing_events').insert({
@@ -187,8 +199,14 @@ Deno.serve(async(req)=>{
   const {data:active,error:activeError}=await admin.from('rc_billing_subscriptions')
    .select('status').eq('user_id',user.id).maybeSingle()
   if(activeError)throw Error('No se pudo consultar el plan')
-  if(active && ['active','trialing'].includes(active.status))
-   return reply({error:'Ya tienes una suscripción activa; usa el portal de clientes'},409,origin)
+  if(active && ['active','trialing','past_due','unpaid','paused'].includes(active.status))
+   return reply({error:'Ya existe una suscripción; usa el portal de clientes'},409,origin)
+  // Check the Stripe source of truth too: webhooks can be delayed or reordered.
+  const current=await stripeApi('/subscriptions?customer='+encodeURIComponent(customer)+'&status=all&limit=100')
+  if(current?.data?.some((subscription:any)=>
+      subscription.items?.data?.some((item:any)=>item.price?.id===stripePrice) &&
+      ['active','trialing','incomplete','past_due','unpaid','paused'].includes(subscription.status)))
+   return reply({error:'Existe una suscripción o un pago pendiente para este plan'},409,origin)
   const checkout=await stripeApi('/checkout/sessions',new URLSearchParams({
    mode:'subscription',customer,
    'line_items[0][price]':stripePrice,'line_items[0][quantity]':'1',
@@ -197,7 +215,7 @@ Deno.serve(async(req)=>{
    success_url:ORIGIN+'/#/settings?checkout=success',
    cancel_url:ORIGIN+'/#/settings?checkout=cancel',
    allow_promotion_codes:'true'
-  }))
+  }),'rutacap-checkout-'+user.id+'-'+Math.floor(Date.now()/600000))
   if(typeof checkout.url!=='string'||!checkout.url.startsWith('https://checkout.stripe.com/'))
    throw Error('Checkout no válido')
   return reply({url:checkout.url},200,origin)

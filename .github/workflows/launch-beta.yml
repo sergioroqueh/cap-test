@@ -21,6 +21,8 @@ jobs:
         run: python3 -m py_compile ops/rutacap/legal/build_legal_pages.py
       - name: R82 security boundary checks (no network or test payments)
         run: node --test scripts/test_commercial_sprint_r82.mjs
+      - name: R84 Stripe webhook runtime (synthetic, no provider connections)
+        run: node --test scripts/test_r84_billing_runtime.mjs
       - name: Validate commercial beta artifact
         env:
           VITE_RUTACAP_PUBLIC_AUTH: ${{ vars.RUTACAP_PUBLIC_AUTH }}
