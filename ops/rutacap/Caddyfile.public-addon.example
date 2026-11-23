@@ -24,6 +24,13 @@ rutacap.es {
     @assets path /assets/*
     header @assets Cache-Control "public, max-age=31536000, immutable"
 
+    # Legal identity pages are generated only on the VPS (DNI/address never committed).
+    # Paths in /srv/rutacap/legal must exist before public launch.
+    handle_path /legal/* {
+        root * /srv/rutacap/legal
+        file_server
+    }
+
     # Missing source/data files MUST be 404, never index.html.
     @static path /data/* /assets/* /sw.js /manifest.webmanifest /icon.svg
     handle @static {
