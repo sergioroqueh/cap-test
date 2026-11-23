@@ -38,6 +38,10 @@ const devSignupConfigured = devAuth &&
   import.meta.env.VITE_RUTACAP_DEV_SIGNUPS === 'true'
 export const emailOtpConfigured = authConfigured &&
   import.meta.env.VITE_RUTACAP_EMAIL_OTP === 'true'
+// R89: verified new accounts choose a password before entering the app.
+// This user-editable metadata flag only controls onboarding UI. Never use it
+// for RLS, paid entitlements, quotas or any security authorization decision.
+const passwordReadyKey = 'rutacap_password_ready_v1'
 // R88: optional password sign-in for verified RutaCAP accounts.
 export const passwordConfigured = authConfigured &&
   import.meta.env.VITE_RUTACAP_PASSWORD_AUTH === 'true'
@@ -61,7 +65,17 @@ export async function getSession(): Promise<Session | null> {
   const { data: verified, error: userError } = await client.auth.getUser()
   if (userError || !verified.user || verified.user.id !== sessionData.session.user.id ||
       verified.user.is_anonymous) throw new Error('No se pudo verificar esta sesión.')
-  return sessionData.session
+  // getUser() is authoritative for latest user metadata; cached session.user
+  // may lag after updateUser({password,data}) and keep onboarding visible.
+  return {...sessionData.session,user:verified.user}
+}
+
+export function needsPasswordOnboarding(session:Session|null):boolean {
+  if(!session || !passwordConfigured || !emailOtpConfigured) return false
+  const user=session.user
+  if(!user.email || !user.email_confirmed_at || user.is_anonymous) return false
+  if(user.app_metadata?.provider === 'google') return false
+  return user.user_metadata?.[passwordReadyKey] !== true
 }
 export async function signInWithGoogle(): Promise<void> {
   if (!googleConfigured) throw new Error('Google no está configurado para este entorno.')
@@ -98,7 +112,16 @@ export async function signInWithPassword(email: string, password: string): Promi
     email: normalizedEmail, password
   })
   if (error) throw error
-  if (!(await getSession())) throw new Error('No se pudo verificar la sesión.')
+  const verified=await getSession()
+  if (!verified) throw new Error('No se pudo verificar la sesión.')
+  // Existing R88 passwords were created before this onboarding marker.
+  // A successful password login itself confirms a password exists.
+  if (verified.user.user_metadata?.[passwordReadyKey] !== true) {
+    const {error:metadataError}=await requireAuth().auth.updateUser({
+      data:{...verified.user.user_metadata,[passwordReadyKey]:true}
+    })
+    if (metadataError) throw metadataError
+  }
 }
 
 export async function setAccountPassword(password: string): Promise<void> {
@@ -109,8 +132,23 @@ export async function setAccountPassword(password: string): Promise<void> {
   const session = await getSession()
   if (!session?.user.email || !session.user.email_confirmed_at)
     throw new Error('Debes tener una cuenta con correo confirmado para establecer contraseña.')
-  const { error } = await client.auth.updateUser({ password })
+  const { error } = await client.auth.updateUser({
+    password, data:{...session.user.user_metadata,[passwordReadyKey]:true}
+  })
   if (error) throw error
+}
+
+// Existing accounts that created a password in R88 can bypass the new first-use
+// screen. This flag is only presentation state and never unlocks any resources.
+export async function acknowledgeExistingPassword(): Promise<void> {
+  if (!passwordConfigured) throw new Error('El acceso con contraseña no está habilitado.')
+  const session=await getSession()
+  if (!session?.user.email || !session.user.email_confirmed_at)
+    throw new Error('No se pudo verificar tu cuenta.')
+  const {error}=await requireAuth().auth.updateUser({
+    data:{...session.user.user_metadata,[passwordReadyKey]:true}
+  })
+  if(error) throw error
 }
 
 export async function signOut(): Promise<void> {

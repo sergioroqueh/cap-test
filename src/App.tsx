@@ -5,13 +5,14 @@ import CommercialHome, { ProBrand, ProIcon, isRegionCode, regionByCode, RegionMa
 import { CommercialAccountPreview } from './CommercialAccountPreview'
 import { CommercialBillingPanel } from './CommercialBillingPanel'
 import { CommercialPasswordPanel } from './CommercialPasswordPanel'
+import { CommercialPasswordOnboarding } from './CommercialPasswordOnboarding'
 import ConfirmDialog from './ConfirmDialog'
 import StudyPdfButton from './StudyPdfButton'
 import TopFrequencyDialog from './TopFrequencyDialog'
 import { CAP_DURATION_MINUTES, gradeSession, frequentExamQuestionsAtOrAbove, mostFrequentExamQuestions, uniqueExamQuestions } from './examEngine.mjs'
 import type { ActiveSession, AnswerKey, BankIndex, Question, QuestionProgress, QuestionnaireMeta, StudySessionRecord, StudySource } from './types'
 import { addSession, clearAllData, getAllProgress, getRecentSessions, pushLocalSnapshotToCloud, putProgress } from './db'
-import { authConfigured, emailOtpConfigured, googleConfigured, passwordConfigured, getSession, signInWithEmail, signInWithGoogle, signInWithPassword, signOut, supabase, verifyEmailOtp } from './supabase'
+import { acknowledgeExistingPassword, authConfigured, emailOtpConfigured, googleConfigured, passwordConfigured, getSession, needsPasswordOnboarding, setAccountPassword, signInWithEmail, signInWithGoogle, signInWithPassword, signOut, supabase, verifyEmailOtp } from './supabase'
 import { activeKey, lastKey, regionKey, setLocalOwner } from './localScope'
 import BackupPanel from './BackupPanel'
 import type { Session } from '@supabase/supabase-js'
@@ -69,7 +70,7 @@ function App(){
   const {data:{subscription}}=client.auth.onAuthStateChange(event=>{
    if(!live)return
    if(event==='SIGNED_OUT'){setLocalOwner(null);setSession(null)}
-   else if(event==='SIGNED_IN'||event==='INITIAL_SESSION'||event==='TOKEN_REFRESHED')
+   else if(event==='SIGNED_IN'||event==='INITIAL_SESSION'||event==='TOKEN_REFRESHED'||event==='USER_UPDATED')
     queueMicrotask(()=>{if(live)void refreshIdentity()})
   })
   void refreshIdentity()
@@ -83,8 +84,20 @@ function App(){
    go('home')
   }catch{setAuthError('No se pudo cerrar la sesión. Vuelve a intentarlo.')}
  }
+ async function finishPasswordSetup(action:()=>Promise<void>):Promise<void>{
+  await action()
+  const refreshed=await getSession()
+  if (!refreshed) throw new Error('La sesión ha dejado de estar disponible.')
+  setSession(refreshed)
+ }
  if(PREVIEW)return <CapApp userEmail="Modo pruebas · solo este navegador" onSignOut={async()=>{}}/>
  if(!authReady)return <Loading text="Comprobando tu acceso…"/>
+ if(session && needsPasswordOnboarding(session))
+  return <CommercialPasswordOnboarding key={'setup-'+session.user.id}
+   email={session.user.email||''}
+   onCreate={password=>finishPasswordSetup(()=>setAccountPassword(password))}
+   onExisting={()=>finishPasswordSetup(acknowledgeExistingPassword)}
+   onLogout={logout}/>
  if(session)return <CapApp key={'account-'+session.user.id} userEmail={session.user.email||'Mi cuenta'} onSignOut={logout} signedIn/>
  if(guest)return <CapApp key="guest" userEmail="Modo invitado · solo este navegador" onSignOut={logout}/>
  return <div className="pro-auth-entry"><CommercialAccountPreview
