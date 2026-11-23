@@ -9,6 +9,7 @@
     "build": "npm run prepare:data && tsc -b && vite build && node scripts/package_public_data_r63.mjs --verify",
     "preview": "vite preview",
     "build:preview": "npm run prepare:data && tsc -b && vite build --mode cap-preview && node scripts/package_public_data_r63.mjs --verify",
+    "build:launch": "npm run prepare:data && tsc -b && vite build --mode cap-launch && node scripts/package_public_data_r63.mjs --verify",
     "dev:catalog": "vite --mode catalog-local --host 127.0.0.1 --port 4188 --strictPort"
   },
   "dependencies": {
