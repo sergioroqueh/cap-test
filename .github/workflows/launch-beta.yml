@@ -1,0 +1,28 @@
+name: RutaCAP public beta build (no deployment)
+on:
+  push:
+    branches: [feat/cap-commercial]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-launch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install frozen dependencies
+        run: npm ci --no-audit --no-fund
+      - name: Validate commercial beta artifact
+        run: npm run build:launch
+      - name: Upload tested beta artifact (not a deployment)
+        uses: actions/upload-artifact@v4
+        with:
+          name: rutacap-public-beta-dist
+          path: dist/
+          if-no-files-found: error
+          retention-days: 7
