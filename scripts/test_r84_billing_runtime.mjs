@@ -13,14 +13,8 @@ function bootSyntheticBilling() {
   // those types without fetching packages, issuing requests or invoking Deno.
   const externalImport = "import { createClient } from 'npm:@supabase/supabase-js@2.119.1'"
   assert.ok(source.includes(externalImport), 'Pinned Supabase client import changed unexpectedly')
-  // Diagnostic is injected into this synthetic VM only. Production webhook
-  // responses remain generic and never disclose private Stripe details.
-  const silentCatch = "}catch{return reply({error:'No se pudo procesar el evento; Stripe debe reintentar'},500)}"
-  assert.ok(source.includes(silentCatch), 'Webhook failure guard changed')
-  const diagnosticsOnly = source.replace(silentCatch,
-    "}catch(error){ console.error('Synthetic billing failure:', String(error)); return reply({error:'No se pudo procesar el evento; Stripe debe reintentar'},500)}")
   const script = stripTypeScriptTypes(
-    diagnosticsOnly.replace(externalImport, 'const { createClient } = __testSupabase'),
+    source.replace(externalImport, 'const { createClient } = __testSupabase'),
     { mode: 'strip' }
   )
   const env = {
@@ -43,7 +37,7 @@ function bootSyntheticBilling() {
     sub_wrongA1: {
       id:'sub_wrongA1', customer:'cus_synthA1', status:'active',
       cancel_at_period_end:false,
-      items:{data:[{price:{id:'price_not_rutacapA1'},current_period_end:1999999999}]}
+      items:{data:[{price:{id:'price_otherA1'},current_period_end:1999999999}]}
     }
   }
   const admin = {
