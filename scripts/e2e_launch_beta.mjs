@@ -12,6 +12,21 @@ try {
   const response = await page.goto(base, { waitUntil: 'domcontentloaded' })
   assert.equal(response?.status(), 200, 'Launch root must serve HTTP 200')
   await page.locator('.pro-account-preview').waitFor()
+  const legalFooter=page.locator('.pro-legal-footer')
+  await legalFooter.waitFor()
+  assert.equal(await legalFooter.locator('.pro-legal-links a').count(),4,'Legal links must be visible')
+  const legalLayout=await legalFooter.evaluate(footer=>{
+   const links=footer.querySelector('.pro-legal-links')
+   if(!links)return {valid:false,reason:'missing links'}
+   const outer=footer.getBoundingClientRect()
+   const inner=links.getBoundingClientRect()
+   return {
+    valid: getComputedStyle(links).position!=='fixed' &&
+      inner.top>=outer.top-1 && inner.bottom<=outer.bottom+1,
+    reason:'legal links must stay inside footer in normal document flow'
+   }
+  })
+  assert.ok(legalLayout.valid,legalLayout.reason)
   assert.equal(await page.getByText('BETA GRATUITA', { exact: true }).count(), 1)
   assert.equal(await page.getByRole('button', { name: /Continuar con Google/ }).count(), 0, 'No disabled OAuth in beta')
   assert.ok(await page.getByText('Versión beta independiente', { exact: false }).isVisible(), 'Beta disclosure required')
