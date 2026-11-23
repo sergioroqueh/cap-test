@@ -17,6 +17,8 @@ jobs:
           node-version: 22
       - name: Install frozen dependencies
         run: npm ci --no-audit --no-fund
+      - name: Validate legal page generator syntax (without personal data)
+        run: python3 -m py_compile ops/rutacap/legal/build_legal_pages.py
       - name: Validate commercial beta artifact
         run: npm run build:launch
       - name: Test first-use beta journey in Chromium
