@@ -1,4 +1,11 @@
 # RutaCAP.es — Preparación de beta pública gratuita
+
+> **ACTUALIZACIÓN R76 (23/11/2026):** este procedimiento de Cloudflare
+> queda sustituido como recomendación de alojamiento principal debido a
+> los bloqueos colaterales de IP de LaLiga. Ver
+> [R76_AVOID_LALIGA_IP_BLOCKS.md](R76_AVOID_LALIGA_IP_BLOCKS.md).
+> No ejecutar la sección Cloudflare de este documento sin una nueva decisión.
+
 Fecha: 23/11/2026. Objetivo de presentación: jueves 26/11/2026.
 
 ## Alcance de autorización
