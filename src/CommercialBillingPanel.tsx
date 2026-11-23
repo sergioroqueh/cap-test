@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { billingEnabled, openStripeFlow, readBillingState, type BillingState } from './commercialBilling'
 
 export function CommercialBillingPanel({signedIn}:{signedIn:boolean}){
- const [state,setState]=useState<BillingState>({tier:signedIn?'beta':'guest',subscriptionStatus:null,renewalAt:null})
+ const [state,setState]=useState<BillingState>({tier:signedIn?'free':'guest',subscriptionStatus:null,renewalAt:null})
  const [error,setError]=useState('')
  const [busy,setBusy]=useState(false)
  useEffect(()=>{
@@ -20,9 +20,9 @@ export function CommercialBillingPanel({signedIn}:{signedIn:boolean}){
  }
  const premium=state.tier==='premium'
  return <div className="panel account" aria-label="Plan de acceso">
-  <small>PLAN DE RUTACAP</small><h2>{premium?'Premium':signedIn?'Beta gratuita':'Invitado'}</h2>
+  <small>PLAN DE RUTACAP</small><h2>{premium?'Premium':signedIn?'Cuenta gratuita':'Invitado'}</h2>
   <p>{premium?'Tu acceso Premium se confirma mediante Stripe y nuestro servidor.':
-     signedIn?'La beta permite estudiar sin cargos. Las funciones de pago permanecen desactivadas hasta su aprobación.':
+     signedIn?'Tu plan actual es gratuito. RutaCAP está en fase beta; el pago Premium solo aparecerá cuando esté habilitado de forma segura.':
      'Estás practicando como invitado. El progreso se conserva en este navegador.'}</p>
   {premium&&state.renewalAt&&<p>Periodo registrado hasta: {new Date(state.renewalAt).toLocaleDateString('es-ES')}</p>}
   {state.subscriptionStatus==='past_due'&&<p role="alert">Hay un problema de pago pendiente. Puedes gestionar tu suscripción en Stripe.</p>}

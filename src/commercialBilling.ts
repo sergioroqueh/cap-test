@@ -1,6 +1,6 @@
 import { authConfigured, getSession, supabase } from './supabase'
 
-export type CommercialTier = 'guest' | 'free' | 'beta' | 'premium'
+export type CommercialTier = 'guest' | 'free' | 'premium'
 export type BillingState = { tier: CommercialTier; subscriptionStatus: string | null; renewalAt: string | null }
 
 // Client tiers are for presentation only; entitlement decisions belong on the server.
@@ -13,14 +13,15 @@ export async function readBillingState(): Promise<BillingState> {
   if (!authConfigured || !supabase) return { tier:'guest', subscriptionStatus:null, renewalAt:null }
   const session = await getSession()
   if (!session) return { tier:'guest', subscriptionStatus:null, renewalAt:null }
-  if (!billingEnabled) return { tier:'beta', subscriptionStatus:null, renewalAt:null }
+  if (!billingEnabled) return { tier:'free', subscriptionStatus:null, renewalAt:null }
   const { data, error } = await supabase.from('rc_billing_subscriptions')
     .select('status,current_period_end').eq('user_id', session.user.id).maybeSingle()
   if (error) throw error
   const status = typeof data?.status === 'string' ? data.status : null
   const renewalAt = typeof data?.current_period_end === 'string' ? data.current_period_end : null
   const active = (status === 'active' || status === 'trialing') &&
-    (!renewalAt || new Date(renewalAt).getTime() > Date.now())
+    renewalAt !== null && Number.isFinite(Date.parse(renewalAt)) &&
+    Date.parse(renewalAt) > Date.now()
   return {tier:active?'premium':'free',subscriptionStatus:status,renewalAt}
 }
 

@@ -35,3 +35,41 @@ test('static historical JSON cannot serve as premium protection',()=>{
  assert.doesNotMatch(server,/serviceRoleKey/i)
  assert.match(server,/const ORIGIN = 'https:\/\/rutacap\.es'/)
 })
+
+test('exactly three commercial tiers; beta is a launch phase, not an entitlement',()=>{
+ const client=read('src/commercialBilling.ts')
+ const sql=read('docs/commercial/sql/R82_BILLING_DRAFT.sql')
+ const panel=read('src/CommercialBillingPanel.tsx')
+ assert.match(client,/CommercialTier = 'guest' \| 'free' \| 'premium'/)
+ assert.doesNotMatch(client,/tier:\s*'beta'|CommercialTier[^\n]*'beta'/)
+ assert.match(client,/if \(!billingEnabled\) return \{ tier:'free'/)
+ assert.match(sql,/tier in \('guest','free','premium'\)/)
+ assert.doesNotMatch(sql,/\('beta',/)
+ for(const tier of ['guest','free','premium']){
+  assert.match(sql,new RegExp("\\('"+tier+"',"))
+ }
+ assert.doesNotMatch(panel,/tier:signedIn\?'beta'|\?'Beta gratuita'/)
+ assert.match(panel,/Cuenta gratuita/)
+});
+
+test('email OTP is opt-in, verifies six digits, and does not impersonate synced progress',()=>{
+ const auth=read('src/supabase.ts')
+ const entry=read('src/CommercialAccountPreview.tsx')
+ const app=read('src/App.tsx')
+ const wf=read('.github/workflows/launch-beta.yml')
+ assert.match(auth,/VITE_RUTACAP_EMAIL_OTP === 'true'/)
+ assert.match(auth,/verifyEmailOtp\(email: string, token: string\)/)
+ assert.match(auth,/type: 'email'/)
+ assert.match(auth,/shouldCreateUser: publicAuth/)
+ assert.match(entry,/emailOtpEnabled&&codeSent/)
+ assert.match(entry,/pattern="\[0-9\]\{6\}"/)
+ assert.match(app,/onVerifyEmail=\{verifyEmailOtp\}/)
+ assert.match(wf,/RUTACAP_EMAIL_OTP/)
+ assert.match(auth,/export const cloudConfigured = false/)
+});
+test('Premium presentation requires an unexpired paid subscription, not a browser flag',()=>{
+ const billing=read('src/commercialBilling.ts')
+ assert.match(billing,/status === 'active' \|\| status === 'trialing'/)
+ assert.match(billing,/Date\.parse\(renewalAt\) > Date\.now\(\)/)
+ assert.match(billing,/return \{tier:active\?'premium':'free'/)
+});

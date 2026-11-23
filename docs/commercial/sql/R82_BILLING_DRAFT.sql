@@ -25,7 +25,7 @@ create table public.rc_billing_events (
 -- These are future server-side policy values, not a claim of enforced public limits.
 -- Do NOT enforce quotas on static /data JSON files (clients can download those).
 create table public.rc_access_policies (
- tier text primary key check (tier in ('guest','free','beta','premium')),
+ tier text primary key check (tier in ('guest','free','premium')),
  daily_question_cap integer check (daily_question_cap is null or daily_question_cap between 1 and 100000),
  daily_exam_cap integer check (daily_exam_cap is null or daily_exam_cap between 1 and 1000),
  cloud_sync boolean not null default false,
@@ -35,7 +35,6 @@ create table public.rc_access_policies (
 insert into public.rc_access_policies(tier,daily_question_cap,daily_exam_cap,cloud_sync,pdf_export,full_archive) values
  ('guest',25,1,false,false,false),
  ('free',100,3,true,false,false),
- ('beta',null,null,true,true,true),
  ('premium',null,null,true,true,true);
 alter table public.rc_billing_customers enable row level security;
 alter table public.rc_billing_subscriptions enable row level security;

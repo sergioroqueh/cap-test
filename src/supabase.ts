@@ -1,6 +1,6 @@
 import { createClient, type Session } from '@supabase/supabase-js'
 
-// C22: Authentication is developer-only. The cloud DATA gate remains closed.
+// R83: Public account auth is explicitly gated; cloud DATA synchronization remains closed.
 const url = import.meta.env.VITE_CAP_PRO_SUPABASE_URL?.trim() || ''
 const publishableKey = import.meta.env.VITE_CAP_PRO_SUPABASE_PUBLISHABLE_KEY?.trim() || ''
 function validIsolatedUrl(value: string): boolean {
@@ -30,6 +30,8 @@ const devAuth = import.meta.env.DEV &&
   localDevOrigin && validIsolatedUrl(url) &&
   publishableKey.startsWith('sb_publishable_')
 export const authConfigured = publicAuth || devAuth
+export const emailOtpConfigured = authConfigured &&
+  import.meta.env.VITE_RUTACAP_EMAIL_OTP === 'true'
 export const cloudConfigured = false
 export const supabase = authConfigured
   ? createClient(url, publishableKey, { auth: {
@@ -38,7 +40,7 @@ export const supabase = authConfigured
     } })
   : null
 function requireAuth() {
-  if (!supabase) throw new Error('El acceso de desarrollo no está configurado.')
+  if (!supabase) throw new Error('El acceso con cuenta no está configurado.')
   return supabase
 }
 function callbackUrl() { return (publicAuth ? 'https://rutacap.es' : window.location.origin) + '/auth/callback' }
@@ -59,12 +61,25 @@ export async function signInWithGoogle(): Promise<void> {
   if (error) throw error
 }
 export async function signInWithEmail(email: string): Promise<void> {
+  if (!emailOtpConfigured) throw new Error('El acceso por código todavía no está habilitado.')
   const { error } = await requireAuth().auth.signInWithOtp({
-    email: email.trim(),
+    email: email.trim().toLowerCase(),
     options: { emailRedirectTo: callbackUrl(), shouldCreateUser: publicAuth }
   })
   if (error) throw error
 }
+export async function verifyEmailOtp(email: string, token: string): Promise<void> {
+  if (!emailOtpConfigured) throw new Error('El acceso por código todavía no está habilitado.')
+  const normalizedEmail = email.trim().toLowerCase()
+  if (!normalizedEmail || !/^\d{6}$/.test(token.trim()))
+    throw new Error('Introduce el código de seis cifras recibido por correo.')
+  const { error } = await requireAuth().auth.verifyOtp({
+    email: normalizedEmail, token: token.trim(), type: 'email'
+  })
+  if (error) throw error
+  if (!(await getSession())) throw new Error('No se pudo verificar la nueva sesión.')
+}
+
 export async function signOut(): Promise<void> {
   if (!supabase) return
   const { error } = await supabase.auth.signOut()

@@ -11,7 +11,7 @@ Rama `feat/rutacap-commerce-sprint-20261123`, origen congelado R80 `6864b95653a6
 - `scripts/test_commercial_sprint_r82.mjs`: comprobaciones estáticas de fronteras. **No sustituyen** prueba Stripe/test de API y JWT real.
 
 ## Límites propuestos — NO ENFORCED en R82
-Invitado 25 preguntas/1 examen por día; Gratis 100 preguntas/3 exámenes por día; Beta y Premium sin cuotas de producto. `rc_access_policies` es una configuración de **borrador**, no existe un backend de consumo diario. Los JSON `/data` siguen públicos en R80: ocultar botones, cuotas en navegador o mostrar Premium no restringe su descarga. NO activar el bloqueo comercial de corpus estático sin migrar a entrega controlada por servidor, con licencias comprobadas y pruebas de no filtración. No vender acceso exclusivo a esos mismos archivos abiertos.
+**Tres planes exclusivamente:** Invitado (25 preguntas/1 examen por día), Gratis (100 preguntas/3 exámenes por día) y Premium (sin cuotas de producto). La palabra beta designa la fase de lanzamiento, nunca un nivel de acceso. Durante promociones de lanzamiento se pueden modificar temporalmente las cuotas del plan Gratis mediante la política del servidor, sin inventar un cuarto plan. `rc_access_policies` es una configuración de **borrador**, no existe un backend de consumo diario. Los JSON `/data` siguen públicos en R80: ocultar botones, cuotas en navegador o mostrar Premium no restringe su descarga. NO activar el bloqueo comercial de corpus estático sin migrar a entrega controlada por servidor, con licencias comprobadas y pruebas de no filtración. No vender acceso exclusivo a esos mismos archivos abiertos.
 
 ## Activación técnica (orden de ejecución; ninguna realizada)
 1. Resolver los permisos de uso de bancos y exámenes y finalizar aviso legal, privacidad, cookies y condiciones comerciales; alta fiscal apropiada antes de cobros reales.
@@ -26,7 +26,7 @@ Invitado 25 preguntas/1 examen por día; Gratis 100 preguntas/3 exámenes por d�
 
 ## Bloqueantes reales para "comercial cerrado"
 - Sin cuenta Stripe conectada ni parámetros reales no hay cobro que habilitar.
-- Sin entrega autenticada de JSON no hay cuotas verificables para banco/exámenes.
+- Sin entrega autenticada de JSON no hay cuotas verificables para banco/exámenes. No mostrar cuotas como restricciones efectivas en la interfaz hasta tener enforcement server-side.
 - `cloudConfigured=false`, adaptación del progreso entre dispositivos todavía no aprobada.
 - Sin derechos acreditados no se puede publicar ni comercializar automáticamente el corpus R80 íntegro.
 - Los textos legales actuales dicen que la beta no usa cuentas/pagos; deben actualizarse cuando se habiliten efectivamente.
