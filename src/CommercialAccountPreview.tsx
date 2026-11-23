@@ -23,7 +23,10 @@ export function CommercialAccountPreview({onContinue,authEnabled=false,googleEna
  async function run(action:()=>Promise<void>){
   if(busy)return
   setBusy(true);setError('');setMessage('')
-  try{await action()}catch{setError('No se pudo completar el acceso. Revisa la configuración e inténtalo de nuevo.')}
+  try{await action()}catch(error){
+   const diagnostic=import.meta.env.DEV && error instanceof Error ? `Prueba local: ${error.message}` : null
+   setError(diagnostic??'No se pudo completar el acceso. Revisa la configuración e inténtalo de nuevo.')
+  }
   finally{setBusy(false)}
  }
  return <section className="pro-account-preview" aria-label="Acceso RutaCAP">

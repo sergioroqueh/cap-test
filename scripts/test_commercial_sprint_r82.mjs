@@ -91,3 +91,19 @@ test('R86: separately gate public Google, email OTP and dev-only registrations',
  assert.match(workflow,/RUTACAP_GOOGLE_AUTH/)
  assert.match(client,/export const cloudConfigured = false/)
 });
+
+test('R87 local OTP runner is isolated and never persists keys or enables billing',()=>{
+ const runner=read('scripts/r87_otp_local.mjs')
+ const auth=read('src/supabase.ts')
+ const entry=read('src/CommercialAccountPreview.tsx')
+ assert.match(runner,/rhtbqetskghkarxhrgee/)
+ assert.match(runner,/VITE_RUTACAP_AUTH_DEV: 'true'/)
+ assert.match(runner,/VITE_RUTACAP_DEV_SIGNUPS: 'true'/)
+ assert.match(runner,/VITE_RUTACAP_EMAIL_OTP: 'true'/)
+ assert.match(runner,/VITE_RUTACAP_GOOGLE_AUTH: 'false'/)
+ assert.match(runner,/VITE_RUTACAP_BILLING_ENABLED: 'false'/)
+ assert.match(runner,/'--host', '127.0.0.1', '--port', '5173', '--strictPort'/)
+ assert.doesNotMatch(runner,/writeFile|appendFile|createWriteStream|sk_live_|service_role|sb_secret_/)
+ assert.match(entry,/import.meta.env.DEV && error instanceof Error/)
+ assert.match(auth,/export const cloudConfigured = false/)
+});
