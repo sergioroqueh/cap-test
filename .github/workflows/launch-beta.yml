@@ -19,6 +19,15 @@ jobs:
         run: npm ci --no-audit --no-fund
       - name: Validate commercial beta artifact
         run: npm run build:launch
+      - name: Test first-use beta journey in Chromium
+        run: |
+          npx playwright install --with-deps chromium
+          npm run preview -- --host 127.0.0.1 --port 4178 --strictPort > /tmp/rutacap-launch-preview.log 2>&1 &
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:4178/ > /dev/null; then break; fi
+            sleep 1
+          done
+          node scripts/e2e_launch_beta.mjs
       - name: Upload tested beta artifact (not a deployment)
         uses: actions/upload-artifact@v4
         with:
