@@ -1,6 +1,6 @@
 const BASE = new URL(self.registration.scope).pathname
 const PREFIX = 'cap-test-pro:' + BASE + ':'
-const CACHE = PREFIX + 'c1-2026-11-16'
+const CACHE = PREFIX + 'launch-2026-11-23'
 const CORE = [
   BASE,
   `${BASE}index.html`,
@@ -53,6 +53,23 @@ self.addEventListener('fetch', (event) => {
       } catch (error) {
         const cached = await cache.match(BASE)
         if (cached) return cached
+        throw error
+      }
+    }
+    // Fresh public question data takes priority; retain cached copies for outages.
+    // Assets stay cache-first because hashed Vite filenames are immutable.
+    if (relative.startsWith('data/')) {
+      try {
+        const response = await fetch(event.request, { cache: 'no-store' })
+        if (response.ok) {
+          await cache.put(event.request, response.clone())
+          return response
+        }
+        if (response.status >= 500) return (await cache.match(event.request)) || response
+        return response
+      } catch (error) {
+        const offline = await cache.match(event.request)
+        if (offline) return offline
         throw error
       }
     }
