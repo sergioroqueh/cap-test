@@ -7,10 +7,10 @@ R88 añade un acceso alternativo opcional con correo+contraseña. No cambia el f
 
 ## Seguridad e implementación
 - Nuevo gate de frontend `VITE_RUTACAP_PASSWORD_AUTH=true`, aislado por `authConfigured`; en GitHub Actions variable `RUTACAP_PASSWORD_AUTH`.
-- `signInWithPassword` llama a Supabase Auth y valida la sesión devuelta. `setAccountPassword` solo funciona en cuenta autenticada con email confirmado; exige mínimo 12 y máximo 128 caracteres y delega el hash a Supabase Auth mediante `updateUser({ password })`.
+- `signInWithPassword` llama a Supabase Auth y valida la sesión devuelta. `setAccountPassword` solo funciona en cuenta autenticada con email confirmado; exige mínimo 8 y máximo 128 caracteres y delega el hash a Supabase Auth mediante `updateUser({ password })`.
 - Dos campos con confirmación en «Mi perfil»; no guardar contraseñas en IndexedDB, localStorage, GitHub ni logs. No enviarlas al chat.
 - El inicio con OTP mantiene el mismo formulario, el mismo código de seis cifras y los controles R87. El OTP sigue siendo alternativa al olvido de contraseña.
-- El cambio o establecimiento de contraseña exige sesión autenticada, pero su seguridad final depende también de las opciones de reautenticación de Supabase, los límites de intentos y la política del servidor. Antes del lanzamiento público, revisar **Secure password change**, reautenticación al cambiar contraseña y configuración mínima de contraseña ≥12 en Supabase; el panel Pro puede requerir plan de pago para filtración de contraseñas.
+- El cambio o establecimiento de contraseña exige sesión autenticada, pero su seguridad final depende también de las opciones de reautenticación de Supabase, los límites de intentos y la política del servidor. Antes del lanzamiento público, revisar **Secure password change**, reautenticación al cambiar contraseña y configuración mínima de contraseña ≥8 en Supabase; el panel Pro puede requerir plan de pago para filtración de contraseñas.
 - El modo de pruebas localhost habilita `VITE_RUTACAP_PASSWORD_AUTH=true` sin alterar Google, pagos, cloudConfigured=false, dominio público, VPS, R80 ni Auth del proyecto no relacionado.
 
 ## Prueba humana requerida

@@ -26,7 +26,7 @@ export function CommercialPasswordOnboarding({email,onCreate,onExisting,onLogout
   }finally{setBusy(false)}
  }
  async function submit(){
-  if(password.length<12||password.length>128){setError('La contraseña debe tener entre 12 y 128 caracteres.');return}
+  if(password.length<8||password.length>128){setError('La contraseña debe tener entre 8 y 128 caracteres.');return}
   if(password!==confirm){setError('Las contraseñas no coinciden.');return}
   await run(()=>onCreate(password))
  }
@@ -40,15 +40,15 @@ export function CommercialPasswordOnboarding({email,onCreate,onExisting,onLogout
   <form className="pro-email-signin" onSubmit={e=>{e.preventDefault();void submit()}}>
    <label htmlFor="pro-account-verified-email">Correo verificado</label>
    <input id="pro-account-verified-email" type="email" value={email} disabled readOnly/>
-   <label htmlFor="pro-onboarding-password">Nueva contraseña (mínimo 12 caracteres)</label>
+   <label htmlFor="pro-onboarding-password">Nueva contraseña (mínimo 8 caracteres)</label>
    <input id="pro-onboarding-password" type="password" autoComplete="new-password"
-    minLength={12} maxLength={128} value={password} onChange={e=>setPassword(e.target.value)}
+    minLength={8} maxLength={128} value={password} onChange={e=>setPassword(e.target.value)}
     disabled={busy} required/>
    <label htmlFor="pro-onboarding-confirm">Repetir contraseña</label>
    <input id="pro-onboarding-confirm" type="password" autoComplete="new-password"
-    minLength={12} maxLength={128} value={confirm} onChange={e=>setConfirm(e.target.value)}
+    minLength={8} maxLength={128} value={confirm} onChange={e=>setConfirm(e.target.value)}
     disabled={busy} required/>
-   <button type="submit" disabled={busy||password.length<12||password!==confirm}>
+   <button type="submit" disabled={busy||password.length<8||password!==confirm}>
     {busy?'Guardando…':'Crear contraseña y entrar'}
    </button>
   </form>

@@ -13,7 +13,7 @@ Fecha: 24/11/2026. Rama aislada `feat/rutacap-commerce-sprint-20261123`.
 
 ## Seguridad y alcance
 - `user_metadata` es **editable por el usuario**: es un indicador exclusivamente visual de onboarding. No se utiliza para controlar cuotas, roles, acceso Premium ni autorización RLS.
-- La contraseña exige al menos 12 caracteres en el formulario. Es aconsejable configurar en Supabase Auth un mínimo de 12 caracteres también en el servidor antes de publicar (ahora la configuración observada permitía menos).
+- La contraseña exige al menos 8 caracteres en el formulario. Es aconsejable configurar en Supabase Auth un mínimo de 8 caracteres también en el servidor antes de publicar (ahora la configuración observada permitía menos).
 - Los requisitos de reautenticación para cambios de contraseña, la recuperación de cuenta y los límites de intentos se revisarán antes de lanzamiento público.
 - El acceso por OTP sigue disponible para recuperar acceso; las plantillas de Signup y Magic Link deben conservar el mismo código de 6 cifras. Nunca mostrar OTPs en capturas públicas.
 - No modifica los usuarios, las tablas de Supabase, planes, Stripe, el VPS, Vercel, DNS ni R80. `cloudConfigured=false`.

@@ -123,7 +123,7 @@ test('R88: verified users can optionally configure and use email/password withou
  assert.match(entry,/passwordEnabled&&usePassword/)
  assert.match(entry,/onPassword\(email,password\)/)
  assert.match(entry,/emailOtpEnabled&&!usePassword/)
- assert.match(account,/minLength=\{12\}/)
+ assert.match(account,/minLength=\{8\}/)
  assert.match(account,/setAccountPassword\(first\)/)
  assert.match(app,/onPassword=\{signInWithPassword\}/)
  assert.match(app,/<CommercialPasswordPanel signedIn=\{signedIn\}\/>/)
@@ -156,7 +156,7 @@ test('R89: email verified -> first password -> account, existing accounts keep a
  assert.match(onboarding,/Crear contraseña y entrar/)
  assert.match(onboarding,/Ya tenía una contraseña/)
  assert.match(onboarding,/onCreate\(password\)/)
- assert.match(onboarding,/minLength=\{12\}/)
+ assert.match(onboarding,/minLength=\{8\}/)
  assert.match(entry,/const \[usePassword,setUsePassword\]=useState\(passwordEnabled\)/)
  assert.match(entry,/Crear cuenta o recuperar acceso/)
  assert.match(entry,/Verificar correo/)
@@ -164,4 +164,19 @@ test('R89: email verified -> first password -> account, existing accounts keep a
  assert.match(entry,/onVerifyEmail\(email,code\)/)
  assert.match(passwordPanel,/setAccountPassword\(first\)/)
  assert.match(auth,/export const cloudConfigured = false/)
+});
+
+test('R90: password length is consistently 8 to 128 in auth, onboarding and profile',()=>{
+ const auth=read('src/supabase.ts')
+ const onboard=read('src/CommercialPasswordOnboarding.tsx')
+ const account=read('src/CommercialPasswordPanel.tsx')
+ assert.match(auth,/password.length < 8 \|\| password.length > 128/)
+ assert.match(auth,/entre 8 y 128 caracteres/)
+ assert.match(onboard,/password.length<8\|\|password.length>128/)
+ assert.match(onboard,/minLength=\{8\}/)
+ assert.match(account,/first.length<8 \|\| first.length>128/)
+ assert.match(account,/minLength=\{8\}/)
+ assert.doesNotMatch(auth,/password.length < 12/)
+ assert.doesNotMatch(onboard,/minLength=\{12\}/)
+ assert.doesNotMatch(account,/minLength=\{12\}/)
 });

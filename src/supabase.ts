@@ -126,8 +126,8 @@ export async function signInWithPassword(email: string, password: string): Promi
 
 export async function setAccountPassword(password: string): Promise<void> {
   if (!passwordConfigured) throw new Error('La contraseña no está habilitada en este entorno.')
-  if (password.length < 12 || password.length > 128)
-    throw new Error('Utiliza una contraseña de entre 12 y 128 caracteres.')
+  if (password.length < 8 || password.length > 128)
+    throw new Error('Utiliza una contraseña de entre 8 y 128 caracteres.')
   const client = requireAuth()
   const session = await getSession()
   if (!session?.user.email || !session.user.email_confirmed_at)

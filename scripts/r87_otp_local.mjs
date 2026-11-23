@@ -60,7 +60,7 @@ if (buildData.error || buildData.status !== 0) {
 
 console.log('\nRutaCAP OTP local: http://localhost:5173')
 console.log('Proyecto: rutacap-dev. Google OFF. Stripe OFF. Sync OFF. Contraseña opcional ON. Ningún despliegue.')
-console.log('Puedes entrar por código o, después de crearla en Mi perfil, por contraseña. Ctrl+C para finalizar.\n')
+console.log('Primera vez: correo + OTP, crea la contraseña (mínimo 8 caracteres) y entra. Usuarios existentes: correo + contraseña. Ctrl+C para finalizar.\n')
 const server = spawn(process.execPath, ['node_modules/vite/bin/vite.js', '--host', '127.0.0.1', '--port', '5173', '--strictPort'], {
   env, stdio: 'inherit', windowsHide: true,
 })

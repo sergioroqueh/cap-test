@@ -13,7 +13,7 @@ export function CommercialPasswordPanel({signedIn}:{signedIn:boolean}){
  async function submit(){
   if(busy)return
   setMessage('');setError('')
-  if(first.length<12 || first.length>128){setError('Usa una contraseña de entre 12 y 128 caracteres.');return}
+  if(first.length<8 || first.length>128){setError('Usa una contraseña de entre 8 y 128 caracteres.');return}
   if(first!==second){setError('Las contraseñas no coinciden.');return}
   setBusy(true)
   try {
@@ -29,13 +29,13 @@ export function CommercialPasswordPanel({signedIn}:{signedIn:boolean}){
   <h2>Acceder sin pedir un código cada vez</h2>
   <p>Puedes crear o cambiar una contraseña para tu cuenta de correo ya verificada. El inicio por código seguirá disponible.</p>
   <form className="pro-email-signin" onSubmit={e=>{e.preventDefault();void submit()}}>
-   <label htmlFor="rutacap-account-password">Nueva contraseña (mínimo 12 caracteres)</label>
-   <input id="rutacap-account-password" type="password" autoComplete="new-password" minLength={12} maxLength={128}
+   <label htmlFor="rutacap-account-password">Nueva contraseña (mínimo 8 caracteres)</label>
+   <input id="rutacap-account-password" type="password" autoComplete="new-password" minLength={8} maxLength={128}
     value={first} onChange={e=>setFirst(e.target.value)} disabled={busy} required/>
    <label htmlFor="rutacap-account-password-confirm">Repetir contraseña</label>
-   <input id="rutacap-account-password-confirm" type="password" autoComplete="new-password" minLength={12} maxLength={128}
+   <input id="rutacap-account-password-confirm" type="password" autoComplete="new-password" minLength={8} maxLength={128}
     value={second} onChange={e=>setSecond(e.target.value)} disabled={busy} required/>
-   <button type="submit" disabled={busy||first.length<12||first!==second}>
+   <button type="submit" disabled={busy||first.length<8||first!==second}>
     {busy?'Guardando…':'Guardar contraseña'}
    </button>
   </form>
