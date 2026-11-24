@@ -36,9 +36,10 @@ export function validateDeliveredUnit(reply,item){
    if(item.category!=='general'&&(!q.id.startsWith('cap:')||typeof q.examId!=='string'||!q.examId))fail()
    seen.add(q.id)
  }
+ if(item.kind==='question'&&reply.content.questions[0].id!==item.contentId)fail()
  if(item.kind==='exam'&&item.category!=='general'){
    const ids=new Set(reply.content.questions.map(q=>q.examId))
-   if(ids.size!==1||reply.content.questions.some((q,i)=>q.number!==i+1))fail()
+   if(ids.size!==1||!ids.has(item.contentId)||reply.content.questions.some((q,i)=>q.number!==i+1))fail()
  }
  return reply.content.questions
 }
