@@ -1,3 +1,4 @@
+import {validateAttribution} from '../src/sourceAttribution.mjs'
 // Offline-only preparation. No credentials, network, SQL execution or upload.
 // Default deny: source files require exact SHA-256 and explicit rights approval.
 import {createHash} from 'node:crypto'
@@ -41,13 +42,15 @@ export function prepareCatalog({readSource,approvals}){
   const info=byPath.get(a.path)
   if(!info)fail('source not in original index')
   const {m,category}=info
+  const attribution=validateAttribution(a.sourceAttribution)
+  if(category!=='general'&&!attribution.answerUrl)fail('historical key attribution required')
   if(category==='general'&&a.units.includes('exam'))fail('general exam composition not yet approved')
   if(category!=='general'&&(!m.hasOriginalAnswerSheet||m.count!==100))fail('historical model without original answer sheet')
   const raw=readSource(a.path)
   if(hash(raw)!==a.sha256)fail('source digest differs from approval')
   const rows=parse(raw)
   if(!Array.isArray(rows)||rows.length!==m.count)fail('source count mismatch')
-  const projected=(category==='general'?rows:projectHistoricalQuestions(rows,m)).map(deliveryQuestion)
+  const projected=(category==='general'?rows:projectHistoricalQuestions(rows,m)).map(q=>({...deliveryQuestion(q),sourceAttribution:attribution}))
   if(projected.length!==rows.length)fail('historical projection incomplete')
   const categoryLabel=category==='general'?'Banco general':category==='mercancias'?'CAP Mercancías':'CAP Viajeros'
   function add(kind,contentId,label,questions){
