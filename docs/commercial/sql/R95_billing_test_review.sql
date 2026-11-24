@@ -119,12 +119,12 @@ end $$;
 create function rc_internal.rc_billing_test_session_v1(p_user uuid,p_price text,p_session uuid)
 returns void language plpgsql security definer set search_path='' as $$
 begin
- perform rc_internal.rc_billing_test_check_v1(p_user,p_price);
  if not exists(select 1 from auth.sessions where id=p_session and user_id=p_user
   and (not_after is null or not_after>clock_timestamp()) for share) then
   raise exception using errcode='42501',message='BILLING_SESSION_DENIED';
  end if;
-end $$;
+ perform rc_internal.rc_billing_test_check_v1(p_user,p_price);
+end $;
 create function rc_internal.rc_billing_test_status_v1(p_user uuid,p_price text)
 returns jsonb language plpgsql security definer set search_path='' as $$
 declare s public.rc_billing_subscriptions%rowtype; active boolean;
