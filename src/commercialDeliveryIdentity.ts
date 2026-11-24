@@ -7,6 +7,7 @@ import { localBackupOwner, localOwnerGeneration } from './localScope'
 import { createDeliveryClient, createDeliveryRequest } from './commercialDelivery.mjs'
 
 const RELEASE_APPROVED = false
+export const protectedDeliveryApproved=RELEASE_APPROVED
 const PROJECT = 'https://rhtbqetskghkarxhrgee.supabase.co'
 const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/
 const key = import.meta.env.VITE_CAP_PRO_SUPABASE_PUBLISHABLE_KEY?.trim() || ''
@@ -50,6 +51,15 @@ async function checkedIdentity(client:SupabaseClient,anonymous:boolean){
   return {verified:true,userId:session.user.id,isAnonymous:anonymous,sessionId:c.session_id,accessToken:token}
 }
 
+export async function hasVerifiedGuestIdentity():Promise<boolean>{
+  requireReady();await assertNoAccount()
+  const client=guestAuth()
+  const current=await client.auth.getSession()
+  if(current.error)throw Error('R93_GUEST_SESSION_ERROR')
+  if(!current.data.session)return false
+  await checkedIdentity(client,true);await assertNoAccount()
+  return true
+}
 // Explicit future action, never automatic on failure. CAPTCHA must be enforced
 // in Supabase Auth itself, not just checked by this browser wrapper.
 export async function provisionGuestIdentity(captchaToken:string):Promise<void>{
