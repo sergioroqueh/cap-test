@@ -57,6 +57,11 @@ interface CapRawQuestion extends Omit<CapQuestion, 'correctAnswer' | 'progressId
   canonicalQuestionId: string | null
   textCorrection?: {round?:string;method:string;reviewStatus:string;originalQuestion:string;originalOptions:Record<AnswerKey,string>;sourceOfficialPdf?:string;sourceOriginalExam?:string}
 }
+// R94 defense in depth: never fetch static corpus from the protected entry.
+function legacyFetch(input:RequestInfo|URL,init?:RequestInit):Promise<Response>{
+  if(import.meta.env.MODE==='cap-protected')return Promise.reject(new Error('R94_LEGACY_CORPUS_DISABLED'))
+  return fetch(input,init)
+}
 const BASE = import.meta.env.BASE_URL
 let cachedIndex: CapExamIndex | null = null
 const cache = new Map<string, CapQuestion[]>()
@@ -64,7 +69,7 @@ let frequencyCache: Record<string, { count: number; denominator: number; categor
 
 export async function loadCapIndex(): Promise<CapExamIndex> {
   if (cachedIndex) return cachedIndex
-  const res = await fetch(BASE + 'data/exams/index.json')
+  const res = await legacyFetch(BASE + 'data/exams/index.json')
   if (!res.ok) throw new Error('No se ha podido cargar el catálogo de exámenes CAP.')
   const raw = await res.json() as CapExamIndex
   if (!raw.technicalR31Stats) throw new Error('Falta la revisión técnica R31; actualiza la aplicación.')
@@ -75,7 +80,7 @@ export async function loadCapIndex(): Promise<CapExamIndex> {
 export async function loadCapQuestions(meta: CapExamMeta): Promise<CapQuestion[]> {
   const existing = cache.get(meta.id)
   if (existing) return existing
-  const res = await fetch(BASE + meta.path)
+  const res = await legacyFetch(BASE + meta.path)
   if (!res.ok) throw new Error('No se pudo cargar el examen ' + meta.id)
   const raw: CapRawQuestion[] = await res.json()
   // Complete historical exams show all 100 original questions, including
@@ -113,7 +118,7 @@ export interface CapSheetReviewQuestion {
 
 /** Returns every question, including three documented conflicts, for audit by exam. */
 export async function loadCapSheetReview(meta: CapExamMeta): Promise<CapSheetReviewQuestion[]> {
-  const [res, triage, casebook, casebookR23, casebookR24] = await Promise.all([fetch(BASE + meta.path), loadCapEditorialTriage(), loadCapR22Casebook(), loadCapR23Casebook(), loadCapR24Casebook()])
+  const [res, triage, casebook, casebookR23, casebookR24] = await Promise.all([legacyFetch(BASE + meta.path), loadCapEditorialTriage(), loadCapR22Casebook(), loadCapR23Casebook(), loadCapR24Casebook()])
   if (!res.ok) throw new Error('No se pudo cargar la convocatoria.')
   const rows: CapRawQuestion[] = await res.json()
   const sourceFlags = new Map((triage.questions[meta.id] || []).map(x => [x.number, x]))
@@ -177,7 +182,7 @@ export interface CapR22Casebook {
 let r22Cache: CapR22Casebook | null = null
 export async function loadCapR22Casebook(): Promise<CapR22Casebook> {
   if (r22Cache) return r22Cache
-  const res = await fetch(BASE + 'data/exams/editorial_casebook_r22.json')
+  const res = await legacyFetch(BASE + 'data/exams/editorial_casebook_r22.json')
   if (!res.ok) throw new Error('No se ha podido cargar el expediente editorial R22.')
   const payload = await res.json() as CapR22Casebook
   if (payload.totalRows !== 306 || payload.manualCaseCount !== 33 ||
@@ -207,7 +212,7 @@ export interface CapR23Casebook {
 let r23Cache: CapR23Casebook | null = null
 export async function loadCapR23Casebook(): Promise<CapR23Casebook> {
   if (r23Cache) return r23Cache
-  const res = await fetch(BASE + 'data/exams/editorial_casebook_r23.json')
+  const res = await legacyFetch(BASE + 'data/exams/editorial_casebook_r23.json')
   if (!res.ok) throw new Error('No se ha podido cargar el expediente R23.')
   const payload = await res.json() as CapR23Casebook
   if (payload.totalQuestionRows !== 1000 || payload.manualEvidenceCases !== 17 ||
@@ -227,7 +232,7 @@ export interface CapR24Casebook {
 let r24Cache: CapR24Casebook | null = null
 export async function loadCapR24Casebook(): Promise<CapR24Casebook> {
   if (r24Cache) return r24Cache
-  const res = await fetch(BASE + 'data/exams/editorial_casebook_r24.json')
+  const res = await legacyFetch(BASE + 'data/exams/editorial_casebook_r24.json')
   if (!res.ok) throw new Error('No se ha podido cargar el expediente editorial R24.')
   const payload = await res.json() as CapR24Casebook
   if (payload.totalQuestionRows !== 1000 || payload.caseCount !== 18 ||
@@ -263,7 +268,7 @@ export interface CapEditorialTriage {
 let editorialTriageCache: CapEditorialTriage | null = null
 export async function loadCapEditorialTriage(): Promise<CapEditorialTriage> {
   if (editorialTriageCache) return editorialTriageCache
-  const res = await fetch(BASE + 'data/exams/editorial_triage_r21.json')
+  const res = await legacyFetch(BASE + 'data/exams/editorial_triage_r21.json')
   if (!res.ok) throw new Error('No se ha podido cargar la revisión editorial por convocatoria.')
   const payload = await res.json() as CapEditorialTriage
   if (payload.totalExams !== 26 || payload.totalQuestions !== 2600 || payload.scoredBeforeAfter !== 2508)
@@ -283,7 +288,7 @@ export interface CapPendingQuestion {
 }
 
 export async function loadCapPendingQuestions(meta: CapExamMeta): Promise<CapPendingQuestion[]> {
-  const res = await fetch(BASE + meta.path)
+  const res = await legacyFetch(BASE + meta.path)
   if (!res.ok) throw new Error('No se pudieron cargar las preguntas pendientes.')
   const rows: CapRawQuestion[] = await res.json()
   return rows.filter(q => q.correctAnswer === null || q.technicalDecision?.action === 'exclude').map(q => ({
@@ -310,7 +315,7 @@ export async function loadAllCapQuestions(category: CapCategory): Promise<CapQue
 
 export async function loadBankExamFrequency(): Promise<Record<string, { count: number; denominator: number; category: CapCategory }>> {
   if (frequencyCache) return frequencyCache
-  const res = await fetch(BASE + 'data/exams/frequency_by_bank.json')
+  const res = await legacyFetch(BASE + 'data/exams/frequency_by_bank.json')
   if (!res.ok) return {}
   frequencyCache = await res.json() as Record<string, { count: number; denominator: number; category: CapCategory }>
   return frequencyCache
