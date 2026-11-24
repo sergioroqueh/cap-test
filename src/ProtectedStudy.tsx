@@ -57,7 +57,7 @@ export default function ProtectedStudy({userEmail,onSignOut,signedIn=false}:{use
  const refresh=async()=>{if(ownerCurrent()){const value=await getAllProgress();if(ownerCurrent())setProgress(value)}}
  async function start(item:ProtectedItem){
   if(lock.current||!ownerCurrent())return
-  lock.current=true;setBusy(true);setError('');setResult(null)
+  lock.current=true;setBusy(true);setError('');setResult(null);setSelectionNotice('')
   const key=item.kind+':'+item.contentId+':'+item.revision
   if(pending.current?.key!==key)pending.current={key,requestId:crypto.randomUUID()}
   const requestId=pending.current.requestId
@@ -139,7 +139,7 @@ export default function ProtectedStudy({userEmail,onSignOut,signedIn=false}:{use
    if(ownerCurrent())setError(e instanceof Error&&e.message==='R93_DELIVERY_DISABLED'?'La entrega comercial aún no está activada.':'No se ha podido abrir la selección. Reintenta el mismo modo.')
   }finally{client?.close();lock.current=false;if(ownerCurrent())setBusy(false)}
  }
- if(active&&ownerCurrent())return <div className="app pro-quiz-page"><QuizSession key={active.initial.clientId} initial={active.initial} questions={active.questions} frequency={{}} pm={new Map(progress.map(p=>[p.questionId,p]))} refresh={refresh} protectedCallbacks={{
+ if(active&&ownerCurrent())return <div className="app pro-quiz-page">{selectionNotice&&<p role="status" className="card">{selectionNotice}</p>}<QuizSession key={active.initial.clientId} initial={active.initial} questions={active.questions} frequency={{}} pm={new Map(progress.map(p=>[p.questionId,p]))} refresh={refresh} protectedCallbacks={{
   ownerCurrent,exit:()=>setActive(null),complete:record=>{setActive(null);setResult(record)}
  }}/></div>
  const items=(catalog?.items||[]).filter(i=>i.kind===mode)
@@ -158,7 +158,7 @@ export default function ProtectedStudy({userEmail,onSignOut,signedIn=false}:{use
  <label>Contenido <select disabled={busy} value={selected} onChange={e=>setSelected(e.target.value)}><option value="">Selecciona una unidad</option>{items.map(i=><option key={i.contentId} value={i.contentId}>{i.label}</option>)}</select></label>
  <button className="btn primary" disabled={busy||!chosen} onClick={()=>{if(chosen)void start(chosen)}}>{busy?'Comprobando acceso…':'Abrir contenido'}</button>
  <button className="btn light" disabled={busy} onClick={()=>{const item=items[Math.floor(Math.random()*items.length)];if(item){setSelected(item.contentId);void start(item)}}}>Elegir al azar</button></>}
- {error&&<p role="alert">{error}</p>}</div>
+ </div>
  <section className="card" aria-label="Modos de estudio protegidos">
  <h2>Simulacros y repaso</h2>
  <div className="pro-shortcuts">{selectionModes.map(spec=><button type="button" key={spec.mode} className={selectionMode===spec.mode?'btn primary':'btn light'} aria-pressed={selectionMode===spec.mode} disabled={busy} onClick={()=>{if(selectionMode!==spec.mode)selectionPending.current=null;setSelectionMode(spec.mode);setSelectionNotice('')}}><strong>{spec.title}</strong> · {spec.description}</button>)}</div>
@@ -168,6 +168,7 @@ export default function ProtectedStudy({userEmail,onSignOut,signedIn=false}:{use
  <button className="btn primary" disabled={busy||!catalog||!catalog.items.some(i=>i.kind==='question'&&i.category===(selectionMode.startsWith('mixed-')?selectionCategory:'mercancias'))} onClick={()=>void startSelection()}>{busy?'Comprobando acceso…':'Iniciar selección protegida'}</button>
  {selectionNotice&&<p role="status">{selectionNotice}</p>}
  </section>
+ {error&&<p role="alert" className="card">{error}</p>}
  <p>La exportación PDF y el estudio sin conexión siguen deshabilitados en esta compilación protegida.</p>
  </main></div>
 }
