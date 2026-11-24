@@ -1,4 +1,4 @@
-import { defineConfig, loadEnv } from 'vite'
+import { defineConfig, loadEnv, type Plugin } from 'vite'
 import react from '@vitejs/plugin-react'
 import { readdirSync } from 'node:fs'
 import { join } from 'node:path'
@@ -54,7 +54,7 @@ export default defineConfig(({ mode,command }) => {
         if(result.error)throw result.error
         if(result.status!==0)throw Error('R94: protected distribution verification failed.')
       }
-    }]
+    } satisfies Plugin]
   }
   const configured = loadEnv(mode, '.', 'CAP_PUBLIC_BASE').CAP_PUBLIC_BASE || '/cap-test/'
   const base = local||(mode === 'cap-preview'||mode === 'cap-launch')||command === 'serve' ? '/' : configured
