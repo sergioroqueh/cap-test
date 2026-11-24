@@ -14,7 +14,7 @@ export default function ProtectedStudy({userEmail,onSignOut,signedIn=false}:{use
  const [progress,setProgress]=useState<QuestionProgress[]>([])
  const [error,setError]=useState('')
  const [busy,setBusy]=useState(false)
- const [quota,setQuota]=useState<Exclude<DeliveryReply,{status:'unavailable'}>|null>(null)
+ const [quota,setQuota]=useState<Pick<Exclude<DeliveryReply,{status:'unavailable'}>,'tier'|'day'|'resetAt'|'questionsRemaining'|'examsRemaining'>|null>(null)
  const [selected,setSelected]=useState('')
  const [mode,setMode]=useState<'question'|'exam'>('exam')
  const [active,setActive]=useState<{initial:ActiveSession;questions:Question[]}|null>(null)
@@ -48,8 +48,8 @@ export default function ProtectedStudy({userEmail,onSignOut,signedIn=false}:{use
    if(!ownerCurrent())return
    if(reply.status==='unavailable'){pending.current=null;setError('Este contenido no está disponible para tu acceso.');return}
    // Never retain the delivered payload in quota state.
-   const {status,tier,day,resetAt,questionsRemaining,examsRemaining,replayed}=reply
-   setQuota({status:'quota_exhausted',tier,day,resetAt,questionsRemaining,examsRemaining,replayed})
+   const {tier,day,resetAt,questionsRemaining,examsRemaining}=reply
+   setQuota({tier,day,resetAt,questionsRemaining,examsRemaining})
    if(reply.status==='quota_exhausted'){pending.current=null;setError('Has agotado el cupo diario de esta modalidad.');return}
    const questions=validateDeliveredUnit(reply,item)
    const initial:ActiveSession={type:item.kind==='exam'?'exam':'study',source:item.category==='general'?'questionnaire':'cap-original',
