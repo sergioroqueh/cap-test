@@ -23,6 +23,8 @@ jobs:
         run: node --test scripts/test_commercial_sprint_r82.mjs
       - name: R84 Stripe webhook runtime (synthetic, no provider connections)
         run: node --test scripts/test_r84_billing_runtime.mjs
+      - name: R91 commercial sync transport (synthetic, no provider connections)
+        run: node scripts/test_commercial_sync_r91.mjs
       - name: Validate commercial beta artifact
         env:
           VITE_RUTACAP_PUBLIC_AUTH: ${{ vars.RUTACAP_PUBLIC_AUTH }}
