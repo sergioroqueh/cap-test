@@ -54,7 +54,7 @@ export function createCommercialSyncTransport({enabled=false,expectedUserId,veri
       const result={events:[],sessions:[]}
       for(const kind of ['events','sessions']){
         let cursor=null
-        const seen=new Set(),key=kind==='events'?'eventId':'clientId',limit=kind==='events'?100:4
+        const seen=new Set(),key=kind==='events'?'eventId':'clientId',limit=100
         do{
           const page=await send('rpc/rc_sync_page_v1','POST',{...args(),p_generation:generation,p_kind:kind,p_after:cursor,p_limit:limit})
           if(page?.status==='changed'){changed=true;break}
@@ -67,7 +67,7 @@ export function createCommercialSyncTransport({enabled=false,expectedUserId,veri
             if(result[kind].length>cap||totalBytes>byteCap)fail('SNAPSHOT_BUDGET')
           }
           const next=page.nextCursor
-          if(next!==null&&(typeof next!=='string'||next===cursor||page.records.length!==limit||page.records[page.records.length-1]?.[key]!==next))fail('CURSOR_INVALID')
+          if(next!==null&&(typeof next!=='string'||next===cursor||page.records.length===0||page.records[page.records.length-1]?.[key]!==next))fail('CURSOR_INVALID')
           cursor=next
         }while(cursor!==null)
         if(changed)break
