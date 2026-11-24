@@ -6,7 +6,7 @@ async function runTransportTests(create,createRequest){
   function assert(b){if(!b)throw Error('assertion failed')}
   async function reject(fn,code){try{await fn()}catch(e){assert(String(e.message).includes(code));return}throw Error('expected '+code)}
   function fixture(){
-    let user=A,scope=true,revision=1,granted=true,session=S,anonymous=false,corrupt=false,collision=false,generation=0,changes=0,stale=false,foreign=false,loop=false
+    let user=A,scope=true,revision=1,granted=true,session=S,anonymous=false,corrupt=false,collision=false,generation=0,changes=0,stale=false,foreign=false,loop=false,pageCap=100
     const db={events:[],sessions:[]},calls=[]
     const event={eventId:'event-1',questionId:'q1',occurredAt:1700000000000,kind:'answer'}
     const record={clientId:'session-1',completedAt:1700000000000}
@@ -23,7 +23,7 @@ async function runTransportTests(create,createRequest){
           if(b.p_generation!==null&&b.p_generation!==String(generation))return {status:'changed'}
           const key=b.p_kind==='events'?'eventId':'clientId'
           const all=db[b.p_kind].slice().sort((a,b)=>a[key]<b[key]?-1:a[key]>b[key]?1:0).filter(r=>b.p_after===null||r[key]>b.p_after)
-          const rows=all.slice(0,b.p_limit)
+          const rows=all.slice(0,Math.min(b.p_limit,pageCap))
           return corrupt?null:{status:'ok',schemaVersion:2,userId:foreign?B:A,generation:String(generation),kind:b.p_kind,records:rows,nextCursor:loop?'bogus':all.length>rows.length?rows[rows.length-1][key]:null}
         }
         if(stale){stale=false;generation++;return {status:'changed'}}
@@ -35,7 +35,7 @@ async function runTransportTests(create,createRequest){
         if(inserted)generation++
         return {status:'ok',userId:A,generation:String(generation),inserted}
       }}
-    return {opts,db,calls,event,record,setUser:v=>user=v,setScope:v=>scope=v,setRevision:v=>revision=v,setGranted:v=>granted=v,setSession:v=>session=v,setAnonymous:v=>anonymous=v,setCorrupt:v=>corrupt=v,setCollision:v=>collision=v,setChanges:v=>changes=v,setStale:v=>stale=v,setForeign:v=>foreign=v,setLoop:v=>loop=v}
+    return {opts,db,calls,event,record,setUser:v=>user=v,setScope:v=>scope=v,setRevision:v=>revision=v,setGranted:v=>granted=v,setSession:v=>session=v,setAnonymous:v=>anonymous=v,setCorrupt:v=>corrupt=v,setCollision:v=>collision=v,setChanges:v=>changes=v,setStale:v=>stale=v,setForeign:v=>foreign=v,setLoop:v=>loop=v,setPageCap:v=>pageCap=v}
   }
   async function test(name,fn){await fn();results.push(name)}
   await test('disabled and guest deny before network',async()=>{let f=fixture();await reject(()=>create({...f.opts,enabled:false}).pull(A),'SCOPE_DENIED');f.setAnonymous(true);await reject(()=>create(f.opts).pull(A),'IDENTITY_DENIED');assert(!f.calls.length)})
@@ -58,6 +58,7 @@ async function runTransportTests(create,createRequest){
   await test('foreign owner page denied',async()=>{const f=fixture();f.setForeign(true);await reject(()=>create(f.opts).pull(A),'SNAPSHOT_DENIED')})
   await test('invalid cursor denied',async()=>{const f=fixture();f.setLoop(true);await reject(()=>create(f.opts).pull(A),'CURSOR_INVALID')})
   await test('direct writes forbidden',async()=>{const r=createRequest({publishableKey:'sb_publishable_synthetic',fetchImpl:async()=>{throw Error('unexpected network')}});await reject(()=>r({path:'rc_progress_events?on_conflict=user_id,event_id',method:'POST',accessToken:'fake'}),'REQUEST_DENIED')})
+  await test('short byte-bounded pages keep cursor and all records',async()=>{const f=fixture();f.setPageCap(2);f.db.events=Array.from({length:5},(_,i)=>({...f.event,eventId:'e'+i}));const r=await create(f.opts).pull(A);assert(r.events.length===5&&f.calls.filter(x=>x.body?.p_kind==='events').length===3)})
   return results
 }
 const passed=await runTransportTests(createCommercialSyncTransport,createCommercialPostgrestRequest)
