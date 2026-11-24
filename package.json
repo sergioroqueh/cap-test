@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "build:preview": "npm run prepare:data && tsc -b && vite build --mode cap-preview && node scripts/package_public_data_r63.mjs --verify",
     "build:launch": "npm run prepare:data && tsc -b && vite build --mode cap-launch && node scripts/package_public_data_r63.mjs --verify && node scripts/verify_launch_beta.mjs",
-    "dev:catalog": "vite --mode catalog-local --host 127.0.0.1 --port 4188 --strictPort"
+    "dev:catalog": "vite --mode catalog-local --host 127.0.0.1 --port 4188 --strictPort",
+    "build:protected": "tsc -b && vite build --mode cap-protected && node scripts/package_protected_r94.mjs --verify"
   },
   "dependencies": {
     "@supabase/supabase-js": "2.119.1",
