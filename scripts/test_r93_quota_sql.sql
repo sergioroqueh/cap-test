@@ -4,9 +4,6 @@ do $$begin
  if current_database()<>'rutacap_r92_synthetic' or not exists(select 1 from pg_namespace where nspname='rc_internal')
  or exists(select 1 from pg_class where relname='rc_billing_subscriptions') then raise exception 'WRONG_FIXTURE';end if;
 end$$;
-create role service_role nologin;
-alter table auth.users add column is_anonymous boolean not null default false,
- add column email_confirmed_at timestamptz,add column banned_until timestamptz,add column deleted_at timestamptz;
 \ir ../docs/commercial/sql/R82_BILLING_DRAFT.sql
 \ir ../docs/commercial/sql/R93_quota_delivery_review.sql
 insert into auth.users(id,is_anonymous,email_confirmed_at) values
