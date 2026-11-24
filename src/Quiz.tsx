@@ -52,10 +52,11 @@ export default function Quiz({pm,refresh}:{pm:Map<string,QuestionProgress>;refre
   return <QuizSession initial={initial} questions={questions} frequency={frequency} pm={pm} refresh={refresh}/>
 }
 
-function QuizSession({initial,questions,frequency,pm,refresh}:{
+export function QuizSession({initial,questions,frequency,pm,refresh,protectedCallbacks}:{
   initial:ActiveSession;questions:Question[]
   frequency:Record<string,{count:number;denominator:number;category:CapCategory}>
   pm:Map<string,QuestionProgress>;refresh:()=>Promise<void>
+  protectedCallbacks?:{exit:()=>void;complete:(record:StudySessionRecord)=>void;ownerCurrent:()=>boolean}
 }){
   const [s,setS]=useState(initial)
   const [now,setNow]=useState(Date.now)
@@ -86,14 +87,15 @@ function QuizSession({initial,questions,frequency,pm,refresh}:{
     :frequency[progressId(q)]
   const save=(next:ActiveSession)=>{
     setS(next)
-    localStorage.setItem(activeKey(),JSON.stringify(next))
-    sessionStorage.removeItem(activeKey())
+    if(!protectedCallbacks){localStorage.setItem(activeKey(),JSON.stringify(next))
+    sessionStorage.removeItem(activeKey())}
   }
   const navigate=(index:number)=>{
     save({...s,currentIndex:index})
     window.scrollTo({top:0,behavior:'instant'})
   }
   async function select(k:AnswerKey){
+    if(protectedCallbacks&&!protectedCallbacks.ownerCurrent())return
     if(finishing||expired||selecting.current||s.type==='study'&&checked)return
     if(s.type==='exam'){
       // Persist the answer and advance in one atomic state update. On question 100,
@@ -124,6 +126,7 @@ function QuizSession({initial,questions,frequency,pm,refresh}:{
     } finally { selecting.current=false }
   }
   async function toggleFavorite(){
+    if(protectedCallbacks&&!protectedCallbacks.ownerCurrent())return
     if(favoriting.current)return
     favoriting.current=true
     try {
@@ -141,7 +144,7 @@ function QuizSession({initial,questions,frequency,pm,refresh}:{
     // Crash recovery for C30 study operations saved to ActiveSession before IDB.
     // Legacy checked answers with NO eventId were already counted by old code:
     // never fabricate a second attempt for them.
-    if(initial.type!=='study')return
+    if(protectedCallbacks||initial.type!=='study')return
     const pending=(initial.checkedIds||[]).flatMap(qid=>{
       const key=initial.selectedAnswers[qid], eventId=initial.answerEventIds?.[qid]
       const question=questions.find(item=>item.id===qid)
@@ -165,6 +168,7 @@ function QuizSession({initial,questions,frequency,pm,refresh}:{
     save({...s,markedIds:[...set]})
   }
   async function finish(force=false,confirmed=false){
+    if(protectedCallbacks&&!protectedCallbacks.ownerCurrent())return
     if(lock.current)return
     const ranOut=timed&&Date.now()>=deadlineAt(s.startedAt,duration)
     const timedOut=force||ranOut
@@ -212,11 +216,11 @@ function QuizSession({initial,questions,frequency,pm,refresh}:{
       }else{
         await addSession(record)
       }
-      localStorage.setItem(lastKey(),JSON.stringify({record:storedRecord,questionIds:s.questionIds}))
+      if(!protectedCallbacks){localStorage.setItem(lastKey(),JSON.stringify({record:storedRecord,questionIds:s.questionIds}))
       localStorage.removeItem(activeKey())
-      sessionStorage.removeItem(activeKey())
+      sessionStorage.removeItem(activeKey())}
       await refresh()
-      go('results')
+      if(protectedCallbacks){if(protectedCallbacks.ownerCurrent())protectedCallbacks.complete(storedRecord)}else go('results')
     }catch(err){
       console.error(err)
       setFinishing(false)
@@ -240,7 +244,7 @@ function QuizSession({initial,questions,frequency,pm,refresh}:{
   },[now,s.startedAt,s.durationMinutes,timed])
 
   async function downloadPdf(){
-    if(pdfBusy)return
+    if(protectedCallbacks||pdfBusy)return
     setPdfBusy(true)
     setPdfError('')
     try{
@@ -256,7 +260,7 @@ function QuizSession({initial,questions,frequency,pm,refresh}:{
   const isCorrect=q.scoringEligible!==false&&selected===q.correctAnswer
   return <div className="quiz focus-quiz">
     <div className="quizhead focus-quiz-head">
-      <button aria-label="Volver al inicio; el examen no se pausa" title="Volver sin pausar" onClick={()=>go('home')}>‹</button>
+      <button aria-label="Volver al inicio; el examen no se pausa" title="Volver sin pausar" onClick={()=>protectedCallbacks?protectedCallbacks.exit():go('home')}>‹</button>
       <div><b>{s.label}</b><small>{s.currentIndex+1} / {questions.length}</small><Bar value={percent(s.currentIndex+1,questions.length)}/></div>
       <button className={favorite?'fav':''} aria-pressed={!!favorite} aria-label={favorite?'Quitar de favoritas':'Guardar en favoritas para próximos repasos'} title="Favorita: guardada para otros tests" onClick={()=>void toggleFavorite()}>★</button>
     </div>
@@ -300,7 +304,7 @@ function QuizSession({initial,questions,frequency,pm,refresh}:{
       <button className="btn light" disabled={s.currentIndex===questions.length-1||finishing} onClick={()=>navigate(s.currentIndex+1)}>Siguiente</button>
       <button className="btn primary" disabled={finishing} onClick={()=>void finish()}>{finishing?'Guardando…':'Entregar'}</button>
     </footer>
-    <StudyPdfButton busy={pdfBusy} onClick={()=>void downloadPdf()}/>
+    {!protectedCallbacks&&<StudyPdfButton busy={pdfBusy} onClick={()=>void downloadPdf()}/>}
     {pdfError&&<p className="focus-muted" role="alert">{pdfError}</p>}
     {confirmSubmit&&<ConfirmDialog
       title="¿Entregar el examen?"
