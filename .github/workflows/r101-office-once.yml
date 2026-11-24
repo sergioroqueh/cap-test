@@ -1,0 +1,71 @@
+name: R101 PostgreSQL-only validation of R100 (one-time, no deployment)
+on:
+  push:
+    branches: [feat/rutacap-office-20261124]
+    paths: ['.github/workflows/r101-office-once.yml']
+
+concurrency:
+  group: rutacap-r101-r100-once
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  postgresql-only:
+    if: github.ref_name == 'feat/rutacap-office-20261124' && github.event.before == '7a32406143d6e7b00b2757d060027a8007ea5bee' && github.run_attempt == 1
+    timeout-minutes: 8
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: r92_synthetic_only
+          POSTGRES_DB: rutacap_r92_synthetic
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: '7a32406143d6e7b00b2757d060027a8007ea5bee'
+          persist-credentials: false
+      - name: Verify exact immutable R100 source
+        run: test "$(git rev-parse HEAD)" = '7a32406143d6e7b00b2757d060027a8007ea5bee'
+      - name: R92 SQL integration on disposable PostgreSQL only
+        id: sql92
+        if: ${{ !cancelled() && success() }}
+        env:
+          PGPASSWORD: r92_synthetic_only
+        run: psql -X -h 127.0.0.1 -U postgres -d rutacap_r92_synthetic -v ON_ERROR_STOP=1 -f scripts/test_r92_sync_sql.sql
+      - name: R93 quota SQL and concurrency on disposable PostgreSQL only
+        id: sql93
+        if: ${{ !cancelled() && steps.sql92.outcome == 'success' }}
+        env:
+          PGPASSWORD: r92_synthetic_only
+          RUTACAP_R93_SYNTHETIC: '1'
+        run: |
+          psql -X -h 127.0.0.1 -U postgres -d rutacap_r92_synthetic -v ON_ERROR_STOP=1 -f scripts/test_r93_quota_sql.sql
+          python3 scripts/test_r93_quota_concurrency.py
+      - name: R95 atomic billing SQL on disposable PostgreSQL only
+        id: sql95
+        if: ${{ !cancelled() && steps.sql93.outcome == 'success' }}
+        env:
+          PGPASSWORD: r92_synthetic_only
+        run: psql -X -h 127.0.0.1 -U postgres -d rutacap_r92_synthetic -v ON_ERROR_STOP=1 -f scripts/test_r95_billing_sql.sql
+      - name: R97 shared quota and selection SQL on disposable PostgreSQL only
+        id: sql97
+        if: ${{ !cancelled() && steps.sql95.outcome == 'success' }}
+        env:
+          PGPASSWORD: r92_synthetic_only
+        run: psql -X -h 127.0.0.1 -U postgres -d rutacap_r92_synthetic -v ON_ERROR_STOP=1 -f scripts/test_r97_selection_sql.sql
+      - name: R98 consent SQL on disposable PostgreSQL only
+        id: sql98
+        if: ${{ !cancelled() && steps.sql97.outcome == 'success' }}
+        env:
+          PGPASSWORD: r92_synthetic_only
+        run: psql -X -h 127.0.0.1 -U postgres -d rutacap_r92_synthetic -v ON_ERROR_STOP=1 -f scripts/test_r98_consent_sql.sql
