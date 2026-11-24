@@ -1,3 +1,4 @@
+import {createSelectionRequest} from './protectedSelection.mjs'
 // R93: future delivery identity adapter. No import from App, no live signup,
 // no change to the existing verified-account client or legacy cloud storage.
 import { createClient, type Session, type SupabaseClient } from '@supabase/supabase-js'
@@ -87,6 +88,7 @@ export async function openCommercialDelivery(mode:'guest'|'account'){
       if(mode==='guest')await assertNoAccount()
       return checkedIdentity(client,mode==='guest')
     },
-    request:createDeliveryRequest({publishableKey:key,fetchImpl:fetch.bind(globalThis)})
+    request:createDeliveryRequest({publishableKey:key,fetchImpl:fetch.bind(globalThis)}),
+    selectionRequest:createSelectionRequest({publishableKey:key,fetchImpl:fetch.bind(globalThis)})
   })
 }
