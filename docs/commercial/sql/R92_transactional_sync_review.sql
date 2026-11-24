@@ -29,6 +29,9 @@ begin
       and (s.not_after is null or s.not_after > clock_timestamp())
     for share;
   if not found then raise exception using errcode='42501', message='SYNC_SESSION_INACTIVE'; end if;
+  perform 1 from auth.users a where a.id=v_uid and not a.is_anonymous and a.email_confirmed_at is not null
+    and a.deleted_at is null and (a.banned_until is null or a.banned_until<=clock_timestamp()) for share;
+  if not found then raise exception using errcode='42501',message='SYNC_IDENTITY_DENIED';end if;
   select c.revision into v_revision from public.rc_sync_consents c
     where c.user_id=v_uid and c.purpose='progress-sync'
       and c.notice_version='progress-sync-v1' and c.granted and c.revoked_at is null
