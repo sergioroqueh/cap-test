@@ -91,7 +91,8 @@ test('R86: separately gate public Google, email OTP and dev-only registrations',
  assert.match(entry,/\{googleEnabled&&<>/)
  assert.doesNotMatch(entry,/disabled=\{!authEnabled\|\|busy\}/)
  assert.match(entry,/Continuar como invitado/)
- assert.match(workflow,/feat\/rutacap-commerce-sprint-20261123/)
+ assert.match(workflow,/feat\/rutacap-office-20261124/)
+ assert.match(workflow,/confirm_grouped/)
  assert.match(workflow,/RUTACAP_GOOGLE_AUTH/)
  assert.match(client,/export const cloudConfigured = false/)
 });
