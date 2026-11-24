@@ -1,13 +1,18 @@
 import { loadCapByIds } from './capExams'
 import type { BankIndex, Question, QuestionnaireMeta } from './types'
 
+// R94 defense in depth: never fetch static corpus from the protected entry.
+function legacyFetch(input:RequestInfo|URL,init?:RequestInit):Promise<Response>{
+  if(import.meta.env.MODE==='cap-protected')return Promise.reject(new Error('R94_LEGACY_CORPUS_DISABLED'))
+  return fetch(input,init)
+}
 const BASE = import.meta.env.BASE_URL
 let indexCache: BankIndex | null = null
 const questionnaireCache = new Map<string, Question[]>()
 
 export async function loadBankIndex(): Promise<BankIndex> {
   if (indexCache) return indexCache
-  const res = await fetch(`${BASE}data/index.json`)
+  const res = await legacyFetch(`${BASE}data/index.json`)
   if (!res.ok) throw new Error('No se pudo cargar el índice de preguntas.')
   const parsed = (await res.json()) as BankIndex
   indexCache = parsed
@@ -16,7 +21,7 @@ export async function loadBankIndex(): Promise<BankIndex> {
 
 export async function loadQuestionnaire(meta: QuestionnaireMeta): Promise<Question[]> {
   if (questionnaireCache.has(meta.id)) return questionnaireCache.get(meta.id)!
-  const res = await fetch(`${BASE}${meta.path}`)
+  const res = await legacyFetch(`${BASE}${meta.path}`)
   if (!res.ok) throw new Error(`No se pudo cargar ${meta.title}.`)
   const rows: Question[] = await res.json()
   questionnaireCache.set(meta.id, rows)
