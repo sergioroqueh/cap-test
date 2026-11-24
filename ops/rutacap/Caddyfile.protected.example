@@ -1,0 +1,35 @@
+# R94 DRAFT ONLY. Replace the public apex block only after authorization.
+# Never replace beta.rutacap.es, the R80 directory or existing credentials.
+# This root must point ONLY to a verified dist-protected, never the repository.
+rutacap.es {
+    root * /srv/rutacap/protected-current
+    encode zstd gzip
+    header {
+        X-Content-Type-Options nosniff
+        Referrer-Policy strict-origin-when-cross-origin
+        Permissions-Policy "camera=(), microphone=(), geolocation=()"
+        Strict-Transport-Security "max-age=86400"
+        Cache-Control "no-store"
+    }
+    @legal path /legal/aviso-legal.html /legal/privacidad.html /legal/condiciones-beta.html
+    handle @legal {
+        root * /srv/rutacap
+        file_server
+    }
+    @shell path / /index.html /auth/callback
+    handle @shell {
+        rewrite * /index.html
+        file_server
+    }
+    @files path /assets/* /catalog.json /sw.js /manifest.webmanifest /icon.svg
+    handle @files {
+        file_server
+    }
+    # No broad SPA fallback or access to old JSON, archives or staging.
+    handle {
+        respond "Contenido no disponible en esta ruta." 404
+    }
+}
+www.rutacap.es {
+    redir https://rutacap.es{uri} permanent
+}
