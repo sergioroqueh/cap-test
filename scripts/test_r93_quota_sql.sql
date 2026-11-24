@@ -107,6 +107,7 @@ do $$declare r jsonb;begin
  if r->>'tier' is distinct from 'free' then raise exception 'WRONG_PRICE';end if;
 end$$;
 reset role;
+insert into rc_internal.rc_billing_test_users_v1 values('66666666-6666-4666-8666-666666666666');
 update rc_internal.rc_quota_config_v1 set approved_price_id='price_synthetic';
 set role authenticated;
 do $$declare r jsonb;begin
