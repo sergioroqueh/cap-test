@@ -1,0 +1,150 @@
+name: R99 grouped integration of exact R98 (one-time, no deployment)
+on:
+  push:
+    branches: [feat/rutacap-office-20261124]
+    paths: ['.github/workflows/r99-office-once.yml']
+
+concurrency:
+  group: rutacap-r99-r98-once
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  build-launch:
+    if: github.ref_name == 'feat/rutacap-office-20261124' && github.event.before == '5219fd40b9c0b8374cc88a6a180f8bb5187ddb2a' && github.run_attempt == 1
+    timeout-minutes: 25
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: r92_synthetic_only
+          POSTGRES_DB: rutacap_r92_synthetic
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      VITE_RUTACAP_PUBLIC_AUTH: 'false'
+      VITE_RUTACAP_EMAIL_OTP: 'false'
+      VITE_RUTACAP_GOOGLE_AUTH: 'false'
+      VITE_RUTACAP_PASSWORD_AUTH: 'false'
+      VITE_RUTACAP_BILLING_ENABLED: 'false'
+      VITE_RUTACAP_TEST_BILLING: 'false'
+      VITE_RUTACAP_CAPTCHA_ENABLED: 'false'
+      VITE_CAP_PRO_SUPABASE_URL: ''
+      VITE_CAP_PRO_SUPABASE_PUBLISHABLE_KEY: ''
+      VITE_RUTACAP_TURNSTILE_SITEKEY: ''
+      RUTACAP_R94_PUBLIC_CATALOG: ''
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: '5219fd40b9c0b8374cc88a6a180f8bb5187ddb2a'
+          persist-credentials: false
+      - name: Verify exact immutable R98 source
+        run: test "$(git rev-parse HEAD)" = '5219fd40b9c0b8374cc88a6a180f8bb5187ddb2a'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install frozen dependencies
+        id: install
+        run: npm ci --no-audit --no-fund
+      - name: Validate legal page generator syntax (without personal data)
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: python3 -m py_compile ops/rutacap/legal/build_legal_pages.py
+      - name: R82 security boundary checks (no network or test payments)
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: node --test scripts/test_commercial_sprint_r82.mjs
+      - name: R95 Stripe webhook runtime (synthetic, no provider connections)
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: node --test scripts/test_r84_billing_runtime.mjs
+      - name: R92 commercial sync transport (synthetic, no provider connections)
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: node scripts/test_commercial_sync_r91.mjs
+      - name: R92 SQL integration on disposable PostgreSQL only
+        id: sql92
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        env:
+          PGPASSWORD: r92_synthetic_only
+        run: psql -X -h 127.0.0.1 -U postgres -d rutacap_r92_synthetic -v ON_ERROR_STOP=1 -f scripts/test_r92_sync_sql.sql
+      - name: R93 protected delivery transport (synthetic)
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: node scripts/test_r93_delivery.mjs
+      - name: R93 quota SQL and concurrency on disposable PostgreSQL only
+        id: sql93
+        if: ${{ !cancelled() && steps.install.outcome == 'success' && steps.sql92.outcome == 'success' }}
+        env:
+          PGPASSWORD: r92_synthetic_only
+          RUTACAP_R93_SYNTHETIC: '1'
+        run: |
+          psql -X -h 127.0.0.1 -U postgres -d rutacap_r92_synthetic -v ON_ERROR_STOP=1 -f scripts/test_r93_quota_sql.sql
+          python3 scripts/test_r93_quota_concurrency.py
+      - name: R95 lifecycle protocol (synthetic)
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: node scripts/test_r95_protocol.mjs
+      - name: R95 atomic billing SQL on disposable PostgreSQL only
+        id: sql95
+        if: ${{ !cancelled() && steps.install.outcome == 'success' && steps.sql93.outcome == 'success' }}
+        env:
+          PGPASSWORD: r92_synthetic_only
+        run: psql -X -h 127.0.0.1 -U postgres -d rutacap_r92_synthetic -v ON_ERROR_STOP=1 -f scripts/test_r95_billing_sql.sql
+      - name: R97 protected selection (synthetic)
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: node scripts/test_r97_selection.mjs
+      - name: R97 shared quota and selection SQL on disposable PostgreSQL only
+        id: sql97
+        if: ${{ !cancelled() && steps.install.outcome == 'success' && steps.sql95.outcome == 'success' }}
+        env:
+          PGPASSWORD: r92_synthetic_only
+        run: psql -X -h 127.0.0.1 -U postgres -d rutacap_r92_synthetic -v ON_ERROR_STOP=1 -f scripts/test_r97_selection_sql.sql
+      - name: R98 CAPTCHA and source attribution checks (synthetic)
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: node scripts/test_r98_integration.mjs
+      - name: R98 consent SQL on disposable PostgreSQL only
+        id: sql98
+        if: ${{ !cancelled() && steps.install.outcome == 'success' && steps.sql97.outcome == 'success' }}
+        env:
+          PGPASSWORD: r92_synthetic_only
+        run: psql -X -h 127.0.0.1 -U postgres -d rutacap_r92_synthetic -v ON_ERROR_STOP=1 -f scripts/test_r98_consent_sql.sql
+      - name: R94 metadata and offline catalog checks (synthetic)
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: |
+          node scripts/test_r94_contract.mjs
+          node scripts/test_r94_catalog_export.mjs
+      - name: R94 protected build with empty catalog and no credentials
+        id: protected
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: npm run build:protected
+      - name: Validate legacy beta artifact (regression only, not commercial release)
+        id: legacy
+        if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: npm run build:launch
+      - name: Test first-use beta journey in Chromium
+        id: legacy_browser
+        if: ${{ !cancelled() && steps.install.outcome == 'success' && steps.legacy.outcome == 'success' }}
+        run: |
+          npx playwright install --with-deps chromium
+          npm run preview -- --host 127.0.0.1 --port 4178 --strictPort > /tmp/rutacap-launch-preview.log 2>&1 &
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:4178/ > /dev/null; then break; fi
+            sleep 1
+          done
+          node scripts/e2e_launch_beta.mjs
+      - name: R94 protected browser integration
+        id: protected_browser
+        if: ${{ !cancelled() && steps.install.outcome == 'success' && steps.protected.outcome == 'success' }}
+        run: |
+          npx playwright install --with-deps chromium
+          node scripts/e2e_protected_r94.mjs
+      - name: Upload verified protected shell (empty catalog, not a deployment)
+        uses: actions/upload-artifact@v4
+        with:
+          name: rutacap-protected-shell
+          path: dist-protected/
+          if-no-files-found: error
+          retention-days: 7
