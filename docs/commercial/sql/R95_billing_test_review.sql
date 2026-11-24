@@ -124,7 +124,7 @@ begin
   raise exception using errcode='42501',message='BILLING_SESSION_DENIED';
  end if;
  perform rc_internal.rc_billing_test_check_v1(p_user,p_price);
-end $;
+end $$;
 create function rc_internal.rc_billing_test_status_v1(p_user uuid,p_price text)
 returns jsonb language plpgsql security definer set search_path='' as $$
 declare s public.rc_billing_subscriptions%rowtype; active boolean;
