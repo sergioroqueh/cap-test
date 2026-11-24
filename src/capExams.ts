@@ -1,3 +1,4 @@
+import { projectHistoricalQuestions } from './historicalProjection.mjs'
 import type { AnswerKey, Question, CapTechnicalDecision } from './types'
 
 export type CapCategory = 'mercancias' | 'viajeros'
@@ -79,18 +80,7 @@ export async function loadCapQuestions(meta: CapExamMeta): Promise<CapQuestion[]
   const raw: CapRawQuestion[] = await res.json()
   // Complete historical exams show all 100 original questions, including
   // contested items. A disputed printed solution is NEVER a graded answer.
-  const ready = raw.filter(q => meta.hasOriginalAnswerSheet
-    ? !!q.originalSheetAnswer
-    : !!q.correctAnswer
-  ).map(q => ({
-    ...q,
-    options: q.technicalDecision?.restoredOptions ?? q.options,
-    correctAnswer: (q.technicalDecision?.technicalAnswer || q.correctAnswer || q.originalSheetAnswer) as AnswerKey,
-    scoringEligible: q.correctAnswer !== null && q.technicalDecision?.action !== 'exclude',
-    id: 'cap:' + meta.id + ':' + q.number,
-    progressId: q.canonicalQuestionId || q.id,
-    examId: meta.id
-  }))
+  const ready = projectHistoricalQuestions(raw,meta)
   cache.set(meta.id, ready)
   return ready
 }
