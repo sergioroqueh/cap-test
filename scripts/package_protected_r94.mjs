@@ -5,6 +5,9 @@ import {fileURLToPath} from 'node:url'
 import {validatePublicCatalog} from '../src/protectedCatalogContract.mjs'
 const allowedRoot=new Set(['index.html','manifest.webmanifest','icon.svg','sw.js','catalog.json'])
 const fail=m=>{throw Error('R94 '+m)}
+export function isProtectedAssetName(name){
+ return typeof name==='string'&&/^[A-Za-z0-9_-]+(?:\.[A-Za-z0-9_-]+)*-[A-Za-z0-9_-]{8,64}\.(?:js|css)$(?![\s\S])/.test(name)
+}
 export function verifyProtectedDist(root='dist-protected'){
  const base=resolve(root)
  if(!lstatSync(base).isDirectory()||realpathSync(base)!==base)fail('invalid output root')
@@ -15,7 +18,7 @@ export function verifyProtectedDist(root='dist-protected'){
   if(name==='assets'){
    if(!s.isDirectory()||s.isSymbolicLink())fail('invalid assets directory')
    for(const entry of readdirSync(join(base,name))){
-    if(!/^[A-Za-z0-9_-]+-[A-Za-z0-9_-]+\.(?:js|css)$/.test(entry)||!lstatSync(join(base,name,entry)).isFile())fail('unexpected asset '+entry)
+    if(!isProtectedAssetName(entry)||!lstatSync(join(base,name,entry)).isFile())fail('unexpected asset '+entry)
    }
   }else if(!allowedRoot.has(name)||!s.isFile()||s.isSymbolicLink())fail('unexpected root entry '+name)
  }

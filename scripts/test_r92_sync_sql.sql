@@ -86,18 +86,33 @@ reset role;
 -- Seed existing history in disposable fixture only, before paging.
 insert into public.rc_progress_events(user_id,event_id,question_id,payload,occurred_at)
 select '11111111-1111-4111-8111-111111111111','z'||lpad(i::text,5,'0'),'q',
- jsonb_build_object('eventId','z'||lpad(i::text,5,'0')),now()
+ jsonb_build_object('eventId','z'||lpad(i::text,5,'0'),'questionId','q','questionnaireId','x',
+  'deviceId','d','clock',i+1,'occurredAt',1700000000000+i,'kind','answer','answer','A','correct',true),now()
 from generate_series(1,5000) i;
+-- Privileged seed changes the snapshot generation explicitly.
+update rc_internal.rc_sync_generation_v1 set generation=generation+1 where user_id='11111111-1111-4111-8111-111111111111';
 set role authenticated;
 select set_config('request.jwt.claims','{"sub":"11111111-1111-4111-8111-111111111111","role":"authenticated","is_anonymous":false,"session_id":"33333333-3333-4333-8333-333333333333"}',false);
-do $$declare r jsonb; c text:=null; n integer:=0; pages integer:=0;begin
+do $$declare r jsonb; c text:=null; n integer:=0; pages integer:=0; ids text[]:='{}'; chunk text[];begin
  loop
-   r:=public.rc_sync_page_v1(1,'33333333-3333-4333-8333-333333333333','1','events',c,100);
-   n:=n+jsonb_array_length(r->'records'); pages:=pages+1;c:=r->>'nextCursor';
+   r:=public.rc_sync_page_v1(1,'33333333-3333-4333-8333-333333333333','2','events',c,100);
+   if r->>'status' is distinct from 'ok' or r->>'generation' is distinct from '2'
+      or jsonb_typeof(r->'records') is distinct from 'array' then
+      raise exception 'PAGINATION_RESPONSE: page %, status %, generation %',pages+1,r->>'status',r->>'generation';
+   end if;
+   select coalesce(array_agg(x.value->>'eventId' order by x.ordinality),'{}'::text[]) into chunk
+     from jsonb_array_elements(r->'records') with ordinality as x(value,ordinality);
+   if cardinality(chunk)<1 or cardinality(chunk)>100 or ids&&chunk then
+      raise exception 'PAGINATION_ROWS: page %, rows %',pages+1,cardinality(chunk);
+   end if;
+   ids:=ids||chunk;
+   n:=n+cardinality(chunk); pages:=pages+1;c:=r->>'nextCursor';
    if pages>52 then raise exception 'CURSOR_LOOP';end if;
+   if c is not null and c is distinct from chunk[cardinality(chunk)] then raise exception 'PAGINATION_CURSOR';end if;
    exit when c is null;
  end loop;
- if n<>5001 or pages<>51 then raise exception 'PAGINATION_COUNT';end if;
+ if n<>5001 or pages<>51 or ids[1] is distinct from 'e1' or ids[5001] is distinct from 'z05000'
+ then raise exception 'PAGINATION_COUNT: expected 5001 rows/51 pages, got %/%; first %, last %',n,pages,ids[1],ids[n];end if;
 end$$;
 reset role;
 update public.rc_sync_consents set granted=false,revision=2,revoked_at=now() where user_id='11111111-1111-4111-8111-111111111111';

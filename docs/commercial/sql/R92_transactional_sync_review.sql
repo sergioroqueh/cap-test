@@ -46,7 +46,8 @@ revoke all on function rc_internal.rc_sync_lock_v1(integer,uuid) from public,ano
 create function rc_internal.rc_sync_page_v1(p_revision integer,p_session uuid,
   p_generation text,p_kind text,p_after text,p_limit integer)
 returns jsonb language plpgsql security definer set search_path = '' as $$
-declare v_uid uuid; v_gen bigint; v_rows jsonb; v_next text; v_count integer;
+declare v_uid uuid; v_gen bigint; v_rows jsonb:='[]'::jsonb; v_next text;
+  v_count integer:=0; v_bytes bigint:=2; v_more boolean:=false; v_row record; v_size integer;
 begin
   v_uid := rc_internal.rc_sync_lock_v1(p_revision,p_session);
   if p_kind is null or p_kind not in ('events','sessions') or p_limit is null
@@ -60,35 +61,37 @@ begin
   if p_generation is not null and p_generation is distinct from v_gen::text then
     return jsonb_build_object('status','changed');
   end if;
-  if p_kind='events' then
-    with candidates as (
+  -- Explicit keyset iteration with one lookahead row. Use one ordering for
+  -- both comparison and iteration; cursor is the last emitted key, not an
+  -- aggregate over candidates. Size limits include array punctuation.
+  for v_row in
+    select q.k,q.payload from (
       select e.event_id as k,e.payload from public.rc_progress_events e
-      where e.user_id=v_uid and (p_after is null or e.event_id > p_after)
-      order by e.event_id limit p_limit+1
-    ), sized as (
-      select *,sum(octet_length(payload::text)+1) over(order by k rows unbounded preceding) as running_bytes,
-        row_number() over(order by k) as rn from candidates
-    ), page as (select k,payload from sized where rn<=p_limit and running_bytes<=2097152 order by k)
-    select coalesce(jsonb_agg(payload order by k),'[]'::jsonb),max(k),
-      (select count(*)::integer from candidates) into v_rows,v_next,v_count from page;
-  else
-    with candidates as (
+      where p_kind='events' and e.user_id=v_uid
+        and (p_after is null or e.event_id collate pg_catalog."C" > p_after collate pg_catalog."C")
+      union all
       select s.session_key as k,s.payload from public.rc_study_sessions s
-      where s.user_id=v_uid and (p_after is null or s.session_key > p_after)
-      order by s.session_key limit p_limit+1
-    ), sized as (
-      select *,sum(octet_length(payload::text)+1) over(order by k rows unbounded preceding) as running_bytes,
-        row_number() over(order by k) as rn from candidates
-    ), page as (select k,payload from sized where rn<=p_limit and running_bytes<=2097152 order by k)
-    select coalesce(jsonb_agg(payload order by k),'[]'::jsonb),max(k),
-      (select count(*)::integer from candidates) into v_rows,v_next,v_count from page;
-  end if;
-  if v_count>0 and jsonb_array_length(v_rows)=0 then
+      where p_kind='sessions' and s.user_id=v_uid
+        and (p_after is null or s.session_key collate pg_catalog."C" > p_after collate pg_catalog."C")
+    ) q
+    order by q.k collate pg_catalog."C" limit (p_limit+1)
+  loop
+    v_size:=octet_length(v_row.payload::text)+2;
+    if v_count>=p_limit or v_bytes+v_size>2097152 then
+      v_more:=true;
+      exit;
+    end if;
+    v_rows:=v_rows||jsonb_build_array(v_row.payload);
+    v_count:=v_count+1;
+    v_bytes:=v_bytes+v_size;
+    v_next:=v_row.k;
+  end loop;
+  if v_more and v_count=0 then
     raise exception using errcode='22023',message='SYNC_PAGE_BUDGET';
   end if;
   return jsonb_build_object('status','ok','schemaVersion',2,'userId',v_uid::text,
     'generation',v_gen::text,'kind',p_kind,'records',v_rows,
-    'nextCursor',case when v_count>jsonb_array_length(v_rows) then v_next else null end);
+    'nextCursor',case when v_more then v_next else null end);
 end $$;
 
 create function rc_internal.rc_sync_ingest_v1(p_revision integer,p_session uuid,

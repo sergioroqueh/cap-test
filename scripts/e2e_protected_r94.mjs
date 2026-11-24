@@ -4,15 +4,17 @@ import {createServer} from 'node:http'
 import {readFileSync,lstatSync} from 'node:fs'
 import {resolve,extname} from 'node:path'
 import {chromium} from 'playwright'
+import {isProtectedAssetName} from './package_protected_r94.mjs'
 const root=resolve('dist-protected')
-const allowed=/^\/(?:index\.html|manifest\.webmanifest|icon\.svg|sw\.js|catalog\.json|assets\/[A-Za-z0-9_-]+\.(?:js|css))$/
+const rootFiles=new Set(['/index.html','/manifest.webmanifest','/icon.svg','/sw.js','/catalog.json'])
+const allowed=file=>rootFiles.has(file)||(file.startsWith('/assets/')&&isProtectedAssetName(file.slice('/assets/'.length)))
 const mime={'.html':'text/html','.js':'text/javascript','.css':'text/css','.json':'application/json','.webmanifest':'application/manifest+json','.svg':'image/svg+xml'}
 const server=createServer((req,res)=>{
  const path=new URL(req.url,'http://127.0.0.1').pathname
  res.setHeader('Cache-Control','no-store')
  if(path==='/seed'){res.setHeader('Content-Type','text/html');res.end('<html lang="es"><body>synthetic seed</body></html>');return}
  const file=path==='/'?'/index.html':path
- if(!allowed.test(file)){res.writeHead(404);res.end();return}
+ if(!allowed(file)){res.writeHead(404);res.end();return}
  try{
   const target=resolve(root,'.'+file)
   if(!target.startsWith(root+'/')||!lstatSync(target).isFile())throw Error('denied')

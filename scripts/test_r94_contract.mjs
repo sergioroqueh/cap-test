@@ -1,3 +1,4 @@
+import {isProtectedAssetName} from './package_protected_r94.mjs'
 import {validatePublicCatalog,validateDeliveredUnit} from '../src/protectedCatalogContract.mjs'
 import {projectHistoricalQuestions} from '../src/historicalProjection.mjs'
 function runContractTests(validatePublicCatalog,validateDeliveredUnit,projectHistoricalQuestions){
@@ -33,3 +34,12 @@ function runContractTests(validatePublicCatalog,validateDeliveredUnit,projectHis
 const passed=runContractTests(validatePublicCatalog,validateDeliveredUnit,projectHistoricalQuestions)
 for(const name of passed)console.log('PASS',name)
 console.log(passed.length+' R94 contract tests passed (synthetic only)')
+
+function runAssetNameTests(isProtectedAssetName){
+ const valid=['index.es-CkEhhZ6J.js','purify.es-Chx6Wqs2.js','index-B8ELjzQT.css','rolldown-runtime-XKyaHtl9.js','preload-helper-7y9sWmk5.js','db-CeTTwNsM.js','html2canvas-fMrU3NQZ.js','pdfExport-BxFMVujn.js','index-DR7y6wOe.js']
+ const invalid=['../index.es-CkEhhZ6J.js','x/y-abcdefgh.js','index..es-CkEhhZ6J.js','index.es.js','questions-abcdefgh.json','x-abcdefgh.js.map','x-abcdefgh.pdf','x-abcdefgh.js?x','x-abc.js','x-abcdefgh.js/','x-abcdefgh.js\n','x-abcdefgh.js\\']
+ for(const n of valid)if(!isProtectedAssetName(n))throw Error('Rejected valid asset: '+n)
+ for(const n of invalid)if(isProtectedAssetName(n))throw Error('Accepted invalid asset: '+JSON.stringify(n))
+ return valid.length+invalid.length
+}
+console.log('PASS R99 protected asset names: '+runAssetNameTests(isProtectedAssetName)+' cases')
