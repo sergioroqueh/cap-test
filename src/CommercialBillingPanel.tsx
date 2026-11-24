@@ -29,7 +29,7 @@ export function CommercialBillingPanel({signedIn}:{signedIn:boolean}){
   {state.subscriptionStatus==='past_due'&&<p role="alert">Hay un problema de pago pendiente. Puedes gestionar tu suscripción en Stripe.</p>}
   {signedIn&&billingEnabled&&<button type="button" className="btn light" disabled={busy}
     onClick={()=>void go(managed?'portal':'checkout')}>
-    {busy?'Conectando…':premium||state.subscriptionStatus==='past_due'?'Gestionar suscripción':'Probar Premium en Stripe (TEST)'}
+    {busy?'Conectando…':managed?'Gestionar suscripción':'Probar Premium en Stripe (TEST)'}
   </button>}
   {billingEnabled&&signedIn&&<small>Modo de prueba · no usar una tarjeta real.</small>}
   {!billingEnabled&&signedIn&&<small>Sin cobros habilitados durante esta etapa.</small>}
