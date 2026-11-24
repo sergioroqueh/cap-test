@@ -6,16 +6,17 @@ type Props = {
   authEnabled?: boolean
   googleEnabled?: boolean
   onGoogle?: () => Promise<void>
-  onEmail?: (email: string) => Promise<void>
+  onEmail?: (email: string, captchaToken?:string) => Promise<void>
   onVerifyEmail?: (email: string, code: string) => Promise<void>
   emailOtpEnabled?: boolean
   passwordEnabled?: boolean
-  onPassword?: (email: string, password: string) => Promise<void>
+  onPassword?: (email: string, password: string, captchaToken?:string) => Promise<void>
   notice?: string
+  runWithCaptcha?: (title:string,action:(token:string)=>Promise<void>)=>Promise<void>
 }
 // No real third-party requests in preview; development OAuth is explicit opt-in.
 const launchBeta = import.meta.env.VITE_CAP_LAUNCH === 'true'
-export function CommercialAccountPreview({onContinue,authEnabled=false,googleEnabled=false,onGoogle,onEmail,onVerifyEmail,emailOtpEnabled=false,passwordEnabled=false,onPassword,notice}:Props){
+export function CommercialAccountPreview({onContinue,authEnabled=false,googleEnabled=false,onGoogle,onEmail,onVerifyEmail,emailOtpEnabled=false,passwordEnabled=false,onPassword,notice,runWithCaptcha}:Props){
  const [email,setEmail]=useState('')
  const [password,setPassword]=useState('')
  const [usePassword,setUsePassword]=useState(passwordEnabled)
@@ -24,6 +25,9 @@ export function CommercialAccountPreview({onContinue,authEnabled=false,googleEna
  const [busy,setBusy]=useState(false)
  const [message,setMessage]=useState('')
  const [error,setError]=useState('')
+ async function verifyAction(title:string,action:(token?:string)=>Promise<void>){
+  if(runWithCaptcha)await runWithCaptcha(title,action);else await action()
+ }
  async function run(action:()=>Promise<void>){
   if(busy)return
   setBusy(true);setError('');setMessage('')
@@ -44,7 +48,7 @@ export function CommercialAccountPreview({onContinue,authEnabled=false,googleEna
     onClick={()=>{setUsePassword(false);setError('');setMessage('');setPassword('')}} disabled={busy}>Crear cuenta o recuperar acceso</button>
   </div>}
   {authEnabled&&passwordEnabled&&usePassword&&<form className="pro-email-signin"
-   onSubmit={e=>{e.preventDefault();if(onPassword)void run(()=>onPassword(email,password))}}>
+   onSubmit={e=>{e.preventDefault();if(onPassword)void run(()=>verifyAction('Acceso con contraseña',token=>onPassword(email,password,token)))}}>
    <label htmlFor="pro-access-password-email">Correo electrónico</label>
    <input id="pro-access-password-email" type="email" autoComplete="username" value={email}
     onChange={e=>setEmail(e.target.value)} placeholder="tu@email.es" disabled={busy} required/>
@@ -54,7 +58,7 @@ export function CommercialAccountPreview({onContinue,authEnabled=false,googleEna
    <button type="submit" disabled={busy||!onPassword||!email.trim()||!password}>Iniciar sesión</button>
    {emailOtpEnabled&&<small>¿Primera vez u olvidaste la contraseña? Selecciona «Crear cuenta o recuperar acceso».</small>}
   </form>}
-  {authEnabled&&emailOtpEnabled&&!usePassword&&<form className="pro-email-signin" onSubmit={e=>{e.preventDefault();if(onEmail)void run(async()=>{await onEmail(email);setCodeSent(true);setMessage('Comprueba tu correo electrónico e introduce el código de seis cifras.')})}}>
+  {authEnabled&&emailOtpEnabled&&!usePassword&&<form className="pro-email-signin" onSubmit={e=>{e.preventDefault();if(onEmail)void run(async()=>{await verifyAction('Enviar código de acceso',token=>onEmail(email,token));setCodeSent(true);setMessage('Comprueba tu correo electrónico e introduce el código de seis cifras.')})}}>
    <label htmlFor="pro-access-email">Correo para verificar tu cuenta</label>
    <input id="pro-access-email" type="email" autoComplete="email" value={email} onChange={e=>{setEmail(e.target.value);setCodeSent(false);setCode('')}} placeholder="tu@email.es" required disabled={busy}/>
    <button type="submit" disabled={busy||!email.trim()}>{codeSent?'Reenviar código':'Enviar código de verificación'}</button>
@@ -67,7 +71,7 @@ export function CommercialAccountPreview({onContinue,authEnabled=false,googleEna
   </form>}
   {(error||notice)&&<p className="pro-account-error" role="alert">{error||notice}</p>}
   {message&&<p className="pro-account-message" role="status">{message}</p>}
-  <button type="button" className="pro-guest-button" onClick={onContinue}><span>Continuar como invitado</span><span aria-hidden="true">›</span></button>
+  <button type="button" className="pro-guest-button" disabled={busy} onClick={onContinue}><span>Continuar como invitado</span><span aria-hidden="true">›</span></button>
   {launchBeta&&<p className="pro-account-status" role="note">Versión beta independiente, no oficial. Conserva una copia de tu progreso desde Perfil; las respuestas y los exámenes históricos pueden estar sujetos a revisión. Consulta las fuentes oficiales para preparar tu examen.</p>}
   <div className="pro-account-benefits"><span><ProIcon name="file"/> Archivo histórico</span><span><ProIcon name="chart"/> Progreso local</span><span><ProIcon name="bank"/> Banco general</span></div>
  </section>
