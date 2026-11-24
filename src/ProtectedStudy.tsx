@@ -9,6 +9,20 @@ import {openCommercialDelivery} from './commercialDeliveryIdentity'
 import {validatePublicCatalog,validateDeliveredUnit,type ProtectedItem,type ProtectedCatalog} from './protectedCatalogContract.mjs'
 import type {ActiveSession,Question,QuestionProgress,StudySessionRecord} from './types'
 import type {DeliveryReply} from './commercialDelivery.mjs'
+import type {SelectionInput,SelectionMode} from './protectedSelection.mjs'
+import {needsReview,smartScore} from './utils'
+import type {StudySource} from './types'
+
+const selectionModes: {mode:SelectionMode;source:StudySource;title:string;description:string}[]=[
+ {mode:'mixed-exam',source:'cap-mixed',title:'Simulacro mezclado',description:'100 preguntas · 2 h'},
+ {mode:'mixed-study',source:'cap-mixed',title:'Estudio mezclado',description:'Corrección inmediata'},
+ {mode:'top100',source:'cap-top100',title:'Top 100 más repetidas',description:'Selección entre las 100 más frecuentes'},
+ {mode:'top3',source:'cap-top3',title:'Desde 3 repeticiones',description:'Preguntas de frecuencia histórica ≥ 3'},
+ {mode:'top4',source:'cap-top4',title:'Desde 4 repeticiones',description:'Preguntas de frecuencia histórica ≥ 4'},
+ {mode:'favorites',source:'cap-favorites',title:'Favoritos',description:'Tus preguntas guardadas'},
+ {mode:'errors',source:'cap-errors',title:'Errores',description:'Repasa tus fallos pendientes'},
+ {mode:'review',source:'cap-review',title:'Repaso inteligente',description:'Prioridad según tu progreso'}
+]
 
 export default function ProtectedStudy({userEmail,onSignOut,signedIn=false}:{userEmail:string;onSignOut:()=>Promise<void>;signedIn?:boolean}){
  const [catalog,setCatalog]=useState<ProtectedCatalog|null>(null)
@@ -16,6 +30,11 @@ export default function ProtectedStudy({userEmail,onSignOut,signedIn=false}:{use
  const [error,setError]=useState('')
  const [busy,setBusy]=useState(false)
  const [quota,setQuota]=useState<Pick<Exclude<DeliveryReply,{status:'unavailable'}>,'tier'|'day'|'resetAt'|'questionsRemaining'|'examsRemaining'>|null>(null)
+ const [selectionMode,setSelectionMode]=useState<SelectionMode>('mixed-exam')
+ const [selectionCount,setSelectionCount]=useState(20)
+ const [selectionCategory,setSelectionCategory]=useState<'mercancias'|'viajeros'>('mercancias')
+ const [selectionNotice,setSelectionNotice]=useState('')
+ const selectionPending=useRef<SelectionInput|null>(null)
  const [selected,setSelected]=useState('')
  const [mode,setMode]=useState<'question'|'exam'>('exam')
  const [active,setActive]=useState<{initial:ActiveSession;questions:Question[]}|null>(null)
@@ -63,6 +82,63 @@ export default function ProtectedStudy({userEmail,onSignOut,signedIn=false}:{use
     :!signedIn?'No se ha podido verificar el acceso de invitado. Puede requerir verificación CAPTCHA.':'No se ha podido abrir el contenido autorizado. Reintenta la misma selección.')
   }finally{client?.close();lock.current=false;if(ownerCurrent())setBusy(false)}
  }
+ async function startSelection(){
+  if(lock.current||!ownerCurrent())return
+  lock.current=true;setBusy(true);setError('');setResult(null);setSelectionNotice('')
+  const spec=selectionModes.find(x=>x.mode===selectionMode)!
+  const count=selectionMode==='mixed-exam'?100:selectionCount
+  const category=selectionMode.startsWith('mixed-')?selectionCategory:'mercancias'
+  // Only progress IDs and scores travel. Never transmit answer history,
+  // email, user ID, current tier, or question text to the selector.
+  const hints:Record<string,number>=Object.create(null)
+  if(['favorites','errors','review'].includes(selectionMode)){
+   for(const p of [...progress].sort((a,b)=>a.questionId.localeCompare(b.questionId))){
+    if(!/^[A-Za-z0-9_.:-]{1,200}$/.test(p.questionId))continue
+    if(selectionMode==='favorites'&&p.favorite)hints[p.questionId]=1
+    if(selectionMode==='errors'&&needsReview(p))hints[p.questionId]=1
+    if(selectionMode==='review'){
+     const score=smartScore(p)
+     if(Number.isFinite(score))hints[p.questionId]=Math.round(Math.max(-1000000,Math.min(1000000,score))*1000)/1000
+    }
+   }
+  }
+  let client:Awaited<ReturnType<typeof openCommercialDelivery>>|undefined
+  try{
+   if(['favorites','errors'].includes(selectionMode)&&!Object.keys(hints).length){
+    setError(selectionMode==='favorites'?'Todavía no tienes preguntas favoritas.':'No tienes errores pendientes de repaso.');return
+   }
+   if(Object.keys(hints).length>5000||JSON.stringify(hints).length>500000){
+    setError('El historial supera el límite de selección de esta versión. No se ha consumido cupo.');return
+   }
+   const last=selectionPending.current
+   // A retry reuses the exact preferences, even if the smart age score changes.
+   const input:SelectionInput=last&&last.mode===selectionMode&&last.count===count&&last.category===category
+    ?last:{mode:selectionMode,category,count,hints,requestId:crypto.randomUUID()}
+   selectionPending.current=input
+   client=await openCommercialDelivery(signedIn?'account':'guest')
+   const reply=await client.select(input)
+   if(!ownerCurrent())return
+   if(reply.status==='unavailable'){
+    selectionPending.current=null
+    setError('No hay suficientes preguntas autorizadas para esta selección. No se ha consumido cupo.');return
+   }
+   const {tier,day,resetAt,questionsRemaining,examsRemaining}=reply
+   setQuota({tier,day,resetAt,questionsRemaining,examsRemaining})
+   if(reply.status==='quota_exhausted'){
+    selectionPending.current=null;setError('Has agotado el cupo diario de esta modalidad.');return
+   }
+   const questions=reply.content.questions
+   const exam=input.mode==='mixed-exam'
+   const initial:ActiveSession={type:exam?'exam':'study',source:spec.source,
+    label:'CAP '+(category==='mercancias'?'Mercancías':'Viajeros')+' · '+spec.title+' · '+questions.length+' preguntas',
+    questionIds:questions.map(q=>q.id),currentIndex:0,selectedAnswers:{},checkedIds:[],startedAt:Date.now(),
+    timed:exam,durationMinutes:exam?CAP_DURATION_MINUTES:undefined,clientId:crypto.randomUUID()}
+   if(questions.length<count)setSelectionNotice('Se han entregado '+questions.length+' de '+count+' preguntas solicitadas por disponibilidad o cupo.')
+   selectionPending.current=null;setActive({initial,questions})
+  }catch(e){
+   if(ownerCurrent())setError(e instanceof Error&&e.message==='R93_DELIVERY_DISABLED'?'La entrega comercial aún no está activada.':'No se ha podido abrir la selección. Reintenta el mismo modo.')
+  }finally{client?.close();lock.current=false;if(ownerCurrent())setBusy(false)}
+ }
  if(active&&ownerCurrent())return <div className="app pro-quiz-page"><QuizSession key={active.initial.clientId} initial={active.initial} questions={active.questions} frequency={{}} pm={new Map(progress.map(p=>[p.questionId,p]))} refresh={refresh} protectedCallbacks={{
   ownerCurrent,exit:()=>setActive(null),complete:record=>{setActive(null);setResult(record)}
  }}/></div>
@@ -83,6 +159,15 @@ export default function ProtectedStudy({userEmail,onSignOut,signedIn=false}:{use
  <button className="btn primary" disabled={busy||!chosen} onClick={()=>{if(chosen)void start(chosen)}}>{busy?'Comprobando acceso…':'Abrir contenido'}</button>
  <button className="btn light" disabled={busy} onClick={()=>{const item=items[Math.floor(Math.random()*items.length)];if(item){setSelected(item.contentId);void start(item)}}}>Elegir al azar</button></>}
  {error&&<p role="alert">{error}</p>}</div>
- <p>Los modos de banco completo, exportación PDF y estudio sin conexión no están habilitados en esta compilación protegida.</p>
+ <section className="card" aria-label="Modos de estudio protegidos">
+ <h2>Simulacros y repaso</h2>
+ <div className="pro-shortcuts">{selectionModes.map(spec=><button type="button" key={spec.mode} className={selectionMode===spec.mode?'btn primary':'btn light'} aria-pressed={selectionMode===spec.mode} disabled={busy} onClick={()=>{if(selectionMode!==spec.mode)selectionPending.current=null;setSelectionMode(spec.mode);setSelectionNotice('')}}><strong>{spec.title}</strong> · {spec.description}</button>)}</div>
+ {selectionMode.startsWith('mixed-')&&<label>Modalidad CAP <select disabled={busy} value={selectionCategory} onChange={e=>{selectionPending.current=null;setSelectionCategory(e.target.value as 'mercancias'|'viajeros')}}><option value="mercancias">Mercancías</option><option value="viajeros">Viajeros</option></select></label>}
+ {selectionMode!=='mixed-exam'&&<label>Preguntas por sesión <select disabled={busy} value={selectionCount} onChange={e=>{selectionPending.current=null;setSelectionCount(Number(e.target.value))}}>{[10,20,25,50,100].map(n=><option key={n} value={n}>{n}</option>)}</select></label>}
+ <p>{selectionMode==='mixed-exam'?'Se consume un examen si se entregan las 100 preguntas.':'Se consumen únicamente las preguntas entregadas. El servidor puede ajustar la sesión al cupo disponible.'}</p>
+ <button className="btn primary" disabled={busy||!catalog||!catalog.items.some(i=>i.kind==='question'&&i.category===(selectionMode.startsWith('mixed-')?selectionCategory:'mercancias'))} onClick={()=>void startSelection()}>{busy?'Comprobando acceso…':'Iniciar selección protegida'}</button>
+ {selectionNotice&&<p role="status">{selectionNotice}</p>}
+ </section>
+ <p>La exportación PDF y el estudio sin conexión siguen deshabilitados en esta compilación protegida.</p>
  </main></div>
 }
