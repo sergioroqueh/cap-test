@@ -7,7 +7,7 @@ const https=x=>{
 export function validateAttribution(a){
  if(!a||typeof a!=='object'||Array.isArray(a)||Object.keys(a).sort().join('|')!=='answerUrl|conditionsUrl|issuer|questionnaireUrl|title|updatedOn'||
  !text(a.issuer,200)||!text(a.title,300)||!https(a.questionnaireUrl)||!https(a.conditionsUrl)||
- !(a.answerUrl===null||https(a.answerUrl))||!(a.updatedOn===null||(/^\d{4}-\d{2}-\d{2}$/.test(a.updatedOn)&&Number.isFinite(Date.parse(a.updatedOn)))))throw Error('R98_ATTRIBUTION_INVALID')
+ !(a.answerUrl===null||https(a.answerUrl))||!(a.updatedOn===null||(typeof a.updatedOn==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(a.updatedOn)&&Number.isFinite(Date.parse(a.updatedOn))&&new Date(a.updatedOn).toISOString().slice(0,10)===a.updatedOn)))throw Error('R98_ATTRIBUTION_INVALID')
  return a
 }
 export function requireSessionAttributions(questions){
