@@ -1,3 +1,4 @@
+import type {SourceAttribution} from './sourceAttribution.mjs'
 export type AnswerKey = 'A' | 'B' | 'C' | 'D'
 
 export interface CapTechnicalDecision {
@@ -15,6 +16,7 @@ export interface CapTechnicalDecision {
 }
 
 export interface Question {
+  sourceAttribution?: SourceAttribution
   technicalDecision?: CapTechnicalDecision
   id: string
   code: string
