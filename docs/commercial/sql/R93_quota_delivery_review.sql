@@ -16,6 +16,12 @@ create table rc_internal.rc_quota_config_v1 (
   check(billing_mode='off' or approved_price_id is not null)
 );
 insert into rc_internal.rc_quota_config_v1(singleton) values(true);
+-- R95: only explicitly allowlisted accounts may receive TEST entitlements.
+create table rc_internal.rc_billing_test_users_v1(
+ user_id uuid primary key references auth.users(id) on delete cascade
+);
+alter table rc_internal.rc_billing_test_users_v1 enable row level security;
+revoke all on rc_internal.rc_billing_test_users_v1 from public,anon,authenticated,service_role;
 
 -- Private delivery catalog. No real corpus loaded by R93. A revision identifies
 -- a specific approved payload; publisher MUST change revision on any change.
@@ -130,7 +136,8 @@ begin
    raise exception using errcode='42501',message='DELIVERY_DISABLED';
  end if;
  v_tier:=case when v_anon then 'guest' else 'free' end;
- if not v_anon and v_config.billing_mode in ('test','live') and exists(
+ if not v_anon and v_config.billing_mode in ('test','live')
+ and (v_config.billing_mode='live' or exists(select 1 from rc_internal.rc_billing_test_users_v1 where user_id=v_uid for share)) and exists(
    select 1 from public.rc_billing_subscriptions b
    where b.user_id=v_uid and b.status in ('active','trialing')
    and b.current_period_end>v_now and b.price_id=v_config.approved_price_id
