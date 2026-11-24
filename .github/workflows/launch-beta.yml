@@ -57,6 +57,12 @@ jobs:
         env:
           PGPASSWORD: r92_synthetic_only
         run: psql -X -h 127.0.0.1 -U postgres -d rutacap_r92_synthetic -v ON_ERROR_STOP=1 -f scripts/test_r95_billing_sql.sql
+      - name: R97 protected selection (synthetic)
+        run: node scripts/test_r97_selection.mjs
+      - name: R97 shared quota and selection SQL on disposable PostgreSQL only
+        env:
+          PGPASSWORD: r92_synthetic_only
+        run: psql -X -h 127.0.0.1 -U postgres -d rutacap_r92_synthetic -v ON_ERROR_STOP=1 -f scripts/test_r97_selection_sql.sql
       - name: R94 metadata and offline catalog checks (synthetic)
         run: |
           node scripts/test_r94_contract.mjs
