@@ -7,7 +7,7 @@ const fail=code=>{throw Error('R93_'+code)}
 export function createDeliveryRequest({publishableKey,fetchImpl}={}){
   if(typeof publishableKey!=='string'||!publishableKey.startsWith('sb_publishable_')||typeof fetchImpl!=='function')fail('CONFIG_DENIED')
   return async ({accessToken,kind,contentId,requestId})=>{
-    if(!accessToken||!['question','exam'].includes(kind)||!ID.test(contentId)||!UUID.test(requestId))fail('REQUEST_INVALID')
+    if(typeof accessToken!=='string'||!accessToken||!['question','exam'].includes(kind)||typeof contentId!=='string'||!ID.test(contentId)||typeof requestId!=='string'||!UUID.test(requestId))fail('REQUEST_INVALID')
     const response=await fetchImpl('https://rhtbqetskghkarxhrgee.supabase.co/rest/v1/rpc/rc_deliver_v1',{
       method:'POST',headers:{apikey:publishableKey,Authorization:'Bearer '+accessToken,'Content-Type':'application/json'},
       body:JSON.stringify({p_kind:kind,p_content_id:contentId,p_request_id:requestId}),
