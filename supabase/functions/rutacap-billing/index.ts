@@ -1,52 +1,35 @@
-// RutaCAP R82: Stripe Checkout/Billing + webhook. No real payments until
-// secrets, price, consumer terms, rights and RUTACAP_LIVE_BILLING=approved.
+// R95: TEST only. No LIVE code path. Deploy only with separate approval.
 import { createClient } from 'npm:@supabase/supabase-js@2.119.1'
-
+import {stripeTestReady,validStripeUrl,reconcileEvent,readSubscriptions,checkoutParams} from './protocol.mjs'
 const ORIGIN = 'https://rutacap.es'
-const env = (key: string) => Deno.env.get(key) || ''
-const stripeKey = env('STRIPE_SECRET_KEY')
-const supaUrl = env('SUPABASE_URL')
-const serviceKey = env('SUPABASE_SERVICE_ROLE_KEY')
-const stripePrice = env('STRIPE_PRICE_ID')
-const isLive = stripeKey.startsWith('sk_live_')
-const liveApproved = env('RUTACAP_LIVE_BILLING') === 'approved'
-// A wrong Supabase project must fail closed rather than writing billing records elsewhere.
-const ISOLATED_SUPABASE_URL = 'https://rhtbqetskghkarxhrgee.supabase.co'
-const admin = supaUrl === ISOLATED_SUPABASE_URL && serviceKey ? createClient(supaUrl, serviceKey, {
- auth:{persistSession:false,autoRefreshToken:false}
-}) : null
-
-function reply(body: Record<string, unknown>, status=200, origin='') {
- return new Response(JSON.stringify(body),{status,headers:{
-  'Content-Type':'application/json; charset=utf-8',
-  'Cache-Control':'no-store',
-  'Vary':'Origin',
-  ...(origin ? {'Access-Control-Allow-Origin':origin} : {})
- }})
+const env=(key:string)=>Deno.env.get(key)||''
+const stripeKey=env('STRIPE_SECRET_KEY')
+const stripePrice=env('STRIPE_PRICE_ID')
+const supaUrl=env('SUPABASE_URL')
+const serviceKey=env('SUPABASE_SERVICE_ROLE_KEY')
+const admin=supaUrl==='https://rhtbqetskghkarxhrgee.supabase.co'&&serviceKey?createClient(supaUrl,serviceKey,{auth:{persistSession:false,autoRefreshToken:false}}):null
+function ready(){
+ return !!admin&&stripeTestReady({key:stripeKey,approved:env('RUTACAP_TEST_BILLING'),project:supaUrl,secret:env('STRIPE_WEBHOOK_SECRET'),price:stripePrice})
 }
-function originAllowed(origin: string): boolean {
- return origin === ORIGIN || (stripeKey.startsWith('sk_test_') &&
-   env('RUTACAP_TEST_ORIGIN') === 'http://localhost:5173' &&
-   origin === 'http://localhost:5173')
+function reply(body:Record<string,unknown>,status=200,origin=''){
+ return new Response(JSON.stringify(body),{status,headers:{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store','Vary':'Origin',...(origin?{'Access-Control-Allow-Origin':origin}:{})}})
 }
-function ready(): boolean {
- return !!admin && /^(sk_test_|sk_live_)/.test(stripeKey) &&
-  (!isLive || liveApproved)
+async function stripeApi(path:string,params?:URLSearchParams,key?:string):Promise<any>{
+ if(!ready())throw Error('TEST_DISABLED')
+ const response=await fetch('https://api.stripe.com/v1'+path,{method:params?'POST':'GET',headers:{
+  Authorization:'Bearer '+stripeKey,'Stripe-Version':'2025-03-31.basil',
+  ...(params?{'Content-Type':'application/x-www-form-urlencoded'}:{}),...(key?{'Idempotency-Key':key}:{})
+ },...(params?{body:params.toString()}:{}),redirect:'error',signal:AbortSignal.timeout(15000)})
+ if(!response.ok)throw Error('STRIPE_UNAVAILABLE')
+ return response.json()
 }
-async function stripeApi(path: string, params?: URLSearchParams, idempotency?: string): Promise<any> {
- if(!ready())throw Error('Stripe no configurado o no aprobado')
- const response=await fetch('https://api.stripe.com/v1'+path,{
-  method:params?'POST':'GET',
-  headers:{
-   'Authorization':'Bearer '+stripeKey,
-   ...(params?{'Content-Type':'application/x-www-form-urlencoded'}:{}),
-   ...(idempotency?{'Idempotency-Key':idempotency}:{})
-  },
-  ...(params?{body:params.toString()}:{})
- })
- if(!response.ok)throw Error('Stripe API devolvió '+response.status)
- return await response.json()
+async function rpc(name:string,args:Record<string,unknown>){
+ if(!admin)throw Error('DB_DISABLED')
+ const {data,error}=await admin.rpc(name,args)
+ if(error)throw Error('BILLING_RPC_FAILED')
+ return data
 }
+const read=(customer:string)=>stripeApi('/subscriptions?customer='+encodeURIComponent(customer)+'&status=all&limit=100')
 async function verifyStripeSignature(raw:string, header:string):Promise<boolean>{
  const timestamp=header.split(',').find(p=>p.startsWith('t='))?.slice(2) || ''
  const signatures=header.split(',').filter(p=>p.startsWith('v1=')).map(p=>p.slice(3))
@@ -65,159 +48,91 @@ async function verifyStripeSignature(raw:string, header:string):Promise<boolean>
   return difference===0
  })
 }
-async function synchronizeSubscription(subscriptionId: string){
- if(!/^sub_[A-Za-z0-9]+$/.test(subscriptionId)||!admin)throw Error('Suscripción inválida')
- const subscription=await stripeApi('/subscriptions/'+encodeURIComponent(subscriptionId))
- const customerId=typeof subscription.customer==='string'?
-   subscription.customer:subscription.customer?.id
- if(!/^cus_[A-Za-z0-9]+$/.test(customerId||''))throw Error('Cliente Stripe inválido')
- const {data:linked,error:linkError}=await admin.from('rc_billing_customers')
-   .select('user_id').eq('stripe_customer_id',customerId).single()
- if(linkError||!linked)throw Error('Cliente sin vinculación verificada')
- const status=subscription.status
- const allowed=['incomplete','incomplete_expired','trialing','active','past_due','canceled','unpaid','paused']
- if(!allowed.includes(status))throw Error('Estado de suscripción desconocido')
- const period=subscription.items?.data?.[0]?.current_period_end ?? subscription.current_period_end
- const periodEnd=Number.isSafeInteger(period)&&period>0?new Date(period*1000).toISOString():null
- const price=subscription.items?.data?.[0]?.price?.id || ''
- if(!/^price_[A-Za-z0-9]+$/.test(price))throw Error('Precio de suscripción no válido')
- // A Stripe subscription for a different product/price must never grant RutaCAP Premium.
- if(price!==stripePrice)return
- const {data:previous,error:prevError}=await admin.from('rc_billing_subscriptions')
-   .select('stripe_subscription_id,status').eq('user_id',linked.user_id).maybeSingle()
- if(prevError)throw Error('No se pudo leer suscripción')
- // Ignore late cancellation from an older subscription after a replacement.
- if(previous?.stripe_subscription_id!==subscriptionId && previous){
-   if(['canceled','incomplete_expired'].includes(status))return
-   // A parallel unfinished Checkout cannot revoke an existing paid subscription.
-   if(['active','trialing'].includes(previous.status) && !['active','trialing'].includes(status))return
- }
- const {error}=await admin.from('rc_billing_subscriptions').upsert({
-  user_id:linked.user_id,stripe_customer_id:customerId,
-  stripe_subscription_id:subscriptionId,status,price_id:price,
-  current_period_end:periodEnd,
-  cancel_at_period_end:subscription.cancel_at_period_end===true,
-  updated_at:new Date().toISOString()
- },{onConflict:'user_id'})
- if(error)throw Error('No se pudo actualizar estado de pago')
-}
+
 async function webhook(req:Request){
- if(req.method!=='POST'||!ready())return reply({error:'No disponible'},503)
+ if(req.method!=='POST')return reply({error:'Método no admitido'},405)
+ if(!ready())return reply({error:'TEST no habilitado'},503)
  const raw=await req.text()
- if(raw.length>200000)return reply({error:'Payload demasiado grande'},413)
+ if(new TextEncoder().encode(raw).length>200000)return reply({error:'Payload demasiado grande'},413)
  if(!await verifyStripeSignature(raw,req.headers.get('Stripe-Signature')||''))return reply({error:'Firma inválida'},400)
  let event:any
  try{event=JSON.parse(raw)}catch{return reply({error:'JSON inválido'},400)}
- if(!/^evt_[A-Za-z0-9]+$/.test(event.id||'') ||
-    event.livemode!==isLive)return reply({error:'Evento inválido'},400)
- if(!admin)return reply({error:'Servicio no disponible'},503)
- const {data:already,error:readError}=await admin.from('rc_billing_events')
-   .select('stripe_event_id').eq('stripe_event_id',event.id).maybeSingle()
- if(readError)return reply({error:'No se pudo consultar idempotencia'},500)
- if(already)return reply({received:true})
+ if(!event||!/^evt_[A-Za-z0-9]+$/.test(event.id||'')||event.livemode!==false)return reply({error:'Evento inválido'},400)
  try{
-  let subscriptionId=''
-  if(['customer.subscription.created','customer.subscription.updated','customer.subscription.deleted'].includes(event.type)){
-   subscriptionId=event.data?.object?.id || ''
-  }else if(['checkout.session.completed','checkout.session.async_payment_succeeded'].includes(event.type) &&
-    event.data?.object?.mode==='subscription'){
-   subscriptionId=event.data?.object?.subscription || ''
-  }else if(event.type==='invoice.paid'){
-   // Stripe 2025-03-31+ stores the subscription reference in invoice.parent.
-   const invoice=event.data?.object
-   subscriptionId=invoice?.parent?.subscription_details?.subscription || invoice?.subscription || ''
-  }
-  if(subscriptionId)await synchronizeSubscription(subscriptionId)
-  const {error}=await admin.from('rc_billing_events').insert({
-   stripe_event_id:event.id,event_type:String(event.type||'unknown').slice(0,150),
-   livemode:event.livemode===true
-  })
-  if(error && error.code!=='23505')throw Error('Fallo al guardar recibo de evento')
+  await reconcileEvent(event,{price:stripePrice,begin:(args:Record<string,unknown>)=>rpc('rc_billing_begin_v1',args),read,
+    apply:(args:Record<string,unknown>)=>rpc('rc_billing_apply_v1',args)})
   return reply({received:true})
- }catch{return reply({error:'No se pudo procesar el evento; Stripe debe reintentar'},500)}
+ }catch{return reply({error:'No se pudo reconciliar; reintentar'},500)}
 }
 async function authorizedUser(req:Request){
  if(!admin)return null
- const authorization=req.headers.get('Authorization')||''
- const token=authorization.match(/^Bearer ([A-Za-z0-9._-]+)$/)?.[1]
+ const token=(req.headers.get('Authorization')||'').match(/^Bearer ([A-Za-z0-9._-]+)$/)?.[1]
  if(!token)return null
  const {data,error}=await admin.auth.getUser(token)
- if(error||!data.user||data.user.is_anonymous||!data.user.email)return null
+ if(error||!data.user||data.user.is_anonymous!==false||!data.user.email_confirmed_at||!data.user.email)return null
+ // Verify current server-side session through service-only RPC, not user_metadata.
+ const claims=await admin.auth.getClaims(token)
+ const c=claims.data?.claims
+ if(claims.error||!c||c.sub!==data.user.id||c.iss!==supaUrl+'/auth/v1'||c.role!=='authenticated'||c.is_anonymous!==false||typeof c.session_id!=='string'||typeof c.exp!=='number'||c.exp<=Date.now()/1000)return null
+ try{await rpc('rc_billing_test_authorize_v1',{p_user:data.user.id,p_price:stripePrice,p_session:c.session_id})}catch{return null}
  return data.user
 }
 async function customerForUser(user:{id:string;email?:string|null}):Promise<string>{
- if(!admin)throw Error('Servicio no configurado')
- const {data:existing,error}=await admin.from('rc_billing_customers')
-  .select('stripe_customer_id').eq('user_id',user.id).maybeSingle()
- if(error)throw Error('No se pudo consultar cliente')
- if(existing)return existing.stripe_customer_id
- const params=new URLSearchParams({'metadata[rutacap_user_id]':user.id})
- if(user.email)params.set('email',user.email)
- const created=await stripeApi('/customers',params,'rutacap-customer-v1-'+user.id)
- if(!/^cus_[A-Za-z0-9]+$/.test(created.id||''))throw Error('Cliente Stripe inválido')
- const {error:saveError}=await admin.from('rc_billing_customers')
-   .insert({user_id:user.id,stripe_customer_id:created.id})
- if(saveError){
-  const {data:again}=await admin.from('rc_billing_customers')
-   .select('stripe_customer_id').eq('user_id',user.id).maybeSingle()
-  if(again)return again.stripe_customer_id
-  throw Error('No se pudo vincular el cliente')
+ if(!admin)throw Error('DB_DISABLED')
+ const {data:existing,error}=await admin.from('rc_billing_customers').select('stripe_customer_id,stripe_livemode').eq('user_id',user.id).maybeSingle()
+ if(error)throw Error('CUSTOMER_LOOKUP_FAILED')
+ if(existing){
+  if(existing.stripe_livemode!==false)throw Error('CUSTOMER_MODE_UNKNOWN')
+  const customer=await stripeApi('/customers/'+encodeURIComponent(existing.stripe_customer_id))
+  if(customer.id!==existing.stripe_customer_id||customer.livemode!==false||customer.deleted||customer.metadata?.rutacap_user_id!==user.id)throw Error('CUSTOMER_INVALID')
+  return existing.stripe_customer_id
  }
- return created.id
+ // Stable payload (no changing email parameter) and idempotency key. Reconcile
+ // by metadata search before creating after Stripe's 24-hour idempotency window.
+ const found=await stripeApi('/customers/search?query='+encodeURIComponent("metadata['rutacap_user_id']:'"+user.id+"'")+'&limit=100')
+ if(found.has_more!==false||!Array.isArray(found.data)||found.data.length>1)throw Error('CUSTOMER_AMBIGUOUS')
+ const customer=found.data[0]??await stripeApi('/customers',new URLSearchParams({'metadata[rutacap_user_id]':user.id}),'rutacap-test-customer-v1-'+user.id)
+ if(!/^cus_[A-Za-z0-9]+$/.test(customer?.id||'')||customer.livemode!==false||customer.deleted||customer.metadata?.rutacap_user_id!==user.id)throw Error('CUSTOMER_INVALID')
+ const {error:saveError}=await admin.from('rc_billing_customers').insert({user_id:user.id,stripe_customer_id:customer.id,stripe_livemode:false})
+ if(saveError){
+  const {data:again,error:againError}=await admin.from('rc_billing_customers').select('stripe_customer_id,stripe_livemode').eq('user_id',user.id).maybeSingle()
+  if(againError||again?.stripe_customer_id!==customer.id||again.stripe_livemode!==false)throw Error('CUSTOMER_LINK_FAILED')
+ }
+ return customer.id
 }
 Deno.serve(async(req)=>{
- const url=new URL(req.url)
- if(url.pathname.endsWith('/webhook'))return webhook(req)
+ const path=new URL(req.url).pathname
+ if(path==='/rutacap-billing/webhook'||path==='/functions/v1/rutacap-billing/webhook')return webhook(req)
+ if(path!=='/rutacap-billing'&&path!=='/functions/v1/rutacap-billing')return reply({error:'Ruta no admitida'},404)
  const origin=req.headers.get('Origin')||''
- if(!originAllowed(origin))return reply({error:'Origen no permitido'},403)
- if(req.method==='OPTIONS'){
-  return new Response(null,{status:204,headers:{
-   'Access-Control-Allow-Origin':origin,
-   'Access-Control-Allow-Methods':'POST, OPTIONS',
-   'Access-Control-Allow-Headers':'authorization, x-client-info, apikey, content-type',
-   'Access-Control-Max-Age':'600','Vary':'Origin'
-  }})
- }
+ if(origin!==ORIGIN)return reply({error:'Origen no permitido'},403)
+ if(req.method==='OPTIONS')return new Response(null,{status:204,headers:{'Access-Control-Allow-Origin':origin,'Access-Control-Allow-Methods':'POST, OPTIONS','Access-Control-Allow-Headers':'authorization, x-client-info, apikey, content-type','Vary':'Origin'}})
  if(req.method!=='POST')return reply({error:'Método no admitido'},405,origin)
- if(!ready())return reply({error:'Pagos no habilitados'},503,origin)
+ if(!ready())return reply({error:'Stripe TEST no habilitado'},503,origin)
  const user=await authorizedUser(req)
- if(!user)return reply({error:'Sesión no válida'},401,origin)
+ if(!user)return reply({error:'Acceso TEST no autorizado'},401,origin)
  let body:any
- try{body=await req.json()}catch{return reply({error:'Solicitud inválida'},400,origin)}
- if(!body||!['checkout','portal'].includes(body.action))return reply({error:'Acción inválida'},400,origin)
+ try{const raw=await req.text();if(raw.length>1000)throw Error();body=JSON.parse(raw)}catch{return reply({error:'Solicitud inválida'},400,origin)}
+ if(!body||Object.keys(body).length!==1||!['checkout','portal','status'].includes(body.action))return reply({error:'Acción inválida'},400,origin)
  try{
+  if(body.action==='status'){
+   const data=await rpc('rc_billing_test_status_v1',{p_user:user.id,p_price:stripePrice})
+   return reply({mode:'test',...data},200,origin)
+  }
   const customer=await customerForUser(user)
   if(body.action==='portal'){
-   const portal=await stripeApi('/billing_portal/sessions',
-    new URLSearchParams({customer,return_url:ORIGIN+'/#/settings'}))
-   if(typeof portal.url!=='string'||!portal.url.startsWith('https://billing.stripe.com/'))
-    throw Error('Portal no válido')
-   return reply({url:portal.url},200,origin)
+   const portal=await stripeApi('/billing_portal/sessions',new URLSearchParams({customer,return_url:ORIGIN+'/#/settings'}))
+   if(!validStripeUrl(portal.url,'billing.stripe.com')||portal.livemode!==false||portal.customer!==customer)throw Error('PORTAL_INVALID')
+   return reply({mode:'test',url:portal.url},200,origin)
   }
-  if(!/^price_[A-Za-z0-9]+$/.test(stripePrice))return reply({error:'Precio no configurado'},503,origin)
-  if(!admin)throw Error('Configuración no disponible')
-  const {data:active,error:activeError}=await admin.from('rc_billing_subscriptions')
-   .select('status').eq('user_id',user.id).maybeSingle()
-  if(activeError)throw Error('No se pudo consultar el plan')
-  if(active && ['active','trialing','past_due','unpaid','paused'].includes(active.status))
-   return reply({error:'Ya existe una suscripción; usa el portal de clientes'},409,origin)
-  // Check the Stripe source of truth too: webhooks can be delayed or reordered.
-  const current=await stripeApi('/subscriptions?customer='+encodeURIComponent(customer)+'&status=all&limit=100')
-  if(current?.data?.some((subscription:any)=>
-      subscription.items?.data?.some((item:any)=>item.price?.id===stripePrice) &&
-      ['active','trialing','incomplete','past_due','unpaid','paused'].includes(subscription.status)))
-   return reply({error:'Existe una suscripción o un pago pendiente para este plan'},409,origin)
-  const checkout=await stripeApi('/checkout/sessions',new URLSearchParams({
-   mode:'subscription',customer,
-   'line_items[0][price]':stripePrice,'line_items[0][quantity]':'1',
-   'subscription_data[metadata][rutacap_user_id]':user.id,
-   client_reference_id:user.id,
-   success_url:ORIGIN+'/#/settings?checkout=success',
-   cancel_url:ORIGIN+'/#/settings?checkout=cancel',
-   allow_promotion_codes:'true'
-  }),'rutacap-checkout-'+user.id+'-'+Math.floor(Date.now()/600000))
-  if(typeof checkout.url!=='string'||!checkout.url.startsWith('https://checkout.stripe.com/'))
-   throw Error('Checkout no válido')
-  return reply({url:checkout.url},200,origin)
- }catch{return reply({error:'No se pudo iniciar el servicio de Stripe'},502,origin)}
+  // Current Stripe state, not a stale local receipt or browser claim.
+  if(readSubscriptions(await read(customer),customer,stripePrice).blocked)return reply({error:'Ya hay una suscripción; utiliza el portal.'},409,origin)
+  const attempt=await rpc('rc_checkout_reserve_v1',{p_user:user.id,p_price:stripePrice,p_attempt:crypto.randomUUID()})
+  // Recheck after reservation to avoid a recently completed checkout.
+  if(readSubscriptions(await read(customer),customer,stripePrice).blocked)return reply({error:'Ya hay una suscripción; utiliza el portal.'},409,origin)
+  const {key,params}=checkoutParams({customer,userId:user.id,price:stripePrice,attempt,origin:ORIGIN})
+  const checkout=await stripeApi('/checkout/sessions',new URLSearchParams(params),key)
+  if(!validStripeUrl(checkout.url,'checkout.stripe.com')||checkout.livemode!==false||checkout.customer!==customer||checkout.mode!=='subscription'||checkout.status!=='open'||checkout.expires_at!==attempt.expiresAt)throw Error('CHECKOUT_INVALID')
+  return reply({mode:'test',url:checkout.url},200,origin)
+ }catch{return reply({error:'No se pudo iniciar o consultar Stripe TEST'},502,origin)}
 })
