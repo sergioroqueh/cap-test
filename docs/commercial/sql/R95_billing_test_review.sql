@@ -68,8 +68,8 @@ begin
    return jsonb_build_object('status','duplicate');
  end if;
  if g is null or g::text is distinct from p_generation then return jsonb_build_object('status','stale');end if;
- if p_snapshot is null or jsonb_typeof(p_snapshot) not in ('object','null') then raise exception 'BILLING_SNAPSHOT_INVALID';end if;
- if p_snapshot='null'::jsonb then
+ if p_snapshot is null or jsonb_typeof(p_snapshot)<>'object' then raise exception 'BILLING_SNAPSHOT_INVALID';end if;
+ if p_snapshot='{"empty":true}'::jsonb then
   -- No matching subscription currently exists: revoke any prior TEST entitlement.
   update public.rc_billing_subscriptions set status='canceled',current_period_end=null,
    cancel_at_period_end=false,updated_at=clock_timestamp()
