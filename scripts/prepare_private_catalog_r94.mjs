@@ -71,6 +71,19 @@ function main(){
  mkdirSync(out,{mode:0o700})
  for(const [name,value] of [['public-catalog.json',result.catalog],['PRIVATE-catalog-rows.json',result.privateRows],['PRIVATE-report.json',result.report]])
    writeFileSync(join(out,name),JSON.stringify(value)+'\n',{mode:0o600,flag:'wx'})
+ // Private import draft only. Encoded literals prevent SQL injection from payloads.
+ const encoded=Buffer.from(JSON.stringify(result.privateRows),'utf8').toString('base64')
+ const sql=[
+  '-- PRIVATE R94: do not apply without approved rights and isolated database authorization.',
+  'begin;',
+  'create temporary table rc_r94_stage (like rc_internal.rc_delivery_catalog_v1 including constraints) on commit drop;',
+  "insert into rc_r94_stage(kind,content_id,revision,minimum_tier,publishable,payload) select kind,content_id,revision,minimum_tier,false,payload from jsonb_to_recordset(convert_from(decode('"+encoded+"','base64'),'UTF8')::jsonb) as x(kind text,content_id text,revision text,minimum_tier text,publishable boolean,payload jsonb);",
+  'lock table rc_internal.rc_delivery_catalog_v1 in share row exclusive mode;',
+  "do $begin if exists(select 1 from rc_r94_stage s join rc_internal.rc_delivery_catalog_v1 d using(kind,content_id) where s.revision is distinct from d.revision or s.minimum_tier is distinct from d.minimum_tier or s.payload is distinct from d.payload) then raise exception 'R94_CATALOG_CONFLICT';end if;end$;",
+  'insert into rc_internal.rc_delivery_catalog_v1(kind,content_id,revision,minimum_tier,publishable,payload) select kind,content_id,revision,minimum_tier,false,payload from rc_r94_stage on conflict(kind,content_id) do nothing;',
+  'commit;'
+ ].join('\n')+'\n'
+ writeFileSync(join(out,'PRIVATE-catalog-import.sql'),sql,{mode:0o600,flag:'wx'})
  console.log(JSON.stringify(result.report))
 }
 if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url))main()
