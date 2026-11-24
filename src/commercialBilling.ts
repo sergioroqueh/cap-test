@@ -16,6 +16,7 @@ export async function readBillingState(): Promise<BillingState> {
   if (!session) return { tier:'guest', subscriptionStatus:null, renewalAt:null }
   if (!billingEnabled) return { tier:'free', subscriptionStatus:null, renewalAt:null }
   const {data,error}=await supabase.functions.invoke('rutacap-billing',{body:{action:'status'}})
+  if((await getSession())?.user.id!==session.user.id)throw Error('La cuenta ha cambiado.')
   if(error||data?.mode!=='test'||!['free','premium'].includes(data.tier))throw Error('No se pudo verificar la suscripción TEST.')
   const status=typeof data.subscriptionStatus==='string'?data.subscriptionStatus:null
   const renewalAt=typeof data.renewalAt==='string'?data.renewalAt:null
@@ -26,8 +27,10 @@ export async function readBillingState(): Promise<BillingState> {
 
 export async function openStripeFlow(action: 'checkout' | 'portal'): Promise<void> {
   if (!billingEnabled || !supabase) throw Error('Los pagos todavía no están habilitados.')
-  if (!(await getSession())) throw Error('Necesitas iniciar sesión para gestionar una suscripción.')
+  const session=await getSession()
+  if (!session) throw Error('Necesitas iniciar sesión para gestionar una suscripción.')
   const { data, error } = await supabase.functions.invoke('rutacap-billing', {body:{action}})
+  if((await getSession())?.user.id!==session.user.id)throw Error('La cuenta ha cambiado.')
   if (error || data?.mode!=='test') throw Error('No se pudo contactar con el servicio seguro de pagos.')
   const url = data && typeof data.url === 'string' ? data.url : ''
   // Never follow arbitrary URLs returned to the browser, even on a failed API path.
