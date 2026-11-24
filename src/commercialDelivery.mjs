@@ -1,3 +1,4 @@
+import {validateSelectionInput,validateSelectionReply} from './protectedSelection.mjs'
 // R93: protected delivery client, not mounted in App. No static fallback.
 const UUID=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/
 const ID=/^[A-Za-z0-9_.:-]{1,200}$/
@@ -17,7 +18,7 @@ export function createDeliveryRequest({publishableKey,fetchImpl}={}){
     return response.json()
   }
 }
-export function createDeliveryClient({enabled=false,expectedUserId,expectedAnonymous,ownerCurrent,verifyIdentity,request}={}){
+export function createDeliveryClient({enabled=false,expectedUserId,expectedAnonymous,ownerCurrent,verifyIdentity,request,selectionRequest}={}){
   let pinnedSession=null,closed=false
   async function identity(){
     if(!enabled||closed||!UUID.test(expectedUserId||'')||typeof expectedAnonymous!=='boolean'||ownerCurrent?.()!==true)fail('SCOPE_DENIED')
@@ -55,5 +56,13 @@ export function createDeliveryClient({enabled=false,expectedUserId,expectedAnony
        !response.content||typeof response.content!=='object'||Array.isArray(response.content))fail('RESPONSE_INVALID')
     return response
   }
-  return {deliver,close(){closed=true}}
+  async function select(input){
+    const x=validateSelectionInput(input)
+    if(typeof selectionRequest!=='function')fail('SELECTION_DISABLED')
+    const i=await identity()
+    const response=await selectionRequest({accessToken:i.accessToken,...x})
+    await identity()
+    return validateSelectionReply(response,x,expectedAnonymous)
+  }
+  return {deliver,select,close(){closed=true}}
 }
