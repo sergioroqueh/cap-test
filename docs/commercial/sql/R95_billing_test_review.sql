@@ -2,9 +2,6 @@
 begin;
 -- Legacy customer mappings have unknown mode. Never reuse them in TEST.
 alter table public.rc_billing_customers add column stripe_livemode boolean;
-create table rc_internal.rc_billing_test_users_v1(
- user_id uuid primary key references auth.users(id) on delete cascade
-);
 create table rc_internal.rc_billing_fence_v1(
  user_id uuid primary key references auth.users(id) on delete cascade,
  generation bigint not null default 0 check(generation>=0)
@@ -15,7 +12,6 @@ create table rc_internal.rc_checkout_attempt_v1(
  expires_epoch bigint not null,
  price_id text not null
 );
-alter table rc_internal.rc_billing_test_users_v1 enable row level security;
 alter table rc_internal.rc_billing_fence_v1 enable row level security;
 alter table rc_internal.rc_checkout_attempt_v1 enable row level security;
 revoke all on rc_internal.rc_billing_test_users_v1,rc_internal.rc_billing_fence_v1,rc_internal.rc_checkout_attempt_v1 from public,anon,authenticated,service_role;
@@ -119,10 +115,33 @@ begin
  return jsonb_build_object('attemptId',a.attempt_id,'expiresAt',a.expires_epoch);
 end $$;
 
-create function public.rc_billing_test_authorize_v1(p_user uuid,p_price text)
-returns void language sql security invoker set search_path='' as $$
- select rc_internal.rc_billing_test_check_v1(p_user,p_price)
-$$;
+create function rc_internal.rc_billing_test_session_v1(p_user uuid,p_price text,p_session uuid)
+returns void language plpgsql security definer set search_path='' as $
+begin
+ perform rc_internal.rc_billing_test_check_v1(p_user,p_price);
+ if not exists(select 1 from auth.sessions where id=p_session and user_id=p_user
+  and (not_after is null or not_after>clock_timestamp()) for share) then
+  raise exception using errcode='42501',message='BILLING_SESSION_DENIED';
+ end if;
+end $;
+create function rc_internal.rc_billing_test_status_v1(p_user uuid,p_price text)
+returns jsonb language plpgsql security definer set search_path='' as $
+declare s public.rc_billing_subscriptions%rowtype; active boolean;
+begin
+ perform rc_internal.rc_billing_test_check_v1(p_user,p_price);
+ select * into s from public.rc_billing_subscriptions where user_id=p_user and stripe_livemode=false;
+ active:=coalesce(s.status in ('active','trialing') and s.price_id=p_price and s.current_period_end>clock_timestamp(),false);
+ return jsonb_build_object('tier',case when active then 'premium' else 'free' end,
+   'subscriptionStatus',s.status,'renewalAt',s.current_period_end,'cancelAtPeriodEnd',coalesce(s.cancel_at_period_end,false));
+end $;
+create function public.rc_billing_test_authorize_v1(p_user uuid,p_price text,p_session uuid)
+returns void language sql security invoker set search_path='' as $
+ select rc_internal.rc_billing_test_session_v1(p_user,p_price,p_session)
+$;
+create function public.rc_billing_test_status_v1(p_user uuid,p_price text)
+returns jsonb language sql security invoker set search_path='' as $
+ select rc_internal.rc_billing_test_status_v1(p_user,p_price)
+$;
 create function public.rc_billing_begin_v1(p_customer text,p_price text,p_event text)
 returns jsonb language sql security invoker set search_path='' as $$
  select rc_internal.rc_billing_begin_v1(p_customer,p_price,p_event)
@@ -135,12 +154,14 @@ create function public.rc_checkout_reserve_v1(p_user uuid,p_price text,p_attempt
 returns jsonb language sql security invoker set search_path='' as $$
  select rc_internal.rc_checkout_reserve_v1(p_user,p_price,p_attempt)
 $$;
-revoke all on function public.rc_billing_test_authorize_v1(uuid,text),public.rc_billing_begin_v1(text,text,text),
+revoke all on function public.rc_billing_test_authorize_v1(uuid,text,uuid),public.rc_billing_test_status_v1(uuid,text),
+ rc_internal.rc_billing_test_session_v1(uuid,text,uuid),rc_internal.rc_billing_test_status_v1(uuid,text),public.rc_billing_begin_v1(text,text,text),
  public.rc_billing_apply_v1(text,text,text,text,text,jsonb),public.rc_checkout_reserve_v1(uuid,text,uuid),
  rc_internal.rc_billing_begin_v1(text,text,text),rc_internal.rc_billing_apply_v1(text,text,text,text,text,jsonb),
  rc_internal.rc_checkout_reserve_v1(uuid,text,uuid) from public,anon,authenticated,service_role;
 grant usage on schema rc_internal to service_role;
-grant execute on function public.rc_billing_test_authorize_v1(uuid,text),public.rc_billing_begin_v1(text,text,text),
+grant execute on function public.rc_billing_test_authorize_v1(uuid,text,uuid),public.rc_billing_test_status_v1(uuid,text),
+ rc_internal.rc_billing_test_session_v1(uuid,text,uuid),rc_internal.rc_billing_test_status_v1(uuid,text),public.rc_billing_begin_v1(text,text,text),
  public.rc_billing_apply_v1(text,text,text,text,text,jsonb),public.rc_checkout_reserve_v1(uuid,text,uuid),
  rc_internal.rc_billing_test_check_v1(uuid,text),rc_internal.rc_billing_begin_v1(text,text,text),
  rc_internal.rc_billing_apply_v1(text,text,text,text,text,jsonb),rc_internal.rc_checkout_reserve_v1(uuid,text,uuid) to service_role;
