@@ -5,7 +5,7 @@ import {QuizSession} from './Quiz'
 import {CAP_DURATION_MINUTES} from './examEngine.mjs'
 import {getAllProgress} from './db'
 import {localOwnerGeneration,localBackupOwner} from './localScope'
-import {openCommercialDelivery} from './commercialDeliveryIdentity'
+import {openCommercialDelivery,protectedDeliveryApproved} from './commercialDeliveryIdentity'
 import {validatePublicCatalog,validateDeliveredUnit,type ProtectedItem,type ProtectedCatalog} from './protectedCatalogContract.mjs'
 import type {ActiveSession,Question,QuestionProgress,StudySessionRecord} from './types'
 import type {DeliveryReply} from './commercialDelivery.mjs'
@@ -147,6 +147,7 @@ export default function ProtectedStudy({userEmail,onSignOut,signedIn=false}:{use
  return <div className="app"><header><ProBrand/><button className="btn light" onClick={()=>void onSignOut()}>Salir</button></header>
  <main className="page"><h1>Estudio RutaCAP</h1><p>{userEmail}</p>
  <p>Entrega de contenido autorizado por sesión. Se requiere conexión.</p>
+ {!protectedDeliveryApproved&&<p role="status">Catálogo comercial pendiente de autorización. La entrega permanece desactivada.</p>}
  <CommercialBillingPanel signedIn={signedIn}/>
  {quota&&<section className="card" aria-label="Cupo diario"><b>{quota.tier==='guest'?'Invitado':quota.tier==='free'?'Gratis':'Premium'}</b>
  <p>Preguntas disponibles: {quota.questionsRemaining??'Sin límite'} · Exámenes: {quota.examsRemaining??'Sin límite'}</p>
@@ -156,8 +157,8 @@ export default function ProtectedStudy({userEmail,onSignOut,signedIn=false}:{use
  <div className="card"><label>Modalidad <select disabled={busy} value={mode} onChange={e=>{setMode(e.target.value as 'question'|'exam');setSelected('')}}><option value="exam">Examen histórico</option><option value="question">Pregunta de estudio</option></select></label>
  {!catalog?<p>Cargando catálogo…</p>:items.length===0?<p>No hay unidades autorizadas para esta modalidad.</p>:<>
  <label>Contenido <select disabled={busy} value={selected} onChange={e=>setSelected(e.target.value)}><option value="">Selecciona una unidad</option>{items.map(i=><option key={i.contentId} value={i.contentId}>{i.label}</option>)}</select></label>
- <button className="btn primary" disabled={busy||!chosen} onClick={()=>{if(chosen)void start(chosen)}}>{busy?'Comprobando acceso…':'Abrir contenido'}</button>
- <button className="btn light" disabled={busy} onClick={()=>{const item=items[Math.floor(Math.random()*items.length)];if(item){setSelected(item.contentId);void start(item)}}}>Elegir al azar</button></>}
+ <button className="btn primary" disabled={busy||!chosen||!protectedDeliveryApproved} onClick={()=>{if(chosen)void start(chosen)}}>{busy?'Comprobando acceso…':'Abrir contenido'}</button>
+ <button className="btn light" disabled={busy||!protectedDeliveryApproved} onClick={()=>{const item=items[Math.floor(Math.random()*items.length)];if(item){setSelected(item.contentId);void start(item)}}}>Elegir al azar</button></>}
  </div>
  <section className="card" aria-label="Modos de estudio protegidos">
  <h2>Simulacros y repaso</h2>
@@ -165,7 +166,7 @@ export default function ProtectedStudy({userEmail,onSignOut,signedIn=false}:{use
  {selectionMode.startsWith('mixed-')&&<label>Modalidad CAP <select disabled={busy} value={selectionCategory} onChange={e=>{selectionPending.current=null;setSelectionCategory(e.target.value as 'mercancias'|'viajeros')}}><option value="mercancias">Mercancías</option><option value="viajeros">Viajeros</option></select></label>}
  {selectionMode!=='mixed-exam'&&<label>Preguntas por sesión <select disabled={busy} value={selectionCount} onChange={e=>{selectionPending.current=null;setSelectionCount(Number(e.target.value))}}>{[10,20,25,50,100].map(n=><option key={n} value={n}>{n}</option>)}</select></label>}
  <p>{selectionMode==='mixed-exam'?'Se consume un examen si se entregan las 100 preguntas.':'Se consumen únicamente las preguntas entregadas. El servidor puede ajustar la sesión al cupo disponible.'}</p>
- <button className="btn primary" disabled={busy||!catalog||!catalog.items.some(i=>i.kind==='question'&&i.category===(selectionMode.startsWith('mixed-')?selectionCategory:'mercancias'))} onClick={()=>void startSelection()}>{busy?'Comprobando acceso…':'Iniciar selección protegida'}</button>
+ <button className="btn primary" disabled={busy||!protectedDeliveryApproved||!catalog||!catalog.items.some(i=>i.kind==='question'&&i.category===(selectionMode.startsWith('mixed-')?selectionCategory:'mercancias'))} onClick={()=>void startSelection()}>{busy?'Comprobando acceso…':'Iniciar selección protegida'}</button>
  {selectionNotice&&<p role="status">{selectionNotice}</p>}
  </section>
  {error&&<p role="alert" className="card">{error}</p>}
