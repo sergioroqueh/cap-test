@@ -10,6 +10,22 @@ const hash=x=>createHash('sha256').update(x).digest('hex')
 const fail=m=>{throw Error('R94 '+m)}
 const sourcePattern=/^data\/(?:questions|exams\/questions)\/[a-z0-9-]+\.json$/
 const parse=x=>JSON.parse(x.toString('utf8'))
+// Only the fields consumed by the existing quiz/provenance contract travel.
+// Raw textCorrection, review queues, candidate answers and source files stay private.
+const questionFields=[
+ 'id','code','number','section','questionnaireId','question','options','correctAnswer','norm','reference',
+ 'progressId','examId','category','examFrequency','examFrequencyDenominator','answerStatus','reviewRequired',
+ 'sourcePage','scoringEligible','originalSheetAnswer','originalSheetQuestionNumber','originalSheetSourceFile',
+ 'originalSheetSha256','mappedSheetAnswer','mappedSheetQuestionNumber','answerEvidenceUrl','answerEvidenceSource',
+ 'answerTemplateOfficiallyVerified','answerTemplateSourceAuthority','bankAnswer','templateAnswer',
+ 'transcriptionReview','sourceMethod','answerDispute','answerSourceReview','technicalDecision','editorialDecision'
+]
+function deliveryQuestion(row){
+ const result=Object.fromEntries(questionFields.filter(k=>Object.hasOwn(row,k)).map(k=>[k,row[k]]))
+ // Preserve the displayed document name, not any local filesystem path.
+ if(typeof result.originalSheetSourceFile==='string')result.originalSheetSourceFile=result.originalSheetSourceFile.split(/[\\/]/).pop()
+ return result
+}
 export function prepareCatalog({readSource,approvals}){
  if(!approvals||approvals.schemaVersion!==1||!Array.isArray(approvals.sources))fail('approval manifest invalid')
  const bank=parse(readSource('data/index.json')),exams=parse(readSource('data/exams/index.json'))
@@ -31,7 +47,7 @@ export function prepareCatalog({readSource,approvals}){
   if(hash(raw)!==a.sha256)fail('source digest differs from approval')
   const rows=parse(raw)
   if(!Array.isArray(rows)||rows.length!==m.count)fail('source count mismatch')
-  const projected=category==='general'?rows:projectHistoricalQuestions(rows,m)
+  const projected=(category==='general'?rows:projectHistoricalQuestions(rows,m)).map(deliveryQuestion)
   if(projected.length!==rows.length)fail('historical projection incomplete')
   const categoryLabel=category==='general'?'Banco general':category==='mercancias'?'CAP Mercancías':'CAP Viajeros'
   function add(kind,contentId,label,questions){
