@@ -6,8 +6,8 @@ const CAPS={guest:[25,1],free:[100,3],premium:[null,null]}
 const fail=()=>{throw Error('R97_SELECTION_INVALID')}
 const object=x=>x!==null&&typeof x==='object'&&!Array.isArray(x)
 export function validateSelectionInput(x){
- if(!object(x)||!MODES.includes(x.mode)||!['mercancias','viajeros'].includes(x.category)||
-  !Number.isInteger(x.count)||x.count<1||x.count>100||!UUID.test(x.requestId||'')||
+ if(!object(x)||Object.keys(x).sort().join('|')!=='category|count|hints|mode|requestId'||!MODES.includes(x.mode)||!['mercancias','viajeros'].includes(x.category)||
+  !Number.isInteger(x.count)||x.count<1||x.count>100||typeof x.requestId!=='string'||!UUID.test(x.requestId)||
   !object(x.hints)||Object.keys(x.hints).length>5000)fail()
  if(x.mode==='mixed-exam'&&x.count!==100||!x.mode.startsWith('mixed-')&&x.category!=='mercancias'||
   !['favorites','errors','review'].includes(x.mode)&&Object.keys(x.hints).length)fail()
