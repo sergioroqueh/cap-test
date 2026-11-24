@@ -1,3 +1,4 @@
+import {CommercialBillingPanel} from './CommercialBillingPanel'
 import {useEffect,useRef,useState} from 'react'
 import {ProBrand} from './CommercialHome'
 import {QuizSession} from './Quiz'
@@ -70,6 +71,7 @@ export default function ProtectedStudy({userEmail,onSignOut,signedIn=false}:{use
  return <div className="app"><header><ProBrand/><button className="btn light" onClick={()=>void onSignOut()}>Salir</button></header>
  <main className="page"><h1>Estudio RutaCAP</h1><p>{userEmail}</p>
  <p>Entrega de contenido autorizado por sesión. Se requiere conexión.</p>
+ <CommercialBillingPanel signedIn={signedIn}/>
  {quota&&<section className="card" aria-label="Cupo diario"><b>{quota.tier==='guest'?'Invitado':quota.tier==='free'?'Gratis':'Premium'}</b>
  <p>Preguntas disponibles: {quota.questionsRemaining??'Sin límite'} · Exámenes: {quota.examsRemaining??'Sin límite'}</p>
  <small>Renovación: {new Date(quota.resetAt).toLocaleString('es-ES',{timeZone:'Europe/Madrid'})}</small></section>}
