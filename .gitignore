@@ -6,3 +6,7 @@ dist
 RutaCAP_*_privad*.json
 RutaCAP_*_importacion*.json
 RutaCAP_*_catalogo_privado.html
+
+/dist-protected/
+/PRIVATE-catalog-rows.json
+/PRIVATE-report.json
