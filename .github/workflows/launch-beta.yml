@@ -51,7 +51,13 @@ jobs:
         run: |
           psql -X -h 127.0.0.1 -U postgres -d rutacap_r92_synthetic -v ON_ERROR_STOP=1 -f scripts/test_r93_quota_sql.sql
           python3 scripts/test_r93_quota_concurrency.py
-      - name: Validate commercial beta artifact
+      - name: R94 metadata and offline catalog checks (synthetic)
+        run: |
+          node scripts/test_r94_contract.mjs
+          node scripts/test_r94_catalog_export.mjs
+      - name: R94 protected build with empty catalog and no credentials
+        run: npm run build:protected
+      - name: Validate legacy beta artifact (regression only, not commercial release)
         env:
           VITE_RUTACAP_PUBLIC_AUTH: ${{ vars.RUTACAP_PUBLIC_AUTH }}
           VITE_CAP_PRO_SUPABASE_URL: ${{ vars.RUTACAP_SUPABASE_URL }}
@@ -70,10 +76,12 @@ jobs:
             sleep 1
           done
           node scripts/e2e_launch_beta.mjs
-      - name: Upload tested beta artifact (not a deployment)
+      - name: R94 protected browser integration
+        run: node scripts/e2e_protected_r94.mjs
+      - name: Upload verified protected shell (empty catalog, not a deployment)
         uses: actions/upload-artifact@v4
         with:
-          name: rutacap-public-beta-dist
-          path: dist/
+          name: rutacap-protected-shell
+          path: dist-protected/
           if-no-files-found: error
           retention-days: 7
