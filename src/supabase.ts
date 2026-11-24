@@ -84,11 +84,11 @@ export async function signInWithGoogle(): Promise<void> {
   })
   if (error) throw error
 }
-export async function signInWithEmail(email: string): Promise<void> {
+export async function signInWithEmail(email: string, captchaToken?: string): Promise<void> {
   if (!emailOtpConfigured) throw new Error('El acceso por código todavía no está habilitado.')
   const { error } = await requireAuth().auth.signInWithOtp({
     email: email.trim().toLowerCase(),
-    options: { emailRedirectTo: callbackUrl(), shouldCreateUser: publicAuth || devSignupConfigured }
+    options: { emailRedirectTo: callbackUrl(), shouldCreateUser: publicAuth || devSignupConfigured, ...(captchaToken?{captchaToken}:{}) }
   })
   if (error) throw error
 }
@@ -104,12 +104,12 @@ export async function verifyEmailOtp(email: string, token: string): Promise<void
   if (!(await getSession())) throw new Error('No se pudo verificar la nueva sesión.')
 }
 
-export async function signInWithPassword(email: string, password: string): Promise<void> {
+export async function signInWithPassword(email: string, password: string, captchaToken?: string): Promise<void> {
   if (!passwordConfigured) throw new Error('El acceso con contraseña no está habilitado.')
   const normalizedEmail = email.trim().toLowerCase()
   if (!normalizedEmail || !password) throw new Error('Introduce correo y contraseña.')
   const { error } = await requireAuth().auth.signInWithPassword({
-    email: normalizedEmail, password
+    email: normalizedEmail, password, ...(captchaToken?{options:{captchaToken}}:{})
   })
   if (error) throw error
   const verified=await getSession()
