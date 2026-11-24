@@ -39,6 +39,16 @@ export default defineConfig(({ mode,command }) => {
       transformIndexHtml:{order:'pre' as const,handler(html:string){
         return html.replace('/src/main.tsx','/src/protectedMain.tsx')
       }},
+      generateBundle(_options,bundle){
+        for(const output of Object.values(bundle)){
+          if(output.type!=='chunk')continue
+          for(const source of Object.keys(output.modules)){
+            const clean=source.replace(/\\/g,'/').split('?')[0]
+            if(!clean.includes('/node_modules/')&&(/\/(?:data-src|public|artifacts)\//.test(clean)||/\.(?:json|csv|pdf|zip)$/i.test(clean)))
+              throw Error('R94: private data module in protected build: '+clean)
+          }
+        }
+      },
       closeBundle(){
         const result=spawnSync(process.execPath,['scripts/package_protected_r94.mjs'],{stdio:'inherit',windowsHide:true})
         if(result.error)throw result.error
