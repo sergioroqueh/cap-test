@@ -11,12 +11,14 @@ const sources=new Map([
  [path,data]
 ])
 const readSource=p=>{assert.ok(sources.has(p));return sources.get(p)}
-const approval={path,sha256,approved:true,rightsReference:'synthetic test only',minimumTier:'guest',units:['question']}
+const approval={path,sha256,approved:true,rightsReference:'synthetic test only',minimumTier:'guest',units:['question'],sourceAttribution:{issuer:'Synthetic authority',title:'Synthetic test',questionnaireUrl:'https://example.invalid/questions',answerUrl:null,conditionsUrl:'https://example.invalid/terms',updatedOn:null}}
 const run=(items)=>prepareCatalog({readSource,approvals:{schemaVersion:1,sources:items}})
 assert.equal(run([]).privateRows.length,0)
 const r=run([approval])
 assert.equal(r.catalog.items.length,1)
 assert.equal(r.privateRows[0].publishable,false)
+assert.equal(r.privateRows[0].payload.questions[0].sourceAttribution.issuer,'Synthetic authority')
+assert.throws(()=>run([{...approval,sourceAttribution:null}]))
 assert.equal(r.privateRows[0].payload.questions[0].correctAnswer,'A')
 assert.equal(r.privateRows[0].payload.questions[0].question,q.question)
 assert.ok(!JSON.stringify(r.catalog).includes('SYNTHETIC_STEM'))
