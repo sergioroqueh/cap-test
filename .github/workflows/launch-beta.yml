@@ -34,7 +34,7 @@ jobs:
         run: python3 -m py_compile ops/rutacap/legal/build_legal_pages.py
       - name: R82 security boundary checks (no network or test payments)
         run: node --test scripts/test_commercial_sprint_r82.mjs
-      - name: R84 Stripe webhook runtime (synthetic, no provider connections)
+      - name: R95 Stripe webhook runtime (synthetic, no provider connections)
         run: node --test scripts/test_r84_billing_runtime.mjs
       - name: R92 commercial sync transport (synthetic, no provider connections)
         run: node scripts/test_commercial_sync_r91.mjs
@@ -51,6 +51,12 @@ jobs:
         run: |
           psql -X -h 127.0.0.1 -U postgres -d rutacap_r92_synthetic -v ON_ERROR_STOP=1 -f scripts/test_r93_quota_sql.sql
           python3 scripts/test_r93_quota_concurrency.py
+      - name: R95 lifecycle protocol (synthetic)
+        run: node scripts/test_r95_protocol.mjs
+      - name: R95 atomic billing SQL on disposable PostgreSQL only
+        env:
+          PGPASSWORD: r92_synthetic_only
+        run: psql -X -h 127.0.0.1 -U postgres -d rutacap_r92_synthetic -v ON_ERROR_STOP=1 -f scripts/test_r95_billing_sql.sql
       - name: R94 metadata and offline catalog checks (synthetic)
         run: |
           node scripts/test_r94_contract.mjs
