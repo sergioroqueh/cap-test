@@ -42,6 +42,15 @@ jobs:
         env:
           PGPASSWORD: r92_synthetic_only
         run: psql -X -h 127.0.0.1 -U postgres -d rutacap_r92_synthetic -v ON_ERROR_STOP=1 -f scripts/test_r92_sync_sql.sql
+      - name: R93 protected delivery transport (synthetic)
+        run: node scripts/test_r93_delivery.mjs
+      - name: R93 quota SQL and concurrency on disposable PostgreSQL only
+        env:
+          PGPASSWORD: r92_synthetic_only
+          RUTACAP_R93_SYNTHETIC: '1'
+        run: |
+          psql -X -h 127.0.0.1 -U postgres -d rutacap_r92_synthetic -v ON_ERROR_STOP=1 -f scripts/test_r93_quota_sql.sql
+          python3 scripts/test_r93_quota_concurrency.py
       - name: Validate commercial beta artifact
         env:
           VITE_RUTACAP_PUBLIC_AUTH: ${{ vars.RUTACAP_PUBLIC_AUTH }}
