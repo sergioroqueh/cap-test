@@ -5,8 +5,9 @@ import type {Session} from '@supabase/supabase-js'
 import {CommercialAccountPreview} from './CommercialAccountPreview'
 import {CommercialPasswordOnboarding} from './CommercialPasswordOnboarding'
 import {acknowledgeExistingPassword,authConfigured,emailOtpConfigured,googleConfigured,passwordConfigured,getSession,needsPasswordOnboarding,setAccountPassword,signInWithEmail,signInWithGoogle,signInWithPassword,signOut,supabase,verifyEmailOtp} from './supabase'
-import {setLocalOwner} from './localScope'
+import {setLocalOwner,localBackupOwner} from './localScope'
 import ProtectedStudy from './ProtectedStudy'
+type PendingChallenge={title:string;action:(token:string)=>Promise<void>;resolve:()=>void;reject:(e:Error)=>void}
 const PREVIEW=false
 const THEME='rutacap-dev-theme'
 const go=(r:string)=>location.hash='#/'+r
@@ -16,13 +17,13 @@ export default function ProtectedApp(){
  const [guest,setGuest]=useState(()=>{try{return !protectedDeliveryApproved&&sessionStorage.getItem('rutacap-dev-guest-open')==='1'}catch{return false}})
  const [authReady,setAuthReady]=useState(!authConfigured)
  const [authError,setAuthError]=useState('')
- const [challenge,setChallenge]=useState<{title:string;action:(token:string)=>Promise<void>;resolve:()=>void;reject:(e:Error)=>void}|null>(null)
+ const [challenge,setChallenge]=useState<PendingChallenge|null>(null)
  const challengeRef=useRef<typeof challenge>(null)
  const guestBusy=useRef(false)
  const cancelChallenge=()=>{const current=challengeRef.current;challengeRef.current=null;setChallenge(null);current?.reject(Error('R98_CAPTCHA_CANCELLED'))}
  function runWithCaptcha(title:string,action:(token:string)=>Promise<void>):Promise<void>{
   if(!captchaConfigured||challengeRef.current)return Promise.reject(Error('R98_CAPTCHA_UNAVAILABLE'))
-  return new Promise((resolve,reject)=>{const c={title,action:async(token:string)=>{await action(token);if(challengeRef.current===c){challengeRef.current=null;setChallenge(null);resolve()}},resolve,reject};challengeRef.current=c;setChallenge(c)})
+  return new Promise((resolve,reject)=>{const c:PendingChallenge={title,action:async(token:string)=>{await action(token);if(challengeRef.current===c){challengeRef.current=null;setChallenge(null);resolve()}},resolve,reject};challengeRef.current=c;setChallenge(c)})
  }
  function enterGuest(){
   setLocalOwner(null);sessionStorage.setItem('rutacap-dev-guest-open','1');setGuest(true);setAuthError('')
@@ -33,6 +34,7 @@ export default function ProtectedApp(){
   try{
    if(!protectedDeliveryApproved){enterGuest();return}
    if(!await hasVerifiedGuestIdentity())await runWithCaptcha('Acceso como invitado',provisionGuestIdentity)
+   if(localBackupOwner().kind!=='guest'||(authConfigured&&await getSession()))throw Error('R98_ACCOUNT_CHANGED')
    enterGuest()
   }catch{setAuthError('No se ha podido verificar el acceso de invitado. Inténtalo de nuevo.')}
   finally{guestBusy.current=false}
@@ -68,11 +70,15 @@ export default function ProtectedApp(){
    }
   }
   // Auth state callback does not await or call auth methods inside its lock.
-  const {data:{subscription}}=client.auth.onAuthStateChange(event=>{
+  const {data:{subscription}}=client.auth.onAuthStateChange((event,nextSession)=>{
    if(!live)return
-   if(event==='SIGNED_OUT'){revision++;setLocalOwner(null);setSession(null)}
+   if(event==='SIGNED_OUT'){revision++;setLocalOwner(null);setSession(null);setGuest(false);setAuthReady(true)}
    else if(event==='SIGNED_IN'||event==='INITIAL_SESSION'||event==='TOKEN_REFRESHED'||event==='USER_UPDATED')
-    setTimeout(()=>{if(live)void refreshIdentity()},0)
+    {
+     const owner=localBackupOwner()
+     if(nextSession&&owner.kind==='user'&&owner.userId!==nextSession.user.id){revision++;setLocalOwner(null);setSession(null);setGuest(false);setAuthReady(false)}
+     setTimeout(()=>{if(live)void refreshIdentity()},0)
+    }
   })
   void refreshIdentity()
   return()=>{live=false;subscription.unsubscribe()}
@@ -102,7 +108,8 @@ export default function ProtectedApp(){
  if(guest)return <ProtectedStudy key="guest" userEmail="Modo invitado · solo este navegador" onSignOut={logout}/>
  return <div className="pro-auth-entry"><CommercialAccountPreview
   onContinue={()=>void continueGuest()}
-  runWithCaptcha={captchaConfigured?runWithCaptcha:undefined}
+  runWithCaptcha={captchaConfigured||import.meta.env.VITE_RUTACAP_CAPTCHA_ENABLED==='true'?runWithCaptcha:undefined}
+  externalBusy={!!challenge}
   authEnabled={authConfigured} googleEnabled={googleConfigured} emailOtpEnabled={emailOtpConfigured} passwordEnabled={passwordConfigured} notice={authError}
   onGoogle={signInWithGoogle} onEmail={signInWithEmail} onVerifyEmail={verifyEmailOtp} onPassword={signInWithPassword}
  />{challenge&&<CaptchaAction key={challenge.title} title={challenge.title} action={challenge.action}
