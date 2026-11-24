@@ -10,6 +10,19 @@ permissions:
 jobs:
   build-launch:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: r92_synthetic_only
+          POSTGRES_DB: rutacap_r92_synthetic
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -23,8 +36,12 @@ jobs:
         run: node --test scripts/test_commercial_sprint_r82.mjs
       - name: R84 Stripe webhook runtime (synthetic, no provider connections)
         run: node --test scripts/test_r84_billing_runtime.mjs
-      - name: R91 commercial sync transport (synthetic, no provider connections)
+      - name: R92 commercial sync transport (synthetic, no provider connections)
         run: node scripts/test_commercial_sync_r91.mjs
+      - name: R92 SQL integration on disposable PostgreSQL only
+        env:
+          PGPASSWORD: r92_synthetic_only
+        run: psql -X -h 127.0.0.1 -U postgres -d rutacap_r92_synthetic -v ON_ERROR_STOP=1 -f scripts/test_r92_sync_sql.sql
       - name: Validate commercial beta artifact
         env:
           VITE_RUTACAP_PUBLIC_AUTH: ${{ vars.RUTACAP_PUBLIC_AUTH }}
