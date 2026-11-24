@@ -36,6 +36,7 @@ create function rc_internal.rc_billing_begin_v1(p_customer text,p_price text,p_e
 returns jsonb language plpgsql security definer set search_path='' as $$
 declare u uuid; g bigint;
 begin
+ if p_event is null or p_event !~ '^evt_[A-Za-z0-9]+$' then raise exception 'BILLING_EVENT_INVALID';end if;
  select user_id into u from public.rc_billing_customers where stripe_customer_id=p_customer and stripe_livemode=false;
  if not found then raise exception 'BILLING_CUSTOMER_UNKNOWN';end if;
  perform rc_internal.rc_billing_test_check_v1(u,p_price);
@@ -116,16 +117,16 @@ begin
 end $$;
 
 create function rc_internal.rc_billing_test_session_v1(p_user uuid,p_price text,p_session uuid)
-returns void language plpgsql security definer set search_path='' as $
+returns void language plpgsql security definer set search_path='' as $$
 begin
  perform rc_internal.rc_billing_test_check_v1(p_user,p_price);
  if not exists(select 1 from auth.sessions where id=p_session and user_id=p_user
   and (not_after is null or not_after>clock_timestamp()) for share) then
   raise exception using errcode='42501',message='BILLING_SESSION_DENIED';
  end if;
-end $;
+end $$;
 create function rc_internal.rc_billing_test_status_v1(p_user uuid,p_price text)
-returns jsonb language plpgsql security definer set search_path='' as $
+returns jsonb language plpgsql security definer set search_path='' as $$
 declare s public.rc_billing_subscriptions%rowtype; active boolean;
 begin
  perform rc_internal.rc_billing_test_check_v1(p_user,p_price);
@@ -133,15 +134,15 @@ begin
  active:=coalesce(s.status in ('active','trialing') and s.price_id=p_price and s.current_period_end>clock_timestamp(),false);
  return jsonb_build_object('tier',case when active then 'premium' else 'free' end,
    'subscriptionStatus',s.status,'renewalAt',s.current_period_end,'cancelAtPeriodEnd',coalesce(s.cancel_at_period_end,false));
-end $;
+end $$;
 create function public.rc_billing_test_authorize_v1(p_user uuid,p_price text,p_session uuid)
-returns void language sql security invoker set search_path='' as $
+returns void language sql security invoker set search_path='' as $$
  select rc_internal.rc_billing_test_session_v1(p_user,p_price,p_session)
-$;
+$$;
 create function public.rc_billing_test_status_v1(p_user uuid,p_price text)
-returns jsonb language sql security invoker set search_path='' as $
+returns jsonb language sql security invoker set search_path='' as $$
  select rc_internal.rc_billing_test_status_v1(p_user,p_price)
-$;
+$$;
 create function public.rc_billing_begin_v1(p_customer text,p_price text,p_event text)
 returns jsonb language sql security invoker set search_path='' as $$
  select rc_internal.rc_billing_begin_v1(p_customer,p_price,p_event)
@@ -167,4 +168,5 @@ grant execute on function public.rc_billing_test_authorize_v1(uuid,text,uuid),pu
  rc_internal.rc_billing_apply_v1(text,text,text,text,text,jsonb),rc_internal.rc_checkout_reserve_v1(uuid,text,uuid) to service_role;
 -- Service role is trusted but the Edge runtime may not bypass the atomic write path.
 revoke insert,update,delete on public.rc_billing_subscriptions,public.rc_billing_events from service_role;
+revoke update,delete on public.rc_billing_customers from service_role;
 commit;
