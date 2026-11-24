@@ -1,0 +1,871 @@
+{
+  "schemaVersion": 1,
+  "asOf": "2026-11-24",
+  "baseCommit": "8ba00f68b33b9c1364e8afc952f9aa2ced7c2aed",
+  "releaseAllowed": false,
+  "approvalManifestGenerated": false,
+  "bank": {
+    "source": "data-src/questions.xz.b64",
+    "reportedQuestions": 8655,
+    "reportedQuestionnaires": 33,
+    "status": "blocked_exact_original_and_license_unverified",
+    "officialLead": "https://transporte.castillalamancha.es/actuaciones/certificado-de-aptitud-profesional-de-conductores-de-transporte-cap",
+    "officialArchiveUrl": null,
+    "officialArchiveVersion": null,
+    "commercialApproved": false,
+    "publicBetaApproved": false,
+    "pdfApproved": false
+  },
+  "historical": [
+    {
+      "id": "2024-04-06-mercancias-global",
+      "category": "mercancias",
+      "date": "2024-04-06",
+      "model": "GLOBAL",
+      "compiledSource": "Examenes TOTALES.pdf",
+      "pageStart": 1,
+      "pageEnd": 21,
+      "templateFile": "Plantilla Abril 2024.pdf",
+      "recordedTemplateSha256": "6355052fdc3440ebd4ca01dbd15d8c19b9a53104d9f8e2d095b6473b5360c934",
+      "templateAuthority": null,
+      "officialAuthorityConfirmed": null,
+      "officialCandidates": [],
+      "rightsStatus": "blocked_original_source_unidentified",
+      "commercialApproved": false,
+      "publicBetaApproved": false,
+      "pdfApproved": false,
+      "requiredEvidence": [
+        "original_questionnaire_url_and_version",
+        "original_key_url_and_finality",
+        "match_all_delivered_fields_to_original",
+        "applicable_reuse_terms_and_third_party_clearance",
+        "source_attribution_and_manual_release_decision"
+      ]
+    },
+    {
+      "id": "2023-07-29-mercancias-a",
+      "category": "mercancias",
+      "date": "2023-07-29",
+      "model": "A",
+      "compiledSource": "Examenes TOTALES.pdf",
+      "pageStart": 57,
+      "pageEnd": 78,
+      "templateFile": "Plantilla A Julio 2023.pdf",
+      "recordedTemplateSha256": "f6aa466561082940f9ce0697aa134c6c4b473b15363b69c54717b9bf933b9f1d",
+      "templateAuthority": null,
+      "officialAuthorityConfirmed": null,
+      "officialCandidates": [],
+      "rightsStatus": "blocked_original_source_unidentified",
+      "commercialApproved": false,
+      "publicBetaApproved": false,
+      "pdfApproved": false,
+      "requiredEvidence": [
+        "original_questionnaire_url_and_version",
+        "original_key_url_and_finality",
+        "match_all_delivered_fields_to_original",
+        "applicable_reuse_terms_and_third_party_clearance",
+        "source_attribution_and_manual_release_decision"
+      ]
+    },
+    {
+      "id": "2024-07-20-mercancias-a",
+      "category": "mercancias",
+      "date": "2024-07-20",
+      "model": "A",
+      "compiledSource": "Examenes TOTALES.pdf",
+      "pageStart": 79,
+      "pageEnd": 96,
+      "templateFile": "Plantilla A Julio 2024.pdf",
+      "recordedTemplateSha256": "cc9bbb874993073f9e4bfe638c5bbc4a9d535b3e3f5dde9e83af0e9f48b04ea1",
+      "templateAuthority": null,
+      "officialAuthorityConfirmed": null,
+      "officialCandidates": [],
+      "rightsStatus": "blocked_original_source_unidentified",
+      "commercialApproved": false,
+      "publicBetaApproved": false,
+      "pdfApproved": false,
+      "requiredEvidence": [
+        "original_questionnaire_url_and_version",
+        "original_key_url_and_finality",
+        "match_all_delivered_fields_to_original",
+        "applicable_reuse_terms_and_third_party_clearance",
+        "source_attribution_and_manual_release_decision"
+      ]
+    },
+    {
+      "id": "2025-07-26-mercancias-a",
+      "category": "mercancias",
+      "date": "2025-07-26",
+      "model": "A",
+      "compiledSource": "Examenes TOTALES.pdf",
+      "pageStart": 97,
+      "pageEnd": 111,
+      "templateFile": "Plantilla A Julio 2025.pdf",
+      "recordedTemplateSha256": "8dd030ebdb4bdfd739b07a009018253200666da47355d1e152bc5b14a3b88d5c",
+      "templateAuthority": null,
+      "officialAuthorityConfirmed": null,
+      "officialCandidates": [
+        {
+          "id": "2025-07-key",
+          "kind": "answer_key",
+          "url": "https://www.castillalamancha.es/sites/default/files/documentos/pdf/20250728/2025_4a_prueba_cap_-_plantillas_correctoras.pdf",
+          "previousEvidence": "indexed_text_initial_key",
+          "priorSha256": null,
+          "localHashMatchesPrior": null,
+          "matchStatus": "candidate_by_date_only_not_verified_for_this_model"
+        }
+      ],
+      "rightsStatus": "conditional_official_candidates_unmatched",
+      "commercialApproved": false,
+      "publicBetaApproved": false,
+      "pdfApproved": false,
+      "requiredEvidence": [
+        "original_questionnaire_url_and_version",
+        "original_key_url_and_finality",
+        "match_all_delivered_fields_to_original",
+        "applicable_reuse_terms_and_third_party_clearance",
+        "source_attribution_and_manual_release_decision"
+      ]
+    },
+    {
+      "id": "2026-07-25-mercancias-a",
+      "category": "mercancias",
+      "date": "2026-07-25",
+      "model": "A",
+      "compiledSource": "Examenes TOTALES.pdf",
+      "pageStart": 112,
+      "pageEnd": 127,
+      "templateFile": "Plantilla A Julio 2026.pdf",
+      "recordedTemplateSha256": "52f0f8ec3f7823f5beab0fdceee1c9d40ce16eaa3ea605f827330b24b719c401",
+      "templateAuthority": null,
+      "officialAuthorityConfirmed": null,
+      "officialCandidates": [
+        {
+          "id": "2026-07-25-questionnaire",
+          "kind": "questionnaire",
+          "url": "https://transporte.castillalamancha.es/sites/default/files/2026-07/CAP%202026_4%C2%AA_cuestionarios.pdf",
+          "previousEvidence": "retrieved_pdfinfo_success_visual_pending",
+          "priorSha256": "d1220c44c21d784487c3b6792eb45bce130088b5b9bf038d13712a03d4df9244",
+          "localHashMatchesPrior": true,
+          "matchStatus": "candidate_by_date_only_not_verified_for_this_model"
+        },
+        {
+          "id": "2026-07-25-answer_key",
+          "kind": "answer_key",
+          "url": "https://transporte.castillalamancha.es/sites/default/files/2026-07/CAP%202026_4%C2%AA_plantillas%20correctoras.pdf",
+          "previousEvidence": "retrieved_pdfinfo_success_visual_pending",
+          "priorSha256": "04a031d7bd008187140a66fa65563fce5da862e86968187b611af84a5ff4e680",
+          "localHashMatchesPrior": true,
+          "matchStatus": "candidate_by_date_only_not_verified_for_this_model"
+        }
+      ],
+      "rightsStatus": "conditional_official_candidates_unmatched",
+      "commercialApproved": false,
+      "publicBetaApproved": false,
+      "pdfApproved": false,
+      "requiredEvidence": [
+        "original_questionnaire_url_and_version",
+        "original_key_url_and_finality",
+        "match_all_delivered_fields_to_original",
+        "applicable_reuse_terms_and_third_party_clearance",
+        "source_attribution_and_manual_release_decision"
+      ]
+    },
+    {
+      "id": "2026-09-26-mercancias-a",
+      "category": "mercancias",
+      "date": "2026-09-26",
+      "model": "A",
+      "compiledSource": "Examenes TOTALES.pdf",
+      "pageStart": 128,
+      "pageEnd": 144,
+      "templateFile": "Plantilla A Septiembre 2026.pdf",
+      "recordedTemplateSha256": "1bf6a46650cd4854face47e35b8a5872d6d00d186bcdb4ae0d2026e4fe44c2bd",
+      "templateAuthority": null,
+      "officialAuthorityConfirmed": null,
+      "officialCandidates": [
+        {
+          "id": "2026-09-26-questionnaire",
+          "kind": "questionnaire",
+          "url": "https://transporte.castillalamancha.es/sites/default/files/2026-09/CAP%202026%20-%20Cuestionarios%205%C2%AA%20prueba.pdf",
+          "previousEvidence": "bytes_retrieved_pdfinfo_failed_visual_pending",
+          "priorSha256": "fa4bf7d38f9569c7ad47c8e5f69b82c30a9a33a4e8f481a9b87c1055cb8e38af",
+          "localHashMatchesPrior": false,
+          "matchStatus": "candidate_by_date_only_not_verified_for_this_model"
+        },
+        {
+          "id": "2026-09-26-answer_key",
+          "kind": "answer_key",
+          "url": "https://transporte.castillalamancha.es/sites/default/files/2026-09/CAP%202026%20-%20Plantillas%20correctoras%205%C2%AA%20prueba_0.pdf",
+          "previousEvidence": "retrieved_pdfinfo_success_visual_pending",
+          "priorSha256": "1bf6a46650cd4854face47e35b8a5872d6d00d186bcdb4ae0d2026e4fe44c2bd",
+          "localHashMatchesPrior": true,
+          "matchStatus": "candidate_by_date_only_not_verified_for_this_model"
+        }
+      ],
+      "rightsStatus": "conditional_official_candidates_unmatched",
+      "commercialApproved": false,
+      "publicBetaApproved": false,
+      "pdfApproved": false,
+      "requiredEvidence": [
+        "original_questionnaire_url_and_version",
+        "original_key_url_and_finality",
+        "match_all_delivered_fields_to_original",
+        "applicable_reuse_terms_and_third_party_clearance",
+        "source_attribution_and_manual_release_decision"
+      ]
+    },
+    {
+      "id": "2023-07-29-mercancias-b",
+      "category": "mercancias",
+      "date": "2023-07-29",
+      "model": "B",
+      "compiledSource": "Examenes TOTALES.pdf",
+      "pageStart": 145,
+      "pageEnd": 166,
+      "templateFile": "Plantilla B Julio 2023.pdf",
+      "recordedTemplateSha256": "8207166c3195e3a47a3b1192d89fc00edf6ba8dbab99ae217eba413e70d7cbd3",
+      "templateAuthority": null,
+      "officialAuthorityConfirmed": null,
+      "officialCandidates": [],
+      "rightsStatus": "blocked_original_source_unidentified",
+      "commercialApproved": false,
+      "publicBetaApproved": false,
+      "pdfApproved": false,
+      "requiredEvidence": [
+        "original_questionnaire_url_and_version",
+        "original_key_url_and_finality",
+        "match_all_delivered_fields_to_original",
+        "applicable_reuse_terms_and_third_party_clearance",
+        "source_attribution_and_manual_release_decision"
+      ]
+    },
+    {
+      "id": "2024-07-20-mercancias-b",
+      "category": "mercancias",
+      "date": "2024-07-20",
+      "model": "B",
+      "compiledSource": "Examenes TOTALES.pdf",
+      "pageStart": 167,
+      "pageEnd": 184,
+      "templateFile": "Plantilla B Julio 2024.pdf",
+      "recordedTemplateSha256": "c315413c24be4c22cecc0cb458c4ab4006be5c708319ba379cc5319ca4a4ee95",
+      "templateAuthority": null,
+      "officialAuthorityConfirmed": null,
+      "officialCandidates": [],
+      "rightsStatus": "blocked_original_source_unidentified",
+      "commercialApproved": false,
+      "publicBetaApproved": false,
+      "pdfApproved": false,
+      "requiredEvidence": [
+        "original_questionnaire_url_and_version",
+        "original_key_url_and_finality",
+        "match_all_delivered_fields_to_original",
+        "applicable_reuse_terms_and_third_party_clearance",
+        "source_attribution_and_manual_release_decision"
+      ]
+    },
+    {
+      "id": "2025-07-26-mercancias-b",
+      "category": "mercancias",
+      "date": "2025-07-26",
+      "model": "B",
+      "compiledSource": "Examenes TOTALES.pdf",
+      "pageStart": 185,
+      "pageEnd": 201,
+      "templateFile": "Plantilla B Julio 2025.pdf",
+      "recordedTemplateSha256": "3ea899730b817f56e1d09d21303da289019db3ed24aa0b72c65fdd82a1a37c1e",
+      "templateAuthority": "documento aportado, sin identificación visible del organismo; autenticidad oficial no comprobada",
+      "officialAuthorityConfirmed": false,
+      "officialCandidates": [
+        {
+          "id": "2025-07-key",
+          "kind": "answer_key",
+          "url": "https://www.castillalamancha.es/sites/default/files/documentos/pdf/20250728/2025_4a_prueba_cap_-_plantillas_correctoras.pdf",
+          "previousEvidence": "indexed_text_initial_key",
+          "priorSha256": null,
+          "localHashMatchesPrior": null,
+          "matchStatus": "candidate_by_date_only_not_verified_for_this_model"
+        }
+      ],
+      "rightsStatus": "blocked_unverified_template_authority",
+      "commercialApproved": false,
+      "publicBetaApproved": false,
+      "pdfApproved": false,
+      "requiredEvidence": [
+        "original_questionnaire_url_and_version",
+        "original_key_url_and_finality",
+        "match_all_delivered_fields_to_original",
+        "applicable_reuse_terms_and_third_party_clearance",
+        "source_attribution_and_manual_release_decision"
+      ]
+    },
+    {
+      "id": "2026-07-25-mercancias-b",
+      "category": "mercancias",
+      "date": "2026-07-25",
+      "model": "B",
+      "compiledSource": "Examenes TOTALES.pdf",
+      "pageStart": 202,
+      "pageEnd": 217,
+      "templateFile": "Plantilla B Julio 2026.pdf",
+      "recordedTemplateSha256": "ff53590c92943b79aec97f9ec2fe820693f80c4abcf14066b5cc651508233531",
+      "templateAuthority": null,
+      "officialAuthorityConfirmed": null,
+      "officialCandidates": [
+        {
+          "id": "2026-07-25-questionnaire",
+          "kind": "questionnaire",
+          "url": "https://transporte.castillalamancha.es/sites/default/files/2026-07/CAP%202026_4%C2%AA_cuestionarios.pdf",
+          "previousEvidence": "retrieved_pdfinfo_success_visual_pending",
+          "priorSha256": "d1220c44c21d784487c3b6792eb45bce130088b5b9bf038d13712a03d4df9244",
+          "localHashMatchesPrior": true,
+          "matchStatus": "candidate_by_date_only_not_verified_for_this_model"
+        },
+        {
+          "id": "2026-07-25-answer_key",
+          "kind": "answer_key",
+          "url": "https://transporte.castillalamancha.es/sites/default/files/2026-07/CAP%202026_4%C2%AA_plantillas%20correctoras.pdf",
+          "previousEvidence": "retrieved_pdfinfo_success_visual_pending",
+          "priorSha256": "04a031d7bd008187140a66fa65563fce5da862e86968187b611af84a5ff4e680",
+          "localHashMatchesPrior": true,
+          "matchStatus": "candidate_by_date_only_not_verified_for_this_model"
+        }
+      ],
+      "rightsStatus": "conditional_official_candidates_unmatched",
+      "commercialApproved": false,
+      "publicBetaApproved": false,
+      "pdfApproved": false,
+      "requiredEvidence": [
+        "original_questionnaire_url_and_version",
+        "original_key_url_and_finality",
+        "match_all_delivered_fields_to_original",
+        "applicable_reuse_terms_and_third_party_clearance",
+        "source_attribution_and_manual_release_decision"
+      ]
+    },
+    {
+      "id": "2023-12-02-mercancias-global",
+      "category": "mercancias",
+      "date": "2023-12-02",
+      "model": "GLOBAL",
+      "compiledSource": "Examenes TOTALES.pdf",
+      "pageStart": 218,
+      "pageEnd": 237,
+      "templateFile": "Plantilla Diciembre 2023.pdf",
+      "recordedTemplateSha256": "074175ab60ba24a078d2e301e2a3f6ae9920e28cbf5f3f81a86fdae22a899e58",
+      "templateAuthority": "plantilla correctora del tribunal de Castilla-La Mancha, documento fechado 04/12/2023; firma visible, no verificada criptográficamente",
+      "officialAuthorityConfirmed": true,
+      "officialCandidates": [],
+      "rightsStatus": "blocked_original_source_unidentified",
+      "commercialApproved": false,
+      "publicBetaApproved": false,
+      "pdfApproved": false,
+      "requiredEvidence": [
+        "original_questionnaire_url_and_version",
+        "original_key_url_and_finality",
+        "match_all_delivered_fields_to_original",
+        "applicable_reuse_terms_and_third_party_clearance",
+        "source_attribution_and_manual_release_decision"
+      ]
+    },
+    {
+      "id": "2023-02-04-mercancias-global",
+      "category": "mercancias",
+      "date": "2023-02-04",
+      "model": "GLOBAL",
+      "compiledSource": "Examenes TOTALES.pdf",
+      "pageStart": 238,
+      "pageEnd": 258,
+      "templateFile": "Plantilla Febrero 2023.pdf",
+      "recordedTemplateSha256": "4a9ba1433a070e9bdf5cbfa4bd0d624d149591d2d8f69a11c552a345f1cd780d",
+      "templateAuthority": null,
+      "officialAuthorityConfirmed": null,
+      "officialCandidates": [],
+      "rightsStatus": "blocked_original_source_unidentified",
+      "commercialApproved": false,
+      "publicBetaApproved": false,
+      "pdfApproved": false,
+      "requiredEvidence": [
+        "original_questionnaire_url_and_version",
+        "original_key_url_and_finality",
+        "match_all_delivered_fields_to_original",
+        "applicable_reuse_terms_and_third_party_clearance",
+        "source_attribution_and_manual_release_decision"
+      ]
+    },
+    {
+      "id": "2025-02-01-mercancias-global",
+      "category": "mercancias",
+      "date": "2025-02-01",
+      "model": "GLOBAL",
+      "compiledSource": "Examenes TOTALES.pdf",
+      "pageStart": 259,
+      "pageEnd": 274,
+      "templateFile": "Plantilla Febrero 2025.pdf",
+      "recordedTemplateSha256": "b9331bd813737d33edd9d7615dba25f935b5e61f06aa56f5dd739a17caf56424",
+      "templateAuthority": null,
+      "officialAuthorityConfirmed": null,
+      "officialCandidates": [
+        {
+          "id": "2025-02-questions",
+          "kind": "questionnaire",
+          "url": "https://www.castillalamancha.es/sites/default/files/documentos/pdf/20250203/cap_2025_1a_cuestionarios.pdf",
+          "previousEvidence": "indexed_official_source_binary_and_visual_pending",
+          "priorSha256": null,
+          "localHashMatchesPrior": null,
+          "matchStatus": "candidate_by_date_only_not_verified_for_this_model"
+        },
+        {
+          "id": "2025-02-key-mercancias",
+          "kind": "answer_key",
+          "url": "https://www.castillalamancha.es/sites/default/files/documentos/pdf/20250203/cap_2025_1a_plantilla_mercancias.pdf",
+          "previousEvidence": "indexed_official_source_binary_and_visual_pending",
+          "priorSha256": null,
+          "localHashMatchesPrior": null,
+          "matchStatus": "candidate_by_date_only_not_verified_for_this_model"
+        },
+        {
+          "id": "2025-02-key-viajeros",
+          "kind": "answer_key",
+          "url": "https://www.castillalamancha.es/sites/default/files/documentos/pdf/20250203/cap_2025_1a_plantilla_viajeros.pdf",
+          "previousEvidence": "indexed_official_source_binary_and_visual_pending",
+          "priorSha256": null,
+          "localHashMatchesPrior": null,
+          "matchStatus": "candidate_by_date_only_not_verified_for_this_model"
+        }
+      ],
+      "rightsStatus": "conditional_official_candidates_unmatched",
+      "commercialApproved": false,
+      "publicBetaApproved": false,
+      "pdfApproved": false,
+      "requiredEvidence": [
+        "original_questionnaire_url_and_version",
+        "original_key_url_and_finality",
+        "match_all_delivered_fields_to_original",
+        "applicable_reuse_terms_and_third_party_clearance",
+        "source_attribution_and_manual_release_decision"
+      ]
+    },
+    {
+      "id": "2026-02-07-mercancias-global",
+      "category": "mercancias",
+      "date": "2026-02-07",
+      "model": "GLOBAL",
+      "compiledSource": "Examenes TOTALES.pdf",
+      "pageStart": 275,
+      "pageEnd": 290,
+      "templateFile": "Plantilla Febrero 2026.pdf",
+      "recordedTemplateSha256": "df29f426fc22c50502b8afcc448a374b78a079a89b5bf1fbc2818f25c55f6d87",
+      "templateAuthority": null,
+      "officialAuthorityConfirmed": null,
+      "officialCandidates": [],
+      "rightsStatus": "blocked_original_source_unidentified",
+      "commercialApproved": false,
+      "publicBetaApproved": false,
+      "pdfApproved": false,
+      "requiredEvidence": [
+        "original_questionnaire_url_and_version",
+        "original_key_url_and_finality",
+        "match_all_delivered_fields_to_original",
+        "applicable_reuse_terms_and_third_party_clearance",
+        "source_attribution_and_manual_release_decision"
+      ]
+    },
+    {
+      "id": "2023-06-03-mercancias-global",
+      "category": "mercancias",
+      "date": "2023-06-03",
+      "model": "GLOBAL",
+      "compiledSource": "Examenes TOTALES.pdf",
+      "pageStart": 291,
+      "pageEnd": 311,
+      "templateFile": "Plantilla Junio 2023.pdf",
+      "recordedTemplateSha256": "4be70234cd312b429499ff489df044798324b390013fff277618646d09434429",
+      "templateAuthority": null,
+      "officialAuthorityConfirmed": null,
+      "officialCandidates": [],
+      "rightsStatus": "blocked_original_source_unidentified",
+      "commercialApproved": false,
+      "publicBetaApproved": false,
+      "pdfApproved": false,
+      "requiredEvidence": [
+        "original_questionnaire_url_and_version",
+        "original_key_url_and_finality",
+        "match_all_delivered_fields_to_original",
+        "applicable_reuse_terms_and_third_party_clearance",
+        "source_attribution_and_manual_release_decision"
+      ]
+    },
+    {
+      "id": "2023-03-25-mercancias-global",
+      "category": "mercancias",
+      "date": "2023-03-25",
+      "model": "GLOBAL",
+      "compiledSource": "Examenes TOTALES.pdf",
+      "pageStart": 312,
+      "pageEnd": 331,
+      "templateFile": "Plantilla Marzo 2023.pdf",
+      "recordedTemplateSha256": "ac2b2092331d9bdfb4a0416e9c2eb98cc3988922c66b960f5119ffd22e4900bb",
+      "templateAuthority": null,
+      "officialAuthorityConfirmed": null,
+      "officialCandidates": [],
+      "rightsStatus": "blocked_original_source_unidentified",
+      "commercialApproved": false,
+      "publicBetaApproved": false,
+      "pdfApproved": false,
+      "requiredEvidence": [
+        "original_questionnaire_url_and_version",
+        "original_key_url_and_finality",
+        "match_all_delivered_fields_to_original",
+        "applicable_reuse_terms_and_third_party_clearance",
+        "source_attribution_and_manual_release_decision"
+      ]
+    },
+    {
+      "id": "2025-03-29-mercancias-global",
+      "category": "mercancias",
+      "date": "2025-03-29",
+      "model": "GLOBAL",
+      "compiledSource": "Examenes TOTALES.pdf",
+      "pageStart": 332,
+      "pageEnd": 347,
+      "templateFile": "Plantilla Marzo 2025.pdf",
+      "recordedTemplateSha256": "ef2729a312160717c732240d9dde37807a459f66e7ec2d86cfc60f1faaeeb70b",
+      "templateAuthority": null,
+      "officialAuthorityConfirmed": null,
+      "officialCandidates": [
+        {
+          "id": "2025-03-questions",
+          "kind": "questionnaire",
+          "url": "https://www.castillalamancha.es/sites/default/files/documentos/pdf/20250331/2a_prueba_cap_2025_-_cuestionarios.pdf",
+          "previousEvidence": "indexed_text",
+          "priorSha256": null,
+          "localHashMatchesPrior": null,
+          "matchStatus": "candidate_by_date_only_not_verified_for_this_model"
+        },
+        {
+          "id": "2025-03-key",
+          "kind": "answer_key",
+          "url": "https://www.castillalamancha.es/sites/default/files/documentos/pdf/20250331/2a_prueba_cap_2025_-_plantillas_correctoras.pdf",
+          "previousEvidence": "indexed_text_initial_key",
+          "priorSha256": null,
+          "localHashMatchesPrior": null,
+          "matchStatus": "candidate_by_date_only_not_verified_for_this_model"
+        }
+      ],
+      "rightsStatus": "conditional_official_candidates_unmatched",
+      "commercialApproved": false,
+      "publicBetaApproved": false,
+      "pdfApproved": false,
+      "requiredEvidence": [
+        "original_questionnaire_url_and_version",
+        "original_key_url_and_finality",
+        "match_all_delivered_fields_to_original",
+        "applicable_reuse_terms_and_third_party_clearance",
+        "source_attribution_and_manual_release_decision"
+      ]
+    },
+    {
+      "id": "2026-03-28-mercancias-global",
+      "category": "mercancias",
+      "date": "2026-03-28",
+      "model": "GLOBAL",
+      "compiledSource": "Examenes TOTALES.pdf",
+      "pageStart": 348,
+      "pageEnd": 363,
+      "templateFile": "Plantilla Marzo 2026.pdf",
+      "recordedTemplateSha256": "b3be17781d019f25e621490c2f01d671ab7449f156d140ed52be5a1d1d572d23",
+      "templateAuthority": null,
+      "officialAuthorityConfirmed": null,
+      "officialCandidates": [
+        {
+          "id": "2026-03-key",
+          "kind": "answer_key",
+          "url": "https://transporte.castillalamancha.es/sites/default/files/2026-03/CAP%202026_2%C2%AA%20-%20Plantillas%20Correctoras.pdf",
+          "previousEvidence": "retrieved_pdfinfo_success_visual_pending",
+          "priorSha256": "395dee86a428262363bfa9dcd5ad126ff8e8e8e45c847946b0f3288c15b4005f",
+          "localHashMatchesPrior": null,
+          "matchStatus": "candidate_by_date_only_not_verified_for_this_model"
+        }
+      ],
+      "rightsStatus": "conditional_official_candidates_unmatched",
+      "commercialApproved": false,
+      "publicBetaApproved": false,
+      "pdfApproved": false,
+      "requiredEvidence": [
+        "original_questionnaire_url_and_version",
+        "original_key_url_and_finality",
+        "match_all_delivered_fields_to_original",
+        "applicable_reuse_terms_and_third_party_clearance",
+        "source_attribution_and_manual_release_decision"
+      ]
+    },
+    {
+      "id": "2022-05-21-mercancias-global",
+      "category": "mercancias",
+      "date": "2022-05-21",
+      "model": "GLOBAL",
+      "compiledSource": "Examenes TOTALES.pdf",
+      "pageStart": 364,
+      "pageEnd": 383,
+      "templateFile": null,
+      "recordedTemplateSha256": null,
+      "templateAuthority": null,
+      "officialAuthorityConfirmed": null,
+      "officialCandidates": [],
+      "rightsStatus": "blocked_missing_template",
+      "commercialApproved": false,
+      "publicBetaApproved": false,
+      "pdfApproved": false,
+      "requiredEvidence": [
+        "original_questionnaire_url_and_version",
+        "original_key_url_and_finality",
+        "match_all_delivered_fields_to_original",
+        "applicable_reuse_terms_and_third_party_clearance",
+        "source_attribution_and_manual_release_decision"
+      ]
+    },
+    {
+      "id": "2024-05-25-mercancias-global",
+      "category": "mercancias",
+      "date": "2024-05-25",
+      "model": "GLOBAL",
+      "compiledSource": "Examenes TOTALES.pdf",
+      "pageStart": 384,
+      "pageEnd": 403,
+      "templateFile": "Plantilla Mayo 2024.pdf",
+      "recordedTemplateSha256": "58fc1b027af5b974938f6b7e96b2cf9886ac940afb01b296644927f8193aa6f0",
+      "templateAuthority": null,
+      "officialAuthorityConfirmed": null,
+      "officialCandidates": [],
+      "rightsStatus": "blocked_original_source_unidentified",
+      "commercialApproved": false,
+      "publicBetaApproved": false,
+      "pdfApproved": false,
+      "requiredEvidence": [
+        "original_questionnaire_url_and_version",
+        "original_key_url_and_finality",
+        "match_all_delivered_fields_to_original",
+        "applicable_reuse_terms_and_third_party_clearance",
+        "source_attribution_and_manual_release_decision"
+      ]
+    },
+    {
+      "id": "2026-05-30-mercancias-global",
+      "category": "mercancias",
+      "date": "2026-05-30",
+      "model": "GLOBAL",
+      "compiledSource": "Examenes TOTALES.pdf",
+      "pageStart": 404,
+      "pageEnd": 419,
+      "templateFile": "Plantilla Mayo 2026.pdf",
+      "recordedTemplateSha256": "3a4dff720e43e104169076574e8fa67c1153255ab897241693fe2519b70eb73e",
+      "templateAuthority": null,
+      "officialAuthorityConfirmed": null,
+      "officialCandidates": [
+        {
+          "id": "2026-05-questions",
+          "kind": "questionnaire",
+          "url": "https://transporte.castillalamancha.es/sites/default/files/2026-06/Cuestionarios%203%C2%AA%20prueba%20CAP%202026.pdf",
+          "previousEvidence": "retrieved_pdfinfo_success_visual_pending",
+          "priorSha256": "a99e67b195eb245e1ae150e692a5cfafb2f6958c5b1401f4bf69344b8c159d64",
+          "localHashMatchesPrior": true,
+          "matchStatus": "candidate_by_date_only_not_verified_for_this_model"
+        },
+        {
+          "id": "2026-05-30-answer_key",
+          "kind": "answer_key",
+          "url": "https://transporte.castillalamancha.es/sites/default/files/2026-06/3%C2%AA%20prueba%20CAP%202026.%20Plantillas%20correctoras.pdf",
+          "previousEvidence": "retrieved_pdfinfo_success_visual_pending",
+          "priorSha256": "fa7a6916324df8c423e1b7f26eea8ef37393a4475860b60cfcd4e578bae60bb6",
+          "localHashMatchesPrior": true,
+          "matchStatus": "candidate_by_date_only_not_verified_for_this_model"
+        }
+      ],
+      "rightsStatus": "conditional_official_candidates_unmatched",
+      "commercialApproved": false,
+      "publicBetaApproved": false,
+      "pdfApproved": false,
+      "requiredEvidence": [
+        "original_questionnaire_url_and_version",
+        "original_key_url_and_finality",
+        "match_all_delivered_fields_to_original",
+        "applicable_reuse_terms_and_third_party_clearance",
+        "source_attribution_and_manual_release_decision"
+      ]
+    },
+    {
+      "id": "2022-11-26-mercancias-global",
+      "category": "mercancias",
+      "date": "2022-11-26",
+      "model": "GLOBAL",
+      "compiledSource": "Examenes TOTALES.pdf",
+      "pageStart": 420,
+      "pageEnd": 439,
+      "templateFile": "Plantilla Noviembre 2022.pdf",
+      "recordedTemplateSha256": "bf34282a6f2019d502f69d63212714bf1aeba41f2424692a3be5597a62864dc9",
+      "templateAuthority": null,
+      "officialAuthorityConfirmed": null,
+      "officialCandidates": [],
+      "rightsStatus": "blocked_original_source_unidentified",
+      "commercialApproved": false,
+      "publicBetaApproved": false,
+      "pdfApproved": false,
+      "requiredEvidence": [
+        "original_questionnaire_url_and_version",
+        "original_key_url_and_finality",
+        "match_all_delivered_fields_to_original",
+        "applicable_reuse_terms_and_third_party_clearance",
+        "source_attribution_and_manual_release_decision"
+      ]
+    },
+    {
+      "id": "2022-10-01-mercancias-global",
+      "category": "mercancias",
+      "date": "2022-10-01",
+      "model": "GLOBAL",
+      "compiledSource": "Examenes TOTALES.pdf",
+      "pageStart": 440,
+      "pageEnd": 459,
+      "templateFile": "Plantilla Octubre 2022.pdf",
+      "recordedTemplateSha256": "23ffcb1cff5579120103a9746e9bafc74ef8c975c1aece876bef4cc41bb8cdee",
+      "templateAuthority": null,
+      "officialAuthorityConfirmed": null,
+      "officialCandidates": [],
+      "rightsStatus": "blocked_original_source_unidentified",
+      "commercialApproved": false,
+      "publicBetaApproved": false,
+      "pdfApproved": false,
+      "requiredEvidence": [
+        "original_questionnaire_url_and_version",
+        "original_key_url_and_finality",
+        "match_all_delivered_fields_to_original",
+        "applicable_reuse_terms_and_third_party_clearance",
+        "source_attribution_and_manual_release_decision"
+      ]
+    },
+    {
+      "id": "2023-09-23-mercancias-global",
+      "category": "mercancias",
+      "date": "2023-09-23",
+      "model": "GLOBAL",
+      "compiledSource": "Examenes TOTALES.pdf",
+      "pageStart": 460,
+      "pageEnd": 481,
+      "templateFile": "Plantilla Septiembre 2023.pdf",
+      "recordedTemplateSha256": "05362644cfc688bc116358b67f337f42fbeb93a155a5899d358b6169d5db47a3",
+      "templateAuthority": null,
+      "officialAuthorityConfirmed": null,
+      "officialCandidates": [],
+      "rightsStatus": "blocked_original_source_unidentified",
+      "commercialApproved": false,
+      "publicBetaApproved": false,
+      "pdfApproved": false,
+      "requiredEvidence": [
+        "original_questionnaire_url_and_version",
+        "original_key_url_and_finality",
+        "match_all_delivered_fields_to_original",
+        "applicable_reuse_terms_and_third_party_clearance",
+        "source_attribution_and_manual_release_decision"
+      ]
+    },
+    {
+      "id": "2025-09-27-mercancias-global",
+      "category": "mercancias",
+      "date": "2025-09-27",
+      "model": "GLOBAL",
+      "compiledSource": "Examenes TOTALES.pdf",
+      "pageStart": 482,
+      "pageEnd": 499,
+      "templateFile": "Plantilla Septiembre 2025.pdf",
+      "recordedTemplateSha256": "e5f2ed5d2371b8e4c7da3c64ed4a10fdd31b67715b5f6c2718b49f3dbcdbfc04",
+      "templateAuthority": null,
+      "officialAuthorityConfirmed": null,
+      "officialCandidates": [
+        {
+          "id": "2025-09-questions",
+          "kind": "questionnaire",
+          "url": "https://www.castillalamancha.es/sites/default/files/documentos/pdf/20250929/cap_2025_5a_cuestionarios.pdf",
+          "previousEvidence": "previously_referenced_R22",
+          "priorSha256": null,
+          "localHashMatchesPrior": null,
+          "matchStatus": "candidate_by_date_only_not_verified_for_this_model"
+        }
+      ],
+      "rightsStatus": "conditional_official_candidates_unmatched",
+      "commercialApproved": false,
+      "publicBetaApproved": false,
+      "pdfApproved": false,
+      "requiredEvidence": [
+        "original_questionnaire_url_and_version",
+        "original_key_url_and_finality",
+        "match_all_delivered_fields_to_original",
+        "applicable_reuse_terms_and_third_party_clearance",
+        "source_attribution_and_manual_release_decision"
+      ]
+    },
+    {
+      "id": "2024-04-06-viajeros-global",
+      "category": "viajeros",
+      "date": "2024-04-06",
+      "model": "GLOBAL",
+      "compiledSource": "Examenes TOTALES.pdf",
+      "pageStart": 28,
+      "pageEnd": 50,
+      "templateFile": null,
+      "recordedTemplateSha256": null,
+      "templateAuthority": null,
+      "officialAuthorityConfirmed": null,
+      "officialCandidates": [],
+      "rightsStatus": "blocked_missing_template",
+      "commercialApproved": false,
+      "publicBetaApproved": false,
+      "pdfApproved": false,
+      "requiredEvidence": [
+        "original_questionnaire_url_and_version",
+        "original_key_url_and_finality",
+        "match_all_delivered_fields_to_original",
+        "applicable_reuse_terms_and_third_party_clearance",
+        "source_attribution_and_manual_release_decision"
+      ]
+    }
+  ],
+  "other": [
+    {
+      "id": "clm_c13_private_stage",
+      "positions": 903,
+      "models": 14,
+      "status": "blocked_private_stage_and_six_editorial_holds",
+      "commercialApproved": false
+    },
+    {
+      "id": "candidate_lists_and_personal_data",
+      "status": "excluded",
+      "commercialApproved": false
+    },
+    {
+      "id": "original_pdf_layout_logos_images_and_signatures",
+      "status": "excluded_until_specific_rights_and_privacy_review",
+      "commercialApproved": false
+    },
+    {
+      "id": "own_code_and_original_explanations",
+      "status": "conditionally_publicable_separate_author_review",
+      "commercialApproved": false
+    },
+    {
+      "id": "official_legislation_text",
+      "status": "potentially_reusable_art13_excluding_third_party_annotations",
+      "commercialApproved": false
+    }
+  ],
+  "summary": {
+    "historicalModels": 26,
+    "merchandise": 25,
+    "passenger": 1,
+    "withTemplate": 24,
+    "withOfficialCandidate": 10,
+    "commercialApprovedModels": 0
+  }
+}
