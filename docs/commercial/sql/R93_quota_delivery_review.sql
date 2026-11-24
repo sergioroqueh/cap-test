@@ -75,10 +75,8 @@ $$;
 revoke all on function rc_internal.rc_quota_day_v1(timestamptz),
  rc_internal.rc_quota_reset_v1(date) from public,anon,authenticated;
 
--- Private trusted implementation: no caller-controlled user, tier, date, count,
--- price, billing mode, revision or quota override. The returned payload and
--- accounting commit together; any exception rolls the entire statement back.
-create function rc_internal.rc_deliver_v1(p_kind text,p_content_id text,p_request_id uuid)
+-- R97: shared private identity, entitlement and lock gate for both RPCs.
+create function rc_internal.rc_delivery_context_v1()
 returns jsonb language plpgsql security definer set search_path='' as $$
 declare
  v_uid uuid := auth.uid();
@@ -94,13 +92,6 @@ declare
  v_question_cap integer;
  v_exam_cap integer;
  v_config rc_internal.rc_quota_config_v1%rowtype;
- v_content rc_internal.rc_delivery_catalog_v1%rowtype;
- v_daily rc_internal.rc_quota_daily_v1%rowtype;
- v_receipt rc_internal.rc_quota_receipts_v1%rowtype;
- v_replay boolean:=false;
- v_status text:='ok';
- v_q_left bigint;
- v_e_left bigint;
 begin
  if v_uid is null or (auth.jwt()->>'role') is distinct from 'authenticated'
     or coalesce(auth.jwt()->>'is_anonymous','') not in ('true','false')
@@ -108,10 +99,6 @@ begin
    raise exception using errcode='42501',message='DELIVERY_AUTH_REQUIRED';
  end if;
  v_session := (auth.jwt()->>'session_id')::uuid;
- if p_kind is null or p_kind not in ('question','exam') or p_request_id is null
-   or p_content_id is null or p_content_id !~ '^[A-Za-z0-9_.:-]{1,200}$' then
-   raise exception using errcode='22023',message='DELIVERY_REQUEST_INVALID';
- end if;
  -- Lock principal/session rows; no membership means fail closed. Shared locks
  -- allow concurrent readers but prevent the rows changing during the delivery.
  select s.not_after into v_session_end from auth.sessions s
@@ -151,6 +138,38 @@ begin
    or (v_tier='premium' and (v_question_cap is not null or v_exam_cap is not null)) then
    raise exception using errcode='55000',message='DELIVERY_POLICY_INVALID';
  end if;
+ return jsonb_build_object('uid',v_uid,'tier',v_tier,'day',rc_internal.rc_quota_day_v1(v_now),
+  'questionCap',v_question_cap,'examCap',v_exam_cap);
+end $$;
+revoke all on function rc_internal.rc_delivery_context_v1() from public,anon,authenticated,service_role;
+
+-- Private trusted implementation: no caller-controlled user, tier, date, count,
+-- price, billing mode, revision or quota override. The returned payload and
+-- accounting commit together; any exception rolls the entire statement back.
+create function rc_internal.rc_deliver_v1(p_kind text,p_content_id text,p_request_id uuid)
+returns jsonb language plpgsql security definer set search_path='' as $$
+declare
+ v_context jsonb;
+ v_uid uuid;
+ v_day date;
+ v_tier text;
+ v_question_cap integer;
+ v_exam_cap integer;
+ v_content rc_internal.rc_delivery_catalog_v1%rowtype;
+ v_daily rc_internal.rc_quota_daily_v1%rowtype;
+ v_receipt rc_internal.rc_quota_receipts_v1%rowtype;
+ v_replay boolean:=false;
+ v_status text:='ok';
+ v_q_left bigint;
+ v_e_left bigint;
+begin
+ if p_kind is null or p_kind not in ('question','exam') or p_request_id is null
+ or p_content_id is null or p_content_id !~ '^[A-Za-z0-9_.:-]{1,200}$' then
+   raise exception using errcode='22023',message='DELIVERY_REQUEST_INVALID';
+ end if;
+ v_context:=rc_internal.rc_delivery_context_v1();
+ v_uid:=(v_context->>'uid')::uuid;v_tier:=v_context->>'tier';v_day:=(v_context->>'day')::date;
+ v_question_cap:=(v_context->>'questionCap')::integer;v_exam_cap:=(v_context->>'examCap')::integer;
  select * into v_content from rc_internal.rc_delivery_catalog_v1
  where kind=p_kind and content_id=p_content_id and publishable for share;
  if not found or (v_content.minimum_tier='premium' and v_tier<>'premium')
@@ -158,7 +177,6 @@ begin
    -- No receipt or consumption on unavailable / unlicensed / unauthorized content.
    return jsonb_build_object('status','unavailable');
  end if;
- v_day:=rc_internal.rc_quota_day_v1(v_now);
  insert into rc_internal.rc_quota_daily_v1(user_id,madrid_day) values(v_uid,v_day)
  on conflict(user_id,madrid_day) do nothing;
  select * into strict v_daily from rc_internal.rc_quota_daily_v1
